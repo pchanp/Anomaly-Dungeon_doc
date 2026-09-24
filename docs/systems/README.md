@@ -6,3 +6,7 @@
 
 採用済みでない設計には、`Draft（草案）`、`Idea（アイデア）`、`Unconfirmed（未確認）` などの状態を明記してください。
 
+## 資料
+
+- [ゲームループとポータル遷移](game-loop.md) - ランの循環、Secure Slot、Player Anomaly、ポータル遷移、Party Stateの現時点の草案。
+
