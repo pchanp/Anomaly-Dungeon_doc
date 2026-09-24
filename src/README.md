@@ -1,6 +1,6 @@
-# Source placeholder
+# ソース管理用ディレクトリ
 
-This directory is reserved for Roblox source code, shared configuration, or data that is deliberately brought under Git management in the future.
+将来、Gitで管理することになったRobloxのソースコード、共有設定、データを置くためのディレクトリです。
 
-The live Roblox Studio project is not automatically mirrored here. Add implementation assets only when their ownership and synchronization workflow have been decided.
+Roblox Studio上の実プロジェクトは、自動的にここへ複製されるわけではありません。管理主体と同期方法が決まった実装資産だけを追加してください。
 

@@ -1,15 +1,15 @@
-# Decision records
+# 設計判断記録
 
-Store significant design decisions and their rationale here. Prefer one numbered file per decision, for example `001-anomaly-exposure.md`.
+重要な設計判断と、その判断に至った理由をここに保存します。`001-anomaly-exposure.md` のように、原則として1つの判断につき1つの番号付きファイルを作成してください。
 
-A decision record should normally state:
+設計判断記録には通常、以下を記載します。
 
-- status and date;
-- context;
-- decision;
-- rationale;
-- consequences;
-- related documents or implementation areas.
+- 状態と日付
+- 背景
+- 決定内容
+- 判断理由
+- 影響
+- 関連資料または関連する実装領域
 
-When a decision changes, add a new record that supersedes the old one. Do not erase the earlier rationale.
+判断が変更された場合は、以前の判断を置き換える新しい記録を追加してください。過去の判断理由を削除しないでください。
 

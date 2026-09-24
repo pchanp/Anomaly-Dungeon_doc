@@ -1,29 +1,29 @@
 # Anomaly Dungeon
 
-Anomaly Dungeon is a Roblox game currently under development. This repository is its shared design and implementation memory: a place for people working from Windows or macOS, GitHub, and Codex to refer to the same documented knowledge over time.
+Anomaly Dungeonは開発中のRobloxゲームです。このリポジトリは、WindowsやmacOSから編集する人、GitHub、Codexが、長期にわたって同じ情報を参照するための設計・実装上の共通記憶です。
 
-The repository currently establishes the documentation structure. Detailed game settings are intentionally not filled in until they are confirmed. The live Roblox Studio place remains separate from this repository unless source or configuration is deliberately brought under Git management.
+現在はドキュメント管理の基本構造を整えた段階です。詳細なゲーム設定は、確定するまで意図的に記載しません。ソースや設定を明示的にGit管理へ移すまでは、Roblox Studio上の実プレースとこのリポジトリを別のものとして扱います。
 
-## Structure
+## ディレクトリ構成
 
-| Path | Role |
+| パス | 役割 |
 | --- | --- |
-| [`AGENTS.md`](AGENTS.md) | Rules Codex and contributors must follow before changing documentation or implementation. |
-| [`docs/world/`](docs/world/) | World, lore, terminology, player knowledge, and intentional mysteries. |
-| [`docs/systems/`](docs/systems/) | Game behavior, rules, loops, state, networking, UI, and data structures. |
-| [`docs/anomalies/`](docs/anomalies/) | Individual anomaly designs, normally one Markdown file per anomaly. |
-| [`docs/decisions/`](docs/decisions/) | Important design decisions and the reasons behind them. |
-| [`src/`](src/) | Future Roblox-related source, configuration, or shared data selected for Git management. |
+| [`AGENTS.md`](AGENTS.md) | ドキュメントや実装を変更する前に、Codexと開発参加者が従うルール。 |
+| [`docs/world/`](docs/world/) | 世界観、ロア、用語、プレイヤーが知り得る情報、意図的な謎。 |
+| [`docs/systems/`](docs/systems/) | ゲームの挙動、ルール、ループ、状態、ネットワーク、UI、データ構造。 |
+| [`docs/anomalies/`](docs/anomalies/) | 個別アノマリーの設計資料。原則として1体につき1ファイル。 |
+| [`docs/decisions/`](docs/decisions/) | 重要な設計判断と、その判断に至った理由。 |
+| [`src/`](src/) | 将来Gitで管理するRoblox関連ソース、設定、共有データ。 |
 
-## Adding documentation
+## ドキュメントの追加先
 
-- Put facts about the world in `docs/world/` and gameplay or implementation rules in `docs/systems/`.
-- Put anomaly-specific concepts and behavior in `docs/anomalies/`; link to system documents instead of duplicating system rules.
-- Record durable rationale in a numbered file under `docs/decisions/`.
-- Mark incomplete material as `Draft`, `Idea`, or `Unconfirmed`. Do not present it as implemented or approved.
-- Distinguish author-only knowledge from information players can discover.
+- 世界に関する事実は `docs/world/`、ゲームルールや実装上の挙動は `docs/systems/` に置きます。
+- 個別アノマリーのコンセプトや挙動は `docs/anomalies/` に置きます。システムルールを重複して書かず、関連資料へリンクしてください。
+- 将来も理由を参照する必要がある重要な判断は、`docs/decisions/` に番号付きのファイルとして記録します。
+- 未確定の内容には `Draft（草案）`、`Idea（アイデア）`、`Unconfirmed（未確認）` などの状態を明記します。実装済み・採用済みの仕様として扱わないでください。
+- 作者だけが知る情報と、プレイヤーがゲーム内で知り得る情報を区別してください。
 
-## Using this repository with Codex
+## Codexで使用する際の方針
 
-Codex should read [`AGENTS.md`](AGENTS.md) and the relevant documents before making changes. It must not invent missing settings, silently resolve contradictions, or treat an idea as an implemented feature. Implementation work must be checked against the documented design, while discrepancies with the live Roblox Studio project should be reported explicitly.
+Codexは変更前に [`AGENTS.md`](AGENTS.md) と関連資料を確認します。不足している設定の創作、矛盾の暗黙的な解消、アイデアを実装済み機能として扱うことは禁止します。実装作業では文書化された設計との整合性を確認し、Roblox Studio上の実プロジェクトとの差異があれば明示的に報告します。
 

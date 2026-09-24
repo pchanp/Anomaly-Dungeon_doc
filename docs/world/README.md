@@ -1,12 +1,12 @@
-# World documentation
+# 世界設定ドキュメント
 
-Store world-building, lore, terminology, organizations, the nature of the dungeon, and intentional mysteries here.
+世界観、ロア、用語、組織、ダンジョンの性質、意図的な謎をここに保存します。
 
-When relevant, separate:
+必要に応じて、以下を区別してください。
 
-- confirmed author knowledge;
-- information available to players;
-- intentionally unresolved or ambiguous material.
+- 作者側で確定している情報
+- プレイヤーがゲーム内で知り得る情報
+- 意図的に未解決または曖昧な情報
 
-Do not turn an unknown origin or interpretation into canon merely to complete a document.
+資料を完成させるためだけに、未知の起源や解釈を確定設定にしないでください。
 

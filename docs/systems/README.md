@@ -1,8 +1,8 @@
-# System documentation
+# ゲームシステムドキュメント
 
-Store descriptions of how the game operates here: the core loop, runs, exploration, Anomaly Exposure, Player Anomaly, Anomaly Entity interactions, combat, items, skills, secure slots, death, escape, rewards, multiplayer behavior, server/client responsibilities, UI, state transitions, and data structures.
+ゲームがどのように動作するかをここに保存します。対象には、コアゲームループ、ラン、探索、Anomaly Exposure、Player Anomaly、Anomaly Entityとの相互作用、戦闘、アイテム、スキル、セキュアスロット、死亡、脱出、報酬、マルチプレイヤー、サーバー／クライアント責務、UI、状態遷移、データ構造などが含まれます。
 
-Keep system rules separate from lore. Link to anomaly-specific documents when a rule depends on a particular anomaly.
+システムルールと世界設定を混在させないでください。特定のアノマリーに依存するルールは、そのアノマリーの資料へリンクしてください。
 
-Every document should state its status when it is not an accepted design, for example `Draft`, `Idea`, or `Unconfirmed`.
+採用済みでない設計には、`Draft（草案）`、`Idea（アイデア）`、`Unconfirmed（未確認）` などの状態を明記してください。
 

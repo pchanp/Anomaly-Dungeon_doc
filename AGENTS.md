@@ -1,47 +1,47 @@
 # AGENTS.md
 
-## Repository purpose
+## リポジトリの目的
 
-This repository is the long-term shared memory for the design and implementation knowledge of the Roblox game **Anomaly Dungeon**. It primarily manages documentation; it is not assumed to be a mirror of the live Roblox Studio place.
+このリポジトリは、Robloxゲーム **Anomaly Dungeon** の設計・実装知識を長期的に共有するための共通記憶です。主な管理対象はドキュメントであり、Roblox Studio上の実プレースをそのまま複製する場所ではありません。
 
-## Core principles
+## 基本原則
 
-- Preserve ambiguity when it is intentional. Missing information is not permission to invent plausible lore, rules, names, or implementation details.
-- Confirm relevant documentation before changing a design or implementation.
-- Do not silently alter an existing specification. Report contradictions and unresolved questions.
-- Distinguish clearly between `Implemented`, `Designed`, `Draft`, `Idea`, and `Unconfirmed` information.
-- Do not confuse **Player Anomaly** with **Anomaly Entity**.
-- Do not confuse stable system IDs with names presented in the game.
-- Keep world-building, game rules, anomaly-specific design, and decision rationale in their respective locations.
+- 意図的な曖昧さを維持してください。情報が不足していても、もっともらしいロア、ルール、名称、実装詳細を創作してよいことにはなりません。
+- 設計または実装を変更する前に、関連ドキュメントを確認してください。
+- 既存仕様を黙って変更しないでください。矛盾や未解決事項を見つけた場合は報告してください。
+- `Implemented（実装済み）`、`Designed（設計済み）`、`Draft（草案）`、`Idea（アイデア）`、`Unconfirmed（未確認）`を明確に区別してください。
+- **Player Anomaly** と **Anomaly Entity** を混同しないでください。
+- 安定したシステムIDと、ゲーム内に表示される名称を混同しないでください。
+- 世界設定、ゲームルール、個別アノマリーの設計、設計判断の理由は、それぞれ適切な場所に記録してください。
 
-## Documentation map
+## ドキュメント構成
 
-- `docs/world/`: World, lore, terminology, and the boundary between author knowledge and player-accessible knowledge.
-- `docs/systems/`: Game loops, rules, state transitions, data, networking, UI, and implementation-facing behavior.
-- `docs/anomalies/`: One flexible document per individual anomaly, where practical.
-- `docs/decisions/`: Significant decisions and their rationale. Supersede old decisions with new records instead of erasing history.
-- `src/`: Future source code, shared configuration, or data that is appropriate for Git management.
+- `docs/world/`: 世界観、ロア、用語、作者が知る情報とプレイヤーが知り得る情報の境界。
+- `docs/systems/`: ゲームループ、ルール、状態遷移、データ、ネットワーク、UI、実装に関係する挙動。
+- `docs/anomalies/`: 原則として、個々のアノマリーごとに柔軟な形式で作成する設計資料。
+- `docs/decisions/`: 重要な設計判断とその理由。過去の記録を消さず、新しい記録で以前の判断を置き換えます。
+- `src/`: 将来Gitで管理するソースコード、共有設定、データ。
 
-## Before working
+## 作業前の確認
 
-1. Read this file and the repository `README.md`.
-2. Identify and read the documents relevant to the requested area.
-3. Check the status labels and separate confirmed facts from drafts or ideas.
-4. Check related decision records before proposing a conflicting change.
-5. When implementation is involved, compare the intended change with the live Roblox Studio structure and document any assumptions.
+1. このファイルとリポジトリの `README.md` を読んでください。
+2. 依頼された領域に関係するドキュメントを特定し、確認してください。
+3. ステータス表記を確認し、確定事項と草案・アイデアを分けてください。
+4. 方針が衝突する提案を行う前に、関連する設計判断記録を確認してください。
+5. 実装を扱う場合は、意図する変更をRoblox Studio上の実構造と比較し、仮定があれば明記してください。
 
-## Change rules
+## 変更時のルール
 
-- Respect existing assets and avoid unrelated rewrites.
-- If documents conflict, report the conflict rather than resolving it silently.
-- If a specification is unclear, record the uncertainty or ask for direction; do not fill the gap with invented material.
-- When a design changes, update affected documents and add a decision record when the rationale will matter later.
-- When implementation changes, verify consistency with the related world, system, anomaly, and decision documents.
-- Use meaningful, focused commits.
+- 既存資産を尊重し、依頼と無関係な書き換えを避けてください。
+- ドキュメント同士が矛盾する場合、黙って解決せず報告してください。
+- 仕様が不明確な場合は、その不確実性を記録するか確認を求めてください。空白を創作で埋めないでください。
+- 設計を変更した場合は関連ドキュメントを更新し、理由を将来参照する必要があるときは設計判断記録を追加してください。
+- 実装を変更した場合は、関連する世界・システム・アノマリー・設計判断の各ドキュメントとの整合性を確認してください。
+- コミットは意味のある単位に分けてください。
 
-## Anomaly documentation
+## アノマリー資料
 
-Anomaly documents may include a system ID, game name, concept, behavior, visibility, triggers, interactions, prototype status, implementation notes, uncertainties, and related documents. These fields are optional and should reflect the anomaly rather than force every anomaly into one schema.
+アノマリー資料には、必要に応じてシステムID、ゲーム内名称、コンセプト、挙動、可視性、発動条件、相互作用、プロトタイプ状況、実装上の注意、未確定事項、関連資料などを記載できます。これらは必須項目ではありません。すべてのアノマリーを一つの形式に無理に当てはめず、それぞれの性質に合わせてください。
 
-Names are not mandatory. Preserve established names such as **MiW**, **/dev/null**, **Mad Stomper**, and **Memory Swapper**. Treat a system ID such as `ANOMALY_MEMORY_SWAPPER` separately from its game name.
+名称は必須ではありません。**MiW**、**/dev/null**、**Mad Stomper**、**Memory Swapper** などの既存名称は維持してください。`ANOMALY_MEMORY_SWAPPER` のようなシステムIDとゲーム内名称は別々に扱ってください。
 
