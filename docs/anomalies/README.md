@@ -6,3 +6,16 @@
 
 システムIDとゲーム内名称は別のものです。ゲーム内名称は必須ではありません。テンプレートを埋めるためだけに名称を作らず、既存の名称と大文字・小文字表記を維持してください。
 
+## Anomaly Entity
+
+- [MiW](miw.md) - 棺に収まり、観察・接触にリスクとRun情報を伴う猫型アノマリー。
+- [/dev/null](dev-null.md) - 入力・命令・結果の対応関係をnull化するアノマリー。
+- [Mad Stomper](mad-stomper.md) - 撃破ではなく鎮静化・通過を扱う巨大環境アノマリー。
+- [Memory Swapper](memory-swapper.md) - 記憶と認識に応じてItemStackを移動させるInnocentなアノマリー。
+
+## Player Anomaly
+
+Player AnomalyはAnomaly Entityと区別して[`player-anomalies/`](player-anomalies/)に置く。
+
+- [Visible / Invisible Inversion](player-anomalies/visible-invisible-inversion.md) - 可視性と認識を反転させるRun単位のPlayer Anomaly。
+
