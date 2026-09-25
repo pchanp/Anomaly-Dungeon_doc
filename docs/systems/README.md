@@ -9,4 +9,6 @@
 ## 資料
 
 - [ゲームループとポータル遷移](game-loop.md) - ランの循環、Secure Slot、Player Anomaly、ポータル遷移、Party Stateの現時点の草案。
+- [ゲームルール](game-rules.md) - Run、終了条件、ビルド、戦闘、Return、Transition、Server / Client責務の草案。
+- [マップとギミック案](map-gimmick-ideas.md) - 基盤システムを異なる文脈で活用するマップ案と設計原則。
 
