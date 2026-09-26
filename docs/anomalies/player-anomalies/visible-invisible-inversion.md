@@ -3,6 +3,12 @@
 **Status: Draft（草案）**
 **Type: Player Anomaly**
 
+## 実装状況
+
+**Prototype: Not Implemented（Studio確認: 2026-09-26）**
+
+現在のSAN 0／`IsAnomaly`は別の旧プロトタイプであり、この可視性反転の実装とは扱わない。Exposure、Player Anomaly状態、Component分類、Client表示規約が未実装。
+
 ## 概要
 
 Visible / Invisible Inversionは、プレイヤー自身に発生するアノマリー。単純に隠れているものを発見する能力ではなく、**世界における可視性そのものが反転する**。

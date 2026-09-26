@@ -3,6 +3,12 @@
 **Status: Draft（草案）**
 **Type: Anomaly Entity**
 
+## 実装状況
+
+**Prototype: Partially Implemented（Studio確認: 2026-09-26）**
+
+固定配置、プレイヤー個別の距離判定、Tool無効化、Skill／Attack／Itemの結果無効化用Attributeとフィードバックを実装済み。ダッシュ、ジャンプ、インベントリ操作、特殊スロットへの作用は未実装であり、Draftの候補として扱う。
+
 ## 概要
 
 `/dev/null`は、入力されたものを「存在しなかったこと」にするアノマリー。ゴミ箱や廃棄物を象徴するオブジェクトではなく、**入力・命令・結果の対応関係をnull化すること**が本質である。

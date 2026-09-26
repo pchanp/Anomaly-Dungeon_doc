@@ -3,6 +3,12 @@
 **Status: Draft（草案）**
 **Type: Anomaly Entity**
 
+## 実装状況
+
+**Prototype: Partially Implemented（Studio確認: 2026-09-26）**
+
+Studioには `GIANT`／`Giant Anomaly`というID・名称の巨人プロトタイプがあり、ランダム移動、ストンプ、カメラシェイク、Anomaly Level増加、Heal Fieldによる鎮静、スキンメッシュ、歩行アニメーションを実装済み。これをMad Stomperと同一仕様にするかは未確定であり、名称・外見・最終挙動の確定とは扱わない。
+
 ## 概要
 
 Mad Stomperは、青緑色の異形の身体、多数の眼、巨大な足を持つ巨人型アノマリー。プレイヤーを単純に殺す敵ではなく、**通過を妨げる巨大な環境アノマリー**として設計する。

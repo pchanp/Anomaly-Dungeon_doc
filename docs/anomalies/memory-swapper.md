@@ -3,6 +3,12 @@
 **Status: Draft（草案）**
 **Type: Anomaly Entity**
 
+## 実装状況
+
+**Prototype: Not Implemented（Studio確認: 2026-09-26）**
+
+必要となるInventory／ItemStack、`LastRecognizedPlayer`、可視性差の基盤を含め未実装。先にアイテム状態モデルを設計・実装する必要がある。
+
 ## 概要
 
 Memory Swapperは、物体に対する人間の認識や記憶による補完が具現化したアノマリー。アイテムそのものを奪う悪意ある存在ではなく、プレイヤーが「そこにあったはず」と認識した物を別の場所から移動させ、記憶と現実のずれを発生させる。

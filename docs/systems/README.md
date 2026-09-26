@@ -6,9 +6,17 @@
 
 採用済みでない設計には、`Draft（草案）`、`Idea（アイデア）`、`Unconfirmed（未確認）` などの状態を明記してください。
 
+## 現在の開発資料
+
+- [現在の実装状況](current-implementation.md)
+- [Robloxプロジェクト構成](project-structure.md)
+- [未実装機能の優先順位](implementation-priorities.md)
+- [ゲームループとポータル遷移](game-loop.md)
+- [ゲームルール](game-rules.md)
+- [マップとギミック案](map-gimmick-ideas.md)
+
 ## 資料
 
 - [ゲームループとポータル遷移](game-loop.md) - ランの循環、Secure Slot、Player Anomaly、ポータル遷移、Party Stateの現時点の草案。
 - [ゲームルール](game-rules.md) - Run、終了条件、ビルド、戦闘、Return、Transition、Server / Client責務の草案。
 - [マップとギミック案](map-gimmick-ideas.md) - 基盤システムを異なる文脈で活用するマップ案と設計原則。
-
