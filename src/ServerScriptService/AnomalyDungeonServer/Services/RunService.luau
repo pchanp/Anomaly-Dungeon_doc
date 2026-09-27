@@ -16,8 +16,9 @@ function M.Enter(p)
  local _,h=body(p); if not h or h.Health<=0 or p:GetAttribute('InDungeon') then return end
  M.Reset(p,RunConfig.PlayerRunExploring); p:SetAttribute('InDungeon',true); h.Health=h.MaxHealth; teleport(p,world.Entry); tell(p,'マップ条件を満たし、出口ポータルから帰還してください。危険なら入口からも帰還できます。')
 end
-function M.Extract(p,abnormal)
+function M.Extract(p,force)
  if not p:GetAttribute('InDungeon') then return false end
+ if not force and not state:GetAttribute('ExitUnlocked') then tell(p,'出口ポータルはまだ起動していません。指定端末を探してください。'); return false end
  M.Reset(p,RunConfig.PlayerRunReturned); teleport(p,world.Lobby); local _,h=body(p); if h then h.Health=h.MaxHealth end; tell(p,'帰還成功'); return true
 end
 local function bind(q,fn)
@@ -28,8 +29,14 @@ local function bind(q,fn)
 end
 function M.Build(seed)
  for _,c in connections do c:Disconnect() end; connections={}
- world=Map.Build(seed); state:SetAttribute('Seed',seed); state:SetAttribute('Route',world.Root:GetAttribute('Route'))
+ world=Map.Build(seed); state:SetAttribute('Seed',seed); state:SetAttribute('Route',world.Root:GetAttribute('Route')); state:SetAttribute('ExitUnlocked',false)
+ local function setExitUnlocked(unlocked)
+  state:SetAttribute('ExitUnlocked',unlocked)
+  for _,name in {'Return','Extract','AnomalyExit'} do local q=world.Prompts[name]; q.Enabled=unlocked; q.Parent.Transparency=unlocked and 0 or 1; q.Parent.CanCollide=unlocked; q.Parent.Sign.Enabled=unlocked end
+ end
+ setExitUnlocked(false)
  bind(world.Prompts.Enter,M.Enter)
+ bind(world.Prompts.UnlockExit,function(p) if not p:GetAttribute('InDungeon') then return end; if state:GetAttribute('ExitUnlocked') then tell(p,'出口ポータルは既に起動しています'); return end; setExitUnlocked(true); for _,v in Players:GetPlayers() do if v:GetAttribute('InDungeon') then tell(v,p.DisplayName..' が出口ポータルを起動しました') end end end)
  bind(world.Prompts.Reroll,function(p)
   for _,v in Players:GetPlayers() do if v:GetAttribute('InDungeon') then tell(p,'探索中のプレイヤーがいます。全員帰還してから再構成してください。'); return end end
   M.Build(Random.new():NextInteger(1000,99999)); for _,v in Players:GetPlayers() do teleport(v,world.Lobby) end
@@ -53,7 +60,7 @@ function M.Tick(dt)
    p:SetAttribute('Room',roomName)
    if p:GetAttribute('RunLifetimeTicks') then
     local remaining=math.max(0,(p:GetAttribute('RunLifetimeRemaining') or RunConfig.TransformedLifetimeSeconds)-dt); p:SetAttribute('RunLifetimeRemaining',remaining)
-    if remaining<=0 then M.Extract(p,false); tell(p,'Run Lifetime終了 / 強制帰還しました') end
+    if remaining<=0 then M.Extract(p,true); tell(p,'Run Lifetime終了 / 強制帰還しました') end
    end
    if r.Position.Y<world.KillY then h.Health=0 end
   end

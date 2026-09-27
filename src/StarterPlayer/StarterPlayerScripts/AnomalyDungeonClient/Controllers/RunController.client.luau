@@ -19,6 +19,7 @@ Run.Heartbeat:Connect(function(dt)
  local lifetime=p:GetAttribute('RunLifetimeRemaining') or 0; local lifetimeText=p:GetAttribute('RunLifetimeTicks') and string.format(' | 残り %d秒',math.ceil(lifetime)) or ''
  status.Text=string.format('HP  %d / 100\n%s%s  |  %s',hp,anomaly and '未認識' or '正常',lifetimeText,p:GetAttribute('Room') or 'LOBBY')
  status.TextColor3=anomaly and Color3.fromRGB(195,150,255) or Color3.fromRGB(219,233,239)
- objective.Text=p:GetAttribute('InDungeon') and (anomaly and '目的：VHS売場の境界から出口ポータルへ\nRun Lifetime終了までに帰還してください' or '目的：マップ条件を満たし出口ポータルから帰還\n泉は1人で回復 / 観測体の近くは危険') or '中央の端末で探索開始 / E または画面の操作表示\n全員帰還後、右の端末で棚を再配置\n出口はマップ条件の達成後に利用可能'
+ local exitUnlocked=state:GetAttribute('ExitUnlocked')==true
+ objective.Text=p:GetAttribute('InDungeon') and (exitUnlocked and '目的：起動した出口ポータルから帰還\n通常・異常状態とも利用可能' or '目的：レジ奥の出口制御端末を操作\n出口ポータルはまだ停止中') or '中央の端末で探索開始 / E または画面の操作表示\n全員帰還後、右の端末で棚を再配置\n出口は端末操作後に利用可能'
  boss.Visible=(state:GetAttribute('BossUntil') or 0)>workspace:GetServerTimeNow(); boss.Text='BOSS ?   '..(state:GetAttribute('BossName') or '')..'\n━━━━━━━━━━━━━━━━━━━━\n演出のみ / 戦闘は発生しません'
 end)

@@ -130,6 +130,7 @@ function M.Build(seed,preview)
  end
  board(reg,'ReturnsGuide',Vector3.new(0,14,-42),Vector3.new(38,5,.5),'レンタル返却はこちら\n↓ STAFF ONLY / B1')
  localPart(reg,'ReturnBox',Vector3.new(10,6,8),Vector3.new(23,3,-38),C.blue); board(reg,'ReturnLabel',Vector3.new(23,7,-33),Vector3.new(12,3,.5),'返却 BOX')
+ station(reg,'UnlockExit',Vector3.new(0,2,-28),C.yellow,'出口制御端末\n操作すると出口ポータルが起動','出口を起動する')
  for _,x in {-26,26} do localPart(by.STAFF,'Desk',Vector3.new(20,3,9),Vector3.new(x,1.5,-17),C.wall); localPart(by.STAFF,'Lockers',Vector3.new(10,13,6),Vector3.new(x,6.5,25),C.dark) end
  local stock=by.WAREHOUSE
  for _,x in {-42,-25,25,42} do for _,z in {-25,0,25} do localPart(stock,'StockCrate',Vector3.new(10,rng:NextInteger(5,11),14),Vector3.new(x,5,z),Color3.fromRGB(125,111,85)) end end
