@@ -1,7 +1,7 @@
 local Players=game:GetService("Players")
 local RS=game:GetService("ReplicatedStorage")
 local RunService=game:GetService("RunService")
-local Config=require(RS.AnomalyPrototype.Config)
+local Config=require(RS.AnomalyDungeon.Shared.Config.AnomalyConfig)
 local Remotes=RS.AnomalyPrototype.Remotes
 local ShowHUD=Remotes.ShowMiWHUD
 local Feedback=Remotes.DevNullFeedback
@@ -35,7 +35,7 @@ end
 local function gas(coffin,plr)
  eventCount+=1
  local emitter=Instance.new("ParticleEmitter");emitter.Color=ColorSequence.new(Color3.fromRGB(70,210,85),Color3.fromRGB(40,80,30));emitter.Rate=90;emitter.Lifetime=NumberRange.new(1.5,3);emitter.Speed=NumberRange.new(4,9);emitter.SpreadAngle=Vector2.new(180,180);emitter.Parent=coffin
- local s=Instance.new("Sound");s.SoundId="rbxassetid://9118828567";s.Volume=.65;s.Parent=coffin;s:Play()
+ local s=Instance.new("Sound");s.SoundId="rbxasset://sounds/impact_water.mp3";s.Volume=.65;s.Parent=coffin;s:Play()
  local h=plr.Character and plr.Character:FindFirstChildOfClass("Humanoid");if h then h:TakeDamage(Config.PoisonDamage) end;restrict(plr,Config.PoisonRestrictionSeconds)
  task.delay(Config.PoisonRestrictionSeconds,function() if emitter.Parent then emitter.Enabled=false end end)
 end
@@ -61,8 +61,12 @@ local function build(base)
  local opened=false;prompt(lid,"棺を開ける","MiW").Triggered:Connect(function(plr)
   if opened then return end;opened=true;eventCount+=1;coffin:SetAttribute("Active",true);lid.CFrame*=CFrame.new(0,2,-3)*CFrame.Angles(math.rad(-70),0,0)
   miwModel=cat(root,cf*CFrame.new(0,2,0))
-  if math.random()<Config.PoisonGasChance then gas(bottom,plr) end
-  if math.random()<Config.MiWDeathChance then miwModel:SetAttribute("Alive",false);miwModel:SetAttribute("Active",false);miwModel:PivotTo(miwModel:GetPivot()*CFrame.Angles(0,0,math.rad(90)));local h=miwModel:FindFirstChild("Head");if h then label(h,"MiW / DEAD",Color3.fromRGB(255,80,90));local q=h:FindFirstChildOfClass("ProximityPrompt");if q then q.Enabled=false end end end
+  local poisonTriggered=math.random()<Config.PoisonGasChance
+  if poisonTriggered then gas(bottom,plr) end
+  if math.random()<Config.MiWDeathChance then miwModel:SetAttribute("Alive",false);miwModel:SetAttribute("Active",false);miwModel:PivotTo(miwModel:GetPivot()*CFrame.Angles(0,0,math.rad(90)));local h=miwModel:FindFirstChild("Head");if h then label(h,"MiW / DEAD",Color3.fromRGB(255,80,90));local q=h:FindFirstChildOfClass("ProximityPrompt");if q then q.Enabled=false end end end  for _,object in ipairs(coffin:GetDescendants()) do
+   if object:IsA("BasePart") then object.Transparency=1;object.CanCollide=false;object.CanTouch=false;object.CanQuery=false elseif object:IsA("ProximityPrompt") then object.Enabled=false elseif object:IsA("BillboardGui") then object.Enabled=false end
+  end
+  if poisonTriggered then task.delay(Config.PoisonRestrictionSeconds+3,function() if coffin.Parent then coffin:Destroy() end end) else coffin:Destroy() end
  end)
  nullPart=part(root,"dev_null",Vector3.new(8,10,2),base*CFrame.new(18,6,0),Color3.fromRGB(3,3,5),Enum.Material.SmoothPlastic);nullPart:SetAttribute("AnomalyId","DEV_NULL");nullPart:SetAttribute("DisplayName","/dev/null");nullPart:SetAttribute("Active",true);label(nullPart,"/dev/null"..string.char(10).."何もしなければ安全",Color3.fromRGB(180,180,190))
  local light=Instance.new("PointLight");light.Color=Color3.fromRGB(85,30,130);light.Range=16;light.Brightness=2;light.Parent=nullPart

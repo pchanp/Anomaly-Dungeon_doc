@@ -1,6 +1,6 @@
 local Players=game:GetService("Players")
 local Workspace=game:GetService("Workspace")
-local Manager=require(script.Parent.AnomalyPrototype.DungeonManager)
+local Manager=require(script.Parent.RunService)
 local debounce={}
 local function bind(root)
  local rooms=root:WaitForChild("Rooms",10)

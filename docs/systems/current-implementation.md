@@ -73,16 +73,16 @@
 
 ## 確認した主な実装場所
 
-- `ServerScriptService/AnomalyPrototype/MapGenerator`
-- `ServerScriptService/AnomalyPrototype/DungeonManager`
-- `ServerScriptService/AnomalyPrototype/SkillServer`
-- `ServerScriptService/AnomalyPrototypeService`
-- `ServerScriptService/AnomalySystem/*`
-- `StarterPlayer/StarterPlayerScripts/*`
-- `ReplicatedStorage/AnomalyPrototype`
-- `ReplicatedStorage/GiantAnomalyShared`
+- Git: `ServerScriptService/AnomalyDungeonServer/Maps/Generators/MapGenerator`
+- Git: `ServerScriptService/AnomalyDungeonServer/Services/RunService`
+- Git: `ServerScriptService/AnomalyDungeonServer/Services/SkillService`
+- Git: `ServerScriptService/AnomalyDungeonServer/Anomalies/*`
+- Git: `StarterPlayer/StarterPlayerScripts/AnomalyDungeonClient/*`
+- Git: `ReplicatedStorage/AnomalyDungeon/Shared/*`
 - `ServerStorage/AnomalyAssets`
 - `ServerStorage/GiantAnomalyAssets`
+
+上記のGit構成は2026-09-27に整理した。Studio確認時のInstance構成は本資料冒頭の確認日の状態であり、自動同期されていない。
 
 ## 関連資料
 

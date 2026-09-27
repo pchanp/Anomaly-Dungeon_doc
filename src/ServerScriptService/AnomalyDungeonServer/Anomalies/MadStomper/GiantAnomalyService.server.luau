@@ -1,13 +1,12 @@
 local Players=game:GetService("Players")
 local ReplicatedStorage=game:GetService("ReplicatedStorage")
-local ServerScriptService=game:GetService("ServerScriptService")
 local Debris=game:GetService("Debris")
 local shared=ReplicatedStorage:WaitForChild("GiantAnomalyShared")
-local Config=require(shared:WaitForChild("GiantConfig"))
+local Config=require(ReplicatedStorage:WaitForChild("AnomalyDungeon"):WaitForChild("Shared"):WaitForChild("Config"):WaitForChild("GiantConfig"))
 local remotes=shared:WaitForChild("Remotes")
 local Stomp=remotes:WaitForChild("GiantStomp")
 local UseHeal=remotes:WaitForChild("UseGiantHeal")
-local Controller=require(ServerScriptService:WaitForChild("AnomalySystem"):WaitForChild("GiantAnomalyController"))
+local Controller=require(script.Parent:WaitForChild("GiantAnomalyController"))
 local old=workspace:FindFirstChild("Anomalies") and workspace.Anomalies:FindFirstChild("GiantAnomaly")
 if old then old:Destroy() end
 local anomalies=workspace:FindFirstChild("Anomalies") or Instance.new("Folder");anomalies.Name="Anomalies";anomalies.Parent=workspace
@@ -15,20 +14,14 @@ local giant=Instance.new("Model");giant.Name="GiantAnomaly";giant.Parent=anomali
 local visual=Instance.new("Model");visual.Name="Model";visual.Parent=giant
 local configFolder=Instance.new("Folder");configFolder.Name="Config";configFolder.Parent=giant
 for k,v in pairs(Config) do if type(v)=="number" or type(v)=="string" or type(v)=="boolean" then configFolder:SetAttribute(k,v) end end
-local debugFloor=workspace:FindFirstChild("DebugFloor")
-local floor=debugFloor and debugFloor:FindFirstChild("Floor")
-local origin=floor and (floor.Position+Vector3.new(0,26,90)) or Vector3.new(0,30,0)
+local debugFloor=workspace:FindFirstChild("DebugFloor") or workspace:WaitForChild("DebugFloor",10)
+local floor=debugFloor and (debugFloor:FindFirstChild("Floor") or debugFloor:WaitForChild("Floor",10))
+local origin=floor and (floor.Position+Vector3.new(0,13,70)) or Vector3.new(0,15,0)
 local function make(name,size,offset,shape)
- local p=Instance.new("Part");p.Name=name;p.Size=size;p.Anchored=true;p.CanCollide=false;p.Material=Enum.Material.Slate;p.Color=Color3.fromRGB(62,48,42);p.CFrame=CFrame.new(origin+offset);if shape then p.Shape=shape end;p.Parent=visual;return p
+ local p=Instance.new("Part");p.Name=name;p.Size=size*.5;p.Anchored=true;p.CanCollide=false;p.Material=Enum.Material.Slate;p.Color=Color3.fromRGB(62,48,42);p.CFrame=CFrame.new(origin+offset*.5);if shape then p.Shape=shape end;p.Parent=visual;return p
 end
 local root=make("Root",Vector3.new(4,4,4),Vector3.new(0,-23,0));root.Transparency=1;giant.PrimaryPart=root
-make("Torso",Vector3.new(18,30,10),Vector3.new(0,0,0))
-make("Head",Vector3.new(12,12,12),Vector3.new(0,21,0),Enum.PartType.Ball)
-make("LeftArm",Vector3.new(7,30,7),Vector3.new(-13,-1,0))
-make("RightArm",Vector3.new(7,30,7),Vector3.new(13,-1,0))
-make("LeftLeg",Vector3.new(8,25,8),Vector3.new(-5,-27,0))
-make("RightLeg",Vector3.new(8,25,8),Vector3.new(5,-27,0))
-local light=Instance.new("PointLight");light.Color=Color3.fromRGB(150,55,45);light.Range=70;light.Brightness=2;light.Parent=visual.Head
+local light=Instance.new("PointLight");light.Color=Color3.fromRGB(150,55,45);light.Range=70;light.Brightness=2;light.Parent=root
 Controller.Start(giant)
 local fields=workspace:FindFirstChild("HealingFields") or Instance.new("Folder");fields.Name="HealingFields";fields.Parent=workspace
 local cooldowns={}
@@ -61,6 +54,9 @@ local function makeField(plr)
 end
 UseHeal.OnServerEvent:Connect(makeField)
 local stompClock=0
+local roamTarget=root.Position
+local roamNext=0
+local random=Random.new()
 while giant.Parent do
  local dt=task.wait(Config.UpdateInterval);local now=workspace:GetServerTimeNow();local nearest=math.huge
  for _,plr in ipairs(Players:GetPlayers()) do local hrp=plr.Character and plr.Character:FindFirstChild("HumanoidRootPart");if hrp then nearest=math.min(nearest,(hrp.Position-root.Position).Magnitude) end end
@@ -70,6 +66,18 @@ while giant.Parent do
  if state~="CALMED" and state~="CALMING" then
   local wanted=nearest<=Config.ActiveRadius and "ACTIVE" or nearest<=Config.ApproachRadius and "APPROACHING" or "IDLE"
   if wanted~=state then Controller.SetState(giant,wanted);state=wanted end
+ end
+ if state~="CALMING" and state~="CALMED" and floor then
+  local flatDelta=Vector3.new(roamTarget.X-root.Position.X,0,roamTarget.Z-root.Position.Z)
+  if now>=roamNext or flatDelta.Magnitude<2 then
+   local margin=18
+   local halfX=math.max(5,floor.Size.X*.5-margin)
+   local halfZ=math.max(5,floor.Size.Z*.5-margin)
+   roamTarget=Vector3.new(floor.Position.X+random:NextNumber(-halfX,halfX),root.Position.Y,floor.Position.Z+random:NextNumber(-halfZ,halfZ))
+   roamNext=now+random:NextNumber(Config.RoamPauseMin,Config.RoamPauseMax)
+   flatDelta=Vector3.new(roamTarget.X-root.Position.X,0,roamTarget.Z-root.Position.Z)
+  end
+  if flatDelta.Magnitude>.05 then giant:PivotTo(giant:GetPivot()+flatDelta.Unit*math.min(Config.RoamSpeed*dt,flatDelta.Magnitude)) end
  end
  if state=="ACTIVE" then
   stompClock+=dt

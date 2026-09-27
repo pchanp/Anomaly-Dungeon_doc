@@ -3,6 +3,12 @@
 **Status: Designed（構成方針）**
 **Studio確認日: 2026-09-26**
 
+## Gitソースの移行状況
+
+2026-09-27に、Git管理下の`src/`を本資料の責務分離へ合わせて整理した。Server、Client、Shared、Anomalies、Maps、Debugの配置を反映し、Rollback／Backupはbaseline commitで参照できるため削除した。
+
+この変更はGit上のソース構成に対するもの。Rojo等の自動同期は導入しておらず、Roblox Studio上のInstance構成への反映とPlayテストは別途必要である。Remote、Asset、Workspaceの実体名は既存挙動を維持するため変更していない。
+
 この資料は、現在のStudio構成を整理し、設計資料にある案を将来どこへ実装するか判断できるようにする。以下の「推奨構成」は段階的な移行先であり、現プレースを一度に移動する指示ではない。
 
 ## 現在の構成概要
@@ -179,7 +185,7 @@ Workspace
 3. 既存プロトタイプへAdapterを置き、新構成へ1機能ずつ移す。
 4. 移行単位ごとにPlay Soloと複数Clientで確認する。
 5. 移行済み機能だけを `Implemented` として記録する。
-6. `src/`との同期方式はRojo等の採用判断後に定める。現時点では自動同期を仮定しない。
+6. `src/`とStudioは自動同期されない。Git側の配置変更をStudioへ反映する場合は、移行単位ごとに手動で配置とScript種別を確認する。
 
 ## 関連資料
 

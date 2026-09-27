@@ -1,6 +1,6 @@
 local Players=game:GetService('Players')
 local RS=game:GetService('ReplicatedStorage')
-local Map=require(script.Parent.MapGenerator)
+local Map=require(script.Parent.Parent.Maps.Generators.MapGenerator)
 local M={}; local world; local anomalyOwner; local collected={}; local last={}; local connections={}
 local state=RS:WaitForChild('AnomalyState'); local notice=RS:WaitForChild('AnomalyNotice')
 local function tell(p,t) notice:FireClient(p,t) end
@@ -9,7 +9,7 @@ local function teleport(p,pos) if p.Character then p.Character:PivotTo(CFrame.ne
 function M.SetSAN(p,value)
  value=math.clamp(value,0,100)
  if value==0 and not p:GetAttribute('IsAnomaly') then
-  if not anomalyOwner then anomalyOwner=p; p:SetAttribute('IsAnomaly',true); tell(p,'世界があなたを認識しなくなった。観測室の境界へ。') else value=1 end
+  if not anomalyOwner then anomalyOwner=p; p:SetAttribute('IsAnomaly',true); tell(p,'世界があなたを認識しなくなった。VHS売場の境界へ。') else value=1 end
  end
  p:SetAttribute('SAN',value)
 end
@@ -23,7 +23,7 @@ function M.Enter(p)
 end
 function M.Extract(p,abnormal)
  if not p:GetAttribute('InDungeon') then return false end
- if p:GetAttribute('IsAnomaly')~=abnormal then tell(p,abnormal and 'ここは正常な存在の出口ではない。' or 'この出口はあなたを認識できない。観測室の境界へ。'); return false end
+ if p:GetAttribute('IsAnomaly')~=abnormal then tell(p,abnormal and 'ここは正常な存在の出口ではない。' or 'この出口はあなたを認識できない。VHS売場の境界へ。'); return false end
  local n=p:GetAttribute('Relics') or 0; p:SetAttribute('Banked',(p:GetAttribute('Banked') or 0)+n)
  M.Reset(p); teleport(p,world.Lobby); local _,h=body(p); if h then h.Health=h.MaxHealth end; tell(p,'帰還成功 / 記録片 '..n..' 個を持ち帰りました'); return true
 end
@@ -62,9 +62,9 @@ function M.Tick(dt)
    local delta=r.Position-world.Pool.Position
    if math.abs(delta.X)<=9 and math.abs(delta.Z)<=9 and math.abs(delta.Y)<6 then table.insert(occupants,p) end
    if (r.Position-world.Observer.Position).Magnitude<17 then M.SetSAN(p,(p:GetAttribute('SAN') or 100)-8*dt) end
-   local roomName='CORRIDOR'; for _,room in world.Rooms do local d=r.Position-room.Center; if math.abs(d.X)<24 and math.abs(d.Z)<24 then roomName=room.Model.Name end end
-   if r.Position.X>30 then roomName='OUTSIDE' end; p:SetAttribute('Room',roomName)
-   if r.Position.Y<980 then h.Health=0 end
+   local roomName='CORRIDOR'; for _,room in world.Rooms do local d=r.Position-room.Center; if math.abs(d.X)<room.Width/2 and math.abs(d.Z)<room.Depth/2 and math.abs(d.Y)<room.Height then roomName=room.DisplayName end end
+   p:SetAttribute('Room',roomName)
+   if r.Position.Y<world.KillY then h.Health=0 end
   end
  end
  world.Pool:SetAttribute('Occupants',#occupants); world.Pool.Color=#occupants>=2 and Color3.fromRGB(170,225,65) or Color3.fromRGB(78,221,217)
