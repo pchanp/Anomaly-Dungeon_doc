@@ -3,6 +3,8 @@ local Players=game:GetService('Players')
 local RS=game:GetService('ReplicatedStorage')
 local notice=RS:WaitForChild('AnomalyNotice')
 local state=RS:WaitForChild('AnomalyState')
+local Exposure=require(script.Parent.Parent.Services.ExposureService)
+local RunConfig=require(RS.AnomalyDungeon.Shared.Config.RunConfig)
 
 local function tell(p,t) notice:FireClient(p,t) end
 local function body(p) local c=p.Character; return c and c:FindFirstChild('HumanoidRootPart'),c and c:FindFirstChildOfClass('Humanoid') end
@@ -65,7 +67,7 @@ sign(pool,'泉 / 1人で回復・2人以上で毒',C.cyan)
 
 -- === 3. Observer (北) ===
 local observer=part('Observer',Vector3.new(5,6,3),ORIGIN+Vector3.new(0,3,-80),C.violet,root,Enum.Material.Neon)
-sign(observer,'観測体 / 近くでSAN低下 (17st)',C.violet)
+sign(observer,'観測体 / 近くにいるとExposure増加 (17st)',C.violet)
 
 -- === 4. Relics (南) ===
 local relics={}
@@ -77,32 +79,24 @@ end
 
 -- === 5. AnomalyGate (西) ===
 local gate=part('AnomalyGate',Vector3.new(1,12,14),ORIGIN+Vector3.new(-100,6,0),C.violet,root)
-sign(gate,'異常通路 / SAN 0 で越えられる',C.violet)
+sign(gate,'異常通路 / 変異状態で越えられる',C.violet)
 prompts.Secret=prompt(gate,'境界を越える','裏側')
 local secretArea=part('SecretFloor',Vector3.new(40,2,40),ORIGIN+Vector3.new(-140,0,0),C.dark,root,Enum.Material.Concrete)
 sign(secretArea,'異常領域 / AnomalyExitで帰還',C.violet)
 station('AnomalyExit',Vector3.new(-140,2,-12),C.violet,'異常出口','外側から帰還')
 
--- === 6. Debug tools (SAN操作) ===
-station('SAN_Zero',Vector3.new(-40,2,-40),C.red,'SAN を 0 にする\n(異常化テスト)','SANを0に')
-station('SAN_Full',Vector3.new(40,2,-40),C.green,'SAN を 100 にする\n(回復テスト)','SANを100に')
-station('Reset',Vector3.new(0,2,-40),C.blue,'プレイヤー状態をリセット\nSAN/Relic/Anomaly','リセット')
+-- === 6. Debug tools (Exposure操作) ===
+station('Exposure_Max',Vector3.new(-40,2,-40),C.red,'Exposure を閾値にする / 異常化テスト','Exposure最大')
+station('Exposure_Zero',Vector3.new(40,2,-40),C.green,'Exposure を 0 にする / リセットテスト','Exposureを0に')
+station('Reset',Vector3.new(0,2,-40),C.blue,'プレイヤー状態をリセット\nExposure/Relic/Anomaly','リセット')
 
 -- === state management ===
-local anomalyOwner
 local collected={}
 local last={}
 
-local function SetSAN(p,value)
- value=math.clamp(value,0,100)
- if value==0 and not p:GetAttribute('IsAnomaly') then
-  if not anomalyOwner then anomalyOwner=p; p:SetAttribute('IsAnomaly',true); tell(p,'世界があなたを認識しなくなった。') else value=1 end
- end
- p:SetAttribute('SAN',value)
-end
 local function Reset(p)
- if anomalyOwner==p then anomalyOwner=nil end
- p:SetAttribute('IsAnomaly',false); p:SetAttribute('SAN',100); p:SetAttribute('InDungeon',false); p:SetAttribute('Relics',0); p:SetAttribute('Room','DEBUG'); collected[p]={}
+ Exposure.Reset(p)
+ p:SetAttribute('InDungeon',false); p:SetAttribute('Relics',0); p:SetAttribute('Room','DEBUG'); collected[p]={}
 end
 local function teleport(p,pos) if p.Character then p.Character:PivotTo(CFrame.new(pos)) end end
 
@@ -128,21 +122,20 @@ bind(prompts.Extract,function(p)
 end)
 -- Secret gate
 bind(prompts.Secret,function(p)
- if p:GetAttribute('IsAnomaly') then teleport(p,ORIGIN+Vector3.new(-140,4,0)); tell(p,'異常領域へ移動') else tell(p,'ただの壁だ。SAN が低ければ違って見えるかもしれない。') end
+ if Exposure.IsTransformed(p) then teleport(p,ORIGIN+Vector3.new(-140,4,0)); tell(p,'異常領域へ移動') else tell(p,'ただの壁だ。今のあなたには何も見えない。') end
 end)
 -- AnomalyExit
 bind(prompts.AnomalyExit,function(p)
- if not p:GetAttribute('IsAnomaly') then tell(p,'この出口はあなたを認識できない。'); return end
+ if not Exposure.IsTransformed(p) then tell(p,'この出口はあなたを認識できない。'); return end
  Reset(p); teleport(p,ORIGIN+Vector3.new(0,4,0)); tell(p,'異常出口から帰還')
 end)
--- SAN Zero
-bind(prompts.SAN_Zero,function(p)
- SetSAN(p,0); tell(p,'デバッグ: SAN = 0')
+-- Exposure threshold
+bind(prompts.Exposure_Max,function(p)
+ Exposure.Set(p,RunConfig.TransformationThreshold); tell(p,'デバッグ: Exposure = threshold')
 end)
--- SAN Full
-bind(prompts.SAN_Full,function(p)
- if anomalyOwner==p then anomalyOwner=nil end
- p:SetAttribute('IsAnomaly',false); p:SetAttribute('SAN',100); tell(p,'デバッグ: SAN = 100')
+-- Exposure zero
+bind(prompts.Exposure_Zero,function(p)
+ Exposure.Reset(p); tell(p,'デバッグ: Exposure = 0')
 end)
 -- Reset
 bind(prompts.Reset,function(p)
@@ -172,7 +165,7 @@ task.spawn(function()
     if math.abs(dp.X)<=9 and math.abs(dp.Z)<=9 and math.abs(dp.Y)<6 then table.insert(occupants,p) end
     -- observer
     if (r.Position-observer.Position).Magnitude<17 then
-     SetSAN(p,(p:GetAttribute('SAN') or 100)-8*dt)
+     Exposure.Add(p,RunConfig.ObserverExposurePerSecond*dt)
     end
     -- room label
     if (r.Position-ORIGIN).Magnitude<FLOOR_SIZE/2 then
@@ -200,6 +193,6 @@ local function onPlayer(p)
 end
 Players.PlayerAdded:Connect(onPlayer)
 for _,p in Players:GetPlayers() do onPlayer(p) end
-Players.PlayerRemoving:Connect(function(p) if anomalyOwner==p then anomalyOwner=nil end; collected[p]=nil; last[p]=nil end)
+Players.PlayerRemoving:Connect(function(p) Exposure.Release(p); collected[p]=nil; last[p]=nil end)
 
 print('[DEBUG FLOOR] ready at '..tostring(ORIGIN))

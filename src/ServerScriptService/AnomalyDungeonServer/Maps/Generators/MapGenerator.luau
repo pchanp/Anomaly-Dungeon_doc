@@ -120,8 +120,8 @@ function M.Build(seed,preview)
  station(hall,'Boss',Vector3.new(37,2,29),C.yellow,'会員ランキング端末\n今月の主役','ランキングに載る')
  local pool=part('HealingPool',Vector3.new(18,.3,18),by.CISTERN.Center+Vector3.new(0,.2,25),C.cyan,by.CISTERN.Folders.GimmickPoints,Enum.Material.Neon); pool.CanCollide=false; sign(pool,'漏水 / 1人で回復・2人以上で毒',C.cyan); result.Pool=pool
  local obs=by.OBSERVATORY
- local ob=part('Observer',Vector3.new(5,6,3),obs.Center+Vector3.new(0,3,-27),C.violet,obs.Folders.AnomalyPoints,Enum.Material.Neon); sign(ob,'返却されていない映像 / 近くでSAN低下',C.violet); result.Observer=ob
- local gate=part('AnomalyGate',Vector3.new(1,12,14),obs.Center+Vector3.new(-58,6,0),C.violet,obs.Folders.SpecialPoints); sign(gate,'在庫にない通路 / SAN 0',C.violet); result.Prompts.Secret=prompt(gate,'境界を越える','棚の裏側')
+ local ob=part('Observer',Vector3.new(5,6,3),obs.Center+Vector3.new(0,3,-27),C.violet,obs.Folders.AnomalyPoints,Enum.Material.Neon); sign(ob,'返却されていない映像 / 近くにいると危険',C.violet); result.Observer=ob
+ local gate=part('AnomalyGate',Vector3.new(1,12,14),obs.Center+Vector3.new(-58,6,0),C.violet,obs.Folders.SpecialPoints); sign(gate,'在庫にない通路 / 異常状態',C.violet); result.Prompts.Secret=prompt(gate,'境界を越える','棚の裏側')
  result.SecretSpawn=by.OUTSIDE.Center+Vector3.new(0,4,12); station(by.OUTSIDE,'AnomalyExit',Vector3.new(0,2,-8),C.violet,'未登録の返却先','外側から帰還')
  local reg=by.REGISTER
  for _,x in {-40,40} do

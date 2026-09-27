@@ -1,8 +1,10 @@
 local Players=game:GetService("Players")
 local ReplicatedStorage=game:GetService("ReplicatedStorage")
 local Debris=game:GetService("Debris")
+local ServerScriptService=game:GetService("ServerScriptService")
 local shared=ReplicatedStorage:WaitForChild("GiantAnomalyShared")
 local Config=require(ReplicatedStorage:WaitForChild("AnomalyDungeon"):WaitForChild("Shared"):WaitForChild("Config"):WaitForChild("GiantConfig"))
+local Exposure=require(ServerScriptService.AnomalyDungeonServer.Services.ExposureService)
 local remotes=shared:WaitForChild("Remotes")
 local Stomp=remotes:WaitForChild("GiantStomp")
 local UseHeal=remotes:WaitForChild("UseGiantHeal")
@@ -25,8 +27,8 @@ local light=Instance.new("PointLight");light.Color=Color3.fromRGB(150,55,45);lig
 Controller.Start(giant)
 local fields=workspace:FindFirstChild("HealingFields") or Instance.new("Folder");fields.Name="HealingFields";fields.Parent=workspace
 local cooldowns={}
-local function setLevel(plr,value) plr:SetAttribute("AnomalyLevel",math.clamp(value,0,Config.MaxAnomalyLevel)) end
-local function setupPlayer(plr) if plr:GetAttribute("AnomalyLevel")==nil then setLevel(plr,0) end end
+local function setLevel(plr,value) Exposure.Set(plr,value) end
+local function setupPlayer(plr) Exposure.Setup(plr) end
 Players.PlayerAdded:Connect(setupPlayer);for _,p in ipairs(Players:GetPlayers()) do setupPlayer(p) end
 Players.PlayerRemoving:Connect(function(p) cooldowns[p]=nil end)
 local function makeField(plr)
@@ -42,8 +44,8 @@ local function makeField(plr)
    for _,target in ipairs(Players:GetPlayers()) do
     local targetRoot=target.Character and target.Character:FindFirstChild("HumanoidRootPart")
     if targetRoot and (targetRoot.Position-field.Position).Magnitude<=Config.HealRadius then
-     local level=target:GetAttribute("AnomalyLevel") or 0;setLevel(target,level-Config.AnomalyHealPerSecond*dt)
-     if Controller.GetState(giant)=="ACTIVE" and (target:GetAttribute("AnomalyLevel") or 0)<=Config.CalmThreshold then
+     local level=Exposure.Get(target);setLevel(target,level-Config.AnomalyHealPerSecond*dt)
+     if Controller.GetState(giant)=="ACTIVE" and Exposure.Get(target)<=Config.CalmThreshold then
       local calm=math.min(Config.CalmRequired,(giant:GetAttribute("CalmMeter") or 0)+Config.CalmPerSecond*dt);giant:SetAttribute("CalmMeter",calm)
       if calm>=Config.CalmRequired then Controller.SetCalmed(giant,Config.CalmedDuration) end
      end
@@ -82,6 +84,6 @@ while giant.Parent do
  if state=="ACTIVE" then
   stompClock+=dt
   if stompClock>=Config.StompInterval then stompClock=0;Stomp:FireAllClients(root.Position,Config.StompRadius,Config.CameraShakeMagnitude) end
-  for _,plr in ipairs(Players:GetPlayers()) do local hrp=plr.Character and plr.Character:FindFirstChild("HumanoidRootPart");if hrp and (hrp.Position-root.Position).Magnitude<=Config.AnomalyRadius then setLevel(plr,(plr:GetAttribute("AnomalyLevel") or 0)+Config.AnomalyIncreasePerSecond*dt) end end
+  for _,plr in ipairs(Players:GetPlayers()) do local hrp=plr.Character and plr.Character:FindFirstChild("HumanoidRootPart");if hrp and (hrp.Position-root.Position).Magnitude<=Config.AnomalyRadius then setLevel(plr,Exposure.Get(plr)+Config.AnomalyIncreasePerSecond*dt) end end
  else stompClock=0 end
 end

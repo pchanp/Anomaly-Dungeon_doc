@@ -1,21 +1,16 @@
 local Players=game:GetService('Players')
 local RS=game:GetService('ReplicatedStorage')
 local Map=require(script.Parent.Parent.Maps.Generators.MapGenerator)
-local M={}; local world; local anomalyOwner; local collected={}; local last={}; local connections={}
+local Exposure=require(script.Parent.ExposureService)
+local RunConfig=require(game:GetService('ReplicatedStorage').AnomalyDungeon.Shared.Config.RunConfig)
+local M={}; local world; local collected={}; local last={}; local connections={}
 local state=RS:WaitForChild('AnomalyState'); local notice=RS:WaitForChild('AnomalyNotice')
 local function tell(p,t) notice:FireClient(p,t) end
 local function body(p) local c=p.Character; return c and c:FindFirstChild('HumanoidRootPart'),c and c:FindFirstChildOfClass('Humanoid') end
 local function teleport(p,pos) if p.Character then p.Character:PivotTo(CFrame.new(pos)) end end
-function M.SetSAN(p,value)
- value=math.clamp(value,0,100)
- if value==0 and not p:GetAttribute('IsAnomaly') then
-  if not anomalyOwner then anomalyOwner=p; p:SetAttribute('IsAnomaly',true); tell(p,'世界があなたを認識しなくなった。VHS売場の境界へ。') else value=1 end
- end
- p:SetAttribute('SAN',value)
-end
+function M.SetExposure(p,value) return Exposure.Set(p,value) end
 function M.Reset(p)
- if anomalyOwner==p then anomalyOwner=nil end
- p:SetAttribute('IsAnomaly',false); p:SetAttribute('SAN',100); p:SetAttribute('InDungeon',false); p:SetAttribute('Relics',0); p:SetAttribute('Room','LOBBY'); collected[p]={}
+ Exposure.Reset(p); p:SetAttribute('InDungeon',false); p:SetAttribute('Relics',0); p:SetAttribute('Room','LOBBY'); collected[p]={}
 end
 function M.Enter(p)
  local _,h=body(p); if not h or h.Health<=0 or p:GetAttribute('InDungeon') then return end
@@ -23,7 +18,7 @@ function M.Enter(p)
 end
 function M.Extract(p,abnormal)
  if not p:GetAttribute('InDungeon') then return false end
- if p:GetAttribute('IsAnomaly')~=abnormal then tell(p,abnormal and 'ここは正常な存在の出口ではない。' or 'この出口はあなたを認識できない。VHS売場の境界へ。'); return false end
+ if Exposure.IsTransformed(p)~=abnormal then tell(p,abnormal and 'ここは正常な存在の出口ではない。' or 'この出口はあなたを認識できない。VHS売場の境界へ。'); return false end
  local n=p:GetAttribute('Relics') or 0; p:SetAttribute('Banked',(p:GetAttribute('Banked') or 0)+n)
  M.Reset(p); teleport(p,world.Lobby); local _,h=body(p); if h then h.Health=h.MaxHealth end; tell(p,'帰還成功 / 記録片 '..n..' 個を持ち帰りました'); return true
 end
@@ -44,7 +39,7 @@ function M.Build(seed)
  for _,name in {'Return','Extract'} do bind(world.Prompts[name],function(p) M.Extract(p,false) end) end
  bind(world.Prompts.AnomalyExit,function(p) M.Extract(p,true) end)
  bind(world.Prompts.Secret,function(p)
-  if p:GetAttribute('InDungeon') and p:GetAttribute('IsAnomaly') then teleport(p,world.SecretSpawn) else tell(p,'ただの壁だ。SAN が低ければ違って見えるかもしれない。') end
+  if p:GetAttribute('InDungeon') and Exposure.IsTransformed(p) then teleport(p,world.SecretSpawn) else tell(p,'ただの壁だ。今のあなたには何も見えない。') end
  end)
  bind(world.Prompts.Boss,function(p) if p:GetAttribute('InDungeon') then state:SetAttribute('BossName',p.DisplayName); state:SetAttribute('BossUntil',workspace:GetServerTimeNow()+8) end end)
  for _,item in world.Relics do bind(item.Prompt,function(p)
@@ -61,7 +56,7 @@ function M.Tick(dt)
   if r and h and h.Health>0 and p:GetAttribute('InDungeon') then
    local delta=r.Position-world.Pool.Position
    if math.abs(delta.X)<=9 and math.abs(delta.Z)<=9 and math.abs(delta.Y)<6 then table.insert(occupants,p) end
-   if (r.Position-world.Observer.Position).Magnitude<17 then M.SetSAN(p,(p:GetAttribute('SAN') or 100)-8*dt) end
+   if (r.Position-world.Observer.Position).Magnitude<17 then Exposure.Add(p,RunConfig.ObserverExposurePerSecond*dt) end
    local roomName='CORRIDOR'; for _,room in world.Rooms do local d=r.Position-room.Center; if math.abs(d.X)<room.Width/2 and math.abs(d.Z)<room.Depth/2 and math.abs(d.Y)<room.Height then roomName=room.DisplayName end end
    p:SetAttribute('Room',roomName)
    if r.Position.Y<world.KillY then h.Health=0 end
@@ -83,7 +78,7 @@ function M.Start()
   p.CharacterAdded:Connect(character); if p.Character then task.spawn(character,p.Character) end
  end
  Players.PlayerAdded:Connect(player); for _,p in Players:GetPlayers() do player(p) end
- Players.PlayerRemoving:Connect(function(p) if anomalyOwner==p then anomalyOwner=nil end; collected[p]=nil; last[p]=nil end)
+ Players.PlayerRemoving:Connect(function(p) Exposure.Release(p); collected[p]=nil; last[p]=nil end)
  task.spawn(function() while true do task.wait(.5); M.Tick(.5) end end)
  print('[ANOMALY] Prototype ready / seed 92026')
 end

@@ -15,8 +15,8 @@ local function setState(giant,state)
 end
 function Controller.Start(giant)
  records[giant]={State="IDLE",CalmedUntil=0}
- giant:SetAttribute("AnomalyId","GIANT")
- giant:SetAttribute("DisplayName","Giant Anomaly")
+	giant:SetAttribute("AnomalyId","MAD_STOMPER")
+	giant:SetAttribute("DisplayName","Mad Stomper")
  giant:SetAttribute("Active",true)
  giant:SetAttribute("CalmMeter",0)
  setState(giant,"IDLE")

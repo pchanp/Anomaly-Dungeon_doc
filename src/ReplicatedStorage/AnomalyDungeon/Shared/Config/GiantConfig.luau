@@ -7,7 +7,6 @@ return {
  CameraShakeMagnitude=2.0,
  AnomalyRadius=100,
  AnomalyIncreasePerSecond=5,
- MaxAnomalyLevel=100,
  HealKey="F",
  HealRadius=12,
  HealDuration=8,
