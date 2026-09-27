@@ -69,34 +69,25 @@ sign(pool,'泉 / 1人で回復・2人以上で毒',C.cyan)
 local observer=part('Observer',Vector3.new(5,6,3),ORIGIN+Vector3.new(0,3,-80),C.violet,root,Enum.Material.Neon)
 sign(observer,'観測体 / 近くにいるとExposure増加 (17st)',C.violet)
 
--- === 4. Relics (南) ===
-local relics={}
-for i,x in ipairs({-20,0,20}) do
- local b=part('Relic_'..i,Vector3.new(2,2,2),ORIGIN+Vector3.new(x,2,80),C.yellow,root,Enum.Material.Neon)
- sign(b,'記録片 #'..i..' / 回収')
- relics[i]={Prompt=prompt(b,'回収','記録片'),Id='DEBUG_'..i,Part=b}
-end
-
--- === 5. AnomalyGate (西) ===
+-- === 4. AnomalyGate (西) ===
 local gate=part('AnomalyGate',Vector3.new(1,12,14),ORIGIN+Vector3.new(-100,6,0),C.violet,root)
 sign(gate,'異常通路 / 変異状態で越えられる',C.violet)
 prompts.Secret=prompt(gate,'境界を越える','裏側')
 local secretArea=part('SecretFloor',Vector3.new(40,2,40),ORIGIN+Vector3.new(-140,0,0),C.dark,root,Enum.Material.Concrete)
-sign(secretArea,'異常領域 / AnomalyExitで帰還',C.violet)
-station('AnomalyExit',Vector3.new(-140,2,-12),C.violet,'異常出口','外側から帰還')
+sign(secretArea,'異常領域 / 出口ポータルから帰還',C.violet)
+station('AnomalyExit',Vector3.new(-140,2,-12),C.violet,'出口ポータル','帰還する')
 
 -- === 6. Debug tools (Exposure操作) ===
 station('Exposure_Max',Vector3.new(-40,2,-40),C.red,'Exposure を閾値にする / 異常化テスト','Exposure最大')
 station('Exposure_Zero',Vector3.new(40,2,-40),C.green,'Exposure を 0 にする / リセットテスト','Exposureを0に')
-station('Reset',Vector3.new(0,2,-40),C.blue,'プレイヤー状態をリセット\nExposure/Relic/Anomaly','リセット')
+station('Reset',Vector3.new(0,2,-40),C.blue,'プレイヤー状態をリセット\nExposure/Anomaly/Lifetime','リセット')
 
 -- === state management ===
-local collected={}
 local last={}
 
-local function Reset(p)
+local function Reset(p,nextState)
  Exposure.Reset(p)
- p:SetAttribute('InDungeon',false); p:SetAttribute('Relics',0); p:SetAttribute('Room','DEBUG'); collected[p]={}
+ p:SetAttribute('InDungeon',false); p:SetAttribute('Room','DEBUG'); p:SetAttribute('PlayerRunState',nextState or RunConfig.PlayerRunLobby)
 end
 local function teleport(p,pos) if p.Character then p.Character:PivotTo(CFrame.new(pos)) end end
 
@@ -111,14 +102,13 @@ end
 -- Enter
 bind(prompts.Enter,function(p)
  if p:GetAttribute('InDungeon') then tell(p,'既にダンジョン状態です'); return end
- Reset(p); p:SetAttribute('InDungeon',true); local _,h=body(p); if h then h.Health=h.MaxHealth end
+ Reset(p,RunConfig.PlayerRunExploring); p:SetAttribute('InDungeon',true); local _,h=body(p); if h then h.Health=h.MaxHealth end
  tell(p,'デバッグ: ダンジョン状態を付与しました')
 end)
 -- Extract
 bind(prompts.Extract,function(p)
  if not p:GetAttribute('InDungeon') then tell(p,'ダンジョン状態ではありません'); return end
- local n=p:GetAttribute('Relics') or 0
- Reset(p); tell(p,'デバッグ: 脱出 / 記録片 '..n..' 個')
+ Reset(p,RunConfig.PlayerRunReturned); tell(p,'デバッグ: 帰還')
 end)
 -- Secret gate
 bind(prompts.Secret,function(p)
@@ -126,8 +116,7 @@ bind(prompts.Secret,function(p)
 end)
 -- AnomalyExit
 bind(prompts.AnomalyExit,function(p)
- if not Exposure.IsTransformed(p) then tell(p,'この出口はあなたを認識できない。'); return end
- Reset(p); teleport(p,ORIGIN+Vector3.new(0,4,0)); tell(p,'異常出口から帰還')
+ Reset(p,RunConfig.PlayerRunReturned); teleport(p,ORIGIN+Vector3.new(0,4,0)); tell(p,'出口ポータルから帰還')
 end)
 -- Exposure threshold
 bind(prompts.Exposure_Max,function(p)
@@ -141,15 +130,6 @@ end)
 bind(prompts.Reset,function(p)
  Reset(p); tell(p,'デバッグ: 状態リセット完了')
 end)
--- Relics
-for _,item in relics do
- bind(item.Prompt,function(p)
-  if not p:GetAttribute('InDungeon') then tell(p,'ダンジョン状態が必要です (Enterで開始)'); return end
-  collected[p]=collected[p] or {}; if collected[p][item.Id] then tell(p,'回収済みです'); return end
-  collected[p][item.Id]=true; p:SetAttribute('Relics',(p:GetAttribute('Relics') or 0)+1); tell(p,'記録片を回収')
- end)
-end
-
 -- === tick loop (pool + observer + room detection) ===
 local function PoolEffect(count) return count>=2 and -8*(count-1) or (count==1 and 6 or 0) end
 
@@ -160,6 +140,10 @@ task.spawn(function()
   for _,p in Players:GetPlayers() do
    local r,h=body(p)
    if r and h and h.Health>0 then
+    if p:GetAttribute('RunLifetimeTicks') then
+     local remaining=math.max(0,(p:GetAttribute('RunLifetimeRemaining') or RunConfig.TransformedLifetimeSeconds)-dt); p:SetAttribute('RunLifetimeRemaining',remaining)
+     if remaining<=0 then Reset(p,RunConfig.PlayerRunReturned); teleport(p,ORIGIN+Vector3.new(0,4,0)); tell(p,'Run Lifetime終了 / 強制帰還しました') end
+    end
     -- pool
     local dp=r.Position-pool.Position
     if math.abs(dp.X)<=9 and math.abs(dp.Z)<=9 and math.abs(dp.Y)<6 then table.insert(occupants,p) end
@@ -184,7 +168,7 @@ end)
 
 -- player init
 local function onPlayer(p)
- p:SetAttribute('Banked',p:GetAttribute('Banked') or 0); Reset(p)
+ Reset(p)
  p.CharacterAdded:Connect(function(c)
   Reset(p); local h=c:WaitForChild('Humanoid'); h.WalkSpeed=20
   task.defer(function() teleport(p,ORIGIN+Vector3.new(0,4,30)) end)
@@ -193,6 +177,6 @@ local function onPlayer(p)
 end
 Players.PlayerAdded:Connect(onPlayer)
 for _,p in Players:GetPlayers() do onPlayer(p) end
-Players.PlayerRemoving:Connect(function(p) Exposure.Release(p); collected[p]=nil; last[p]=nil end)
+Players.PlayerRemoving:Connect(function(p) Exposure.Release(p); last[p]=nil end)
 
 print('[DEBUG FLOOR] ready at '..tostring(ORIGIN))

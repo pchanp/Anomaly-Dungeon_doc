@@ -36,7 +36,7 @@ function M.Build(seed,preview)
  local old=workspace:FindFirstChild('AnomalyDungeon'); if old then old:Destroy() end
  local root=Instance.new('Model'); root.Name='AnomalyDungeon'; root.Parent=workspace; root:SetAttribute('Seed',seed); root:SetAttribute('Theme','Closed media megastore'); root:SetAttribute('Version',2)
  local rooms=folder('Rooms',root); local links=folder('Connections',root); local roofs=folder('Roofs',root)
- local result={Root=root,Rooms={},Prompts={},Relics={},Seed=seed,KillY=940}; local by={}; local rng=Random.new(seed)
+ local result={Root=root,Rooms={},Prompts={},Seed=seed,KillY=940}; local by={}; local rng=Random.new(seed)
  local function roof(n,size,pos)
   local b=part(n,size,pos,Color3.fromRGB(101,105,103),roofs); b.Transparency=preview and 1 or 0; b:SetAttribute('PreviewHidden',true); return b
  end
@@ -122,7 +122,7 @@ function M.Build(seed,preview)
  local obs=by.OBSERVATORY
  local ob=part('Observer',Vector3.new(5,6,3),obs.Center+Vector3.new(0,3,-27),C.violet,obs.Folders.AnomalyPoints,Enum.Material.Neon); sign(ob,'返却されていない映像 / 近くにいると危険',C.violet); result.Observer=ob
  local gate=part('AnomalyGate',Vector3.new(1,12,14),obs.Center+Vector3.new(-58,6,0),C.violet,obs.Folders.SpecialPoints); sign(gate,'在庫にない通路 / 異常状態',C.violet); result.Prompts.Secret=prompt(gate,'境界を越える','棚の裏側')
- result.SecretSpawn=by.OUTSIDE.Center+Vector3.new(0,4,12); station(by.OUTSIDE,'AnomalyExit',Vector3.new(0,2,-8),C.violet,'未登録の返却先','外側から帰還')
+ result.SecretSpawn=by.OUTSIDE.Center+Vector3.new(0,4,12); station(by.OUTSIDE,'AnomalyExit',Vector3.new(0,2,-8),C.violet,'出口ポータル','帰還する')
  local reg=by.REGISTER
  for _,x in {-40,40} do
   localPart(reg,'CheckoutCounter',Vector3.new(28,4,10),Vector3.new(x,2,8),C.blue)
@@ -138,7 +138,6 @@ function M.Build(seed,preview)
  for _,x in {-55,55} do for z=-40,40,20 do localPart(parking,'ParkingStripe',Vector3.new(32,.035,.35),Vector3.new(x,.03,z),Color3.fromRGB(216,214,183)) end end
  for _,x in {-40,40} do localPart(parking,'BasementPillar',Vector3.new(6,22,6),Vector3.new(x,11,0),C.wall) end
  station(parking,'Extract',Vector3.new(0,2,-42),C.cyan,'非常口 / 地上へ帰還','脱出する')
- for _,n in {'BOOKS','GAMES','WAREHOUSE'} do local r=by[n]; local b=part('Relic',Vector3.new(2,2,2),r.Center+Vector3.new(0,2,-22),C.yellow,r.Folders.ItemPoints,Enum.Material.Neon); sign(b,'記録片 / 回収'); table.insert(result.Relics,{Prompt=prompt(b,'回収','記録片'),Id=n}) end
  root:SetAttribute('Route','DVD → 中央売場 ↔ 書籍・VHS / CD・ゲーム → レジ → スタッフ → 倉庫 → 地下駐車場')
  root:SetAttribute('PreviewCeilingsHidden',preview==true); return result
 end

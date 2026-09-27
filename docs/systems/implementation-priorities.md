@@ -1,7 +1,7 @@
 # 未実装機能の優先順位
 
 **Status: Draft（実装計画）**
-**更新日: 2026-09-26**
+**更新日: 2026-09-28**
 
 この優先順位は、現在のStudio実装とDraft／Idea資料の依存関係を整理したもの。設計案を採用済みに変更するものではない。仕様確定が必要な項目は、実装より先に確認する。
 
@@ -17,7 +17,7 @@
 
 ### 1. 状態名とIDの確定
 
-- SAN、Anomaly Level、Anomaly Exposureの関係を確定する。
+- SANは廃止し、Anomaly LevelとAnomaly Exposureの責務境界を確定する。
 - `GIANT`／`Giant Anomaly`／`Mad Stomper`の対応を確定する。
 - Run、Map、Anomaly、Player AnomalyのID規約を定める。
 
@@ -29,7 +29,7 @@
 - プレイヤー個別状態を1か所から参照できるようにする。
 - 既存AttributeはAdapter経由で段階移行する。
 
-**完了条件:** 現在の入場、記録片回収、帰還、死亡が同じ状態機械を通る。
+**完了条件:** 現在の入場、帰還、死亡、異常化、Run Lifetime終了が同じ状態機械を通る。
 
 ### 3. Remoteとフォルダ構成の整理
 
@@ -101,10 +101,10 @@ InventoryとRun終了処理の完成後に実装する。枠数、対象、入�
 
 ## 推奨する次の実装単位
 
-1. SAN／Exposure／Anomaly Levelの関係を決定する。
-2. `RunState`と`PlayerRunState`の最小仕様を文書化する。
-3. 現在のDungeonManagerをAdapterとして、新しいRun Stateへ接続する。
-4. 既存の入場・死亡・帰還・記録片持ち帰りをPlayテストする。
+1. マップごとの出口出現条件を定義する。
+2. Run Lifetimeを操作する特殊イベントのAPIを定義する。
+3. Run StateをPortal Serviceへ接続する。
+4. 入場・死亡・通常帰還・異常化後帰還・強制帰還をPlayテストする。
 5. その後、Inventory／ItemStackへ進む。
 
 ## 関連資料

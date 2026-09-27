@@ -3,24 +3,22 @@ local RS=game:GetService('ReplicatedStorage')
 local Map=require(script.Parent.Parent.Maps.Generators.MapGenerator)
 local Exposure=require(script.Parent.ExposureService)
 local RunConfig=require(game:GetService('ReplicatedStorage').AnomalyDungeon.Shared.Config.RunConfig)
-local M={}; local world; local collected={}; local last={}; local connections={}
+local M={}; local world; local last={}; local connections={}
 local state=RS:WaitForChild('AnomalyState'); local notice=RS:WaitForChild('AnomalyNotice')
 local function tell(p,t) notice:FireClient(p,t) end
 local function body(p) local c=p.Character; return c and c:FindFirstChild('HumanoidRootPart'),c and c:FindFirstChildOfClass('Humanoid') end
 local function teleport(p,pos) if p.Character then p.Character:PivotTo(CFrame.new(pos)) end end
 function M.SetExposure(p,value) return Exposure.Set(p,value) end
-function M.Reset(p)
- Exposure.Reset(p); p:SetAttribute('InDungeon',false); p:SetAttribute('Relics',0); p:SetAttribute('Room','LOBBY'); collected[p]={}
+function M.Reset(p,nextState)
+ Exposure.Reset(p); p:SetAttribute('InDungeon',false); p:SetAttribute('Room','LOBBY'); p:SetAttribute('PlayerRunState',nextState or RunConfig.PlayerRunLobby)
 end
 function M.Enter(p)
  local _,h=body(p); if not h or h.Health<=0 or p:GetAttribute('InDungeon') then return end
- M.Reset(p); p:SetAttribute('InDungeon',true); h.Health=h.MaxHealth; teleport(p,world.Entry); tell(p,'記録片を集め、出口へ。危険なら入口からも帰還できます。')
+ M.Reset(p,RunConfig.PlayerRunExploring); p:SetAttribute('InDungeon',true); h.Health=h.MaxHealth; teleport(p,world.Entry); tell(p,'マップ条件を満たし、出口ポータルから帰還してください。危険なら入口からも帰還できます。')
 end
 function M.Extract(p,abnormal)
  if not p:GetAttribute('InDungeon') then return false end
- if Exposure.IsTransformed(p)~=abnormal then tell(p,abnormal and 'ここは正常な存在の出口ではない。' or 'この出口はあなたを認識できない。VHS売場の境界へ。'); return false end
- local n=p:GetAttribute('Relics') or 0; p:SetAttribute('Banked',(p:GetAttribute('Banked') or 0)+n)
- M.Reset(p); teleport(p,world.Lobby); local _,h=body(p); if h then h.Health=h.MaxHealth end; tell(p,'帰還成功 / 記録片 '..n..' 個を持ち帰りました'); return true
+ M.Reset(p,RunConfig.PlayerRunReturned); teleport(p,world.Lobby); local _,h=body(p); if h then h.Health=h.MaxHealth end; tell(p,'帰還成功'); return true
 end
 local function bind(q,fn)
  table.insert(connections,q.Triggered:Connect(function(p)
@@ -36,17 +34,11 @@ function M.Build(seed)
   for _,v in Players:GetPlayers() do if v:GetAttribute('InDungeon') then tell(p,'探索中のプレイヤーがいます。全員帰還してから再構成してください。'); return end end
   M.Build(Random.new():NextInteger(1000,99999)); for _,v in Players:GetPlayers() do teleport(v,world.Lobby) end
  end)
- for _,name in {'Return','Extract'} do bind(world.Prompts[name],function(p) M.Extract(p,false) end) end
- bind(world.Prompts.AnomalyExit,function(p) M.Extract(p,true) end)
+ for _,name in {'Return','Extract','AnomalyExit'} do bind(world.Prompts[name],function(p) M.Extract(p,false) end) end
  bind(world.Prompts.Secret,function(p)
   if p:GetAttribute('InDungeon') and Exposure.IsTransformed(p) then teleport(p,world.SecretSpawn) else tell(p,'ただの壁だ。今のあなたには何も見えない。') end
  end)
  bind(world.Prompts.Boss,function(p) if p:GetAttribute('InDungeon') then state:SetAttribute('BossName',p.DisplayName); state:SetAttribute('BossUntil',workspace:GetServerTimeNow()+8) end end)
- for _,item in world.Relics do bind(item.Prompt,function(p)
-  if not p:GetAttribute('InDungeon') then return end
-  collected[p]=collected[p] or {}; if collected[p][item.Id] then tell(p,'この記録片は回収済みです'); return end
-  collected[p][item.Id]=true; p:SetAttribute('Relics',(p:GetAttribute('Relics') or 0)+1); tell(p,'記録片を回収。帰還すると持ち帰れます。')
- end) end
 end
 function M.PoolEffect(count) return count>=2 and -8*(count-1) or (count==1 and 6 or 0) end
 function M.Tick(dt)
@@ -59,6 +51,10 @@ function M.Tick(dt)
    if (r.Position-world.Observer.Position).Magnitude<17 then Exposure.Add(p,RunConfig.ObserverExposurePerSecond*dt) end
    local roomName='CORRIDOR'; for _,room in world.Rooms do local d=r.Position-room.Center; if math.abs(d.X)<room.Width/2 and math.abs(d.Z)<room.Depth/2 and math.abs(d.Y)<room.Height then roomName=room.DisplayName end end
    p:SetAttribute('Room',roomName)
+   if p:GetAttribute('RunLifetimeTicks') then
+    local remaining=math.max(0,(p:GetAttribute('RunLifetimeRemaining') or RunConfig.TransformedLifetimeSeconds)-dt); p:SetAttribute('RunLifetimeRemaining',remaining)
+    if remaining<=0 then M.Extract(p,false); tell(p,'Run Lifetime終了 / 強制帰還しました') end
+   end
    if r.Position.Y<world.KillY then h.Health=0 end
   end
  end
@@ -70,15 +66,15 @@ function M.GetWorld() return world end
 function M.Start()
  M.Build(92026)
  local function player(p)
-  p:SetAttribute('Banked',0); M.Reset(p)
+  M.Reset(p)
   local function character(c)
    M.Reset(p); local h=c:WaitForChild('Humanoid'); h.WalkSpeed=20; task.defer(function() teleport(p,world.Lobby) end)
-   h.Died:Connect(function() M.Reset(p); tell(p,'探索失敗 / 未帰還の記録片を失いました') end)
+   h.Died:Connect(function() M.Reset(p,RunConfig.PlayerRunDead); tell(p,'探索失敗') end)
   end
   p.CharacterAdded:Connect(character); if p.Character then task.spawn(character,p.Character) end
  end
  Players.PlayerAdded:Connect(player); for _,p in Players:GetPlayers() do player(p) end
- Players.PlayerRemoving:Connect(function(p) Exposure.Release(p); collected[p]=nil; last[p]=nil end)
+ Players.PlayerRemoving:Connect(function(p) Exposure.Release(p); last[p]=nil end)
  task.spawn(function() while true do task.wait(.5); M.Tick(.5) end end)
  print('[ANOMALY] Prototype ready / seed 92026')
 end

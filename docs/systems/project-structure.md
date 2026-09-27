@@ -164,8 +164,8 @@ Workspace
 | Return Portal | `PortalService` + Run Remote | Run、Map State | 単一マップ版を実装済み |
 | Transition Portal | `PortalService` | Party State、MapDefinitions | 未実装・Draft |
 | Party State | `RunService`または専用集約Module | Exposure、Quest、Inventory | 未実装・Draft |
-| Anomaly Exposure | `ExposureService` | PlayerState、Anomaly、Portal | SAN旧試作のみ |
-| Player Anomaly | `PlayerStateService` + 個別Module | Exposure、Visibility | 旧試作のみ |
+| Anomaly Exposure | `ExposureService` | PlayerState、Anomaly、Portal | サーバー権威の基礎実装済み |
+| Player Anomaly | `PlayerStateService` + 個別Module | Exposure、Visibility | Mad Stomper変異を基礎実装済み |
 | Visible / Invisible Inversion | Client `Visibility` + Server PlayerState | Component分類 | 未実装・Draft |
 | Secure Slot | `InventoryService` | Run終了、永続データ | 未実装・Draft |
 | ItemStack／認識履歴 | `InventoryService` | ItemDefinitions | 未実装・Draft |

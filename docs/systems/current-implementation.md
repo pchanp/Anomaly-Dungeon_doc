@@ -1,7 +1,7 @@
 # 現在の実装状況
 
 **Status: Implemented（実装棚卸し）**
-**Studio確認日: 2026-09-26**
+**Studio確認日: 2026-09-28**
 
 この資料は、Roblox Studioのプレース「異変のダンジョン」を直接確認して記録した実装状況である。設計の採用を意味する資料ではない。`Draft` や `Idea` の内容が偶然プロトタイプに含まれていても、設計確定とは扱わない。
 
@@ -14,10 +14,11 @@
 - サーバー生成のClosed Stacksマップとロビー。
 - `LOBBY`、`ENTRY`、`HALL`、`BOOKS`、`CISTERN`、`OBSERVATORY`、`GAMES`、`REGISTER`、`STAFF`、`WAREHOUSE`、`EXTRACTION`、`OUTSIDE`の各ルーム。
 - 各ルームに `DoorPoints`、`EnemyPoints`、`AnomalyPoints`、`ItemPoints`、`GimmickPoints`、`SpecialPoints` を持たせる配置規約。
-- ロビーからダンジョンへの入場、通常帰還、異常状態用出口、記録片の回収と持ち帰り。
+- ロビーからダンジョンへの入場と、通常・異常状態で共通の出口ポータルからの帰還。
 - 実行時のマップ再生成と、探索中プレイヤーがいる場合の再生成抑止。
-- HP、SAN、記録片、持ち帰り累計、部屋名、ダンジョン内外などのプレイヤーAttribute。
-- SANが0になったプレイヤー1人を異常状態にするプロトタイプ。
+- HP、Anomaly Exposure、Player Anomaly、Player Run State、Run Lifetime、部屋名、ダンジョン内外などのプレイヤーAttribute。
+- Anomaly Exposureが設定可能な閾値へ達したプレイヤー1人を異常状態にする処理。
+- 異常状態への変化時に5分のRun Lifetimeを開始し、終了時に強制帰還させる処理。通常プレイヤーにも停止状態のLifetimeを保持する。
 - 1人なら回復、2人以上ならダメージとなる泉。
 - Magic Bolt、Roll、Stealthの3スキルと、サーバー側クールダウン・効果判定。
 - R15移動アニメーション、Shift中のみ速度が上がる移動、Roll、Sneak。
@@ -53,9 +54,8 @@
 
 ## 部分実装または設計との差があるもの
 
-- 現在のSAN／`IsAnomaly` は、設計中のAnomaly Exposure／Player Anomalyを検証する旧プロトタイプであり、同一仕様とは確定していない。
 - 現在の入場・帰還は単一マップ内のテレポートであり、Party StateによるTransition Portalではない。
-- 記録片と `Banked` は持ち帰りループの最小検証であり、Quest、FILE、Discovery、報酬経済は未実装。
+- マップごとの出口出現条件は未実装。記録片仕様は廃止済み。
 - 4スキル枠を想定したUIはあるが、現在サーバー実装されているスキルは3つで、ビルド取得・強化システムは未実装。
 - /dev/nullは限定対象のプロトタイプであり、ダッシュ、ジャンプ、インベントリ操作など文書にある候補すべてをnull化しない。
 - Mad Stomperの最終名称、外見、鎮静ルール、再活性化条件は確定していない。
@@ -65,7 +65,7 @@
 - Party Stateと重み付きポータル遷移。
 - Quest、FILE、Achievement、Discoveryの分離されたデータモデル。
 - Secure Slotと正式なInventory／ItemStack。
-- 正式なAnomaly ExposureとIndividual Anomaly。
+- 複数種のIndividual Anomalyと正式な選出・解除フロー。
 - Visible / Invisible Inversion。
 - Memory Swapperと `LastRecognizedPlayer`。
 - マップ案にある8月31日／8月32日、SEKIGAHARA、KOROHKAN、Observation Mapの各機能。
