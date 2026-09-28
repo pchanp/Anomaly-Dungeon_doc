@@ -1,4 +1,5 @@
 -- CLOSED STACKS: modular retail blockout. All dimensions are studs.
+local MapDefinitions=require(game:GetService('ReplicatedStorage').AnomalyDungeon.Shared.Definitions.MapDefinitions)
 local M={}
 local C={wall=Color3.fromRGB(167,166,151),floor=Color3.fromRGB(118,119,111),blue=Color3.fromRGB(26,61,103),yellow=Color3.fromRGB(236,203,70),dark=Color3.fromRGB(47,52,57),cyan=Color3.fromRGB(80,218,202),violet=Color3.fromRGB(157,108,195)}
 local function folder(n,p) local f=Instance.new('Folder'); f.Name=n; f.Parent=p; return f end
@@ -34,7 +35,7 @@ local specs={
 }
 function M.Build(seed,preview)
  local old=workspace:FindFirstChild('AnomalyDungeon'); if old then old:Destroy() end
- local root=Instance.new('Model'); root.Name='AnomalyDungeon'; root.Parent=workspace; root:SetAttribute('Seed',seed); root:SetAttribute('Theme','Closed media megastore'); root:SetAttribute('Version',2)
+ local root=Instance.new('Model'); root.Name='AnomalyDungeon'; root.Parent=workspace; root:SetAttribute('Seed',seed); root:SetAttribute('Theme','Closed media megastore'); root:SetAttribute('Version',2); root:SetAttribute('MapId',MapDefinitions.CLOSED_STACKS.Id); root:SetAttribute('MapDisplayName',MapDefinitions.CLOSED_STACKS.DisplayName)
  local rooms=folder('Rooms',root); local links=folder('Connections',root); local roofs=folder('Roofs',root)
  local result={Root=root,Rooms={},Prompts={},Seed=seed,KillY=940}; local by={}; local rng=Random.new(seed)
  local function roof(n,size,pos)

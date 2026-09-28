@@ -52,6 +52,8 @@
 - Run目的であるQuestと、FILE・発見・実績を別データにする。
 - まず1種類の回収Questと1種類のDiscoveryで縦に検証する。
 
+**進捗:** `RunService` が `QuestState` / `QuestObjective` / `Credits` をプレイヤーAttributeで扱い、出口端末の達成で依頼完了、帰還時に `RunConfig.QuestRewardCredits` を支払うところまで実装済み。Discovery側のデータモデルと、Discoveryからの分離は未実装。Questは専用Serviceでもデータモデルでもなく、単一目標としての属性表現の段階にある。
+
 ### 3. Portal Service
 
 - 現在のReturn処理をService境界へ移す。
@@ -102,6 +104,8 @@ InventoryとRun終了処理の完成後に実装する。枠数、対象、入�
 ## 推奨する次の実装単位
 
 1. 現在の出口制御端末をマップ定義から条件差し替え可能にする。
+
+   **進捗:** `Shared/Definitions/MapDefinitions` を新設し、`MapGenerator` が生成モデルへ `MapId` / `MapDisplayName` を付与、`RunService` が `ExitCondition.PromptName` で端末Promptを参照する形まで実装済み。条件種別の追加と複数条件の判定は未実装。
 2. Run Lifetimeを操作する特殊イベントのAPIを定義する。
 3. Run StateをPortal Serviceへ接続する。
 4. 入場・死亡・通常帰還・異常化後帰還・強制帰還をPlayテストする。

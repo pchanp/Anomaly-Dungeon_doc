@@ -162,7 +162,7 @@ Workspace
 | --- | --- | --- | --- |
 | Run開始・終了 | `RunService` | PlayerState、Map、Inventory | 部分実装 |
 | Return Portal | `PortalService` + Run Remote | Run、Map State | 単一マップ版を実装済み |
-| Transition Portal | `PortalService` | Party State、MapDefinitions | 未実装・Draft |
+| Transition Portal | `PortalService` | Party State、MapDefinitions | 未実装・Draft。`MapDefinitions` は実装済み |
 | Party State | `RunService`または専用集約Module | Exposure、Quest、Inventory | 未実装・Draft |
 | Anomaly Exposure | `ExposureService` | PlayerState、Anomaly、Portal | サーバー権威の基礎実装済み |
 | Player Anomaly | `PlayerStateService` + 個別Module | Exposure、Visibility | Mad Stomper変異を基礎実装済み |
@@ -173,10 +173,11 @@ Workspace
 | MiW | `Anomalies/MiW` + HUD Controller | Run情報、Effects | プロトタイプ実装済み |
 | /dev/null | `Anomalies/DevNull` + 入力結果の共通Gate | Skill、Item、Combat | 限定プロトタイプ実装済み |
 | Mad Stomper | `Anomalies/MadStomper` + Effects | Exposure、Skill | 巨人プロトタイプ実装済み |
-| Quest | `QuestService` + Quest UI | Run、Map | 未実装・Draft |
+| Quest | `QuestService` + Quest UI | Run、Map | 属性ベースの単一目標のみ実装済み・分離は未実装 |
 | FILE／Discovery | `DiscoveryService` + Discovery UI | 永続データ | 未実装・Draft |
 | Archive Selection UI | Client `UI/Archive` | Map gimmick、Discovery | 未実装・Idea |
 | マップ固有ギミック | `Maps/Runtime/<MapId>` | 共通Service | 案ごとに未実装 |
+| マップ別出口条件 | `Definitions/MapDefinitions` | Map、Run | 定義への参照と差し替え口は実装済み、条件種別は`TERMINAL`のみ |
 
 ## 移行ルール
 

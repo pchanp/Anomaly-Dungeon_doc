@@ -20,6 +20,8 @@
 - Anomaly Exposureが設定可能な閾値へ達したプレイヤー1人を異常状態にする処理。
 - 異常状態への変化時に5分のRun Lifetimeを開始し、終了時に強制帰還させる処理。通常プレイヤーにも停止状態のLifetimeを保持する。
 - レジ奥の出口制御端末を操作すると、参加者全員に共有される出口ポータルが起動する。
+- `QuestState`、`QuestObjective`、`Credits`のプレイヤーAttribute。入場で`ACTIVE`、端末操作で`COMPLETED`、死亡で`FAILED`、帰還時に依頼達成なら`REWARDED`として`RunConfig.QuestRewardCredits`を加算する。未達成の帰還は`FAILED`で報酬なし。
+- マップ生成の`M.Build`が生成モデルへ`MapId`、`MapDisplayName`を付与する。</new_string>
 - 1人なら回復、2人以上ならダメージとなる泉。
 - Magic Bolt、Roll、Stealthの3スキルと、サーバー側クールダウン・効果判定。
 - R15移動アニメーション、Shift中のみ速度が上がる移動、Roll、Sneak。
@@ -56,7 +58,8 @@
 ## 部分実装または設計との差があるもの
 
 - 現在の入場・帰還は単一マップ内のテレポートであり、Party StateによるTransition Portalではない。
-- 現在は出口制御端末の操作を単一マップの出口出現条件として実装済み。マップごとの個別条件定義は未実装。記録片仕様は廃止済み。
+- 出口の出現条件は`Shared/Definitions/MapDefinitions`が保持し、`RunService`が`ExitCondition.PromptName`で端末Promptを参照する。登録済みの条件種別は`TERMINAL`のみで、`CLOSED_STACKS`のみ。マップごとの複数条件、達成件数、時間条件などは未実装。記録片仕様は廃止済み。
+- `QuestState`と`Credits`はプレイヤーAttribute上の単一ラン目標であり、`QuestService`として分離したデータモデルではない。</new_string>
 - 4スキル枠を想定したUIはあるが、現在サーバー実装されているスキルは3つで、ビルド取得・強化システムは未実装。
 - /dev/nullは限定対象のプロトタイプであり、ダッシュ、ジャンプ、インベントリ操作など文書にある候補すべてをnull化しない。
 - Mad Stomperの最終名称、外見、鎮静ルール、再活性化条件は確定していない。
@@ -76,10 +79,12 @@
 
 - Git: `ServerScriptService/AnomalyDungeonServer/Maps/Generators/MapGenerator`
 - Git: `ServerScriptService/AnomalyDungeonServer/Services/RunService`
+- Git: `ServerScriptService/AnomalyDungeonServer/Services/ExposureService`
 - Git: `ServerScriptService/AnomalyDungeonServer/Services/SkillService`
 - Git: `ServerScriptService/AnomalyDungeonServer/Anomalies/*`
 - Git: `StarterPlayer/StarterPlayerScripts/AnomalyDungeonClient/*`
-- Git: `ReplicatedStorage/AnomalyDungeon/Shared/*`
+- Git: `ReplicatedStorage/AnomalyDungeon/Shared/Config/*`
+- Git: `ReplicatedStorage/AnomalyDungeon/Shared/Definitions/*`
 - `ServerStorage/AnomalyAssets`
 - `ServerStorage/GiantAnomalyAssets`
 
