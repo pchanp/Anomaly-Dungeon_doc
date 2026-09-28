@@ -16,4 +16,4 @@
 ## 記録
 
 - [001: ゲームループとポータル遷移の設計方針](001-game-loop-and-portal-transitions.md) - ランの循環、Player Anomaly、状態依存のポータル遷移に関する草案。
-
+- [002: アニメーションのリターゲット工程を特定プラグインへ依存させない](002-animation-retarget-tool.md) - 制作工程とツール固有情報を分離する判断。
