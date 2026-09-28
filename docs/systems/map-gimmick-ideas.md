@@ -1,8 +1,20 @@
 # マップとギミック案
 
-**Status: Idea（アイデア）**
+**Status: Mixed（案ごとに下記）**
 
-この資料は、Anomaly Dungeonの基盤ルールを利用して異なるゲーム体験を作るためのマップ案・ギミック案を記録する。各案は実装済みでも採用済みでもない。基盤ルールは[ゲームルール](game-rules.md)と[ゲームループとポータル遷移](game-loop.md)を参照する。
+この資料は、Anomaly Dungeonの基盤ルールを利用して異なるゲーム体験を作るためのマップ案・ギミック案を記録する。基盤ルールは[ゲームルール](game-rules.md)と[ゲームループとポータル遷移](game-loop.md)を参照する。
+
+各マップの採用状況は以下のとおりです。
+
+| マップ | 状態 | 実装場所 |
+| --- | --- | --- |
+| Abandoned TSUTAYA | Prototype: Implemented | `Maps/Tsutaya/TsutayaGenerator`、`TsutayaArchiveService` |
+| 8月31日 | Idea（アイデア） | 未実装 |
+| SEKIGAHARA | Idea（アイデア） | 未実装 |
+| KOROHKAN | Idea（アイデア） | 未実装 |
+| Observation / Open Liminal Map | Idea（アイデア） | 未実装 |
+
+実装済みでも設計として採用済みではない。Transition Portal、Party State、以及Map間の遷移条件は未実装であり、TSUTAYAはデバッグフロアから直接読み込む形式である。
 
 マップは独立したゲームシステムを持つのではなく、既存の基盤システムの特定部分が強く生きる状況を作ることを目的とする。
 
@@ -41,7 +53,28 @@
 
 ## Abandoned TSUTAYA
 
-### コンセプト
+**Status: Prototype: Implemented（実装済みプロトタイプ）**
+**Studio確認日: 2026-09-29**
+
+### 実装済みの範囲
+
+- `FRONT`、`VHS`、`DVD`、`CD`、`BROADCAST`、`TAPE`、`BACKROOM`の7ルームと7つの通路。`CLOSED_STACKS`と同じ`AnomalyDungeon`モデルとして生成され、`Rooms`、`Connections`、`Roofs`を持つ。
+- 扉は`ROOMS`の指定だけで開通し、各部屋は袋小路構造になっている。9スタッド高の棚スタック、柱、レジカウンター、返却ラック、放送卓が視界を分断し、床全体を見渡せない。
+- 出口条件は`MapDefinitions.TSUTAYA.ExitCondition`が保持する。条件種別は`TERMINAL`のみで、`CLOSED_STACKS`と同じ型である。
+- 棚（`ArchiveShelf`）5基。調べる操作でArchive Selection UIが開き、VHS／DVD／CD／Tapeの項目から選択できる。1回の検索で全項目が返ることはない。
+- CRT 4台。チャンネル変更で停波ノイズを挟んで映像が切り替わり、放送中のチャンネルと停波中のチャンネルでは音が変わる。
+- 試聴機3台。個人試聴は`PreviewDuration`で自動的に終わり、共有BGM（`SharedBgm`）とは独立している。
+- 共有BGMはマップモデル直下の`Sound`として保持し、Server Stateで管理する。個人試聴がこの音を変えることはない。
+
+### 未実装の境界
+
+- Transition PortalとParty Stateは未実装のため、マップ切り替えはデバッグフロアの`DebugMapSwitch`端末から行う。
+- 共有BGMの選択UIは未実装であり、現状は固定の音源をループ再生する。
+- 個別メディアの実際の内容（映像・音声）は未実装であり、項目は名前と選択結果のみを持つ。
+- Archive Selection UIには一覧、選択、閉じる以外の遷移がない。
+- Map固有のAnomalyは`/dev/null`Existingのプロトタイプに依存していない。TSUTAYA独自の異常は未実装。
+
+### コンセプト</new_string>
 
 廃店舗化したTSUTAYAを、存在するはずのないメディアを収集し続ける「アーカイブ」として扱う案。VHS、DVD、CD、Audio Tape、Broadcast、CRT、店内設備などを含み、発売されていない作品・存在しない作品が混在する。
 

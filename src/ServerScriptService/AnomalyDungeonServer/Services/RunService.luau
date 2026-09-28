@@ -1,9 +1,13 @@
 local Players=game:GetService('Players')
 local RS=game:GetService('ReplicatedStorage')
 local Map=require(script.Parent.Parent.Maps.Generators.MapGenerator)
+local MapGenerators={CLOSED_STACKS=Map}
 local Exposure=require(script.Parent.ExposureService)
 local RunConfig=require(game:GetService('ReplicatedStorage').AnomalyDungeon.Shared.Config.RunConfig)
 local MapDefinitions=require(RS.AnomalyDungeon.Shared.Definitions.MapDefinitions)
+local TsutayaGenerator=require(script.Parent.Parent.Maps.Tsutaya.TsutayaGenerator)
+local Archive=require(script.Parent.Parent.Maps.Tsutaya.TsutayaArchiveService)
+MapGenerators.TSUTAYA=TsutayaGenerator
 local M={}; local world; local last={}; local connections={}
 local state=RS:WaitForChild('AnomalyState'); local notice=RS:WaitForChild('AnomalyNotice')
 local function tell(p,t) notice:FireClient(p,t) end
@@ -30,12 +34,21 @@ local function bind(q,fn)
   local now=os.clock(); if now-(last[p] or 0)<.4 then return end; last[p]=now; fn(p)
  end))
 end
-function M.Build(seed)
+-- Selects the generator registered for a map ID. Unknown IDs fall back to CLOSED_STACKS.
+function M.SetMap(mapId)
+ M.MapId=mapId and MapDefinitions[mapId] and mapId or 'CLOSED_STACKS'
+end
+function M.GetMapId() return M.MapId end
+function M.Build(seed,mapId)
  for _,c in connections do c:Disconnect() end; connections={}
- world=Map.Build(seed); local mapDef=MapDefinitions.CLOSED_STACKS; state:SetAttribute('Seed',seed); state:SetAttribute('Route',world.Root:GetAttribute('Route')); state:SetAttribute('MapId',mapDef.Id); state:SetAttribute('ExitUnlocked',false)
+ Archive.Unbind()
+ M.SetMap(mapId or M.MapId)
+ local mapDef=MapDefinitions[M.MapId]
+ local generator=MapGenerators[M.MapId] or Map
+ world=generator.Build(seed); Archive.Bind(world); state:SetAttribute('Seed',seed); state:SetAttribute('Route',world.Root:GetAttribute('Route')); state:SetAttribute('MapId',mapDef.Id); state:SetAttribute('MapDisplayName',mapDef.DisplayName); state:SetAttribute('ExitUnlocked',false)
  local function setExitUnlocked(unlocked)
   state:SetAttribute('ExitUnlocked',unlocked)
-  for _,name in {'Return','Extract','AnomalyExit'} do local q=world.Prompts[name]; q.Enabled=unlocked; q.Parent.Transparency=unlocked and 0 or 1; q.Parent.CanCollide=unlocked; q.Parent.Sign.Enabled=unlocked end
+  for _,name in {'Return','Extract','AnomalyExit'} do local q=world.Prompts[name]; if not q then continue end; q.Enabled=unlocked; q.Parent.Transparency=unlocked and 0 or 1; q.Parent.CanCollide=unlocked; local sg=q.Parent:FindFirstChild('Sign'); if sg then sg.Enabled=unlocked end end
  end
  setExitUnlocked(false)
  bind(world.Prompts.Enter,M.Enter)
@@ -68,8 +81,9 @@ function M.Tick(dt)
    if r.Position.Y<world.KillY then h.Health=0 end
   end
  end
- world.Pool:SetAttribute('Occupants',#occupants); world.Pool.Color=#occupants>=2 and Color3.fromRGB(170,225,65) or Color3.fromRGB(78,221,217)
- world.Pool.Sign.TextLabel.Text='泉 / '..#occupants..'人 / '..(#occupants>=2 and '毒' or '回復')
+ local pool=world.Pool
+ pool:SetAttribute('Occupants',#occupants); pool.Color=#occupants>=2 and Color3.fromRGB(170,225,65) or Color3.fromRGB(78,221,217)
+ local poolSign=pool:FindFirstChild('Sign'); if poolSign and poolSign:FindFirstChild('TextLabel') then poolSign.TextLabel.Text='泉 / '..#occupants..'人 / '..(#occupants>=2 and '毒' or '回復') end
  for _,p in occupants do local _,h=body(p); local delta=M.PoolEffect(#occupants)*dt; if delta<0 then h:TakeDamage(-delta) else h.Health=math.min(h.MaxHealth,h.Health+delta) end end
 end
 function M.GetWorld() return world end

@@ -64,6 +64,7 @@ station('Extract',Vector3.new(0,2,20),C.cyan,'DEBUG EXTRACT\nダンジョン状�
 local pool=part('HealingPool',Vector3.new(18,.3,18),ORIGIN+Vector3.new(60,.2,0),C.cyan,root,Enum.Material.Neon)
 pool.CanCollide=false
 sign(pool,'泉 / 1人で回復・2人以上で毒',C.cyan)
+pool.Sign.TextLabel.Text='泉 / 0人 / 回復'
 
 -- === 3. Observer (北) ===
 local observer=part('Observer',Vector3.new(5,6,3),ORIGIN+Vector3.new(0,3,-80),C.violet,root,Enum.Material.Neon)

@@ -5,6 +5,11 @@ local Maps={
 		DisplayName="CLOSED STACKS",
 		ExitCondition={Type="TERMINAL",PromptName="UnlockExit"},
 	},
+	TSUTAYA={
+		Id="TSUTAYA",
+		DisplayName="ABANDONED TSUTAYA",
+		ExitCondition={Type="TERMINAL",PromptName="UnlockExit"},
+	},
 }
 
 return Maps

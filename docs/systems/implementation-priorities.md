@@ -101,6 +101,8 @@ InventoryとRun終了処理の完成後に実装する。枠数、対象、入�
 
 `map-gimmick-ideas.md`の各マップは採用未確定のため、現時点では実装しない。基盤完成後、1マップずつ設計を `Designed` へ更新してから着手する。
 
+**進捗:** Abandoned TSUTAYAのみプロトタイプとして実装済み。`Shared/Definitions/MapDefinitions`へ登録し、`Debug/DebugMapSwitch`から読み込める|archive棚、CRT、試聴機の3系統を実装した。Transition PortalとParty Stateは未実装のため、マップ間の遷移は成立しない。他の4マップは未実装のまま。
+
 ## 推奨する次の実装単位
 
 1. 現在の出口制御端末をマップ定義から条件差し替え可能にする。
@@ -108,6 +110,8 @@ InventoryとRun終了処理の完成後に実装する。枠数、対象、入�
    **進捗:** `Shared/Definitions/MapDefinitions` を新設し、`MapGenerator` が生成モデルへ `MapId` / `MapDisplayName` を付与、`RunService` が `ExitCondition.PromptName` で端末Promptを参照する形まで実装済み。条件種別の追加と複数条件の判定は未実装。
 2. Run Lifetimeを操作する特殊イベントのAPIを定義する。
 3. Run StateをPortal Serviceへ接続する。
+
+   **進捗:** `RunService.Build`がMap IDを受け取るようになり、`MapGenerators`経由で実装済みのGeneratorへ委譲する。`DebugMapSwitch`から任意のMap IDへ切り替えられる。ただし遷移条件とParty Stateは未実装のため、これはTransition Portalの代替ではない。
 4. 入場・死亡・通常帰還・異常化後帰還・強制帰還をPlayテストする。
 5. その後、Inventory／ItemStackへ進む。
 

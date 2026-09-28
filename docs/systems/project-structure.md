@@ -176,7 +176,8 @@ Workspace
 | Quest | `QuestService` + Quest UI | Run、Map | 属性ベースの単一目標のみ実装済み・分離は未実装 |
 | FILE／Discovery | `DiscoveryService` + Discovery UI | 永続データ | 未実装・Draft |
 | Archive Selection UI | Client `UI/Archive` | Map gimmick、Discovery | 未実装・Idea |
-| マップ固有ギミック | `Maps/Runtime/<MapId>` | 共通Service | 案ごとに未実装 |
+| マップ固有ギミック | `Maps/Runtime/<MapId>` | 共通Service | TSUTAYAは `Maps/Tsutaya` にプロトタイプ実装、他の案は未実装 |
+| マップ切替（開発用） | `Debug/DebugMapSwitch` → `RunService.Build` | MapDefinitions | 実装済み。Transition Portalとは別用途 |
 | マップ別出口条件 | `Definitions/MapDefinitions` | Map、Run | 定義への参照と差し替え口は実装済み、条件種別は`TERMINAL`のみ |
 
 ## 移行ルール

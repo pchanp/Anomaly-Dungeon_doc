@@ -12,6 +12,7 @@
 ## 実装済みの基盤
 
 - サーバー生成のClosed Stacksマップとロビー。
+- サーバー生成のAbandoned TSUTAYAマップ。7ルーム、通路、出口端末、泉、観測体、異常通路をもち、デバッグフロアから読み込める。
 - `LOBBY`、`ENTRY`、`HALL`、`BOOKS`、`CISTERN`、`OBSERVATORY`、`GAMES`、`REGISTER`、`STAFF`、`WAREHOUSE`、`EXTRACTION`、`OUTSIDE`の各ルーム。
 - 各ルームに `DoorPoints`、`EnemyPoints`、`AnomalyPoints`、`ItemPoints`、`GimmickPoints`、`SpecialPoints` を持たせる配置規約。
 - ロビーからダンジョンへの入場と、通常・異常状態で共通の出口ポータルからの帰還。
@@ -20,6 +21,10 @@
 - Anomaly Exposureが設定可能な閾値へ達したプレイヤー1人を異常状態にする処理。
 - 異常状態への変化時に5分のRun Lifetimeを開始し、終了時に強制帰還させる処理。通常プレイヤーにも停止状態のLifetimeを保持する。
 - レジ奥の出口制御端末を操作すると、参加者全員に共有される出口ポータルが起動する。
+- TSUTAYAのアーカイブ棚を調べるとArchive Selection UIが開き、VHS／DVD／CD／Tapeの項目から選択できる。1回の検索では全項目が返らない。
+- TSUTAYAのCRTでチャンネルを変更できる。停波ノイズを挟んで切り替わり、チャンネルごとに音が変わる。
+- TSUTAYAの試聴機で個人試聴できる。試聴は一定時間で終わり、共有BGMはSERVER Stateとしてマップモデル直下に保持され、試聴では変わらない。
+- デバッグフロアにマップ切替端末があり、登録済みのMap IDへ切り替える。Transition Portalの代替である。
 - `QuestState`、`QuestObjective`、`Credits`のプレイヤーAttribute。入場で`ACTIVE`、端末操作で`COMPLETED`、死亡で`FAILED`、帰還時に依頼達成なら`REWARDED`として`RunConfig.QuestRewardCredits`を加算する。未達成の帰還は`FAILED`で報酬なし。
 - マップ生成の`M.Build`が生成モデルへ`MapId`、`MapDisplayName`を付与する。</new_string>
 - 1人なら回復、2人以上ならダメージとなる泉。
@@ -57,7 +62,10 @@
 
 ## 部分実装または設計との差があるもの
 
-- 現在の入場・帰還は単一マップ内のテレポートであり、Party StateによるTransition Portalではない。
+- 現在の入場・帰還は単一マップ内のテレポートであり、Party StateによるTransition Portalではない。TSUTAYAはデバッグフロアから直接読み込む形式であり、Transition Portalではない。
+- TSUTAYAのメディア項目は名前と選択結果のみを持ち、映像・音声の実体は未実装である。
+- TSUTAYAの共有BGMは固定音源のループであり、選択UIは未実装である。
+- マップは`CLOSED_STACKS`と`TSUTAYA`の2種だが、マップ間の遷移条件は未実装である。
 - 出口の出現条件は`Shared/Definitions/MapDefinitions`が保持し、`RunService`が`ExitCondition.PromptName`で端末Promptを参照する。登録済みの条件種別は`TERMINAL`のみで、`CLOSED_STACKS`のみ。マップごとの複数条件、達成件数、時間条件などは未実装。記録片仕様は廃止済み。
 - `QuestState`と`Credits`はプレイヤーAttribute上の単一ラン目標であり、`QuestService`として分離したデータモデルではない。</new_string>
 - 4スキル枠を想定したUIはあるが、現在サーバー実装されているスキルは3つで、ビルド取得・強化システムは未実装。
@@ -78,6 +86,10 @@
 ## 確認した主な実装場所
 
 - Git: `ServerScriptService/AnomalyDungeonServer/Maps/Generators/MapGenerator`
+- Git: `ServerScriptService/AnomalyDungeonServer/Maps/Tsutaya/TsutayaGenerator`
+- Git: `ServerScriptService/AnomalyDungeonServer/Maps/Tsutaya/TsutayaArchiveService`
+- Git: `ServerScriptService/AnomalyDungeonServer/Debug/DebugMapSwitch`
+- Git: `StarterPlayer/StarterPlayerScripts/AnomalyDungeonClient/UI/ArchiveSelectionController`
 - Git: `ServerScriptService/AnomalyDungeonServer/Services/RunService`
 - Git: `ServerScriptService/AnomalyDungeonServer/Services/ExposureService`
 - Git: `ServerScriptService/AnomalyDungeonServer/Services/SkillService`
