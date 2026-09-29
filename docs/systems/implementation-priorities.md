@@ -95,7 +95,7 @@ Run State、Portal Service、MapDefinitions、Exposure、Quest、Inventoryが必
 
 ### Secure Slot
 
-InventoryとRun終了処理の完成後に実装する。枠数、対象、入出庫タイミング、Player Anomaly時の扱いは未決定。
+InventoryとRun終了処理の完成後に実装する。総インベントリ20枠のうち初期4枠をSecure Slotとし、通常プレイヤーはスキル強化で拡張できる。対象、入出庫タイミング、拡張上限・コスト、Player Anomaly時の扱いは未決定。
 
 ## P4: アイデア段階のマップ
 

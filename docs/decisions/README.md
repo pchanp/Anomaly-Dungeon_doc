@@ -18,3 +18,5 @@
 - [001: ゲームループとポータル遷移の設計方針](001-game-loop-and-portal-transitions.md) - ランの循環、Player Anomaly、状態依存のポータル遷移に関する草案。
 - [002: アニメーションのリターゲット工程を特定プラグインへ依存させない](002-animation-retarget-tool.md) - 制作工程とツール固有情報を分離する判断。
 - [003: 8月31日の時間進行と8月32日の状態遷移](003-august-31-time-and-phase-design.md) - マップ固有の時計、夕方の帰還、8/32の帰還閉鎖と環境の所有権に関する判断。
+- [004: 都市入口と情報提示の設計方針](004-city-entry-and-information-design.md) - 2D都市入口、施設内3D、世界情報の提示方針に関する草案。
+- [005: 都市ロビーから開始する最小Runの範囲](005-minimum-lobby-run-scope.md) - 2マップを対象にした、都市ロビーから単一マップへ入る最小Runの草案。
