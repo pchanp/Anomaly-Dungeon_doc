@@ -19,3 +19,6 @@ Player AnomalyはAnomaly Entityと区別して[`player-anomalies/`](player-anoma
 
 - [Visible / Invisible Inversion](player-anomalies/visible-invisible-inversion.md) - 可視性と認識を反転させるRun単位のPlayer Anomaly。
 
+## 横断的な設計資料
+
+- [認知アノマリー](cognitive-anomalies.md) - 観察・認識・認識差をアノマリー相互作用として扱うためのDraft。個別Anomaly EntityやPlayer Anomalyではない。
