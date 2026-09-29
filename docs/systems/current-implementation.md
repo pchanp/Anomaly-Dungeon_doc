@@ -1,7 +1,7 @@
 # 現在の実装状況
 
 **Status: Implemented（実装棚卸し）**
-**Studio確認日: 2026-09-28**
+**Studio確認日: 2026-09-29**
 
 この資料は、Roblox Studioのプレース「異変のダンジョン」を直接確認して記録した実装状況である。設計の採用を意味する資料ではない。`Draft` や `Idea` の内容が偶然プロトタイプに含まれていても、設計確定とは扱わない。
 
@@ -13,6 +13,11 @@
 
 - サーバー生成のClosed Stacksマップとロビー。
 - サーバー生成のAbandoned TSUTAYAマップ。7ルーム、通路、出口端末、泉、観測体、異常通路をもち、デバッグフロアから読み込める。
+- サーバー生成の8月31日マップ。10ゾーン、12本のTrail、出口端末、帰還面、泉、観測体、異常通路、8/32専用Parts11個、日付板2枚を生成する。
+- 8月31日マップのServer側時間進行。`DAY`から`EVENING`、`NIGHT`を経て`AUG_32`へ進み、探索者がマップ内にいる間だけ進む。
+- 夕方以降の帰還面開放と、8/32での帰還面閉鎖。8/32では団地前への移動、Anomaly Exposureの取得速度2.4倍、Run Lifetime300秒の強制帰還が始まる。
+- 8/32専用Partsの非表示保持と、遷移時の一括表示。
+- 8月31日マップの`Lighting`と`Atmosphere`のフェーズ別差し替えと、マップ再構築時の復元。
 - `LOBBY`、`ENTRY`、`HALL`、`BOOKS`、`CISTERN`、`OBSERVATORY`、`GAMES`、`REGISTER`、`STAFF`、`WAREHOUSE`、`EXTRACTION`、`OUTSIDE`の各ルーム。
 - 各ルームに `DoorPoints`、`EnemyPoints`、`AnomalyPoints`、`ItemPoints`、`GimmickPoints`、`SpecialPoints` を持たせる配置規約。
 - ロビーからダンジョンへの入場と、通常・異常状態で共通の出口ポータルからの帰還。
@@ -65,8 +70,9 @@
 - 現在の入場・帰還は単一マップ内のテレポートであり、Party StateによるTransition Portalではない。TSUTAYAはデバッグフロアから直接読み込む形式であり、Transition Portalではない。
 - TSUTAYAのメディア項目は名前と選択結果のみを持ち、映像・音声の実体は未実装である。
 - TSUTAYAの共有BGMは固定音源のループであり、選択UIは未実装である。
-- マップは`CLOSED_STACKS`と`TSUTAYA`の2種だが、マップ間の遷移条件は未実装である。
-- 出口の出現条件は`Shared/Definitions/MapDefinitions`が保持し、`RunService`が`ExitCondition.PromptName`で端末Promptを参照する。登録済みの条件種別は`TERMINAL`のみで、`CLOSED_STACKS`のみ。マップごとの複数条件、達成件数、時間条件などは未実装。記録片仕様は廃止済み。
+- マップは`CLOSED_STACKS`、`TSUTAYA`、`AUGUST_31`の3種だが、マップ間の遷移条件は未実装である。
+- 出口の出現条件は`Shared/Definitions/MapDefinitions`が保持し、`RunService`が`ExitCondition.PromptName`で端末Promptを参照する。登録済みの条件種別は`TERMINAL`のみで、`CLOSED_STACKS`と`TSUTAYA`、`AUGUST_31`が該当する。マップごとの複数条件、達成件数、時間条件などは未実装。記録片仕様は廃止済み。
+- `DebugMapSwitch`の`MapSwitchDeck`は実行時に空のFolderとして残っており、端末の読み込み用パッドが生成されない。8月31日をデバッグフロアから読み込む経路は未確認である。
 - `QuestState`と`Credits`はプレイヤーAttribute上の単一ラン目標であり、`QuestService`として分離したデータモデルではない。</new_string>
 - 4スキル枠を想定したUIはあるが、現在サーバー実装されているスキルは3つで、ビルド取得・強化システムは未実装。
 - /dev/nullは限定対象のプロトタイプであり、ダッシュ、ジャンプ、インベントリ操作など文書にある候補すべてをnull化しない。
@@ -80,7 +86,8 @@
 - 複数種のIndividual Anomalyと正式な選出・解除フロー。
 - Visible / Invisible Inversion。
 - Memory Swapperと `LastRecognizedPlayer`。
-- マップ案にある8月31日／8月32日、SEKIGAHARA、KOROHKAN、Observation Mapの各機能。
+- マップ案にあるSEKIGAHARA、KOROHKAN、Observation Mapの各機能。
+- 8月31日マップの共通Anomaly System適用、8/32での強制Anomaly発生、Rare Loot、フェーズごとの日付板の時刻、実音源への差し替え。
 - Abandoned TSUTAYAのArchive Selection UI、メディア視聴、Shared BGMなどの案。
 
 ## 確認した主な実装場所
@@ -88,6 +95,9 @@
 - Git: `ServerScriptService/AnomalyDungeonServer/Maps/Generators/MapGenerator`
 - Git: `ServerScriptService/AnomalyDungeonServer/Maps/Tsutaya/TsutayaGenerator`
 - Git: `ServerScriptService/AnomalyDungeonServer/Maps/Tsutaya/TsutayaArchiveService`
+- Git: `ServerScriptService/AnomalyDungeonServer/Maps/August/AugustGenerator`
+- Git: `ServerScriptService/AnomalyDungeonServer/Maps/August/August31Service`
+- Git: `ReplicatedStorage/AnomalyDungeon/Shared/Config/AugustConfig`
 - Git: `ServerScriptService/AnomalyDungeonServer/Debug/DebugMapSwitch`
 - Git: `StarterPlayer/StarterPlayerScripts/AnomalyDungeonClient/UI/ArchiveSelectionController`
 - Git: `ServerScriptService/AnomalyDungeonServer/Services/RunService`

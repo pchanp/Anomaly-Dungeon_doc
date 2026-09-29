@@ -6,8 +6,8 @@ local Lighting=game:GetService("Lighting")
 local Debris=game:GetService("Debris")
 local player=Players.LocalPlayer
 local shared=ReplicatedStorage:WaitForChild("GiantAnomalyShared")
-local Config=require(ReplicatedStorage:WaitForChild("AnomalyDungeon"):WaitForChild("Shared"):WaitForChild("Config"):WaitForChild("GiantConfig"))
 local RunConfig=require(ReplicatedStorage.AnomalyDungeon.Shared.Config.RunConfig)
+local Config=require(ReplicatedStorage:WaitForChild("AnomalyDungeon"):WaitForChild("Shared"):WaitForChild("Config"):WaitForChild("GiantConfig"))
 local remotes=shared:WaitForChild("Remotes")
 local giant=workspace:WaitForChild("Anomalies"):WaitForChild("GiantAnomaly")
 -- Visual parts may be streamed out; replicated attributes drive the debug UI.

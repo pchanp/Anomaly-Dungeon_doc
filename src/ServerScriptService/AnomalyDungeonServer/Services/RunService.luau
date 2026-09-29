@@ -8,6 +8,9 @@ local MapDefinitions=require(RS.AnomalyDungeon.Shared.Definitions.MapDefinitions
 local TsutayaGenerator=require(script.Parent.Parent.Maps.Tsutaya.TsutayaGenerator)
 local Archive=require(script.Parent.Parent.Maps.Tsutaya.TsutayaArchiveService)
 MapGenerators.TSUTAYA=TsutayaGenerator
+local AugustGenerator=require(script.Parent.Parent.Maps.August.AugustGenerator)
+local August=require(script.Parent.Parent.Maps.August.August31Service)
+MapGenerators.AUGUST_31=AugustGenerator
 local M={}; local world; local last={}; local connections={}
 local state=RS:WaitForChild('AnomalyState'); local notice=RS:WaitForChild('AnomalyNotice')
 local function tell(p,t) notice:FireClient(p,t) end
@@ -19,7 +22,7 @@ function M.Reset(p,nextState)
 end
 function M.Enter(p)
  local _,h=body(p); if not h or h.Health<=0 or p:GetAttribute('InDungeon') then return end
- M.Reset(p,RunConfig.PlayerRunExploring); p:SetAttribute('QuestState','ACTIVE'); p:SetAttribute('QuestObjective','出口制御端末を起動する'); p:SetAttribute('InDungeon',true); h.Health=h.MaxHealth; teleport(p,world.Entry); tell(p,'マップ条件を満たし、出口ポータルから帰還してください。危険なら入口からも帰還できます。')
+ M.Reset(p,RunConfig.PlayerRunExploring); p:SetAttribute('QuestState','ACTIVE'); p:SetAttribute('QuestObjective',MapDefinitions[M.MapId].QuestObjective or '出口制御端末を起動する'); p:SetAttribute('InDungeon',true); h.Health=h.MaxHealth; teleport(p,world.Entry); tell(p,'マップ条件を満たし、出口ポータルから帰還してください。危険なら入口からも帰還できます。')
 end
 function M.Extract(p,force)
  if not p:GetAttribute('InDungeon') then return false end
@@ -39,20 +42,22 @@ function M.SetMap(mapId)
  M.MapId=mapId and MapDefinitions[mapId] and mapId or 'CLOSED_STACKS'
 end
 function M.GetMapId() return M.MapId end
+-- Opens or closes the shared return surfaces. Exposed so a map gimmick service can decide when
+-- the way out exists, instead of every map editing the prompts itself.
+function M.SetExitUnlocked(unlocked)
+ state:SetAttribute('ExitUnlocked',unlocked)
+ for _,name in {'Return','Extract','AnomalyExit'} do local q=world.Prompts[name]; if not q then continue end; q.Enabled=unlocked; q.Parent.Transparency=unlocked and 0 or 1; q.Parent.CanCollide=unlocked; local sg=q.Parent:FindFirstChild('Sign'); if sg then sg.Enabled=unlocked end end
+end
 function M.Build(seed,mapId)
  for _,c in connections do c:Disconnect() end; connections={}
- Archive.Unbind()
+ Archive.Unbind(); August.Unbind()
  M.SetMap(mapId or M.MapId)
  local mapDef=MapDefinitions[M.MapId]
  local generator=MapGenerators[M.MapId] or Map
- world=generator.Build(seed); Archive.Bind(world); state:SetAttribute('Seed',seed); state:SetAttribute('Route',world.Root:GetAttribute('Route')); state:SetAttribute('MapId',mapDef.Id); state:SetAttribute('MapDisplayName',mapDef.DisplayName); state:SetAttribute('ExitUnlocked',false)
- local function setExitUnlocked(unlocked)
-  state:SetAttribute('ExitUnlocked',unlocked)
-  for _,name in {'Return','Extract','AnomalyExit'} do local q=world.Prompts[name]; if not q then continue end; q.Enabled=unlocked; q.Parent.Transparency=unlocked and 0 or 1; q.Parent.CanCollide=unlocked; local sg=q.Parent:FindFirstChild('Sign'); if sg then sg.Enabled=unlocked end end
- end
- setExitUnlocked(false)
+ world=generator.Build(seed); Archive.Bind(world); state:SetAttribute('Seed',seed); state:SetAttribute('Route',world.Root:GetAttribute('Route')); state:SetAttribute('MapId',mapDef.Id); state:SetAttribute('MapDisplayName',mapDef.DisplayName)
+ M.SetExitUnlocked(false)
  bind(world.Prompts.Enter,M.Enter)
- bind(world.Prompts[mapDef.ExitCondition.PromptName],function(p) if not p:GetAttribute('InDungeon') then return end; if state:GetAttribute('ExitUnlocked') then tell(p,'出口ポータルは既に起動しています'); return end; setExitUnlocked(true); for _,v in Players:GetPlayers() do if v:GetAttribute('InDungeon') then v:SetAttribute('QuestState','COMPLETED'); v:SetAttribute('QuestObjective','出口ポータルから帰還する'); tell(v,p.DisplayName..' が出口ポータルを起動しました') end end end)
+ bind(world.Prompts[mapDef.ExitCondition.PromptName],function(p) if not p:GetAttribute('InDungeon') then return end; if state:GetAttribute('ExitUnlocked') then tell(p,'出口ポータルは既に起動しています'); return end; M.SetExitUnlocked(true); for _,v in Players:GetPlayers() do if v:GetAttribute('InDungeon') then v:SetAttribute('QuestState','COMPLETED'); v:SetAttribute('QuestObjective','出口ポータルから帰還する'); tell(v,p.DisplayName..' が出口ポータルを起動しました') end end end)
  bind(world.Prompts.Reroll,function(p)
   for _,v in Players:GetPlayers() do if v:GetAttribute('InDungeon') then tell(p,'探索中のプレイヤーがいます。全員帰還してから再構成してください。'); return end end
   M.Build(Random.new():NextInteger(1000,99999)); for _,v in Players:GetPlayers() do teleport(v,world.Lobby) end
@@ -62,16 +67,19 @@ function M.Build(seed,mapId)
   if p:GetAttribute('InDungeon') and Exposure.IsTransformed(p) then teleport(p,world.SecretSpawn) else tell(p,'ただの壁だ。今のあなたには何も見えない。') end
  end)
  bind(world.Prompts.Boss,function(p) if p:GetAttribute('InDungeon') then state:SetAttribute('BossName',p.DisplayName); state:SetAttribute('BossUntil',workspace:GetServerTimeNow()+8) end end)
+ -- The map gimmick service binds last, so it drives the exit surfaces through the wrapper above.
+ August.Bind(world,{SetExitUnlocked=M.SetExitUnlocked})
 end
 function M.PoolEffect(count) return count>=2 and -8*(count-1) or (count==1 and 6 or 0) end
 function M.Tick(dt)
  local occupants={}
+ local rate=(world.ExposureMultiplier or 1)*RunConfig.ObserverExposurePerSecond
  for _,p in Players:GetPlayers() do
   local r,h=body(p)
   if r and h and h.Health>0 and p:GetAttribute('InDungeon') then
    local delta=r.Position-world.Pool.Position
    if math.abs(delta.X)<=9 and math.abs(delta.Z)<=9 and math.abs(delta.Y)<6 then table.insert(occupants,p) end
-   if (r.Position-world.Observer.Position).Magnitude<17 then Exposure.Add(p,RunConfig.ObserverExposurePerSecond*dt) end
+   if (r.Position-world.Observer.Position).Magnitude<17 then Exposure.Add(p,rate*dt) end
    local roomName='CORRIDOR'; for _,room in world.Rooms do local d=r.Position-room.Center; if math.abs(d.X)<room.Width/2 and math.abs(d.Z)<room.Depth/2 and math.abs(d.Y)<room.Height then roomName=room.DisplayName end end
    p:SetAttribute('Room',roomName)
    if p:GetAttribute('RunLifetimeTicks') then
@@ -85,6 +93,7 @@ function M.Tick(dt)
  pool:SetAttribute('Occupants',#occupants); pool.Color=#occupants>=2 and Color3.fromRGB(170,225,65) or Color3.fromRGB(78,221,217)
  local poolSign=pool:FindFirstChild('Sign'); if poolSign and poolSign:FindFirstChild('TextLabel') then poolSign.TextLabel.Text='泉 / '..#occupants..'人 / '..(#occupants>=2 and '毒' or '回復') end
  for _,p in occupants do local _,h=body(p); local delta=M.PoolEffect(#occupants)*dt; if delta<0 then h:TakeDamage(-delta) else h.Health=math.min(h.MaxHealth,h.Health+delta) end end
+ August.Tick(dt)
 end
 function M.GetWorld() return world end
 function M.Start()

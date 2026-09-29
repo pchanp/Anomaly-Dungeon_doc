@@ -84,6 +84,6 @@ while giant.Parent do
  if state=="ACTIVE" then
   stompClock+=dt
   if stompClock>=Config.StompInterval then stompClock=0;Stomp:FireAllClients(root.Position,Config.StompRadius,Config.CameraShakeMagnitude) end
-  for _,plr in ipairs(Players:GetPlayers()) do local hrp=plr.Character and plr.Character:FindFirstChild("HumanoidRootPart");if hrp and (hrp.Position-root.Position).Magnitude<=Config.AnomalyRadius then setLevel(plr,Exposure.Get(plr)+Config.AnomalyIncreasePerSecond*dt) end end
+  for _,plr in ipairs(Players:GetPlayers()) do local hrp=plr.Character and plr.Character:FindFirstChild("HumanoidRootPart");if hrp and (hrp.Position-root.Position).Magnitude<=Config.AnomalyRadius then setLevel(plr,(Exposure.Get(plr))+Config.AnomalyIncreasePerSecond*dt) end end
  else stompClock=0 end
 end

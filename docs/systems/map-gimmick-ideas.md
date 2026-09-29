@@ -9,7 +9,7 @@
 | マップ | 状態 | 実装場所 |
 | --- | --- | --- |
 | Abandoned TSUTAYA | Prototype: Implemented | `Maps/Tsutaya/TsutayaGenerator`、`TsutayaArchiveService` |
-| 8月31日 | Idea（アイデア） | 未実装 |
+| 8月31日 | Prototype: Implemented | `Maps/August/AugustGenerator`、`August31Service` |
 | SEKIGAHARA | Idea（アイデア） | 未実装 |
 | KOROHKAN | Idea（アイデア） | 未実装 |
 | Observation / Open Liminal Map | Idea（アイデア） | 未実装 |
@@ -19,6 +19,33 @@
 マップは独立したゲームシステムを持つのではなく、既存の基盤システムの特定部分が強く生きる状況を作ることを目的とする。
 
 ## 8月31日
+
+**Status: Prototype: Implemented（実装済みプロトタイプ）**
+**Studio確認日: 2026-09-29**
+
+### 実装済みの範囲
+
+- `LOBBY`、`ROAD`、`VILLAGE`、`SHRINE`、`RICE`、`RIVER`、`APARTMENT`、`TUNNEL`、`FOREST`、`DAM`の10ゾーンと、ゾーン間の12本のTrail。`CLOSED_STACKS`と同じ`AnomalyDungeon`モデルとして生成される。
+- 出口条件は`MapDefinitions.AUGUST_31.ExitCondition`が保持し、条件種別は`TERMINAL`のみ。端末Promptは`UnlockExit`。
+- Server側で`DAY` → `EVENING` → `NIGHT`の順に時間を進行させる。進行するのは探索者がマップ内にいる間だけで、最初の探索者が入るまで待機のまま止まり、无人になると停止する。
+- フェーズ時間は昼480秒、夕方300秒、夜300秒、切り替えのブレンドは24秒。設定値は`AugustConfig`が保持する。
+- `EVENING`以降は依頼未達成でもReturn Portalが開く。端末を操作して開いた状態と、時間経過で開いた状態は別々に扱う。
+- `NIGHT`が終わると日付が8月32日へ遷移する。別マップへの遷移ではなく、同一マップの状態変化として扱う。
+- 8/32ではReturn Portalが閉じる。探索者は団地前の広場へ移動し、Anomaly Exposureの取得速度が`ExposureMultiplier`で2.4倍になり、Run Lifetime300秒が残る。帰還手段はなく、期限切れは強制帰還として処理する。
+- 8/32専用Partsが11個生成され、通常は非表示・非衝突。遷移時に一括で表示する。
+- 日付板がマップ内に2枚あり、日付変更に合わせて表示が更新される。
+- フェーズごとに`Lighting`のAmbient、OutdoorAmbient、Brightness、FogColor、FogStart、FogEnd、ColorShiftと、プレース既存の`Atmosphere`のColor、Density、Haze、Glareを差し替える。マップが有効な間だけ所有し、マップ再構築時にBind前の値へ戻す。
+- 生成時の色を`tint`グループとして登録し、フェーズごとに色味を変える。
+- 音は`Ambience`としてマップモデル直下に1つだけ保持する。
+
+### 未実装の境界
+
+- 共通Anomaly Systemは未実装であり、「通常のAnomaly発生ルールを適用する」は成立していない。
+- 8/32での強制Anomaly発生は未実装である。危険度上昇はExposureの取得速度と帰還閉鎖だけで表現する。
+- Rare Lootと特殊Transition Portalは未実装である。
+- フェーズごとの日付板の時刻は未確定である。現在は`DateBoardClock`の値のみを全フェーズで使い回す。
+- `Ambience`の音源は差し替え用のプレースホルダーであり、実プロジェクトの蝉や風の収録音源は未選定。
+- Transition PortalとParty Stateは未実装のため、マップ切り替えはデバッグフロアの`DebugMapSwitch`端末から行う。現時点で同端末の`MapSwitchDeck`が空のFolderとして残る状態があり、8月31日の読み込みは未確認である。
 
 ### コンセプト
 
@@ -39,6 +66,8 @@
 - 異常現象が増加し、Anomalyが強制的に発生する。
 - 危険度が上昇する。
 - Rare Lootと特殊Transition Portalが出現する。
+
+実装済み範囲では、日付板の書き換え、帰還閉鎖、Exposure上昇、Run Lifetimeによる強制帰還までに限られる。強制Anomaly発生とRare Lootは未実装である。
 
 ```text
 8/31
@@ -178,7 +207,7 @@ Unique Experience
 
 - 各マップの採用、マップ名、ポータル候補群に含める条件。
 - Return Portal、Transition Portal、Terminationの具体条件と優先関係。
-- 8月32日への移行条件、Rare Loot、強制Anomalyの内容。
+- 8月32日への移行タイミングは実装済みである。Rare Loot、強制Anomalyの内容、フェーズごとの日付板の時刻は未確定のままである。
 - Abandoned TSUTAYAにおける個別メディア、Archive UI、Shared BGM、外部作品・商標との最終的な扱い。
 - SEKIGAHARAとKOROHKANのNPC勢力、戦況ロジック、敵対・協力関係。
 - Observation / Open Liminal MapのFocus / Recognition、短いInteraction、知覚変化の実装と評価。
