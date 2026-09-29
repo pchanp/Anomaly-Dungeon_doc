@@ -10,6 +10,10 @@ return {
 	PhaseBlendSeconds=24,
 	-- Return portal. Available to everyone from the evening, whether or not the quest was completed.
 	ReturnFromPhase="EVENING",
+	-- 時刻。003では「ClockTimeは変更しない」としていたが、プレースの既定が0時であり、
+	-- 8月の湖の町が真夜中に描画されてイメージから崩れるため、フェーズごとに時刻を持たせる。
+	-- 8月32日は存在しない日付なので、時刻だけ本来のある時間帯へ戻して日常感を残す。
+	ClockTime={DAY=13.5,EVENING=18.4,NIGHT=23.2,AUG_32=23.6},
 	-- 8/32. Forced on every exploring player when the night ends; there is no return from it.
 	Aug32DateLabel="8月32日",
 	Aug32LifetimeSeconds=300,

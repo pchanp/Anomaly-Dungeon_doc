@@ -22,7 +22,7 @@ local function tell(player,text) Notice:FireClient(player,text) end
 
 -- The place already has a Sky and an Atmosphere, so the sky is driven through the Atmosphere
 -- rather than by swapping Skybox images. Both containers are borrowed and restored verbatim.
-local LIGHT_PROPS={"Ambient","OutdoorAmbient","Brightness","FogColor","FogStart","FogEnd","ColorShift_Top","ColorShift_Bottom"}
+local LIGHT_PROPS={"Ambient","OutdoorAmbient","Brightness","FogColor","FogStart","FogEnd","ColorShift_Top","ColorShift_Bottom","ClockTime"}
 local ATMOS_PROPS={"Color","Density","Haze","Glare"}
 local atmos=Lighting:FindFirstChildOfClass("Atmosphere")
 
@@ -76,6 +76,9 @@ local function apply()
 	end
 	if not baseline then return end
 	mix(baseline.Lighting,Lighting,Config.Lighting[fromPhase] or {},Config.Lighting[phase] or {},blend)
+	local fromTime=Config.ClockTime[fromPhase] or Config.ClockTime[Config.PhaseOrder[1]]
+	local toTime=Config.ClockTime[phase] or fromTime
+	Lighting.ClockTime=fromTime+(toTime-fromTime)*blend
 	if atmos then mix(baseline.Atmosphere,atmos,Config.Atmosphere[fromPhase] or {},Config.Atmosphere[phase] or {},blend) end
 end
 

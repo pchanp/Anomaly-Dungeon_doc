@@ -1,6 +1,7 @@
 local RS=game:GetService("ReplicatedStorage")
 local MapDefinitions=require(RS.AnomalyDungeon.Shared.Definitions.MapDefinitions)
 local Config=require(RS.AnomalyDungeon.Shared.Config.AugustConfig)
+local Terrain=require(script.Parent.AugustTerrain)
 local M={}
 local DEFS=MapDefinitions.AUGUST_31
 
@@ -9,6 +10,7 @@ local C={
 	drygrass=Color3.fromRGB(146,148,84),
 	dirt=Color3.fromRGB(126,104,76),
 	soil=Color3.fromRGB(92,78,60),
+	sand=Color3.fromRGB(196,182,146),
 	road=Color3.fromRGB(72,72,74),
 	roadline=Color3.fromRGB(214,212,178),
 	cedar=Color3.fromRGB(46,72,52),
@@ -106,19 +108,23 @@ local function prompt(body,action,object,hold,maxDistance)
 	return q
 end
 
+
+
 -- Zones: name, display, x, y, z, width, depth, height.
 -- Each zone is a flat terrace; the trails between them are the ramps, so the valley reads in layers.
+-- Zones are placed on the valley floor. The Y column is ignored and recomputed from the terrain
+-- at build time, so a zone always sits on the ground instead of on a floating slab.
 local ZONES={
-	{"LOBBY","00 / バス停 / 集合場所",0,1000,0,74,74,80},
-	{"ROAD","01 / 県道沿い / 夕方の坂",0,1004,140,74,160,80},
-	{"VILLAGE","02 / 山あいの集落 / 商店と公民館",0,1012,330,140,140,80},
-	{"SHRINE","03 / 祠と石段",-150,1030,470,96,96,80},
-	{"RICE","04 / 田んぼと用水路",190,1008,330,160,130,80},
-	{"RIVER","05 / 橋と河原",180,1002,130,180,160,80},
-	{"FOREST","06 / 杉林の林道",-200,1022,220,190,190,80},
-	{"TUNNEL","07 / 県道トンネル",-360,1018,220,80,50,80},
-	{"DAM","08 / ダム下 / 溜め池",-330,1044,40,170,130,80},
-	{"APARTMENT","09 / 山上の団地 / 最終日",70,1036,-250,150,130,80},
+	{"LOBBY","00 / バス停 / 集合場所",0,0,0,74,74,80},
+	{"ROAD","01 / 県道沿い / 夕方の坂",0,0,140,74,160,80},
+	{"VILLAGE","02 / 山あいの集落 / 商店と公民館",0,0,330,140,140,80},
+	{"SHRINE","03 / 祠と石段",-150,0,470,96,96,80},
+	{"RICE","04 / 田んぼと用水路",190,0,330,160,130,80},
+	{"RIVER","05 / 橋と河原",180,0,130,180,160,80},
+	{"FOREST","06 / 杉林の林道",-200,0,220,190,190,80},
+	{"TUNNEL","07 / 県道トンネル",-360,0,220,80,50,80},
+	{"DAM","08 / ダム下 / 溜め池",-330,0,40,170,130,80},
+	{"APARTMENT","09 / 山上の団地 / 最終日",-150,0,-320,150,130,80},
 }
 
 -- Trail network. Every zone is reachable on foot; the tunnel is the only way past the ridge.
@@ -128,13 +134,36 @@ local TRAILS={
 	{"TUNNEL","FOREST"},{"FOREST","VILLAGE"},{"FOREST","DAM"},{"APARTMENT","LOBBY"},
 }
 
--- Ridge ring. Kept outside every terrace so the valley reads as enclosed without blocking a path.
+-- 湖。木崎湖・乙女湖に相当する谷の水面。谷の中央よりやや手前に置く。
+-- Water/Depth/Rim は湖底の形を1000からの相対高で指定する。Rim は外縁の水没を防ぐ持ち上げ量。
+local LAKE={X=250,Z=-430,Inner=180,Water=-2,Depth=26,Rim=8}
+
+-- 尾根。谷を囲む山。{X,Z,Radius,Height} で指定し、Terrainが滑らかな稜線へ変換する。
 local RIDGES={
-	Vector3.new(-560,1105,120),Vector3.new(-560,1105,420),Vector3.new(-300,1120,600),
-	Vector3.new(90,1125,620),Vector3.new(420,1115,430),Vector3.new(430,1100,60),
-	Vector3.new(360,1095,-240),Vector3.new(80,1090,-470),Vector3.new(-330,1090,-450),
-	Vector3.new(-590,1090,-190),
+	{X=-640,Z=180,Radius=290,Height=150},
+	{X=-560,Z=540,Radius=290,Height=170},
+	{X=-200,Z=660,Radius=300,Height=175},
+	{X=200,Z=640,Radius=290,Height=160},
+	{X=560,Z=470,Radius=280,Height=165},
+	{X=640,Z=150,Radius=270,Height=145},
+	{X=620,Z=-200,Radius=290,Height=160},
+	{X=300,Z=-700,Radius=300,Height=175},
+	{X=-220,Z=-600,Radius=300,Height=155},
+	{X=-580,Z=-420,Radius=290,Height=140},
+	{X=-700,Z=-110,Radius=280,Height=130},
+	{X=840,Z=290,Radius=270,Height=125},
+	{X=840,Z=-310,Radius=270,Height=135},
 }
+
+-- ゾーンを平らにする領域。地形メッシュはこの高さに合わせて生成するので、ゾーンの
+-- 床板と地表が同じ高さになり、境界に段差の壁ができない。
+-- 高さは平らにする前の自然地形を使う。平らにした値を入れると地形が自分を追い越す。
+local FLATS={}
+for _,zone in ipairs(ZONES) do
+	-- 平坦化は床板より少し広めにする。境界をまたぐタイルは中心が領域外なので、
+	-- 広げておかないとゾーンの外縁に 1 タイル分だけ段差が残る。
+	FLATS[#FLATS+1]={X=zone[3],Z=zone[5],Width=zone[6]+20,Depth=zone[7]+20,Y=Terrain.heightAt(zone[3],zone[5],LAKE,RIDGES,nil)}
+end
 
 function M.Build(seed)
 	local old=workspace:FindFirstChild("AnomalyDungeon")
@@ -153,7 +182,7 @@ function M.Build(seed)
 
 	local rooms=folder("Rooms",root)
 	local links=folder("Connections",root)
-	local result={Root=root,Rooms={},Prompts={},Seed=seed,DateBoards={},Tints={},Aug32Parts={}}
+	local result={Root=root,Rooms={},Prompts={},Seed=seed,DateBoards={},Tints={},Aug32Parts={},GroundTiles={}}
 	for _,group in ipairs(Config.TintGroups) do result.Tints[group]={} end
 	local by={}
 
@@ -192,7 +221,8 @@ function M.Build(seed)
 		for _,key in ipairs({"Geometry","DoorPoints","EnemyPoints","AnomalyPoints","ItemPoints","GimmickPoints","SpecialPoints"}) do
 			f[key]=folder(key,model)
 		end
-		local center=Vector3.new(x,y,z)
+		local groundY=1000+Terrain.heightAt(x,z,LAKE,RIDGES,nil)
+		local center=Vector3.new(x,groundY,z)
 		local zone={Model=model,Center=center,Width=width,Depth=depth,Height=height,DisplayName=display,Folders=f}
 		by[name]=zone
 		table.insert(result.Rooms,zone)
@@ -207,10 +237,11 @@ function M.Build(seed)
 			return body
 		end
 
-		-- Terraced ground: deep enough to read as a landform rather than a floating slab.
-		localPart("Terrace",Vector3.new(width+30,60,depth+30),Vector3.new(0,-31,0),C.soil,Enum.Material.Ground,"Ground")
+		-- ゾーンの床は平らな板 1 枚だけにする。起伏は谷底メッシュ（ValleyGround）が作り、
+		-- ここで 60 スタッドの箱を積むと阶段状の崖ができるため、積み上げをやめた。
 		local floorColor=(name=="RICE" or name=="RIVER" or name=="DAM") and C.drygrass or C.grass
-		localPart("Ground",Vector3.new(width,2,depth),Vector3.new(0,-1,0),floorColor,Enum.Material.Grass,"Ground")
+		-- ゾーンの床は地形メッシュの表面と高さをそろえる。ずれると地表が床板の上へ出て段差になる。
+		localPart("Ground",Vector3.new(width,2,depth),Vector3.new(0,0,0),floorColor,Enum.Material.Grass,"Ground")
 
 		-- Zone board plus a marker post: open ground otherwise loses all orientation cues.
 		local board=localPart("ZoneSign",Vector3.new(math.min(width-16,46),5,.5),Vector3.new(0,7,depth/2-4),C.stone,Enum.Material.Concrete,"Structure")
@@ -219,13 +250,29 @@ function M.Build(seed)
 		sign(post,display,C.bright,6,180)
 	end
 
-	-- The valley base sits under every terrace, so gaps between zones read as slopes rather than holes.
-	tint("Ground",part("ValleyBase",Vector3.new(1400,60,1240),Vector3.new(-60,958,140),Color3.fromRGB(86,104,66),links,Enum.Material.Grass))
-	for _,peak in ipairs(RIDGES) do
-		local body=part("Ridge",Vector3.new(240,110,240),peak,Color3.fromRGB(104,102,94),links,Enum.Material.Rock)
-		body.CFrame=CFrame.new(peak)*CFrame.Angles(0,math.rad(rng:NextInteger(0,360)),0)*CFrame.Angles(math.rad(rng:NextInteger(2,8)),0,0)
-		tint("Ground",body)
+	-- 谷底。単一の平らな板ではなく、地形メッシュを敷いて谷を作る。
+	-- 湖の領域は湖底の泥、水際は砂、それ以外は草。色は高さから決めて1か所で扱う。
+	local function groundColorAt(x,z,h)
+		if h<-3 then return C.mud end
+		if h<=2 then return C.sand end
+		return C.grass
 	end
+	Terrain.buildSurface("ValleyGround",Vector3.new(1700,0,1500),Vector3.new(-60,1000,120),
+		function(x,z) return Terrain.heightAt(x,z,LAKE,RIDGES,FLATS) end,
+		-- 分割は細かいほど斜面が滑らかになる。粗いとタイル 1 枚ぶんの段差のまま露出する。
+		groundColorAt,Enum.Material.Grass,links,14,result.GroundTiles)
+	for _,tile in ipairs(result.GroundTiles) do tint("Ground",tile) end
+
+	-- 水面。正方形の板にすると、地形が低い方位で水が四角くにじみ出す。
+	-- 円柱を下向きに寝かせた円盤にし、半径は湖底の交線より大きく取る。
+	-- 縁は地形で覆われるので、円盤の縁は境外に出ない。
+	local water=part("LakeWater",Vector3.new(1,LAKE.Inner*1.84,LAKE.Inner*1.84),Vector3.new(LAKE.X,1000+LAKE.Water-.5,LAKE.Z),C.water,links,Enum.Material.Glass)
+	water.Shape=Enum.PartType.Cylinder
+	-- 円柱の軸はローカルX。Z軸まわりに回して水平な円盤にする。
+	water.Orientation=Vector3.new(0,0,90)
+	water.CanCollide=false
+	water.Transparency=.18
+	tint("Water",water)
 
 	-- Trails: a sloped slab between two zone edges, wide enough to walk two abreast.
 	-- Endpoints clamp onto the neighbour's span, so a trail never lands outside the terrace it targets.
@@ -246,11 +293,30 @@ function M.Build(seed)
 		local start=edge(A,B)
 		local finish=edge(B,A)
 		local length=(finish-start).Magnitude
-		local mid=(start+finish)/2
 		local f=folder(a.."_to_"..b,links)
-		local body=part("Trail",Vector3.new(alongX and 20 or length+16,26,alongX and length+16 or 20),mid-Vector3.new(0,12,0),C.dirt,f,Enum.Material.Ground)
-		body.CFrame=CFrame.lookAt(mid-Vector3.new(0,1,0),finish-Vector3.new(0,1,0))
-		tint("Ground",body)
+		-- 路面は地形に沿って分割する。1枚の板でつなぐと、起伏のある谷では板が
+		-- 地面にめり込んだり浮いたりして、段差の壁に見える。
+		local thickness=2
+		-- 分割は細かいほど地形に沿った路面になる。粗いと谷底が湾曲している場所で
+		-- 弦が地面より上に出て、縁が段差の壁になる。
+		local segments=math.max(2,math.ceil(length/12))
+		local function surfaceY(p)
+			-- 端点はゾーンの縁なので、平坦化後の高さ=そのゾーンの床板と一致する。
+			return 1000+Terrain.heightAt(p.X,p.Z,LAKE,RIDGES,FLATS)
+		end
+		for i=0,segments-1 do
+			local s0=start:Lerp(finish,i/segments)
+			local s1=start:Lerp(finish,(i+1)/segments)
+			local y0=surfaceY(s0)
+			local y1=surfaceY(s1)
+			local segLength=(s1-s0).Magnitude
+			local segAlongX=math.abs(s1.X-s0.X)>math.abs(s1.Z-s0.Z)
+			local mid=Vector3.new((s0.X+s1.X)/2,(y0+y1)/2+0.5,(s0.Z+s1.Z)/2)
+			local body=part("Trail",Vector3.new(segAlongX and 20 or segLength+2,thickness,segAlongX and segLength+2 or 20),
+				mid-Vector3.new(0,thickness/2,0),C.dirt,f,Enum.Material.Ground)
+			body.CFrame=CFrame.lookAt(mid-Vector3.new(0,thickness/2,0),Vector3.new(s1.X,y1+0.5,s1.Z)-Vector3.new(0,thickness/2,0))
+			tint("Ground",body)
+		end
 		f:SetAttribute("From",a)
 		f:SetAttribute("To",b)
 		return f
@@ -274,10 +340,12 @@ function M.Build(seed)
 	roadStrip(by.DAM,130)
 
 	-- Power poles follow the road, giving the valley one readable direction.
+	-- 高さはゾーン基準にする。固定Yのままでは地形から浮いてしまう。
 	for z=72,240,32 do
+		local groundY=1000+Terrain.heightAt(0,z,LAKE,RIDGES,FLATS)
 		for _,side in ipairs({-1,1}) do
-			tint("Structure",part("PowerPole",Vector3.new(1.4,30,1.4),Vector3.new(side*44,1004,z),C.stone,links,Enum.Material.Wood))
-			tint("Structure",part("PowerArm",Vector3.new(14,1,1.4),Vector3.new(side*44,1034,z),C.stone,links,Enum.Material.Wood))
+			tint("Structure",part("PowerPole",Vector3.new(1.4,30,1.4),Vector3.new(side*44,groundY+15,z),C.stone,links,Enum.Material.Wood))
+			tint("Structure",part("PowerArm",Vector3.new(14,1,1.4),Vector3.new(side*44,groundY+45,z),C.stone,links,Enum.Material.Wood))
 		end
 	end
 

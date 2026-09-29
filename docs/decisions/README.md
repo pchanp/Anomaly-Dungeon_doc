@@ -20,3 +20,5 @@
 - [003: 8月31日の時間進行と8月32日の状態遷移](003-august-31-time-and-phase-design.md) - マップ固有の時計、夕方の帰還、8/32の帰還閉鎖と環境の所有権に関する判断。
 - [004: 都市入口と情報提示の設計方針](004-city-entry-and-information-design.md) - 2D都市入口、施設内3D、世界情報の提示方針に関する草案。
 - [005: 都市ロビーから開始する最小Runの範囲](005-minimum-lobby-run-scope.md) - 2マップを対象にした、都市ロビーから単一マップへ入る最小Runの草案。
+- [006: 最小Runの実装で確定したサーバー境界](006-minimum-run-server-boundaries.md) - 最小Runをコードに落とした際のRun状態、終了の集約、ロビーの実体、入口の認可、デバッグ経路の境界。
+- [007: 8月31日マップの地形・湖・時計の再設計](007-august-31-terrain-lake-and-clocktime.md) - フェーズごとの`ClockTime`、高さ関数としての地形、ゾーンの平坦化、湖の絶対高と円形水面、地形に沿うTrail。003の`ClockTime`判断を置き換える。
