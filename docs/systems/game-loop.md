@@ -6,6 +6,23 @@
 
 ## 現時点で合意している方向性
 
+### 都市入口からランへの接続
+
+ランの外側には、探索者が生活する都市入口を置く案とする。2Dワールドマップで施設を選び、小規模な施設内3Dで依頼、取引、ビルド管理、出発準備を行ってからダンジョンへ入る。この層は既存のRun中のポータル遷移を置き換えるものではない。
+
+```text
+2D WORLD MAP
+    -> 施設内3D
+    -> NPC / SHOP / QUEST / 出発準備
+    -> ANOMALY DUNGEON
+    -> 探索・戦闘・回収・遭遇
+    -> 帰還
+    -> 換金・クエスト報告・成長
+    -> 2D WORLD MAP
+```
+
+ロビー、クエスト、換金・成長の詳細は、それぞれ[ロビー／ワールドマップ](lobby-world-map.md)、[クエスト](quests.md)、[経済と成長](economy-and-progression.md)に分離する。現時点の実装済みロビーや単一目標のQuest Attributeを、この草案の実装済み仕様とは扱わない。
+
 ### 基本ゲームループ
 
 1回のランは、原則として以下の循環で構成する。
@@ -99,6 +116,10 @@ Exposureは単純な深度や進行度ではなく、ポータルの遷移確率
 ## 関連資料
 
 - [ゲームシステムドキュメント](README.md)
+- [ロビー／ワールドマップ](lobby-world-map.md)
+- [クエスト](quests.md)
+- [経済と成長](economy-and-progression.md)
+- [アノマリー世界観](../world/anomaly-worldview.md)
 - [アノマリードキュメント](../anomalies/README.md)
 - [設計判断記録](../decisions/README.md)
 - [ゲームループとポータル遷移の設計判断](../decisions/001-game-loop-and-portal-transitions.md)
