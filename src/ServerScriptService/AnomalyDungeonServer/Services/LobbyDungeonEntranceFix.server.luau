@@ -1,25 +1,6 @@
-local Players=game:GetService("Players")
-local Workspace=game:GetService("Workspace")
-local Manager=require(script.Parent.RunService)
-local debounce={}
-local function bind(root)
- local rooms=root:WaitForChild("Rooms",10)
- local lobby=rooms and rooms:WaitForChild("LOBBY",10)
- local gimmicks=lobby and lobby:WaitForChild("GimmickPoints",10)
- local enter=gimmicks and gimmicks:WaitForChild("Enter",10)
- if not enter or enter:GetAttribute("TouchEntryBound") then return end
- enter:SetAttribute("TouchEntryBound",true)
- enter.Touched:Connect(function(hit)
-  local character=hit:FindFirstAncestorOfClass("Model")
-  local player=character and Players:GetPlayerFromCharacter(character)
-  if not player or debounce[player] then return end
-  debounce[player]=true
-  Manager.Enter(player)
-  task.delay(1,function() debounce[player]=nil end)
- end)
- print("[LOBBY LINK] entrance prompt + touch fallback ready")
-end
-local current=Workspace:FindFirstChild("AnomalyDungeon")
-if current then task.defer(bind,current) end
-Workspace.ChildAdded:Connect(function(child) if child.Name=="AnomalyDungeon" then task.defer(bind,child) end end)
-Players.PlayerRemoving:Connect(function(player) debounce[player]=nil end)
+-- LobbyDungeonEntranceFix は無効化。
+-- 生成マップ内 LOBBY/GimmickPoints/Enter のTouch入場は、入口ロビーのパーティ受付を迂回するため
+-- 撤去した。入場は LobbyService のパーティ受付と RunService.StartRun だけが認可する。
+-- 過去の入場経路を確認したい場合は、RunService.Enter と roster の利用状況を確認する。
+local RunService=require(script.Parent.RunService)
+print("[LOBBY LINK] disabled / entry is owned by the party reception in Services/LobbyService + PartyService")

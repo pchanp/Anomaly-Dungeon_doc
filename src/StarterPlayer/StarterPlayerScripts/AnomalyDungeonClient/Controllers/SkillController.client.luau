@@ -131,6 +131,8 @@ end
 -- ダッシュ（クライアント側で即座に実行、物理は所有権により複製）
 -- ============================================================
 local function tryDash()
+  -- リザルト表示中はRun操作を受け付けない
+  if player:GetAttribute('RunResultPending') == true then return end
   if os.clock() < dashCdEnd then return end
   local root, hum = getChar()
   if not root or not hum or hum.Health <= 0 then return end
@@ -152,6 +154,8 @@ local function trySkill(slot)
   if slot < 1 or slot > 4 then return end
   local def = SKILL_DEFS[slot]
   if def.cd == 0 then return end
+  -- リザルト表示中はRun操作を受け付けない
+  if player:GetAttribute('RunResultPending') == true then return end
 
   local now = os.clock()
   if cooldowns[slot] and now < cooldowns[slot] then return end

@@ -71,6 +71,7 @@ local observer=part('Observer',Vector3.new(5,6,3),ORIGIN+Vector3.new(0,3,-80),C.
 sign(observer,'観測体 / 近くにいるとExposure増加 (17st)',C.violet)
 
 -- === 4. AnomalyGate (西) ===
+
 local gate=part('AnomalyGate',Vector3.new(1,12,14),ORIGIN+Vector3.new(-100,6,0),C.violet,root)
 sign(gate,'異常通路 / 変異状態で越えられる',C.violet)
 prompts.Secret=prompt(gate,'境界を越える','裏側')
@@ -133,6 +134,13 @@ bind(prompts.Reset,function(p)
 end)
 -- === tick loop (pool + observer + room detection) ===
 local function PoolEffect(count) return count>=2 and -8*(count-1) or (count==1 and 6 or 0) end
+-- デバッグフロアの範囲内にいる人だけを対象にする。Run中のプレイヤーまで触ると
+-- Run Lifetime と状態リセットが RunService と競合する。
+local function inFloor(p)
+ local r=p.Character and p.Character:FindFirstChild('HumanoidRootPart')
+ if not r then return false end
+ return (r.Position-ORIGIN).Magnitude<FLOOR_SIZE/2
+end
 
 task.spawn(function()
  while true do
@@ -140,7 +148,7 @@ task.spawn(function()
   local occupants={}
   for _,p in Players:GetPlayers() do
    local r,h=body(p)
-   if r and h and h.Health>0 then
+   if r and h and h.Health>0 and inFloor(p) then
     if p:GetAttribute('RunLifetimeTicks') then
      local remaining=math.max(0,(p:GetAttribute('RunLifetimeRemaining') or RunConfig.TransformedLifetimeSeconds)-dt); p:SetAttribute('RunLifetimeRemaining',remaining)
      if remaining<=0 then Reset(p,RunConfig.PlayerRunReturned); teleport(p,ORIGIN+Vector3.new(0,4,0)); tell(p,'Run Lifetime終了 / 強制帰還しました') end
@@ -153,9 +161,7 @@ task.spawn(function()
      Exposure.Add(p,RunConfig.ObserverExposurePerSecond*dt)
     end
     -- room label
-    if (r.Position-ORIGIN).Magnitude<FLOOR_SIZE/2 then
-     p:SetAttribute('Room','DEBUG_FLOOR')
-    end
+    p:SetAttribute('Room','DEBUG_FLOOR')
    end
   end
   pool:SetAttribute('Occupants',#occupants)
@@ -167,17 +173,8 @@ task.spawn(function()
  end
 end)
 
--- player init
-local function onPlayer(p)
- Reset(p)
- p.CharacterAdded:Connect(function(c)
-  Reset(p); local h=c:WaitForChild('Humanoid'); h.WalkSpeed=20
-  task.defer(function() teleport(p,ORIGIN+Vector3.new(0,4,30)) end)
- end)
- if p.Character then task.spawn(function() teleport(p,ORIGIN+Vector3.new(0,4,30)) end) end
-end
-Players.PlayerAdded:Connect(onPlayer)
-for _,p in Players:GetPlayers() do onPlayer(p) end
+-- === player init ===
+-- 初期配置は RunService が都市ロビーへ行う。ここでは移動させず、デバッグフロア内の操作だけを受ける。
 Players.PlayerRemoving:Connect(function(p) Exposure.Release(p); last[p]=nil end)
 
 print('[DEBUG FLOOR] ready at '..tostring(ORIGIN))

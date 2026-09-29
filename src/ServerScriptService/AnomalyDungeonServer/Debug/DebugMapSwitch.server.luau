@@ -1,5 +1,7 @@
 -- DebugMapSwitch: swaps the generated dungeon between registered map IDs.
 -- Stands in for the Transition Portal until Party State is specified.
+-- This is a debug path only: it never takes part in the party run draw, and it refuses to run
+-- while a run is active so the generated world is not pulled out from under an exploring party.
 local Players=game:GetService("Players")
 local Workspace=game:GetService("Workspace")
 local RunService=require(script.Parent.Parent.Services.RunService)
@@ -62,6 +64,10 @@ local function build()
   prompt.Parent=pad
   prompt.Triggered:Connect(function(player)
    if not player.Character then return end
+   if RunService.GetRunState()~="IDLE" then
+    RunService.Tell(player,"Run進行中です。マップ切替はRun終了後に利用できます。")
+    return
+   end
    RunService.Build(Random.new():NextInteger(1000,99999),id)
    if player.Character then player.Character:PivotTo(CFrame.new(base+Vector3.new(0,4,10))) end
    print("[MAP SWITCH] "..id.." loaded by "..player.Name)

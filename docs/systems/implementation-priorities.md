@@ -29,13 +29,15 @@
 - プレイヤー個別状態を1か所から参照できるようにする。
 - 既存AttributeはAdapter経由で段階移行する。
 
-**完了条件:** 現在の入場、帰還、死亡、異常化、Run Lifetime終了が同じ状態機械を通る。
+**進捗:** `RunService` が `IDLE` / `RECRUITING` / `DEPARTING` / `ACTIVE` / `RESULT` / `CLOSING` のRun状態を持ち、成功・未達帰還・死亡・切断・8/32満了・異常化後満了がすべて `RunService.Finish` を通る。プレイヤーのロビー帰属は `LobbyState` 属性で表現する。`InDungeon` / `PlayerRunState` / `QuestState` は互換のため残しており、Runの開始と終了でまとめて更新する。Attributeの一意識別やID規約の確定は残る。
 
 ### 3. Remoteとフォルダ構成の整理
 
 - 機能別Remoteフォルダを定義する。
 - Debug、Runtime、Assetsの境界を明確にする。
 - プレース内バックアップを追加し続けない運用へ移行する。
+
+**進捗:** Run結果用に `ReplicatedStorage/AnomalyRunRemotes`（`Result` / `ResultRequest`）を新設した。既存の `AnomalyState` / `AnomalyNotice` / `SkillEvent` はまだフラットなままで、フォルダへの整理は未実施。Debugは `Debug/` 配下、Runtimeは `Services/` 配下に分かれているが、境界の明文化は未実施。
 
 ## P1: コアループを成立させる機能
 
@@ -44,6 +46,8 @@
 - アイテムID、スタック、所有者、ワールド配置のモデル。
 - Run終了時に持ち帰る／失う処理。
 - Secure Slotは仕様確定後にこの基盤へ追加する。
+
+**進捗:** `Services/InventoryService` に20枠・初期Secure Slot 4枠の枠数と、Run終了時の獲得物・喪失物への分類を実装した。`SecureSlotCapacity` 属性で拡張値を受け取る。アイテムID、スタック、所有者、ワールド配置、マップ上の取得源は未実装で、アイテムは `DebugInventoryTerminal` のデバッグ付与でしか作らない。Secure Slotはすでに境界に組み込まれているが、拡張手段と入出庫タイミングは未決定。
 
 **依存する将来機能:** Memory Swapper、Quest回収、報酬、Secure Slot。
 
@@ -58,6 +62,8 @@
 
 - 現在のReturn処理をService境界へ移す。
 - Transition Portalは過半数、30秒、残留プレイヤー、Party Stateの仕様確定後に追加する。
+
+**進捗:** Returnと全終了条件を `RunService.Finish` に集約し、リザルト送信までがService境界になっている。Transition Portalは未実装で、`DebugMapSwitch` はTransition Portalの代替ではない。
 
 ## P2: アノマリー基盤の統合
 
@@ -96,6 +102,8 @@ Run State、Portal Service、MapDefinitions、Exposure、Quest、Inventoryが必
 ### Secure Slot
 
 InventoryとRun終了処理の完成後に実装する。総インベントリ20枠のうち初期4枠をSecure Slotとし、通常プレイヤーはスキル強化で拡張できる。対象、入出庫タイミング、拡張上限・コスト、Player Anomaly時の扱いは未決定。
+
+**進捗:** 枠数とRun終了時の保持／喪失の判定は `InventoryService` に実装済み。拡張手段、入出庫タイミング、Player Anomaly時の制約は未実装。
 
 ## P4: アイデア段階のマップ
 

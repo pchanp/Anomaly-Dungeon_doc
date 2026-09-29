@@ -61,7 +61,10 @@ local function stealth(player,root,hum)
  task.delay(5,function() player:SetAttribute("IsStealth",false) if char and char.Parent then for _,p in ipairs(char:GetDescendants()) do if p:IsA("BasePart") and p.Name~="HumanoidRootPart" then local orig=p:GetAttribute("StealthOrigTrans") if orig~=nil then p.Transparency=orig p:SetAttribute("StealthOrigTrans",nil) end end end local h=char:FindFirstChildOfClass("Humanoid") if h then h.WalkSpeed=20 end end end)
 end
 skillEvent.OnServerEvent:Connect(function(player,slot)
- if typeof(slot)~="number" then return end local root,hum=getChar(player) if not root or not hum or hum.Health<=0 then return end
+  if typeof(slot)~="number" then return end
+  -- リザルト表示中はRun操作を受け付けない
+  if player:GetAttribute("RunResultPending")==true then return end
+  local root,hum=getChar(player) if not root or not hum or hum.Health<=0 then return end
  serverCd[player]=serverCd[player] or {} local now=os.clock() if serverCd[player][slot] and now<serverCd[player][slot] then return end serverCd[player][slot]=now+(SKILL_CD[slot] or 0)
  if slot==1 then magicBolt(player,root) elseif slot==2 then roll(player,root) elseif slot==3 then stealth(player,root,hum) end
 end)
