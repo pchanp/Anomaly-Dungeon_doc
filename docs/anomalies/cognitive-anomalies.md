@@ -92,35 +92,11 @@ Observe
 
 認知アノマリーはPlayer Anomalyそのものではない。また、個別のAnomaly Entityが必ず認知アノマリーである必要もない。Memory Swapperの認識と記憶のずれ、MiWの観察リスクなどとは連携し得るが、それぞれの固有挙動をこの文書で変更しない。
 
-## Robloxでの視認判定方式
+## 共通観察システムとの関係
 
-### 実現可能な構成
+Camera、画面内判定、視野角、遮蔽Raycast、継続時間、ClientからServerへの観察進行報告は、個別アノマリーの技術ではなく[観察・認識システム](../systems/observation-and-recognition.md)の共通契約として扱う。
 
-`Workspace.CurrentCamera` は各ClientのローカルCameraであり、Cameraの位置・向き・視野角はServerの共有事実ではない。[RobloxのCamera API](https://create.roblox.com/docs/reference/engine/classes/Camera/CameraSubject)にある `WorldToViewportPoint()` と `ViewportPointToRay()`、`Camera.CFrame`、`ViewportSize` を用い、**LocalScriptで**観察候補を評価する。
-
-観察の候補判定は、少なくとも次の組み合わせを想定する。
-
-1. 対象の代表点または複数のサンプル点が `WorldToViewportPoint()` で画面内か確認する。
-2. Cameraの向きと対象方向の角度を使い、視野の中心に近いかを評価する。
-3. Cameraから対象へ `Workspace:Raycast()` を行い、対象または対象モデルの一部が最初のヒットかを確認する。
-4. 最大距離、最小表示面積、継続観察時間、観察の中断を組み合わせて `Observe` の進行を決める。
-
-Raycastは遮蔽を検証でき、`RaycastParams` でプレイヤー自身や観察用の非衝突装飾を除外できる。[Raycastingの公式資料](https://create.roblox.com/docs/workspace/raycasting)が示すとおり、方向ベクトルの長さが検査距離を決め、`CanQuery=false` のPartは対象外にできる。
-
-### Serverとの境界
-
-画面内か、カメラがどこを向くか、UIに覆われているかはClient固有である。よってServerが「プレイヤーが実際に見た」ことを完全には検証できない。Clientからの観察進行報告は、Serverで少なくとも対象の有効状態、Run参加、対象までの概算距離、進行上限、報告頻度を検証して受理する。
-
-経路開放、報酬、Exposure、共有状態変更などの重要な結果はServerだけが確定する。Clientの一回の通知で即座に重要報酬を与えず、継続時間、複数の観察段階、Server側の前提条件を組み合わせる。
-
-### 技術的制約
-
-- Cameraはローカルであり、Serverがカメラ方向を直接信頼できない。
-- `WorldToViewportPoint()` が画面内を返しても、遮蔽、対象の小ささ、UI、プレイヤーの注意までは保証しない。
-- Raycastは最初の衝突を返す。対象が大きい、複数Part、Terrain、透明装飾を持つ場合は、対象の代表点・複数点・Query設定を個別に調整する必要がある。
-- Instance Streaming使用時、遠方PartがClientに届いていなければRaycastが検知できない。公式資料でもStreaming下のRaycast偽陰性が指摘されているため、遠景観察の対象はStreaming範囲、距離、代替のDetect痕跡を考慮する。
-- 毎フレーム、全アノマリーへRaycastしない。Client側で候補を距離・マップ・状態で絞り、観察中だけ必要な頻度で評価する。
-- VR、CameraType変更、Spectator的なカメラ、画面比率変更の扱いは未検証である。最初のプロトタイプは通常のデスクトップ／モバイル標準Cameraに範囲を限定する。
+認知アノマリー側は、その契約を使って「何を観察対象にするか」「どの段階でVisibleやRecognitionを変えるか」「報酬・Exposure・認識差をどう作るか」を決める。視野Raycastだけを `Observe` の確定条件にはしない。
 
 ## 実装上の注意点
 
@@ -143,6 +119,7 @@ Raycastは遮蔽を検証でき、`RaycastParams` でプレイヤー自身や観
 
 ## 関連資料
 
+- [アノマリー相互作用](../systems/anomaly-interaction.md)
 - [アノマリー資料](README.md)
 - [Visible / Invisible Inversion](player-anomalies/visible-invisible-inversion.md)
 - [Memory Swapper](memory-swapper.md)

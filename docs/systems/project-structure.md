@@ -97,8 +97,9 @@ ServerScriptService
     │   ├── PortalService
     │   ├── AnomalyService
     │   ├── ExposureService
-    │   ├── InventoryService
-    │   ├── QuestService
+│   ├── InventoryService
+│   ├── ObservationService
+│   ├── QuestService
     │   ├── DiscoveryService
     │   └── SkillService
     ├── Anomalies
@@ -124,7 +125,7 @@ StarterPlayer
 └── StarterPlayerScripts
     └── AnomalyDungeonClient
         ├── Bootstrap.client
-        ├── Controllers/{Run, Anomaly, Skill, Movement, Interaction}
+        ├── Controllers/{Run, Anomaly, Observation, Skill, Movement, Interaction}
         ├── UI/{HUD, Inventory, Quest, Discovery, Archive}
         └── Effects/{Camera, Audio, Visual, Visibility}
 
@@ -165,6 +166,7 @@ Workspace
 | Transition Portal | `PortalService` | Party State、MapDefinitions | 未実装・Draft。`MapDefinitions` は実装済み |
 | Party State | `RunService`または専用集約Module | Exposure、Quest、Inventory | 未実装・Draft |
 | Anomaly Exposure | `ExposureService` | PlayerState、Anomaly、Portal | サーバー権威の基礎実装済み |
+| 観察・認識 | `ObservationService` + Client `Observation` | Camera、Raycast、Anomaly、Map | 未実装・Draft |
 | Player Anomaly | `PlayerStateService` + 個別Module | Exposure、Visibility | Mad Stomper変異を基礎実装済み |
 | Visible / Invisible Inversion | Client `Visibility` + Server PlayerState | Component分類 | 未実装・Draft |
 | Secure Slot | `InventoryService` | Run終了、永続データ | 未実装・Draft |

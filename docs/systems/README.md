@@ -17,6 +17,8 @@
 - [ロビー／ワールドマップ](lobby-world-map.md)
 - [クエスト](quests.md)
 - [経済と成長](economy-and-progression.md)
+- [アノマリー相互作用](anomaly-interaction.md)
+- [観察・認識システム](observation-and-recognition.md)
 
 ## 資料
 
@@ -26,3 +28,5 @@
 - [ロビー／ワールドマップ](lobby-world-map.md) - 2D都市マップ、施設内3D、ダンジョンへの導線の草案。
 - [クエスト](quests.md) - 明確な目的と不明な対象を両立する依頼設計の草案。
 - [経済と成長](economy-and-progression.md) - 換金、レアルート、コレクター、スキル強化の世界内解釈の草案。
+- [アノマリー相互作用](anomaly-interaction.md) - 既存の行動・アイテム・環境イベントを個別アノマリーへ接続する共通設計の草案。
+- [観察・認識システム](observation-and-recognition.md) - 視野・遮蔽・継続時間をObservation Evidenceとして扱う共通設計の草案。
