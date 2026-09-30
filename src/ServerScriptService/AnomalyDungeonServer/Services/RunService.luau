@@ -188,15 +188,18 @@ end
 function M.PoolEffect(count) return count>=2 and -8*(count-1) or (count==1 and 6 or 0) end
 function M.Tick(dt)
  if not world then return end
+ -- Finish は同期で CloseRun を呼び world を nil にする。ループ中は先頭で取った world だけを使い、
+ -- 差し替えられていれば泉の更新と August.Tick へ進まない。
+ local current=world
  local occupants={}
- local rate=(world.ExposureMultiplier or 1)*RunConfig.ObserverExposurePerSecond
+ local rate=(current.ExposureMultiplier or 1)*RunConfig.ObserverExposurePerSecond
  for _,p in Players:GetPlayers() do
   local r,h=body(p)
   if r and h and h.Health>0 and p:GetAttribute('InDungeon') then
-   local delta=r.Position-world.Pool.Position
+   local delta=r.Position-current.Pool.Position
    if math.abs(delta.X)<=9 and math.abs(delta.Z)<=9 and math.abs(delta.Y)<6 then table.insert(occupants,p) end
-   if (r.Position-world.Observer.Position).Magnitude<17 then Exposure.Add(p,rate*dt) end
-   local roomName='CORRIDOR'; for _,room in world.Rooms do local d=r.Position-room.Center; if math.abs(d.X)<room.Width/2 and math.abs(d.Z)<room.Depth/2 and math.abs(d.Y)<room.Height then roomName=room.DisplayName end end
+   if (r.Position-current.Observer.Position).Magnitude<17 then Exposure.Add(p,rate*dt) end
+   local roomName='CORRIDOR'; for _,room in current.Rooms do local d=r.Position-room.Center; if math.abs(d.X)<room.Width/2 and math.abs(d.Z)<room.Depth/2 and math.abs(d.Y)<room.Height then roomName=room.DisplayName end end
    p:SetAttribute('Room',roomName)
    if p:GetAttribute('RunLifetimeTicks') then
     local remaining=math.max(0,(p:GetAttribute('RunLifetimeRemaining') or RunConfig.TransformedLifetimeSeconds)-dt); p:SetAttribute('RunLifetimeRemaining',remaining)
@@ -205,10 +208,11 @@ function M.Tick(dt)
      if state:GetAttribute('Aug32Active')==true then M.Finish(p,RunOutcomes.LIFETIME_EXPIRED.Id); tell(p,'8/32 Run Lifetime終了 / 帰還できません') else M.Finish(p,RunOutcomes.TRANSFORMED_TIMEOUT.Id); tell(p,'Run Lifetime終了 / 帰還しました') end
     end
    end
-   if r.Position.Y<world.KillY then h.Health=0 end
+   if r.Position.Y<current.KillY then h.Health=0 end
   end
  end
- local pool=world.Pool
+ if world~=current then return end
+ local pool=current.Pool
  pool:SetAttribute('Occupants',#occupants); pool.Color=#occupants>=2 and Color3.fromRGB(170,225,65) or Color3.fromRGB(78,221,217)
  local poolSign=pool:FindFirstChild('Sign'); if poolSign and poolSign:FindFirstChild('TextLabel') then poolSign.TextLabel.Text='泉 / '..#occupants..'人 / '..(#occupants>=2 and '毒' or '回復') end
  for _,p in occupants do local _,h=body(p); local delta=M.PoolEffect(#occupants)*dt; if delta<0 then h:TakeDamage(-delta) else h.Health=math.min(h.MaxHealth,h.Health+delta) end end

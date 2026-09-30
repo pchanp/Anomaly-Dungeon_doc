@@ -196,7 +196,7 @@ Party全員が終了すると `RunService.CloseRun` が生成世界を破棄し�
 - **複数人での挙動は未確認。** Play Soloは1人セッションだったため、パーティ上限5人、強制締切による即時出発、切断者を含む複数人でのRun終了順序は未確認。
 - **クライアントのリザルト画面は未確認。** サーバー側の結果確定とRemote送信までは確認済みだが、リザルト画面そのものの表示確認はしていない。
 - **マップ生成は `PartyService` の受付ループではなく別スレッドで走らせる。** 同一スレッドで走らせると、受付ループの実行予算と合算してマップ生成が script timeout で中断された。
-- **2026-09-29にPlay Soloで見つかった3件の修正は、2026-09-30に`src/`の内容でプレース本体へ反映済み。**以降はPlayセッションをMCPから停止でき、Edit DataModelへ書き戻せる状態である。反映対象は次の3点。
-  1. `Services/PartyService`: `depart` の `host.StartRun` を `task.spawn` で別スレッドに逃がす。
-  2. `Services/RunService`: `M.Tick` の先頭で `local current=world` に取り込み、反復中は `current` を使う。`Finish` が `CloseRun` を呼んで `world` をnilにするため、そのまま `world.KillY` を読むと `attempt to index nil` になる。末尾の `if world~=current then return end` は必須。
-  3. `Debug/DebugInventoryTerminal`: `pad.CFrame` の初期化で `CFrame.new` にCFrameを渡していたのを `spawn.CFrame*CFrame.new(14,0,6)` に変更。
+- **2026-09-29にPlay Soloで見つかった3件の修正。** 2026-09-30に`src/`の内容でプレース本体へ反映した。反映状況は次のとおり。
+  1. `Services/PartyService`: `depart` の `host.StartRun` を `task.spawn` で別スレッドに逃がす。**未反映。** `src/` にもプレース本体にも未実装のまま残る。
+  2. `Services/RunService`: `M.Tick` の先頭で `local current=world` に取り込み、反復中は `current` を使う。`Finish` が `CloseRun` を呼んで `world` をnilにするため、そのまま `world.KillY` を読むと `attempt to index nil` になる。末尾の `if world~=current then return end` は必須。**2026-09-30に適用。** Run Lifetime満了で `Finish` が同期的に `CloseRun` する状況をPlay Soloで再現し、`Tick` が例外を投げず `world=nil` へ到達することを確認済み。
+  3. `Debug/DebugInventoryTerminal`: `pad.CFrame` の初期化でCFrameにCFrameを渡していたのを `lobby.CityLobbySpawn.CFrame+Vector3.new(14,0,6)` に変更。反映済み。
