@@ -85,7 +85,9 @@ local function depart(reason)
 	host.SetRunState(RunConfig.RunStateDeparting)
 	-- 抽選は候補と重みだけを入力とする。参加者・Quest・所持品・スキル構成は参照しない。
 	local mapId=MapDraw.Draw()
-	host.StartRun(party,mapId,reason)
+	-- マップ生成は重いので、受付ループの実行予算と合算させない。同一スレッドで走らせると
+	-- script timeout で中断された。clear と refresh は生成の完了を待たずに進める。
+	task.spawn(function() host.StartRun(party,mapId,reason) end)
 	clear()
 	refresh()
 end

@@ -197,6 +197,6 @@ Party全員が終了すると `RunService.CloseRun` が生成世界を破棄し�
 - **クライアントのリザルト画面は未確認。** サーバー側の結果確定とRemote送信までは確認済みだが、リザルト画面そのものの表示確認はしていない。
 - **マップ生成は `PartyService` の受付ループではなく別スレッドで走らせる。** 同一スレッドで走らせると、受付ループの実行予算と合算してマップ生成が script timeout で中断された。
 - **2026-09-29にPlay Soloで見つかった3件の修正。** 2026-09-30に`src/`の内容でプレース本体へ反映した。反映状況は次のとおり。
-  1. `Services/PartyService`: `depart` の `host.StartRun` を `task.spawn` で別スレッドに逃がす。**未反映。** `src/` にもプレース本体にも未実装のまま残る。
+  1. `Services/PartyService`: `depart` の `host.StartRun` を `task.spawn` で別スレッドに逃がす。**2026-09-30に適用。** Play SoloでTIME_UP経路を実測し、例外なく `DEPARTING` から `ACTIVE` へ進み、参加者が生成マップへ移動されることを確認済み。生成は0.1秒未満で終わり、受付ループ0.25秒周期の `syncField` は `DEPARTING` 中に一度も走らない。`FORCE_CLOSE` はデバッグ用プロンプトが未配置で未確認。
   2. `Services/RunService`: `M.Tick` の先頭で `local current=world` に取り込み、反復中は `current` を使う。`Finish` が `CloseRun` を呼んで `world` をnilにするため、そのまま `world.KillY` を読むと `attempt to index nil` になる。末尾の `if world~=current then return end` は必須。**2026-09-30に適用。** Run Lifetime満了で `Finish` が同期的に `CloseRun` する状況をPlay Soloで再現し、`Tick` が例外を投げず `world=nil` へ到達することを確認済み。
   3. `Debug/DebugInventoryTerminal`: `pad.CFrame` の初期化でCFrameにCFrameを渡していたのを `lobby.CityLobbySpawn.CFrame+Vector3.new(14,0,6)` に変更。反映済み。
