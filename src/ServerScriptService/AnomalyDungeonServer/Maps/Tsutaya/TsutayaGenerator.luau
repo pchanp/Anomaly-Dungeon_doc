@@ -13,6 +13,12 @@ local C={
 	shelfframe=Color3.fromRGB(64,58,50),
 	shelfboard=Color3.fromRGB(118,110,96),
 	blue=Color3.fromRGB(26,61,103),
+	paper=Color3.fromRGB(192,182,146),
+	label=Color3.fromRGB(210,196,132),
+	media={
+		Color3.fromRGB(116,70,78),Color3.fromRGB(74,100,132),Color3.fromRGB(112,104,76),
+		Color3.fromRGB(112,80,122),Color3.fromRGB(138,106,70),Color3.fromRGB(72,112,102),
+	},
 	yellow=Color3.fromRGB(236,203,70),
 	dark=Color3.fromRGB(34,36,40),
 	cyan=Color3.fromRGB(80,218,202),
@@ -213,6 +219,15 @@ function M.Build(seed)
 	local result={Root=root,Rooms={},Prompts={},Seed=seed,KillY=940}
 	local by={}
 
+	-- 視覚専用の小物。棚の背表紙、レシート、作業物は移動・Raycast・Promptを妨げない。
+	local function detail(name,size,position,color,parent,material)
+		local body=part(name,size,position,color,parent,material or Enum.Material.SmoothPlastic)
+		body.CanCollide=false
+		body.CanTouch=false
+		body.CanQuery=false
+		return body
+	end
+
 	for _,spec in ipairs(ROOMS) do
 		local name,display,x,z,width,depth,height=table.unpack(spec)
 		local model=Instance.new("Model")
@@ -264,10 +279,11 @@ function M.Build(seed)
 			end
 		end
 
-		-- Uneven strip lighting: broken tubes read as a dead store.
+		-- 閉店直後の店として、店頭はまだ白く、奥の作業区画ほど蛍光灯が消えている。
+		local lightChance=name=="FRONT" and .88 or (name=="BACKROOM" and .28 or (name=="BROADCAST" and .42 or .62))
 		for index=-1,1 do
 			for _,along in ipairs({"X","Z"}) do
-				local on=rng:NextNumber()>.35
+				local on=rng:NextNumber()<lightChance
 				local size=along=="X" and Vector3.new(14,.3,1.2) or Vector3.new(1.2,.3,14)
 				local offset=along=="X" and Vector3.new(index*(width/3),height-.6,0) or Vector3.new(0,height-.6,index*(depth/3))
 				local b=localPart("Strip",size,offset,on and Color3.fromRGB(214,222,206) or C.dark,on and Enum.Material.Neon or Enum.Material.SmoothPlastic)
@@ -299,7 +315,7 @@ function M.Build(seed)
 			end
 		end
 
-		local signboard=localPart("SectionSign",Vector3.new(math.min(width-12,54),5,.5),Vector3.new(0,height-4,depth/2-5),C.blue)
+		local signboard=localPart("SectionSign",Vector3.new(math.min(width-12,54),5,.5),Vector3.new(0,height-4,depth/2-5),C.dark,Enum.Material.Metal)
 		textFace(signboard,display)
 
 		-- Abandoned fixtures. They break long rooms into bays so sightlines stop short.
@@ -309,15 +325,29 @@ function M.Build(seed)
 				local x=(lane-2)*(width/4)
 				localPart("CheckoutLane",Vector3.new(14,4.5,9),Vector3.new(x,2.25,depth/2-16),C.blue)
 				localPart("LanePost",Vector3.new(3,7,3),Vector3.new(x+9,3.5,depth/2-24),C.wall)
+				local register=detail("Register",Vector3.new(4,2,3),center+Vector3.new(x,5.7,depth/2-16),C.dark,f.Geometry,Enum.Material.Metal)
+				local receipt=detail("Receipt",Vector3.new(1.6,.15,2.2),register.Position+Vector3.new(0,1.1,0),C.paper,f.Geometry,Enum.Material.SmoothPlastic)
+				receipt.Orientation=Vector3.new(0,0,(lane-2)*7)
 			end
+			local poster=localPart("FadedPoster",Vector3.new(28,14,.18),Vector3.new(-width/2+.2,11,depth/2-26),C.paper,Enum.Material.SmoothPlastic)
+			textFace(poster,"ARCHIVE NIGHT\nLAST DAY",Enum.NormalId.Right)
 		elseif name=="BACKROOM" then
 			for rack=1,3 do
 				local x=(rack-2)*(width/4)
 				localPart("ReturnsRack",Vector3.new(20,8,7),Vector3.new(x,4,depth/2-18),C.rust,Enum.Material.Metal)
 			end
 			localPart("SortingTable",Vector3.new(26,3.5,12),Vector3.new(0,1.75,-8),C.wall)
+			for cart=1,2 do
+				local x=(cart==1 and -36 or 34)
+				local frame=detail("ReturnCart",Vector3.new(12,7,7),center+Vector3.new(x,3.5,-2),C.rust,f.Geometry,Enum.Material.Metal)
+				for box=1,3 do
+					detail("UnsortedCase",Vector3.new(3.4,1.5,2.4),frame.Position+Vector3.new(-3.2+(box-1)*3.2,4.2,0),C.media[(box+cart)%#C.media+1],f.Geometry)
+				end
+			end
 		elseif name=="BROADCAST" then
 			localPart("Console",Vector3.new(16,4,7),Vector3.new(0,2,-8),C.dark,Enum.Material.Metal)
+			local monitor=detail("StationMonitor",Vector3.new(5,3.6,.4),center+Vector3.new(0,5,-11.7),Color3.fromRGB(42,52,54),f.Geometry,Enum.Material.Neon)
+			monitor.Material=Enum.Material.Neon
 			for _,side in ipairs({-1,1}) do
 				localPart("Rack",Vector3.new(5,9,6),Vector3.new(side*(width/2-14),4.5,10),C.dark)
 			end
@@ -354,7 +384,8 @@ function M.Build(seed)
 
 	auditLayout()
 
-	-- Archive shelves: double-sided stacks with a dead aisle between rows.
+	-- Archive shelves: 棚は単なる障害物ではなく、背表紙の密度で「まだ残っている店」を作る。
+	-- 完全に散乱させず、欠番と少数の落下物だけを残すことで後から荒廃を重ねられる。
 	local function stackRow(room,name,offset,alongX,rows)
 		local dir=alongX and Vector3.new(0,0,1) or Vector3.new(1,0,0)
 		for row=1,(rows or 2) do
@@ -366,7 +397,26 @@ function M.Build(seed)
 			local boardSize=alongX and Vector3.new(length,.4,4.2) or Vector3.new(4.2,.4,length)
 			for _,level in ipairs({2.4,4.6,6.8,9}) do
 				part("ShelfBoard",boardSize,room.Center+spine+Vector3.new(0,level,0),C.shelfboard,room.Folders.AnomalyPoints)
+				local count=math.max(8,math.floor(length/4.4))
+				for item=1,count do
+					-- 一部の欠番は、品揃えが普通の店舗のままではないことだけを示す。
+					if rng:NextNumber()>.13 then
+						local position
+						local caseSize
+						if alongX then
+							position=room.Center+spine+Vector3.new(-length/2+item*length/(count+1),level+.92,2.28)
+							caseSize=Vector3.new(3.25,1.5,.18)
+						else
+							position=room.Center+spine+Vector3.new(2.28,level+.92,-length/2+item*length/(count+1))
+							caseSize=Vector3.new(.18,1.5,3.25)
+						end
+						local media=detail("MediaSpine",caseSize,position,C.media[(item+row+math.floor(level))%#C.media+1],room.Folders.AnomalyPoints)
+						media.Material=Enum.Material.SmoothPlastic
+					end
+				end
 			end
+			local tab=detail("ShelfTab",alongX and Vector3.new(12,1.5,.22) or Vector3.new(.22,1.5,12),room.Center+spine+Vector3.new(0,11.2,alongX and 2.3 or 0),C.label,room.Folders.AnomalyPoints,Enum.Material.SmoothPlastic)
+			if alongX then textFace(tab,"ARCHIVE",Enum.NormalId.Front) end
 		end
 	end
 
@@ -375,13 +425,14 @@ function M.Build(seed)
 	stackRow(by.CD,"CdStack",Vector3.new(0,0,4),true,2)
 	stackRow(by.TAPE,"TapeStack",Vector3.new(0,0,-4),true,3)
 
-	-- Loose stock on the floor breaks the grid so the aisles do not read as corridors.
+	-- 少数の落下ケースだけを残す。全面的な瓦礫化は、テクスチャ・イベント側で後から足せる。
 	for _,name in ipairs({"VHS","DVD","CD","TAPE"}) do
 		local room=by[name]
-		for _=1,4 do
+		for _=1,7 do
 			local x=rng:NextNumber(-(room.Width/2-12),room.Width/2-12)
 			local z=rng:NextNumber(-(room.Depth/2-12),room.Depth/2-12)
-			part("FallenCase",Vector3.new(4,1.6,3),room.Center+Vector3.new(x,0.8,z),C.rust,room.Folders.ItemPoints)
+			local fallen=detail("FallenCase",Vector3.new(4,1.1,3),room.Center+Vector3.new(x,.6,z),C.media[rng:NextInteger(1,#C.media)],room.Folders.ItemPoints)
+			fallen.Orientation=Vector3.new(0,rng:NextInteger(0,179),rng:NextInteger(-5,5))
 		end
 	end
 
