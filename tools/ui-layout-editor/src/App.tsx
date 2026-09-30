@@ -354,7 +354,7 @@ export function App(): React.JSX.Element {
           if (selection) duplicateComponent(selection);
         }}
         onDelete={() => {
-          if (selection) deleteComponent(selection);
+          if (selection && window.confirm(`"${selection}" を削除しますか？`)) deleteComponent(selection);
         }}
         onUndo={doUndo}
         onRedo={doRedo}
