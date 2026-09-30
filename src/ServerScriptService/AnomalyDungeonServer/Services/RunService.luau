@@ -98,7 +98,10 @@ function M.Extract(p,outcomeOrForce)
  end
  return M.Finish(p,key)
 end
+-- Binds a generated prompt. A map is allowed to leave a surface out, so a missing prompt
+-- is skipped instead of indexing nil.
 local function bind(q,fn)
+ if not q then return end
  table.insert(connections,q.Triggered:Connect(function(p)
   local r,h=body(p); if not r or not h or h.Health<=0 or (r.Position-q.Parent.Position).Magnitude>13 then return end
   local now=os.clock(); if now-(last[p] or 0)<.4 then return end; last[p]=now; fn(p)

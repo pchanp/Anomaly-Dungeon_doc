@@ -18,21 +18,83 @@ end
 local function prompt(b,action,name)
  local q=Instance.new('ProximityPrompt'); q.ActionText=action; q.ObjectText=name; q.HoldDuration=.35; q.MaxActivationDistance=10; q.RequiresLineOfSight=false; q.Parent=b; return q
 end
--- Door letters: N=-Z, S=+Z, E=+X, W=-X. Adjacent spaces share 22-stud passages.
+-- Door letters are not written by hand. N=-Z, S=+Z, E=+X, W=-X, and each end's opening is
+-- derived from PASSAGES below, so a typed letter can never seal a corridor a passage promised.
+-- Rooms are listed as: name, title, x, z, width, depth, y, dim.
 local specs={
- {'LOBBY','00 / CLOSED STACKS',0,160,80,64,1000,'',false},
- {'ENTRY','01 / DVD RENTAL',0,0,120,100,1000,'N',false},
- {'HALL','02 / INFORMATION',0,-132,140,112,1000,'NSEW',false},
- {'BOOKS','03 / BOOKS & MAGAZINES',-158,-132,120,112,1000,'EN',false},
- {'CISTERN','04 / CD & LISTENING',158,-132,120,112,1000,'WN',false},
- {'OBSERVATORY','06 / VHS ARCHIVE',-158,-266,120,112,1000,'SE',true},
- {'GAMES','05 / GAMES',158,-266,120,112,1000,'SW',false},
- {'REGISTER','07 / RETURNS & CASHIER',0,-266,140,112,1000,'NSEW',false},
- {'STAFF','08 / STAFF ONLY',0,-380,90,76,1000,'NS',true},
- {'WAREHOUSE','09 / STOCKROOM',0,-486,120,96,1000,'NS',true},
- {'EXTRACTION','B1 / PARKING',0,-666,160,128,976,'S',true},
- {'OUTSIDE','? / RETURN TO SENDER',-300,-266,64,64,1000,'',true},
+ {'ENTRY','01 / DVD RENTAL',0,0,120,100,1000,false},
+ {'HALL','02 / INFORMATION',0,-132,140,112,1000,false},
+ {'BOOKS','03 / BOOKS & MAGAZINES',-158,-132,120,112,1000,false},
+ {'CISTERN','04 / CD & LISTENING',158,-132,120,112,1000,false},
+ {'OBSERVATORY','06 / VHS ARCHIVE',-158,-266,120,112,1000,true},
+ {'GAMES','05 / GAMES',158,-266,120,112,1000,false},
+ {'REGISTER','07 / RETURNS & CASHIER',0,-266,140,112,1000,false},
+ {'STAFF','08 / STAFF ONLY',0,-380,90,76,1000,true},
+ {'WAREHOUSE','09 / STOCKROOM',0,-486,120,96,1000,true},
+ {'EXTRACTION','B1 / PARKING',0,-666,160,128,976,true},
 }
+-- The single description of how the megastore connects. Adjacent spaces share 22-stud passages.
+local PASSAGES={
+ {'ENTRY','HALL'},{'HALL','BOOKS'},{'HALL','CISTERN'},{'HALL','REGISTER'},
+ {'BOOKS','OBSERVATORY'},{'CISTERN','GAMES'},{'OBSERVATORY','REGISTER'},
+ {'GAMES','REGISTER'},{'REGISTER','STAFF'},{'STAFF','WAREHOUSE'},{'WAREHOUSE','EXTRACTION'},
+}
+-- Every room is on the passage graph, so the reachability check below has no exceptions.
+local AISLE=22
+local RAIL=AISLE/2+1
+local SPEC={}
+for _,s in ipairs(specs) do SPEC[s[1]]=s end
+-- Which wall a passage opens on each end.
+local function passageSides(aName,bName)
+ local a,b=SPEC[aName],SPEC[bName]
+ local dx,dz=b[3]-a[3],b[4]-a[4]
+ if math.abs(dx)>math.abs(dz) then
+  local east=dx>0
+  return 'X',east and 'E' or 'W',east and 'W' or 'E'
+ end
+ local south=dz>0
+ return 'Z',south and 'S' or 'N',south and 'N' or 'S'
+end
+local openings={}
+for _,s in ipairs(specs) do openings[s[1]]={} end
+for _,edge in ipairs(PASSAGES) do
+ local _,sideA,sideB=passageSides(edge[1],edge[2])
+ openings[edge[1]][sideA]=(openings[edge[1]][sideA] or 0)+1
+ openings[edge[2]][sideB]=(openings[edge[2]][sideB] or 0)+1
+end
+-- Structural self check, mirroring the TSUTAYA generator. A walled off room, two passages
+-- fighting over one wall, or an overlap are all invisible in the editor and only surface as
+-- a dead run, so the build says so instead of failing quietly.
+local function auditLayout()
+ for index=1,#specs do
+  local a=specs[index]
+  for side,count in pairs(openings[a[1]]) do
+   if count>1 then warn(('[CLOSED_STACKS] room %s has %d passages on wall %s; only one gap gets carved'):format(a[1],count,side)) end
+  end
+  for other=index+1,#specs do
+   local b=specs[other]
+   if math.abs(a[3]-b[3])<(a[5]+b[5])/2 and math.abs(a[4]-b[4])<(a[6]+b[6])/2 then
+    warn(('[CLOSED_STACKS] rooms %s and %s overlap'):format(a[1],b[1]))
+   end
+  end
+ end
+ local neighbours={}
+ for _,s in ipairs(specs) do neighbours[s[1]]={} end
+ for _,edge in ipairs(PASSAGES) do
+  table.insert(neighbours[edge[1]],edge[2]); table.insert(neighbours[edge[2]],edge[1])
+ end
+ local origin='ENTRY'
+ local seen,queue={[origin]=true},{origin}
+ while #queue>0 do
+  local current=table.remove(queue)
+  for _,next_room in ipairs(neighbours[current]) do
+   if not seen[next_room] then seen[next_room]=true; table.insert(queue,next_room) end
+  end
+ end
+ for _,s in ipairs(specs) do
+  if not seen[s[1]] then warn(('[CLOSED_STACKS] room %s has no passage from %s'):format(s[1],origin)) end
+ end
+end
 function M.Build(seed,preview)
  local old=workspace:FindFirstChild('AnomalyDungeon'); if old then old:Destroy() end
  local root=Instance.new('Model'); root.Name='AnomalyDungeon'; root.Parent=workspace; root:SetAttribute('Seed',seed); root:SetAttribute('Theme','Closed media megastore'); root:SetAttribute('Version',2); root:SetAttribute('MapId',MapDefinitions.CLOSED_STACKS.Id); root:SetAttribute('MapDisplayName',MapDefinitions.CLOSED_STACKS.DisplayName)
@@ -46,7 +108,7 @@ function M.Build(seed,preview)
  end
  local function localPart(r,n,size,pos,color,mat) return part(n,size,r.Center+pos,color,r.Folders.Geometry,mat) end
  for index,s in ipairs(specs) do
-  local n,title,x,z,w,d,y,doors,dim=table.unpack(s)
+  local n,title,x,z,w,d,y,dim=table.unpack(s)
   local model=Instance.new('Model'); model.Name=n; model.Parent=rooms
   local f={}; for _,key in {'Geometry','DoorPoints','EnemyPoints','AnomalyPoints','ItemPoints','GimmickPoints','SpecialPoints'} do f[key]=folder(key,model) end
   local r={Model=model,Center=Vector3.new(x,y,z),Width=w,Depth=d,Height=22,DisplayName=title,Folders=f}; by[n]=r; table.insert(result.Rooms,r)
@@ -60,8 +122,8 @@ function M.Build(seed,preview)
     local pos=alongX and Vector3.new(offset,yoff,direction*edge) or Vector3.new(direction*edge,yoff,offset)
     localPart(r,'Wall_'..side,size,pos,C.wall)
    end
-   if string.find(doors,side,1,true) then
-    local segment=(span-22)/2; wallSegment(segment,22/2+segment/2,22,11); wallSegment(segment,-22/2-segment/2,22,11); wallSegment(22,0,6,19)
+   if openings[n][side] then
+    local segment=(span-AISLE)/2; wallSegment(segment,AISLE/2+segment/2,22,11); wallSegment(segment,-AISLE/2-segment/2,22,11); wallSegment(AISLE,0,6,19)
     local pos=alongX and Vector3.new(0,3,direction*edge) or Vector3.new(direction*edge,3,0)
     local marker=part(side,Vector3.one,r.Center+pos,C.yellow,f.DoorPoints); marker.Transparency=1; marker.CanCollide=false
    else wallSegment(span,0,22,11) end
@@ -79,18 +141,21 @@ function M.Build(seed,preview)
    for tz=-math.floor(d/24),math.floor(d/24) do localPart(r,'TileJoint',Vector3.new(w-2,.025,.06),Vector3.new(0,.02,tz*12),Color3.fromRGB(85,88,83)) end
   end
  end
- local function connect(a,b)
-  local A,B=by[a],by[b]; local delta=B.Center-A.Center; local alongX=math.abs(delta.X)>math.abs(delta.Z)
+ -- Reads the axis from the same helper the wall openings came from, so a walkway can never
+ -- be laid along an axis the carved gap is not on.
+ local function connect(aName,bName)
+  local A,B=by[aName],by[bName]; local delta=B.Center-A.Center; local alongX=passageSides(aName,bName)=='X'
   local u=alongX and Vector3.new(math.sign(delta.X),0,0) or Vector3.new(0,0,math.sign(delta.Z))
   local start=A.Center+u*(alongX and A.Width/2 or A.Depth/2); local finish=B.Center-u*(alongX and B.Width/2 or B.Depth/2)
   local len=(finish-start).Magnitude; local mid=(start+finish)/2
-  local f=folder(a..'_to_'..b,links)
-  local floor=part('Walkway',Vector3.new(22,2,len+.5),mid-Vector3.new(0,1,0),C.floor,f,Enum.Material.Concrete); floor.CFrame=CFrame.lookAt(mid-Vector3.new(0,1,0),finish-Vector3.new(0,1,0))
-  for _,side in {-1,1} do local rail=part('PassageWall',Vector3.new(2,22,len+.5),mid,C.wall,f); rail.CFrame=floor.CFrame*CFrame.new(side*12,12,0) end
-  local ceiling=roof(a..'_PassageRoof',Vector3.new(26,1,len+.5),mid); ceiling.CFrame=floor.CFrame*CFrame.new(0,23.5,0)
-  f:SetAttribute('From',a); f:SetAttribute('To',b)
+  local f=folder(aName..'_to_'..bName,links)
+  local floor=part('Walkway',Vector3.new(AISLE,2,len+.5),mid-Vector3.new(0,1,0),C.floor,f,Enum.Material.Concrete); floor.CFrame=CFrame.lookAt(mid-Vector3.new(0,1,0),finish-Vector3.new(0,1,0))
+  for _,side in {-1,1} do local rail=part('PassageWall',Vector3.new(2,22,len+.5),mid,C.wall,f); rail.CFrame=floor.CFrame*CFrame.new(side*RAIL,12,0) end
+  local ceiling=roof(aName..'_PassageRoof',Vector3.new(AISLE+4,1,len+.5),mid); ceiling.CFrame=floor.CFrame*CFrame.new(0,23.5,0)
+  f:SetAttribute('From',aName); f:SetAttribute('To',bName)
  end
- for _,edge in {{'ENTRY','HALL'},{'HALL','BOOKS'},{'HALL','CISTERN'},{'HALL','REGISTER'},{'BOOKS','OBSERVATORY'},{'CISTERN','GAMES'},{'OBSERVATORY','REGISTER'},{'GAMES','REGISTER'},{'REGISTER','STAFF'},{'STAFF','WAREHOUSE'},{'WAREHOUSE','EXTRACTION'}} do connect(edge[1],edge[2]) end
+ for _,edge in ipairs(PASSAGES) do connect(edge[1],edge[2]) end
+ auditLayout()
  local function shelves(r,media)
   local shift=rng:NextInteger(0,1)*3
   for _,x in {-42,-24,24,42} do for _,z in {-27,27} do
@@ -107,11 +172,10 @@ function M.Build(seed,preview)
  local function station(r,n,offset,color,text,action)
   local b=part(n,Vector3.new(5,4,3),r.Center+offset,color,r.Folders.GimmickPoints,Enum.Material.Metal); sign(b,text,color); result.Prompts[n]=prompt(b,action,n); return b
  end
- local lobby=by.LOBBY; result.Lobby=lobby.Center+Vector3.new(0,4,14); result.Entry=by.ENTRY.Center+Vector3.new(0,4,34)
- local spawn=Instance.new('SpawnLocation'); spawn.Name='LobbySpawn'; spawn.Anchored=true; spawn.Size=Vector3.new(8,.2,8); spawn.Position=lobby.Center+Vector3.new(0,.1,16); spawn.Neutral=true; spawn.Transparency=1; spawn.Parent=lobby.Folders.SpecialPoints
- station(lobby,'Enter',Vector3.new(0,2,-8),C.yellow,'CLOSED STACKS\n閉店後の探索を始める','店内に入る')
- station(lobby,'Reroll',Vector3.new(24,2,0),C.yellow,'売場の配置を再抽選\n全員ロビーのときのみ','棚の配置を再抽選')
- board(lobby,'MapBoard',Vector3.new(-23,8,-23),Vector3.new(28,12,.5),'店内案内\nDVD → 中央売場\n書籍・VHS ← → CD・ゲーム\nレジ → スタッフ → 倉庫 → B1')
+ local entryRoom=by.ENTRY; result.Entry=entryRoom.Center+Vector3.new(0,4,34)
+-- LOBBY is gone. The reroll terminal now lives in ENTRY, the room players arrive in, which
+ -- is where TSUTAYA keeps it too. There is no separate staging room to walk to any more.
+ station(entryRoom,'Reroll',Vector3.new(-16,2,-30),C.yellow,'売場の配置を再抽選\n全員ロビーのときのみ','棚の配置を再抽選')
  station(by.ENTRY,'Return',Vector3.new(-18,2,36),C.cyan,'店外へ戻る','帰還する')
  local hall=by.HALL; result.Hall=hall.Center
  for _,x in {-37,37} do localPart(hall,'FeatureTable',Vector3.new(24,3,18),Vector3.new(x,1.5,-27),C.wall) end
@@ -123,7 +187,7 @@ function M.Build(seed,preview)
  local obs=by.OBSERVATORY
  local ob=part('Observer',Vector3.new(5,6,3),obs.Center+Vector3.new(0,3,-27),C.violet,obs.Folders.AnomalyPoints,Enum.Material.Neon); sign(ob,'返却されていない映像 / 近くにいると危険',C.violet); result.Observer=ob
  local gate=part('AnomalyGate',Vector3.new(1,12,14),obs.Center+Vector3.new(-58,6,0),C.violet,obs.Folders.SpecialPoints); sign(gate,'在庫にない通路 / 異常状態',C.violet); result.Prompts.Secret=prompt(gate,'境界を越える','棚の裏側')
- result.SecretSpawn=by.OUTSIDE.Center+Vector3.new(0,4,12); station(by.OUTSIDE,'AnomalyExit',Vector3.new(0,2,-8),C.violet,'出口ポータル','帰還する')
+ result.SecretSpawn=obs.Center+Vector3.new(34,4,26); station(obs,'AnomalyExit',Vector3.new(34,2,20),C.violet,'出口ポータル','帰還する')
  local reg=by.REGISTER
  for _,x in {-40,40} do
   localPart(reg,'CheckoutCounter',Vector3.new(28,4,10),Vector3.new(x,2,8),C.blue)

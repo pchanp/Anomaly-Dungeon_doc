@@ -96,17 +96,102 @@ local function prompt(body,action,object,hold,maxDistance)
 	return q
 end
 
--- Room specs: name, display, x, z, width, depth, doors, height.
+-- Room specs: name, display, x, z, width, depth, height.
+-- No door letters live here. Openings are derived from LINKS below, so a hand typed wall
+-- letter can never seal a corridor that a link already promised.
 -- Aisles are 22 wide with double-sided stacks, so a room reads as corridors rather than an open floor.
 local ROOMS={
-	{"FRONT","01 / 店頭 / 営業終了",0,168,96,72,"S",20},
-	{"VHS","02 / VHS 試写室",-116,60,104,96,"SE",20},
-	{"DVD","03 / DVD / セル",116,60,104,96,"SW",20},
-	{"CD","04 / CD 試聴コーナー",-116,-92,104,96,"NE",20},
-	{"BROADCAST","05 / 社内放送室",0,-92,96,72,"NSE",18},
-	{"TAPE","06 / テープ保管庫",116,-92,104,96,"NW",20},
-	{"BACKROOM","B1 / 返却作業場",0,-236,120,80,"N",18},
+	{"FRONT","01 / 店頭 / 営業終了",0,190,120,64,20},
+	{"VHS","02 / VHS 試写室",-190,190,104,96,20},
+	{"DVD","03 / DVD / セル",190,190,104,96,20},
+	{"CD","04 / CD 試聴コーナー",-190,20,104,96,20},
+	{"BROADCAST","05 / 社内放送室",0,20,160,72,18},
+	{"TAPE","06 / テープ保管庫",190,20,104,96,20},
+	{"BACKROOM","B1 / 返却作業場",0,-130,140,80,18},
 }
+
+-- The single description of how the blockout connects. LINKS is the only place a passage is
+-- declared: each end's wall opening and the walkway between the two ends are both read from it.
+-- Rooms share a row or a column on purpose, so every link runs straight and never bends
+-- through a room it is not supposed to touch.
+local LINKS={
+	{"FRONT","VHS"},
+	{"FRONT","DVD"},
+	{"VHS","CD"},
+	{"DVD","TAPE"},
+	{"CD","BROADCAST"},
+	{"TAPE","BROADCAST"},
+	{"BROADCAST","BACKROOM"},
+}
+
+local AISLE=22
+local RAIL=AISLE/2+1
+
+local SPEC={}
+for _,spec in ipairs(ROOMS) do SPEC[spec[1]]=spec end
+
+-- Which wall a link opens on each end. Door letters: N=-Z, S=+Z, E=+X, W=-X.
+local function linkSides(aName,bName)
+	local a,b=SPEC[aName],SPEC[bName]
+	local dx,dz=b[3]-a[3],b[4]-a[4]
+	if math.abs(dx)>math.abs(dz) then
+		local east=dx>0
+		return "X",east and "E" or "W",east and "W" or "E"
+	end
+	local south=dz>0
+	return "Z",south and "S" or "N",south and "N" or "S"
+end
+
+local openings={}
+for _,spec in ipairs(ROOMS) do openings[spec[1]]={} end
+for _,edge in ipairs(LINKS) do
+	local _,sideA,sideB=linkSides(edge[1],edge[2])
+	openings[edge[1]][sideA]=(openings[edge[1]][sideA] or 0)+1
+	openings[edge[2]][sideB]=(openings[edge[2]][sideB] or 0)+1
+end
+
+-- Structural self check. A walled off room or a corridor nobody walks is invisible in the
+-- editor and only surfaces as a dead run, so the build says so instead of failing quietly.
+local function auditLayout()
+	for index=1,#ROOMS do
+		local a=ROOMS[index]
+		for side,count in pairs(openings[a[1]]) do
+			if count>1 then
+				warn(("[%s] room %s has %d links on wall %s; only one gap gets carved"):format(DEFS.Id,a[1],count,side))
+			end
+		end
+		for other=index+1,#ROOMS do
+			local b=ROOMS[other]
+			local overlapX=math.abs(a[3]-b[3])<(a[5]+b[5])/2
+			local overlapZ=math.abs(a[4]-b[4])<(a[6]+b[6])/2
+			if overlapX and overlapZ then
+				warn(("[%s] rooms %s and %s overlap"):format(DEFS.Id,a[1],b[1]))
+			end
+		end
+	end
+	local neighbours={}
+	for _,spec in ipairs(ROOMS) do neighbours[spec[1]]={} end
+	for _,edge in ipairs(LINKS) do
+		table.insert(neighbours[edge[1]],edge[2])
+		table.insert(neighbours[edge[2]],edge[1])
+	end
+	local origin=ROOMS[1][1]
+	local seen,queue={[origin]=true},{origin}
+	while #queue>0 do
+		local current=table.remove(queue)
+		for _,next_room in ipairs(neighbours[current]) do
+			if not seen[next_room] then
+				seen[next_room]=true
+				table.insert(queue,next_room)
+			end
+		end
+	end
+	for _,spec in ipairs(ROOMS) do
+		if not seen[spec[1]] then
+			warn(("[%s] room %s has no passage from %s"):format(DEFS.Id,spec[1],origin))
+		end
+	end
+end
 
 function M.Build(seed)
 	local old=workspace:FindFirstChild("AnomalyDungeon")
@@ -129,7 +214,7 @@ function M.Build(seed)
 	local by={}
 
 	for _,spec in ipairs(ROOMS) do
-		local name,display,x,z,width,depth,doors,height=table.unpack(spec)
+		local name,display,x,z,width,depth,height=table.unpack(spec)
 		local model=Instance.new("Model")
 		model.Name=name
 		model.Parent=rooms
@@ -165,11 +250,11 @@ function M.Build(seed)
 				local pos=alongX and Vector3.new(offset,yoff,direction*edge) or Vector3.new(direction*edge,yoff,offset)
 				localPart("Wall_"..side,size,pos,C.wall)
 			end
-			if string.find(doors,side,1,true) then
-				local segment=(span-22)/2
-				wallSegment(segment,11+segment/2,height/2)
-				wallSegment(segment,-11-segment/2,height/2)
-				wallSegment(22,0,height-1.5)
+			if openings[name][side] then
+				local segment=(span-AISLE)/2
+				wallSegment(segment,AISLE/2+segment/2,height/2)
+				wallSegment(segment,-AISLE/2-segment/2,height/2)
+				wallSegment(AISLE,0,height-1.5)
 				local pos=alongX and Vector3.new(0,2,direction*edge) or Vector3.new(direction*edge,2,0)
 				local marker=part(side,Vector3.one,center+pos,C.yellow,f.DoorPoints)
 				marker.Transparency=1
@@ -231,36 +316,35 @@ function M.Build(seed)
 		end
 	end
 
-	local function connect(a,b)
-		local A,B=by[a],by[b]
+	-- Reads the axis from the same helper the wall openings came from, so a walkway can
+	-- never be laid along an axis the carved gap is not on.
+	local function connect(aName,bName)
+		local A,B=by[aName],by[bName]
 		local delta=B.Center-A.Center
-		local alongX=math.abs(delta.X)>math.abs(delta.Z)
+		local alongX=linkSides(aName,bName)=="X"
 		local unit=alongX and Vector3.new(math.sign(delta.X),0,0) or Vector3.new(0,0,math.sign(delta.Z))
 		local start=A.Center+unit*(alongX and A.Width/2 or A.Depth/2)
 		local finish=B.Center-unit*(alongX and B.Width/2 or B.Depth/2)
 		local len=(finish-start).Magnitude
 		local mid=(start+finish)/2
-		local f=folder(a.."_to_"..b,links)
-		local floor=part("Walkway",Vector3.new(22,2,len+.5),mid-Vector3.new(0,1,0),C.floor,f,Enum.Material.Concrete)
+		local f=folder(aName.."_to_"..bName,links)
+		local floor=part("Walkway",Vector3.new(AISLE,2,len+.5),mid-Vector3.new(0,1,0),C.floor,f,Enum.Material.Concrete)
 		floor.CFrame=CFrame.lookAt(mid-Vector3.new(0,1,0),finish-Vector3.new(0,1,0))
 		for _,side in ipairs({-1,1}) do
 			local rail=part("PassageWall",Vector3.new(2,18,len+.5),mid,C.wall,f)
-			rail.CFrame=floor.CFrame*CFrame.new(side*12,9,0)
+			rail.CFrame=floor.CFrame*CFrame.new(side*RAIL,9,0)
 		end
-		local lid=part("PassageRoof",Vector3.new(26,1,len+.5),mid,Color3.fromRGB(52,50,47),f)
+		local lid=part("PassageRoof",Vector3.new(AISLE+4,1,len+.5),mid,Color3.fromRGB(52,50,47),f)
 		lid.CFrame=floor.CFrame*CFrame.new(0,19.5,0)
-		f:SetAttribute("From",a)
-		f:SetAttribute("To",b)
+		f:SetAttribute("From",aName)
+		f:SetAttribute("To",bName)
 	end
 
-	for _,edge in ipairs({
-		{"FRONT","VHS"},{"FRONT","DVD"},
-		{"VHS","CD"},{"DVD","TAPE"},
-		{"CD","BROADCAST"},{"TAPE","BROADCAST"},
-		{"BROADCAST","BACKROOM"},
-	}) do
+	for _,edge in ipairs(LINKS) do
 		connect(edge[1],edge[2])
 	end
+
+	auditLayout()
 
 	-- Archive shelves: double-sided stacks with a dead aisle between rows.
 	local function stackRow(room,name,offset,alongX,rows)
@@ -313,7 +397,8 @@ function M.Build(seed)
 		return body
 	end
 
-	station(front,"Enter",Vector3.new(0,2,24),C.yellow,"TSUTAYA\n閉店後の探索を始める","店内に入る")
+	-- No "Enter" prompt here. The entrance reception owns entry, so a direct prompt could only
+	-- duplicate M.Enter and bypass the field check it already guards.
 	station(front,"Reroll",Vector3.new(-32,2,10),C.yellow,"棚の構成を再抽選\n全員ロビーのときのみ","棚の構成を再抽選")
 	station(by.VHS,"Return",Vector3.new(-32,2,42),C.cyan,"店外へ戻る","帰還する")
 	station(by.BACKROOM,"UnlockExit",Vector3.new(0,2,-26),C.yellow,"出口制御端末\n操作すると出口ポータルが起動","出口を起動する")
