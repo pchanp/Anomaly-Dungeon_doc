@@ -282,12 +282,20 @@ function M.Build(seed)
 			end
 		end
 
-		-- Structural columns split long rooms into bays.
+		-- Structural columns split long rooms into bays. A column is skipped where it would
+		-- stand inside a doorway: openings always sit at offset 0 on their wall, so a bay that
+		-- lands on the centre line would otherwise plant a pillar in the only gap.
+		local COLUMN_HALF=1.7
+		local clearance=AISLE/2+COLUMN_HALF
 		local bays=math.max(1,math.floor(width/60))
 		for bay=1,bays do
 			local offset=(bay-(bays+1)/2)*(width/(bays+1))
 			for _,zoff in ipairs({-(depth/2-9),depth/2-9}) do
-				localPart("Column",Vector3.new(3.4,height,3.4),Vector3.new(offset,height/2,zoff),C.wall)
+				local blocksNS=openings[name][(zoff<0) and "N" or "S"] and math.abs(offset)<clearance
+				local blocksEW=openings[name][(offset<0) and "W" or "E"] and math.abs(zoff)<clearance
+				if not blocksNS and not blocksEW then
+					localPart("Column",Vector3.new(3.4,height,3.4),Vector3.new(offset,height/2,zoff),C.wall)
+				end
 			end
 		end
 
