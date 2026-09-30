@@ -66,7 +66,7 @@ Playwright や Selenium は使わず、Chrome の DevTools プロトコル（CDP
 
 ### まだ確認していないこと
 
-- **実機iPhone Safari は未確認。** 上記は横画面 852x393 CSS px・`pointer: coarse` のエミュレーションである。実機でのピンチの反応やSafari側のgesture処理は未検証
+- **実機iPhone Safari は未確認。** 上記は横画面 852x393 CSS px・`pointer: coarse` のエミュレーションである。実機でのピンチの反応やSafari側のgesture処理は未検証。確認手順は [`tools/ui-layout-editor/README.md`](../../tools/ui-layout-editor/README.md) の「実機iPhone Safari 確認手順」に書き起こしてある
 - **ファイルオープンと保存（ダウンロード）は未操作。** ブラウザのファイル選択ダイアログをCDPから安定して扱えないため `Open` / `Save` は未確認
 - 複数人編集は対象外（仕様で除外）
 
