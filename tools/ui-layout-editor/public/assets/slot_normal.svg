@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96">
+  <rect x="2" y="2" width="92" height="92" rx="6" fill="#252b36" stroke="#4b5568" stroke-width="2" />
+  <path d="M20 76 L76 20" stroke="#3d4757" stroke-width="2" />
+  <text x="48" y="54" font-family="monospace" font-size="12" fill="#6b7686" text-anchor="middle">slot</text>
+</svg>

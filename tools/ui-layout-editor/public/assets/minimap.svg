@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240">
+  <rect width="240" height="240" fill="#161b22" />
+  <g stroke="#242c38" stroke-width="1">
+    <path d="M40 0 V240 M80 0 V240 M120 0 V240 M160 0 V240 M200 0 V240" />
+    <path d="M0 40 H240 M0 80 H240 M0 120 H240 M0 160 H240 M0 200 H240" />
+  </g>
+  <rect x="48" y="60" width="64" height="44" fill="#2c3644" />
+  <rect x="132" y="132" width="72" height="52" fill="#2c3644" />
+  <circle cx="120" cy="120" r="7" fill="#4fd6c8" />
+  <path d="M120 120 L196 84" stroke="#4fd6c8" stroke-width="2" opacity="0.8" />
+  <text x="120" y="228" font-family="monospace" font-size="14" fill="#6b7686" text-anchor="middle">minimap</text>
+</svg>

@@ -1,0 +1,126 @@
+version: 1
+screen:
+  id: hud
+  name: Anomaly Dungeon HUD
+  width: 1920
+  height: 1080
+components:
+  - id: anomaly_status
+    type: text
+    x: 64
+    y: 56
+    z: 30
+    width: 360
+    height: 72
+    texture: null
+    properties:
+      text: "HP  100 / 100
+        NORMAL  |  LOBBY"
+      variant: status
+  - id: exposure
+    type: gauge
+    x: 1480
+    y: 60
+    z: 30
+    width: 360
+    height: 32
+    texture: null
+    properties:
+      min: 0
+      max: 100
+      value: 35
+      label: ANOMALY EXPOSURE
+  - id: minimap
+    type: minimap
+    x: 1600
+    y: 120
+    z: 10
+    width: 240
+    height: 240
+    texture: assets/minimap.svg
+    properties:
+      title: MAP
+      scale: 1
+  - id: radio
+    type: radio
+    x: 64
+    y: 880
+    z: 30
+    width: 320
+    height: 56
+    texture: null
+    properties:
+      channel: CH 3
+      band: AM
+      state: idle
+  - id: inventory_panel
+    type: panel
+    x: 400
+    y: 760
+    z: 10
+    width: 1120
+    height: 240
+    texture: null
+    properties:
+      visible: true
+      opacity: 0.92
+  - id: slot_01
+    type: slot
+    x: 440
+    y: 800
+    z: 20
+    width: 96
+    height: 96
+    texture:
+      normal: assets/slot_normal.svg
+      selected: assets/slot_selected.svg
+    properties:
+      selectable: true
+      draggable: false
+      show_count: true
+      show_rarity: true
+  - id: slot_02
+    type: slot
+    x: 548
+    y: 800
+    z: 20
+    width: 96
+    height: 96
+    texture:
+      normal: assets/slot_normal.svg
+      selected: assets/slot_selected.svg
+    properties:
+      selectable: true
+      draggable: true
+      show_count: true
+      show_rarity: true
+  - id: slot_03
+    type: slot
+    x: 656
+    y: 800
+    z: 20
+    width: 96
+    height: 96
+    texture:
+      normal: assets/slot_normal.svg
+      selected: assets/slot_selected.svg
+    properties:
+      selectable: true
+      draggable: true
+      show_count: false
+      show_rarity: true
+  - id: slot_04
+    type: slot
+    x: 764
+    y: 800
+    z: 20
+    width: 96
+    height: 96
+    texture:
+      normal: assets/slot_normal.svg
+      selected: assets/slot_selected.svg
+    properties:
+      selectable: true
+      draggable: true
+      show_count: true
+      show_rarity: false

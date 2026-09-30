@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.vite/
+*.local
+.DS_Store
+
+# Created by some pnpm policy wrappers in single-package repos; not part of this project.
+pnpm-workspace.yaml
