@@ -16,6 +16,7 @@ Anomaly Dungeonは開発中のRobloxゲームです。このリポジトリは�
 | [`docs/decisions/`](docs/decisions/) | 重要な設計判断と、その判断に至った理由。 |
 | [`docs/references/`](docs/references/) | BlenderやDeepMotionなど、外部ツール別の補助情報。 |
 | [`src/`](src/) | 将来Gitで管理するRoblox関連ソース、設定、共有データ。 |
+| [`tools/`](tools/) | 開発を補助するローカルツール。ゲーム本体のソースではなく、標準工程でもない。 |
 
 ## ドキュメントの追加先
 
