@@ -14,6 +14,9 @@ local C={
 	road=Color3.fromRGB(72,72,74),
 	roadline=Color3.fromRGB(214,212,178),
 	cedar=Color3.fromRGB(46,72,52),
+	leaf=Color3.fromRGB(72,118,62),
+	leaflight=Color3.fromRGB(122,164,78),
+	reed=Color3.fromRGB(154,154,78),
 	bark=Color3.fromRGB(78,60,44),
 	rock=Color3.fromRGB(112,110,102),
 	stone=Color3.fromRGB(138,136,128),
@@ -192,6 +195,46 @@ function M.Build(seed)
 		return body
 	end
 
+	-- 景観の小物は、ゲームプレイ領域を塞がず「遠景の量塊」と「道沿いの生活感」を作る。
+	-- 低木・広葉樹・草を同じ箱の反復にしないため、球状の葉と細い草を少数ずつ重ねる。
+	local function foliagePart(name,size,position,color,parent,material)
+		local body=part(name,size,position,color,parent,material or Enum.Material.Grass)
+		body.CanCollide=false
+		body.CanTouch=false
+		body.CanQuery=false
+		return tint("Foliage",body)
+	end
+
+	local function broadleaf(position,height,parent,scale)
+		scale=scale or 1
+		local trunk=part("BroadleafTrunk",Vector3.new(1.8*scale,height,1.8*scale),position+Vector3.new(0,height/2,0),C.bark,parent,Enum.Material.Wood)
+		trunk.CanTouch=false
+		tint("Structure",trunk)
+		for _,offset in ipairs({Vector3.new(-2.4,0,1.2),Vector3.new(2.1,1.2,-1.6),Vector3.new(0,3,0)}) do
+			local crown=foliagePart("BroadleafCrown",Vector3.new(9,8,9)*scale,position+Vector3.new(0,height,0)+offset*scale,C.leaf,parent)
+			crown.Shape=Enum.PartType.Ball
+		end
+	end
+
+	local function grassClump(position,parent,scale)
+		scale=scale or 1
+		for index=-1,1 do
+			local blade=foliagePart("SummerGrass",Vector3.new(.45,4.6*scale,.55),position+Vector3.new(index*.75,2.2*scale,0),index==0 and C.leaflight or C.reed,parent)
+			blade.CFrame=blade.CFrame*CFrame.Angles(0,0,math.rad(index*13))
+		end
+	end
+
+	local function beamBetween(name,startPoint,endPoint,width,color,parent,material,group)
+		local delta=endPoint-startPoint
+		local body=part(name,Vector3.new(width,width,delta.Magnitude),(startPoint+endPoint)/2,color,parent,material or Enum.Material.Metal)
+		body.CFrame=CFrame.lookAt(body.Position,endPoint)
+		body.CanCollide=false
+		body.CanTouch=false
+		body.CanQuery=false
+		if group then tint(group,body) end
+		return body
+	end
+
 	-- Parts registered here stay hidden until the map turns into 8/32.
 	local function revealLater(body)
 		body:SetAttribute("Aug32Reveal",true)
@@ -344,8 +387,13 @@ function M.Build(seed)
 	for z=72,240,32 do
 		local groundY=1000+Terrain.heightAt(0,z,LAKE,RIDGES,FLATS)
 		for _,side in ipairs({-1,1}) do
+			local poleTop=Vector3.new(side*44,groundY+45,z)
 			tint("Structure",part("PowerPole",Vector3.new(1.4,30,1.4),Vector3.new(side*44,groundY+15,z),C.stone,links,Enum.Material.Wood))
-			tint("Structure",part("PowerArm",Vector3.new(14,1,1.4),Vector3.new(side*44,groundY+45,z),C.stone,links,Enum.Material.Wood))
+			tint("Structure",part("PowerArm",Vector3.new(14,1,1.4),poleTop,C.stone,links,Enum.Material.Wood))
+			if z>72 then
+				local previousY=1000+Terrain.heightAt(0,z-32,LAKE,RIDGES,FLATS)+43
+				beamBetween("PowerLine",Vector3.new(side*50,previousY,z-32),Vector3.new(side*50,groundY+43,z),.22,C.bark,links,Enum.Material.Metal,"Structure")
+			end
 		end
 	end
 
@@ -357,7 +405,14 @@ function M.Build(seed)
 	tint("Structure",part("Bench",Vector3.new(12,1.4,3),shelter.Position+Vector3.new(0,-3.2,0),C.roof,lobby.Folders.Geometry,Enum.Material.Wood))
 	local busSign=part("BusSign",Vector3.new(1.4,11,1.4),lobby.Center+Vector3.new(-6,5.5,-18),C.red,lobby.Folders.Geometry,Enum.Material.Metal)
 	tint("Structure",busSign)
-	sign(busSign,"バス停 / 山あいの終点",C.bright,7,240)
+	sign(busSign,"LAST BUS / VALLEY END",C.bright,7,240)
+	for index=-3,3 do
+		grassClump(lobby.Center+Vector3.new(30+index*5,1,-26+(index%2)*4),lobby.Folders.Geometry,.8)
+	end
+	-- 入口では道を全て説明せず、谷の空と遠方の水面へ視線が抜ける余白を残す。
+	for _,offset in ipairs({Vector3.new(-31,0,24),Vector3.new(32,0,29),Vector3.new(35,0,-30)}) do
+		broadleaf(lobby.Center+offset,12,lobby.Folders.Geometry,.85)
+	end
 
 	-- Date board: the only place the in-game date and phase are printed in world space.
 	local function dateBoard(zone,offset)
@@ -379,6 +434,10 @@ function M.Build(seed)
 			water.Transparency=.35
 			water.CanCollide=false
 			tint("Water",water)
+			for plant=1,5 do
+				local px=x-14+(plant-1)*7
+				grassClump(rice.Center+Vector3.new(px-190,2.4,z-330+(plant%2)*4),rice.Folders.Geometry,.56)
+			end
 		end
 	end
 	tint("Ground",part("PaddyBund",Vector3.new(150,2.4,4),rice.Center+Vector3.new(0,1.4,-4),C.soil,rice.Folders.Geometry,Enum.Material.Ground))
@@ -409,10 +468,15 @@ function M.Build(seed)
 		return body
 	end
 
-	-- VILLAGE: shop street, community hall, vending machine, water tower.
+	-- VILLAGE: 建物を一列に並べず、前庭・木・小さな日除けで生活の密度を道沿いに寄せる。
 	local village=by.VILLAGE
 	for index=1,4 do
-		house(village.Folders.Geometry,village.Center+Vector3.new(-46+(index-1)*30,0,-42),Vector3.new(22,14,20),index%2==0 and C.roof or Color3.fromRGB(96,72,64),"Structure")
+		local x=-46+(index-1)*30
+		house(village.Folders.Geometry,village.Center+Vector3.new(x,0,-42),Vector3.new(22,14,20),index%2==0 and C.roof or Color3.fromRGB(96,72,64),"Structure")
+		local awning=part("StoreAwning",Vector3.new(19,1.2,5),village.Center+Vector3.new(x,10,-54),index%2==0 and C.yellow or C.red,village.Folders.Geometry,Enum.Material.Fabric)
+		awning.CanCollide=false
+		tint("Structure",awning)
+		if index~=2 then broadleaf(village.Center+Vector3.new(x+11,0,-27),10,village.Folders.Geometry,.72) end
 	end
 	house(village.Folders.Geometry,village.Center+Vector3.new(0,0,48),Vector3.new(40,20,28),C.roof,"Structure")
 	local vending=part("Vending",Vector3.new(6,10,3),village.Center+Vector3.new(16,5,42),C.red,village.Folders.Geometry,Enum.Material.Metal)
@@ -421,6 +485,9 @@ function M.Build(seed)
 	tint("Structure",part("WaterTank",Vector3.new(14,12,14),village.Center+Vector3.new(48,30,-12),C.stone,village.Folders.Geometry,Enum.Material.Metal))
 	for _,x in ipairs({40,48,56}) do
 		tint("Structure",part("TankLeg",Vector3.new(2,24,2),village.Center+Vector3.new(x,12,-12),C.stone,village.Folders.Geometry,Enum.Material.Metal))
+	end
+	for _,offset in ipairs({Vector3.new(-56,0,34),Vector3.new(-38,0,42),Vector3.new(48,0,38)}) do
+		broadleaf(village.Center+offset,11,village.Folders.Geometry,.8)
 	end
 
 	-- SHRINE: terraced steps up the slope, a torii, and the main hall.
@@ -466,8 +533,10 @@ function M.Build(seed)
 	-- FOREST: cedar rows either side of a single forest road, thick enough to break sightlines.
 	local forest=by.FOREST
 	local function cedar(position,height,parent)
-		tint("Foliage",part("CedarCanopy",Vector3.new(height*.34,height*.5,height*.34),position+Vector3.new(0,height*.62,0),C.cedar,parent,Enum.Material.Grass))
-		tint("Foliage",part("CedarCanopy",Vector3.new(height*.22,height*.4,height*.22),position+Vector3.new(0,height*1.02,0),C.cedar,parent,Enum.Material.Grass))
+		local lower=foliagePart("CedarCanopy",Vector3.new(height*.34,height*.5,height*.34),position+Vector3.new(0,height*.62,0),C.cedar,parent)
+		lower.Shape=Enum.PartType.Ball
+		local upper=foliagePart("CedarCanopy",Vector3.new(height*.22,height*.4,height*.22),position+Vector3.new(0,height*1.02,0),C.cedar,parent)
+		upper.Shape=Enum.PartType.Ball
 		tint("Structure",part("CedarTrunk",Vector3.new(2.6,height,2.6),position+Vector3.new(0,height/2,0),C.bark,parent,Enum.Material.Wood))
 	end
 	tint("Ground",part("ForestRoad",Vector3.new(16,1.2,forest.Depth-16),forest.Center+Vector3.new(0,1,0),C.dirt,forest.Folders.Geometry,Enum.Material.Ground))
@@ -480,6 +549,20 @@ function M.Build(seed)
 		local x=rng:NextNumber(-forest.Width/2+8,forest.Width/2-8)
 		local z=rng:NextNumber(-forest.Depth/2+8,forest.Depth/2-8)
 		tint("Foliage",part("Bush",Vector3.new(6,4,6),forest.Center+Vector3.new(x,2,z),C.cedar,forest.Folders.Geometry,Enum.Material.Grass))
+	end
+	-- 湖畔は建物を増やさず、葦と石だけで「誰かが来たことのある水辺」にする。
+	for index=0,28 do
+		local angle=math.rad(index/29*250+30)
+		local radius=LAKE.Inner-12-(index%4)*5
+		local x=LAKE.X+math.cos(angle)*radius
+		local z=LAKE.Z+math.sin(angle)*radius
+		local y=1000+Terrain.heightAt(x,z,LAKE,RIDGES,FLATS)
+		grassClump(Vector3.new(x,y+1,z),links,.9+(index%3)*.08)
+		if index%4==0 then
+			local stone=part("ShoreStone",Vector3.new(4+(index%3)*2,2.4,3.5),Vector3.new(x,y+1,z),C.stone,links,Enum.Material.Slate)
+			stone.CanTouch=false
+			tint("Ground",stone)
+		end
 	end
 
 	-- TUNNEL: the only covered stretch. Dark, narrow, and the map's natural blind spot.
@@ -526,6 +609,10 @@ function M.Build(seed)
 		end
 	end
 	tint("Structure",part("DormStairBlock",Vector3.new(10,26,14),apartment.Center+Vector3.new(0,0,4),C.stone,apartment.Folders.Geometry,Enum.Material.Concrete))
+	-- 団地は谷全体の遠景マーカー。前面を完全な箱にせず、空いた広場と植栽で輪郭を残す。
+	for _,offset in ipairs({Vector3.new(-56,0,24),Vector3.new(54,0,30),Vector3.new(-48,0,-42)}) do
+		broadleaf(apartment.Center+offset,14,apartment.Folders.Geometry,.95)
+	end
 	-- 8/32-only: a duplicate lower wing in front of the block, with the same 団地 signage.
 	local wingHolder=folder("Wing",apartment.Folders.SpecialPoints)
 	local wing=house(wingHolder,apartment.Center+Vector3.new(6,0,26),Vector3.new(34,22,18),C.concrete,"Structure")

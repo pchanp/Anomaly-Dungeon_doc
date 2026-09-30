@@ -22,3 +22,4 @@
 - [005: 都市ロビーから開始する最小Runの範囲](005-minimum-lobby-run-scope.md) - 2マップを対象にした、都市ロビーから単一マップへ入る最小Runの草案。
 - [006: 最小Runの実装で確定したサーバー境界](006-minimum-run-server-boundaries.md) - 最小Runをコードに落とした際のRun状態、終了の集約、ロビーの実体、入口の認可、デバッグ経路の境界。
 - [007: 8月31日マップの地形・湖・時計の再設計](007-august-31-terrain-lake-and-clocktime.md) - フェーズごとの`ClockTime`、高さ関数としての地形、ゾーンの平坦化、湖の絶対高と円形水面、地形に沿うTrail。003の`ClockTime`判断を置き換える。
+- [008: 8月31日の景観構成を、ブロックアウトから夏の谷へ寄せる](008-august-31-landscape-composition.md) - 視線、植生、水辺、生活の痕跡を用いた景観再構成。ソース反映済みで、Studio確認待ち。
