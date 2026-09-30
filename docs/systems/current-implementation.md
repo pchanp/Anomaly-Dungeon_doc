@@ -32,7 +32,8 @@
 - 8/32専用Partsの非表示保持と、遷移時の一括表示。
 - 8月31日マップの`Lighting`と`Atmosphere`のフェーズ別差し替えと、マップ再構築時の復元。
 - 8月31日マップのフェーズ別`ClockTime`。`DAY=13.5`から`EVENING=18.4`、`NIGHT=23.2`、`AUG_32=23.6`まで補間する。Bind時に値を記録し、Unbind時に復元する。判断の経緯は`docs/decisions/007`を参照。
-- `LOBBY`、`ENTRY`、`HALL`、`BOOKS`、`CISTERN`、`OBSERVATORY`、`GAMES`、`REGISTER`、`STAFF`、`WAREHOUSE`、`EXTRACTION`、`OUTSIDE`の各ルーム。
+- `ENTRY`、`HALL`、`BOOKS`、`CISTERN`、`OBSERVATORY`、`GAMES`、`REGISTER`、`STAFF`、`WAREHOUSE`、`EXTRACTION`の各ルーム。`LOBBY`と`OUTSIDE`は廃止し、待避は`LobbyService`が別途buildする都市ロビーと入口ロビーが担う。
+- 通路は`PASSAGES`（TSUTAYAは`LINKS`）だけを記述し、壁の開口部と通路の床はその一覧から導出する。到達不能部屋、1壁に衝突する通路、ルーム同士の重なりは`Build`時に`warn()`で報告する。
 - 各ルームに `DoorPoints`、`EnemyPoints`、`AnomalyPoints`、`ItemPoints`、`GimmickPoints`、`SpecialPoints` を持たせる配置規約。
 - ロビーからダンジョンへの入場と、通常・異常状態で共通の出口ポータルからの帰還。
 - 実行時のマップ再生成と、探索中プレイヤーがいる場合の再生成抑止。
