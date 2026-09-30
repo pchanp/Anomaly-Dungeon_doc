@@ -170,10 +170,16 @@ Zoom は 25% / 50% / 75% / 100% / 150% / 200% に加え、ホイール・ピン�
 - **複数選択はありません。** Prototype では単一選択です
 - **矢印キーでの nudge はありません。** 移動はドラッグ、または Snap 付きの数値入力で行います
 - **`properties` はネスト非対応です。** ネストした値は JSON 文字列として保持し、警告します
-- **アニメーション、3D、CSSデザイン、Auto Layout、Figma連携、マルチ用户編集は未実装です**
+- **アニメーション、3D、CSSデザイン、Auto Layout、Figma連携、マルチユーザー編集は未実装です**
 - **Snapping はグリッド固定です。** 任意間隔のスナップポイントやガイド線は未実装
 - **テクスチャは `normal` など type が指定する状態を1枚表示します。** 状態の切り替えアニメーションは未実装
 - Roblox Studio との直接連携、Roblox Lua の自動生成、GitHub API 連携は未実装です
+- **実機iPhone Safari は未確認です。** 横画面・`pointer: coarse` のエミュレーションで操作は確認済みですが、実機でのピンチ反応は未検証です
+- **`Open` / `Save` はブラウザ上で未操作です。** ファイル選択ダイアログ経由の読み込みと、ダウンロードしたYAMLの再読み込みは未確認です
+
+## 検証状況
+
+マウスとマルチタッチの操作は、Chrome の DevTools プロトコルに実入力を送って確認しています。記録と欠陥の内容は [`docs/references/ui-layout-editor.md`](../../docs/references/ui-layout-editor.md) の「ブラウザ実機検証」を参照してください。
 
 ## ファイル構成
 
@@ -199,7 +205,8 @@ tools/ui-layout-editor/
 │   │   ├── history.ts      Undo / Redo
 │   │   ├── selection.ts    選択・フィルタ・ソート
 │   │   ├── snap.ts         Snap 規則
-│   │   └── transform.ts    移動・リサイズ・描画順
+│   │   ├── transform.ts    移動・リサイズ・描画順
+│   │   └── view.ts         ペインとビューモードの連動
 │   ├── components/         Canvas / Inspector / Table / List / Toolbar など
 │   └── styles/editor.css   エディタ本体の見た目
 └── README.md

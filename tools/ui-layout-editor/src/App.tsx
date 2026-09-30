@@ -18,6 +18,7 @@ import { Toolbar, type Theme, type ViewMode } from "./components/Toolbar";
 import { createHistory, pushHistory, redo as redoHistory, undo as undoHistory, type HistoryState } from "./editor/history";
 import { snapValue, type GridSize } from "./editor/snap";
 import { resizeComponent, type HandleId } from "./editor/transform";
+import { viewFromMode, viewFromPane } from "./editor/view";
 import { KNOWN_TYPES, defaultSizeFor } from "./model/component";
 import {
   cloneLayout,
@@ -253,6 +254,23 @@ export function App(): React.JSX.Element {
     });
   }, []);
 
+  /**
+   * The table pane is only mounted while the view mode is "table", so the mobile pane
+   * switcher and the toolbar's view switch have to move both. Setting only the pane left
+   * the "Table" tab pointing at a section that was never rendered, i.e. an empty pane.
+   */
+  const handlePane = useCallback((pane: PaneKey) => {
+    const resolved = viewFromPane(pane);
+    setPane(resolved.pane);
+    setMode(resolved.mode);
+  }, []);
+
+  const handleMode = useCallback((mode: ViewMode) => {
+    const resolved = viewFromMode(mode);
+    setPane(resolved.pane);
+    setMode(resolved.mode);
+  }, []);
+
   /** Zooms while keeping the layout point under (viewportX, viewportY) pinned in place. */
   const handleZoomAtViewportPoint = useCallback((nextZoom: number, viewportX: number, viewportY: number) => {
     setViewport((current) => {
@@ -363,11 +381,11 @@ export function App(): React.JSX.Element {
         onToggleSnap={() => setSnapOn((value) => !value)}
         onZoom={(value) => setViewport((current) => ({ ...current, zoom: value }))}
         onFit={handleFit}
-        onMode={setMode}
+        onMode={handleMode}
         onTheme={setTheme}
       />
 
-      <MobileLayout pane={pane} onPane={setPane} counts={{ components: layout.components.length }} />
+      <MobileLayout pane={pane} onPane={handlePane} counts={{ components: layout.components.length }} />
 
       {messages.errors.length > 0 || messages.warnings.length > 0 ? (
         <div className="notice-bar">
