@@ -50,8 +50,8 @@
 
 - プレイヤーの総インベントリは20枠とし、そのうち初期状態の4枠を重要資産用の**Secure Slot**とする。Secure Slot内の物は失敗時にも持ち帰れるリスク管理の手段とする。
 - 通常プレイヤーは、都市ロビーのアノマリー研究室でレアルート品を消費し、通常スロット1枠をSecure Slotへ変換できる。変換では総枠数は増えない。
-- 総インベントリ枠を増やすCapacity Expansionも設け、Secure Conversionと同種のレアルート品を消費する。
-- Secure ConversionとCapacity Expansionの交換レート、強化上限、追加枠の初期種別、対象アイテム、死亡以外の喪失条件、入出庫のタイミングは未決定である。
+- 総インベントリ枠を増やすCapacity Expansionも設け、Secure Conversionと同種のレアルート品を消費する。追加枠は通常スロットとして始まり、Secure Slotにするには別途Secure Conversionを行う。
+- Secure ConversionとCapacity Expansionの交換レート、強化上限、対象アイテム、死亡以外の喪失条件、入出庫のタイミングは未決定である。別種のスロット強化は現時点では扱わない。
 
 ### Player Anomaly
 

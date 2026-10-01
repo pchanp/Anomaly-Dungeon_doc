@@ -72,9 +72,9 @@
 - 近傍のToolを一時的に無効化する。
 - Skill、Attack、Itemの通知を受け、プレイヤー個別の無効化Attributeとフィードバックを設定する。
 
-### Mad Stomper相当の巨人プロトタイプ
+### Mad Stomper（`GIANT`）巨人プロトタイプ
 
-- 現在のSystem IDは `GIANT`、表示名は `Giant Anomaly` であり、文書上の名称 `Mad Stomper` との対応は未確定。
+- System IDは `GIANT`、現在のプロトタイプ表示名は `Giant Anomaly`、設計上の名称は `Mad Stomper`であり、いずれも同一のAnomaly Entityを指す。
 - デバッグフロア上をランダムに移動する。
 - `IDLE`、`APPROACHING`、`ACTIVE`、`CALMING`、`CALMED` の状態を持つ。
 - 近傍プレイヤーのAnomaly Levelを増加させる。
@@ -95,7 +95,7 @@
 - `QuestState`と`Credits`はプレイヤーAttribute上の単一ラン目標であり、`QuestService`として分離したデータモデルではない。</new_string>
 - 4スキル枠を想定したUIはあるが、現在サーバー実装されているスキルは3つで、ビルド取得・強化システムは未実装。
 - /dev/nullは限定対象のプロトタイプであり、ダッシュ、ジャンプ、インベントリ操作など文書にある候補すべてをnull化しない。
-- Mad Stomperの最終名称、外見、鎮静ルール、再活性化条件は確定していない。
+- Mad Stomperの最終表示名、外見、鎮静ルール、再活性化条件は確定していない。
 
 ## 未実装
 

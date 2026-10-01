@@ -75,13 +75,29 @@
   - 決定: 都市ロビーのアノマリー研究室で、レアルート品を消費して通常スロット1枠をSecure Slotへ変換する。総枠数は増えない。
   - 正本: [010: レアルート品によるSecure Slot成長](decisions/010-real-route-secure-slot-progression.md)、[経済と成長](systems/economy-and-progression.md)
 
-- [ ] **Capacity Expansionの詳細を決定する**
-  - 状態: `Needs Human`
+- [x] **レアルート品の分類と取得経路を決定する**
+  - 状態: `Done`
   - 担当: 人間
-  - 決定済み: 総インベントリ枠を増やす強化を設け、Secure Conversionと同種のレアルート品を消費する。
-  - 判断対象: 交換レート、上限、追加枠の初期種別、入出庫時点、Player Anomaly時の制約。
-  - 完了条件: 初期4枠・総20枠と矛盾しない仕様を決め、Inventory実装指示へ展開できる状態にする。
+  - 決定: レアルート品をスキル強化用とスロット強化用に分け、前者を相対的に出やすくする。アノマリー相互作用、低難度以外のQuest、チュートリアルQuestを取得経路にする。
+  - 正本: [011: レアルート品の分類と取得経路](decisions/011-real-route-acquisition.md)、[経済と成長](systems/economy-and-progression.md)
+
+- [x] **アノマリー相互作用による固有スキル取得を決定する**
+  - 状態: `Done`
+  - 担当: 人間
+  - 決定: アノマリーの一部または関連アイテムを専用スキルと交換する。博士の調査Questと研究対象外のレアアノマリーの双方で、相互作用成立時に同一Runのパーティ全員へ固有品を出現させる。
+  - 正本: [012: アノマリー相互作用による固有スキル取得](decisions/012-anomaly-linked-skill-acquisition.md)、[アノマリー相互作用](systems/anomaly-interaction.md)
+
+- [x] **Capacity Expansionの基礎仕様を決定する**
+  - 状態: `Done`
+  - 担当: 人間
+  - 決定: 総インベントリ枠を増やす強化を設け、Secure Conversionと同種のレアルート品を消費する。追加枠は通常スロットとして始まり、Secure化は別途Secure Conversionで行う。
   - 正本: [010: レアルート品によるSecure Slot成長](decisions/010-real-route-secure-slot-progression.md)、[ゲームループとポータル遷移](systems/game-loop.md)
+
+- [ ] **追加のスロット強化とCapacity Expansionの数値設計**
+  - 状態: `Parked`
+  - 担当: 人間
+  - 保留理由: 交換レート、上限、入出庫時点、Player Anomaly時の制約、別種のスロット強化は、現時点の仕様範囲では決めない。
+  - 正本: [010: レアルート品によるSecure Slot成長](decisions/010-real-route-secure-slot-progression.md)
 
 - [ ] **QuestとDiscoveryの最小分離を決定する**
   - 状態: `Needs Human`

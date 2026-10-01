@@ -167,14 +167,14 @@ Workspace
 | Party State | `RunService`または専用集約Module | Exposure、Quest、Inventory | 未実装・Draft |
 | Anomaly Exposure | `ExposureService` | PlayerState、Anomaly、Portal | サーバー権威の基礎実装済み |
 | 観察・認識 | `ObservationService` + Client `Observation` | Camera、Raycast、Anomaly、Map | 未実装・Draft |
-| Player Anomaly | `PlayerStateService` + 個別Module | Exposure、Visibility | Mad Stomper変異を基礎実装済み |
+| Player Anomaly | `PlayerStateService` + 個別Module | Exposure、Visibility | Exposureに基づく基礎プロトタイプ実装済み。Mad StomperはAnomaly Entityとして別資料で扱う |
 | Visible / Invisible Inversion | Client `Visibility` + Server PlayerState | Component分類 | 未実装・Draft |
 | Secure Slot | `InventoryService` | Run終了、永続データ | 未実装・Draft |
 | ItemStack／認識履歴 | `InventoryService` | ItemDefinitions | 未実装・Draft |
 | Memory Swapper | `Anomalies/MemorySwapper` | ItemStack、Visibility | 未実装・Draft |
 | MiW | `Anomalies/MiW` + HUD Controller | Run情報、Effects | プロトタイプ実装済み |
 | /dev/null | `Anomalies/DevNull` + 入力結果の共通Gate | Skill、Item、Combat | 限定プロトタイプ実装済み |
-| Mad Stomper | `Anomalies/MadStomper` + Effects | Exposure、Skill | 巨人プロトタイプ実装済み |
+| Mad Stomper | `Anomalies/MadStomper` + Effects | Exposure、Skill | `GIANT`／`Giant Anomaly`と同一。巨人プロトタイプ実装済み |
 | Quest | `QuestService` + Quest UI | Run、Map | 属性ベースの単一目標のみ実装済み・分離は未実装 |
 | FILE／Discovery | `DiscoveryService` + Discovery UI | 永続データ | 未実装・Draft |
 | Archive Selection UI | Client `UI/Archive` | Map gimmick、Discovery | 未実装・Idea |

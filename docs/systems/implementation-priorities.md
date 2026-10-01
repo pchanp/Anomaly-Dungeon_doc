@@ -18,7 +18,7 @@
 ### 1. 状態名とIDの確定
 
 - SANは廃止し、Anomaly LevelとAnomaly Exposureの責務境界を確定する。
-- `GIANT`／`Giant Anomaly`／`Mad Stomper`の対応を確定する。
+- `GIANT`／`Giant Anomaly`／`Mad Stomper`は同一のAnomaly Entityとして確定した。`GIANT`をSystem IDとして維持し、最終表示名は外見・演出と合わせて決める。
 - Run、Map、Anomaly、Player AnomalyのID規約を定める。
 
 **理由:** 現在は複数の試作用Attributeが同じ概念領域を表しており、このまま新機能を接続すると互換処理が増える。

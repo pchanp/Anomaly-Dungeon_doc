@@ -25,3 +25,6 @@
 - [008: 8月31日の景観構成を、ブロックアウトから夏の谷へ寄せる](008-august-31-landscape-composition.md) - 視線、植生、水辺、生活の痕跡を用いた景観再構成。ソース反映済みで、Studio確認待ち。
 - [009: TSUTAYAを「閉店直後のアーカイブ」として再構成する](009-tsutaya-closing-time-archive.md) - 棚の密度、店頭、返却作業、照明を優先し、荒廃テクスチャは後から重ねる判断。
 - [010: レアルート品によるSecure Slot成長](010-real-route-secure-slot-progression.md) - 都市ロビーの研究室で、レアルート品を用いてSecure ConversionとCapacity Expansionを行う判断。課金経路は未採用。
+- [011: レアルート品の分類と取得経路](011-real-route-acquisition.md) - 汎用スキル用とスロット用のレアルート品、アノマリー固有の交換品、Quest・チュートリアルへの接続を定める判断。
+- [012: アノマリー相互作用による固有スキル取得](012-anomaly-linked-skill-acquisition.md) - アノマリー固有の交換品、博士の調査Quest、研究対象外のレアアノマリー、Party全員への固有品配分を定める判断。
+- [013: Mad StomperとGIANTプロトタイプの同一性](013-mad-stomper-giant-identity.md) - `GIANT`、`Giant Anomaly`、`Mad Stomper`を同一Anomaly Entityとして統合する判断。

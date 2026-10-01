@@ -54,6 +54,8 @@ Player Action / Item / Skill / Environment Event
 
 未決定の項目は推測で埋めず、個別資料で `Unconfirmed` として残す。
 
+個別アノマリーがスキル獲得へ接続する場合は、さらに「博士のQuest対象か」「研究対象外のレアアノマリーか」「成立させるInteraction」「出現する一部または関連アイテム」「交換先の専用スキル」「Party配分」を記録する。Quest報告の直接報酬と、相互作用の結果として出現する固有品を混同しない。
+
 ## 共通の Interaction Kind
 
 以下は再利用を想定する意味上の分類である。アノマリーは必要なものだけを明示的に受理する。ここにない相互作用を禁止するものではない。
@@ -76,7 +78,7 @@ Player Action / Item / Skill / Environment Event
 
 回復スキルまたは回復アイテムの適用を入力にする相互作用。回復量をそのままアノマリーの HP に加えることを意味しない。
 
-例として、GIANT プロトタイプでは Heal 系スキルで鎮静状態へ移行する案がある。ただし、GIANT と `Mad Stomper` の最終対応、およびこれを全アノマリーに通用する規則とするかは未確定である。詳細は [Mad Stomper](../anomalies/mad-stomper.md) を参照する。
+例として、`GIANT`（Mad Stomper）では Heal 系スキルで鎮静状態へ移行する案がある。Healで鎮静できることを全アノマリーに通用する規則とするかは未確定である。詳細は [Mad Stomper](../anomalies/mad-stomper.md) を参照する。
 
 ### Skill Interaction
 
@@ -120,6 +122,7 @@ Player Action / Item / Skill / Environment Event
 
 - 通常のスキル・アイテム・戦闘は既存のサーバー検証済み経路を起点にする。
 - アノマリー状態の遷移、報酬、ラン全体への反映はサーバーが確定する。
+- アノマリー固有の交換品を相互作用の結果として出現させる場合、同一Runで成立条件を満たしたパーティ全員へ配分する。切断者・不在者の扱いは個別の配分仕様が必要になるまで未決定とする。
 - クライアントは視覚・音響・局所的な観察証拠を提示できるが、それだけで共有状態を確定しない。
 - Observation Interaction のクライアントカメラ利用とサーバー再検証は、[観察・認識システム](observation-and-recognition.md) の責務とする。
 - 個人だけに現れる認識差と、パーティ全体へ影響する状態変化は Scope を明示して分離する。
@@ -129,7 +132,7 @@ Player Action / Item / Skill / Environment Event
 | 資料・要素 | 接続候補 | 現状 |
 | --- | --- | --- |
 | 認知アノマリー | Observation → Recognition、Exposure、認識差 | Draft。判定基盤は共通観察資料へ分離済み |
-| GIANT プロトタイプ / Mad Stomper | Heal → 鎮静候補 | Draft。最終的な対応関係は未確定 |
+| `GIANT` / Mad Stomper | Heal → 鎮静候補、花の胞子の出現 | Draft。名称・対応は確定、鎮静条件と専用スキル効果は未確定 |
 | `/dev/null` | Combat / Skill / Item の結果傍受 | Draft。対象範囲・優先順位は未確定 |
 | Memory Swapper | Item と Recognition への干渉 | Draft。所持品基盤は未実装 |
 | 近接 Observer | Environment（近接）→ Exposure | 実装メモ上の既存候補。視認判定とは別 |
