@@ -28,3 +28,7 @@
 - [011: レアルート品の分類と取得経路](011-real-route-acquisition.md) - 汎用スキル用とスロット用のレアルート品、アノマリー固有の交換品、Quest・チュートリアルへの接続を定める判断。
 - [012: アノマリー相互作用による固有スキル取得](012-anomaly-linked-skill-acquisition.md) - アノマリー固有の交換品、博士の調査Quest、研究対象外のレアアノマリー、Party全員への固有品配分を定める判断。
 - [013: Mad StomperとGIANTプロトタイプの同一性](013-mad-stomper-giant-identity.md) - `GIANT`、`Giant Anomaly`、`Mad Stomper`を同一Anomaly Entityとして統合する判断。
+- [014: Quest枠、Discovery、博士Questによる研究解放](014-quest-discovery-and-research-unlocks.md) - 博士Quest・その他Questの枠、Discoveryとの分離、博士Questが固有品の交換と出現率へ与える役割を定める判断。具体的な枠数と確率補正は015が置き換える。
+- [015: 博士Questによるアノマリー出現補正](015-professor-quest-anomaly-spawn.md) - 博士Questを1件へ絞り、対象の個別出現確率を1.40倍、アノマリー発生ごとの全候補減衰を0.90倍と定める判断。
+- [016: Party Runにおける博士Quest出現補正の固定](016-party-professor-quest-spawn-snapshot.md) - 開始時Partyの異なる博士Quest対象をサーバーで固定し、重複を重ねず、途中脱落後も補正を維持する判断。
+- [017: Run単位のアノマリー出現コンポーネント](017-run-anomaly-spawn-components.md) - 候補外の博士Quest対象は何も起こさず、同時出現数とアイテムによる出現変動をRun単位で扱う判断。

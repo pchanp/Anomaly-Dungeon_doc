@@ -56,7 +56,9 @@
 - Run目的であるQuestと、FILE・発見・実績を別データにする。
 - まず1種類の回収Questと1種類のDiscoveryで縦に検証する。
 
-**進捗:** `RunService` が `QuestState` / `QuestObjective` / `Credits` をプレイヤーAttributeで扱い、出口端末の達成で依頼完了、帰還時に `RunConfig.QuestRewardCredits` を支払うところまで実装済み。Discovery側のデータモデルと、Discoveryからの分離は未実装。Questは専用Serviceでもデータモデルでもなく、単一目標としての属性表現の段階にある。
+**設計済み:** 同時受注は博士Quest 1件、その他Quest 3件、合計4件とする。博士Questは対応アノマリーの個別出現確率を基礎値の1.40倍へ上げるが、マップ抽選には関与しない。対象が候補外なら補正は他候補へ移らない。Party RunではRun開始時の博士Quest対象を重複なしでサーバーが固定し、脱落後も補正を維持する。アノマリー1体の発生ごとに全候補の個別確率は0.90倍になる。同種の同時出現上限はアノマリーごとのコンポーネントで持ち、特定アイテムがRun単位で出現コンポーネントを変動させ得る。DiscoveryはQuest枠を消費しない発見・認識記録とする。対応する博士Questを受注中なら、先に得た固有品も専用スキルへ交換できる。
+
+**進捗:** `RunService` が `QuestState` / `QuestObjective` / `Credits` をプレイヤーAttributeで扱い、出口端末の達成で依頼完了、帰還時に `RunConfig.QuestRewardCredits` を支払うところまで実装済み。Discovery側のデータモデルと、Questとの分離は未実装。Questは専用Serviceでもデータモデルでもなく、単一目標としての属性表現の段階にある。
 
 ### 3. Portal Service
 

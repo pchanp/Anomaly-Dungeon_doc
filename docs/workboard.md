@@ -99,12 +99,26 @@
   - 保留理由: 交換レート、上限、入出庫時点、Player Anomaly時の制約、別種のスロット強化は、現時点の仕様範囲では決めない。
   - 正本: [010: レアルート品によるSecure Slot成長](decisions/010-real-route-secure-slot-progression.md)
 
-- [ ] **QuestとDiscoveryの最小分離を決定する**
+- [x] **QuestとDiscoveryの最小分離を決定する**
+  - 状態: `Done`
+  - 担当: 人間
+  - 決定: 同時受注は博士Quest 1件、その他Quest 3件、合計4件。DiscoveryはQuest枠を消費しない発見・認識記録とする。博士Quest受注中は対象アノマリーの個別出現確率を1.40倍へ上げ、対応する固有品を専用スキルへ交換できる。Party Runは開始時の異なる対象をサーバーが固定し、重複なしで補正する。アノマリー発生ごとに全候補は0.90倍へ減衰し、途中脱落後も補正を維持する。
+  - 正本: [016: Party Runにおける博士Quest出現補正の固定](decisions/016-party-professor-quest-spawn-snapshot.md)、[クエスト](systems/quests.md)
+
+- [ ] **Quest／Discoveryのデータモデルと交換状態を定義する**
   - 状態: `Needs Human`
   - 担当: 人間
-  - 判断対象: 1ランに保持できるQuest数、達成・失敗・報酬の記録、FILE／Discoveryとの境界。
-  - 完了条件: 現行の単一Quest Attributeから移行できる最小データモデルと、リザルトへの表示範囲を決める。
-  - 正本: [クエスト](systems/quests.md)、[未実装機能の優先順位](systems/implementation-priorities.md)
+  - 判断対象: Questの受注・放棄・完了・失敗状態、博士Questの解放条件、Discoveryの保存・UI、複数人のQuest入力と切断時の扱い。
+  - 完了条件: `QuestService`、Discovery、アノマリー出現補正、研究室交換UIを実装指示へ展開できる最小データモデルを定義する。
+  - 正本: [014: Quest枠、Discovery、博士Questによる研究解放](decisions/014-quest-discovery-and-research-unlocks.md)、[未実装機能の優先順位](systems/implementation-priorities.md)
+
+- [ ] **Run単位のアノマリー出現コンポーネントを定義する**
+  - 状態: `Needs Human`
+  - 担当: 人間
+  - 決定済み: 候補外の博士Quest対象は何も起こさない。同種の同時出現上限はアノマリーごとのコンポーネントで持ち、特定アイテムが個別出現確率や同時出現数をRun単位で変動させ得る。
+  - 判断対象: コンポーネントのデータ形式、解決後の枠、変動アイテム、重ね方、出現判定順。
+  - 完了条件: Anomaly SystemとItem Interactionの実装指示へ展開できる最小データモデルを定義する。
+  - 正本: [017: Run単位のアノマリー出現コンポーネント](decisions/017-run-anomaly-spawn-components.md)
 
 - [ ] **異常化後のRun終了を決定する**
   - 状態: `Needs Human`

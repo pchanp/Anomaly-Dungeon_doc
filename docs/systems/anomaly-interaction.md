@@ -92,6 +92,8 @@ Player Action / Item / Skill / Environment Event
 
 `Memory Swapper` の所持品・識別への干渉はこの分類と関係するが、現在の `ItemStack` は未実装である。詳細は [Memory Swapper](../anomalies/memory-swapper.md) を参照する。
 
+特定アイテムは、個人だけへの効果ではなく、Run全体のアノマリー出現コンポーネントを変動させ得る。対象には個別出現確率、同時出現数などが含まれ得る。この変更はサーバーがRun状態として確定し、Run終了時に破棄する。具体的なアイテム、変更可能なコンポーネント、重ね方は未決定である。
+
 ### Combat / Result Interaction
 
 攻撃・ダメージ・ノックバックなどの通常結果、またはその結果が不成立になることを扱う相互作用。アノマリーが戦闘で倒せることを前提にしない。
