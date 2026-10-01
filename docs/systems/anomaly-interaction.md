@@ -137,6 +137,7 @@ Player Action / Item / Skill / Environment Event
 | `GIANT` / Mad Stomper | Heal → 鎮静候補、花の胞子の出現 | Draft。名称・対応は確定、鎮静条件と専用スキル効果は未確定 |
 | `/dev/null` | Combat / Skill / Item の結果傍受 | Draft。対象範囲・優先順位は未確定 |
 | Memory Swapper | Item と Recognition への干渉 | Draft。所持品基盤は未実装 |
+| `whisper` | Sound / 認知的フィードバック / 非攻撃・非選択 / NPCへの追従先移送 / `anxiety`による対象内発生 | Draft。消失ではなく移送を主要Interactionとし、`anxiety`は潜在要素を持つ対象の状態・エピソードを引き出し得る |
 | 近接 Observer | Environment（近接）→ Exposure | 実装メモ上の既存候補。視認判定とは別 |
 
 この表は共通化の出発点であり、個別アノマリーの仕様を確定するものではない。
@@ -169,4 +170,5 @@ Player Action / Item / Skill / Environment Event
 - [Mad Stomper](../anomalies/mad-stomper.md)
 - [/dev/null](../anomalies/dev-null.md)
 - [Memory Swapper](../anomalies/memory-swapper.md)
+- [whisper](../anomalies/whisper.md)
 - [アノマリー資料一覧](../anomalies/README.md)

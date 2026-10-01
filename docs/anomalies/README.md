@@ -12,6 +12,7 @@
 - [/dev/null](dev-null.md) - 入力・命令・結果の対応関係をnull化するアノマリー。
 - [Mad Stomper](mad-stomper.md) - 撃破ではなく鎮静化・通過を扱う巨大環境アノマリー。
 - [Memory Swapper](memory-swapper.md) - 記憶と認識に応じてItemStackを移動させるInnocentなアノマリー。
+- [whisper](whisper.md) - 音響・認知へ干渉し、指定対象へ付き従うInvisibleなアノマリー。博士の元同僚Questと専用スキル`anxiety`へ接続するDraft。
 
 ## Player Anomaly
 

@@ -32,3 +32,4 @@
 - [015: 博士Questによるアノマリー出現補正](015-professor-quest-anomaly-spawn.md) - 博士Questを1件へ絞り、対象の個別出現確率を1.40倍、アノマリー発生ごとの全候補減衰を0.90倍と定める判断。
 - [016: Party Runにおける博士Quest出現補正の固定](016-party-professor-quest-spawn-snapshot.md) - 開始時Partyの異なる博士Quest対象をサーバーで固定し、重複を重ねず、途中脱落後も補正を維持する判断。
 - [017: Run単位のアノマリー出現コンポーネント](017-run-anomaly-spawn-components.md) - 候補外の博士Quest対象は何も起こさず、同時出現数とアイテムによる出現変動をRun単位で扱う判断。
+- [018: whisperの元同僚Quest、anxiety、他マップ出現解放](018-whisper-colleague-quest-and-anxiety.md) - 追従先移送を軸とするQuest、専用スキル、永続的な候補解放を定める判断。
