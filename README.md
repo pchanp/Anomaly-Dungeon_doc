@@ -14,6 +14,7 @@ Anomaly Dungeonは開発中のRobloxゲームです。このリポジトリは�
 | [`docs/anomalies/`](docs/anomalies/) | 個別アノマリーの設計資料。原則として1体につき1ファイル。 |
 | [`docs/production/`](docs/production/) | アセット、キャラクター、アニメーション等の制作ワークフロー。 |
 | [`docs/decisions/`](docs/decisions/) | 重要な設計判断と、その判断に至った理由。 |
+| [`docs/workboard.md`](docs/workboard.md) | 人間が次に判断・確認する実行キュー。仕様や障害の正本にはしない。 |
 | [`docs/references/`](docs/references/) | BlenderやDeepMotionなど、外部ツール別の補助情報。 |
 | [`src/`](src/) | 将来Gitで管理するRoblox関連ソース、設定、共有データ。 |
 | [`tools/`](tools/) | 開発を補助するローカルツール。ゲーム本体のソースではなく、標準工程でもない。 |

@@ -9,6 +9,7 @@
 - [アニメーション制作パイプライン](animation-pipeline.md)
 - [Blender作業](blender-workflow.md)
 - [Robloxへの導入](roblox-import.md)
+- [Studio検証チェックリスト](studio-verification-checklist.md)
 - [制作トラブルシューティング](troubleshooting.md)
 
 ## 管理方針
