@@ -69,12 +69,19 @@
   - 完了条件: Quest回収とSecure Slotを一つのデータモデルで扱える最小仕様を、既存資料の正本へ記録する。
   - 正本: [現在の実装状況](systems/current-implementation.md)、[未実装機能の優先順位](systems/implementation-priorities.md)
 
-- [ ] **Secure Slot成長仕様を決定する**
+- [x] **Secure Conversionの成長経路を決定する**
+  - 状態: `Done`
+  - 担当: 人間
+  - 決定: 都市ロビーのアノマリー研究室で、レアルート品を消費して通常スロット1枠をSecure Slotへ変換する。総枠数は増えない。
+  - 正本: [010: レアルート品によるSecure Slot成長](decisions/010-real-route-secure-slot-progression.md)、[経済と成長](systems/economy-and-progression.md)
+
+- [ ] **Capacity Expansionの詳細を決定する**
   - 状態: `Needs Human`
   - 担当: 人間
-  - 判断対象: 拡張手段、上限、コスト、入出庫時点、Player Anomaly時の制約。
+  - 決定済み: 総インベントリ枠を増やす強化を設け、Secure Conversionと同種のレアルート品を消費する。
+  - 判断対象: 交換レート、上限、追加枠の初期種別、入出庫時点、Player Anomaly時の制約。
   - 完了条件: 初期4枠・総20枠と矛盾しない仕様を決め、Inventory実装指示へ展開できる状態にする。
-  - 正本: [ゲームループとポータル遷移](systems/game-loop.md)、[経済と成長](systems/economy-and-progression.md)
+  - 正本: [010: レアルート品によるSecure Slot成長](decisions/010-real-route-secure-slot-progression.md)、[ゲームループとポータル遷移](systems/game-loop.md)
 
 - [ ] **QuestとDiscoveryの最小分離を決定する**
   - 状態: `Needs Human`

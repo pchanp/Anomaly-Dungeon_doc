@@ -24,3 +24,4 @@
 - [007: 8月31日マップの地形・湖・時計の再設計](007-august-31-terrain-lake-and-clocktime.md) - フェーズごとの`ClockTime`、高さ関数としての地形、ゾーンの平坦化、湖の絶対高と円形水面、地形に沿うTrail。003の`ClockTime`判断を置き換える。
 - [008: 8月31日の景観構成を、ブロックアウトから夏の谷へ寄せる](008-august-31-landscape-composition.md) - 視線、植生、水辺、生活の痕跡を用いた景観再構成。ソース反映済みで、Studio確認待ち。
 - [009: TSUTAYAを「閉店直後のアーカイブ」として再構成する](009-tsutaya-closing-time-archive.md) - 棚の密度、店頭、返却作業、照明を優先し、荒廃テクスチャは後から重ねる判断。
+- [010: レアルート品によるSecure Slot成長](010-real-route-secure-slot-progression.md) - 都市ロビーの研究室で、レアルート品を用いてSecure ConversionとCapacity Expansionを行う判断。課金経路は未採用。
