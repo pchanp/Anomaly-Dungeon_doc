@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forest Runners — 15s Cinematic</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#05080a;overflow:hidden;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;}
+  #stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;}
+  canvas{display:block;max-width:100vw;max-height:100vh;aspect-ratio:16/9;
+    box-shadow:0 0 80px rgba(0,0,0,.8);background:#05080a;}
+  #gate{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(ellipse at center,rgba(12,20,16,.82),rgba(4,7,9,.96));
+    color:#e8f2ec;z-index:10;cursor:pointer;transition:opacity .7s ease;}
+  #gate.hidden{opacity:0;pointer-events:none;}
+  #gate .box{text-align:center;padding:34px 46px;border:1px solid rgba(150,220,190,.22);
+    border-radius:14px;background:rgba(10,18,15,.5);backdrop-filter:blur(6px);}
+  #gate h1{margin:0 0 6px;font-size:26px;letter-spacing:.14em;font-weight:600;}
+  #gate p{margin:0;font-size:13px;letter-spacing:.06em;color:#9fc4b3;}
+  #hint{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:5;
+    color:rgba(220,240,230,.5);font-size:11px;letter-spacing:.12em;pointer-events:none;}
+  #stats{position:fixed;left:10px;top:8px;z-index:5;color:rgba(200,230,215,.45);
+    font:11px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre;display:none;}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<div id="hint">SPACE pause · R replay</div>
+<div id="stats"></div>
+<div id="gate"><div class="box">
+  <h1>FOREST RUNNERS</h1>
+  <p>click to enter the forest — 15 second loop</p>
+</div></div>
+
+<script type="module">
+import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+
+/* ------------------------------------------------------------------ *
+ *  FOREST RUNNERS
+ *  Procedural cinematic: two giant ferrets + riders racing an ancient
+ *  forest. Everything below is generated in code — no external assets.
+ * ------------------------------------------------------------------ */
+
+const LOOP = 15.0;            // seconds
+const stage = document.getElementById('stage');
+
+/* ---------- renderer / scene ---------- */
+const renderer = new THREE.WebGLRenderer({ antialias:true, powerPreference:'high-performance' });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
+renderer.setSize(1280, 720);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.06;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+stage.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+// Light haze only: a dense fog here collapses the whole forest into a flat green
+// wall within ~40 units, so density is kept low and depth is carried by the sky
+// gradient and the far tree line instead.
+scene.fog = new THREE.FogExp2(0x8fae8c, 0.0058);
+
+const camera = new THREE.PerspectiveCamera(46, 16/9, 0.1, 2600);
+
+/* ---------- sky dome: bright hazy canopy gap the forest frames ---------- */
+const sky = new THREE.Mesh(
+  new THREE.SphereGeometry(1500, 32, 20),
+  new THREE.ShaderMaterial({
+    side: THREE.BackSide, depthWrite: false, fog: false,
+    uniforms: {
+      uTop:  { value: new THREE.Color(0x7fb4d8) },
+      uMid:  { value: new THREE.Color(0xd6e8c4) },
+      uHaze: { value: new THREE.Color(0xf3efd2) },
+      uSun:  { value: new THREE.Vector3(-24, 42, 18).normalize() }
+    },
+    vertexShader: `varying vec3 vDir;
+      void main(){ vDir = normalize(position);
+        gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+    fragmentShader: `uniform vec3 uTop,uMid,uHaze,uSun; varying vec3 vDir;
+      void main(){
+        float h = clamp(vDir.y*0.5+0.5, 0.0, 1.0);
+        vec3 c = mix(uHaze, uMid, smoothstep(0.46, 0.62, h));
+        c = mix(c, uTop, smoothstep(0.60, 0.95, h));
+        // soft sun bloom in the sky
+        float s = max(dot(normalize(vDir), normalize(uSun)), 0.0);
+        c += vec3(1.0,0.93,0.72) * pow(s, 26.0) * 0.85;
+        c += vec3(1.0,0.96,0.84) * pow(s, 4.0) * 0.10;
+        // ground haze below the horizon so the plane edge never reads as a hard line
+        c = mix(vec3(0.44,0.52,0.38), c, smoothstep(0.40, 0.50, h));
+        gl_FragColor = vec4(c, 1.0);
+      }`
+  })
+);
+sky.renderOrder = -1;
+sky.frustumCulled = false;
+scene.add(sky);
+
+/* ---------- palette ---------- */
+const C = {
+  mossLit:   0x6f9a48,
+  mossDark:  0x2c4322,
+  barkWarm:  0x4a3a2c,
+  barkPale:  0x6d5b45,
+  leafA:     0x4e7f36,
+  leafB:     0x74a544,
+  leafC:     0x2f5427,
+  sun:       0xfff2cf,
+  bounce:    0x6fa04a,
+  sky:       0xbfe0c8,
+  white:     0xf7f7f2,
+  tanuki:    0x9a6b3c,
+  tanukiDark:0x2e241d,
+  tanukiCream:0xe8d6b4,
+};
+
+/* ---------- lights ---------- */
+const hemi = new THREE.HemisphereLight(0xd8f0dc, 0x2a3a24, 0.85);
+scene.add(hemi);
+
+const sun = new THREE.DirectionalLight(C.sun, 2.5);
+sun.position.set(-24, 42, 18);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+sun.shadow.camera.near = 1;
+sun.shadow.far = 260;
+sun.shadow.camera.left = -140; sun.shadow.camera.right = 140;
+sun.shadow.camera.top = 140;   sun.shadow.camera.bottom = -140;
+sun.shadow.bias = -0.0012;
+sun.shadow.normalBias = 0.035;
+scene.add(sun, sun.target);
+
+const fill = new THREE.DirectionalLight(0xa9d3ff, 0.42);
+fill.position.set(26, 14, -22);
+scene.add(fill);
+
+const bounce = new THREE.DirectionalLight(C.bounce, 0.35);
+bounce.position.set(6, -8, 10);
+scene.add(bounce);
+
+/* ---------- procedural textures ---------- */
+function canvasTex(size, draw, repeatX = 1, repeatY = 1) {
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  draw(c.getContext('2d'), size);
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(repeatX, repeatY);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.anisotropy = 4;
+  return t;
+}
+let seed = 1337;
+const rnd = () => (seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296;
+
+const groundTex = canvasTex(512, (g, s) => {
+  g.fillStyle = '#33502a'; g.fillRect(0, 0, s, s);
+  for (let i = 0; i < 5200; i++) {
+    const x = rnd()*s, y = rnd()*s, r = 3 + rnd()*26;
+    const t = rnd();
+    g.fillStyle = t < .34 ? `rgba(120,163,72,${0.10+rnd()*.20})`
+              : t < .68 ? `rgba(52,80,40,${0.10+rnd()*.22})`
+              : `rgba(148,124,70,${0.05+rnd()*.12})`;
+    g.beginPath(); g.arc(x, y, r, 0, 6.2832); g.fill();
+  }
+  for (let i = 0; i < 240; i++) { // leaf litter flecks
+    const x = rnd()*s, y = rnd()*s, l = 4 + rnd()*13, a = rnd()*3.14;
+    g.save(); g.translate(x, y); g.rotate(a);
+    g.fillStyle = `rgba(${170+rnd()*50|0},${130+rnd()*60|0},${60+rnd()*40|0},${0.10+rnd()*.25})`;
+    g.fillRect(-l/2, -1.5, l, 3); g.restore();
+  }
+}, 90, 90);
+const groundRough = canvasTex(256, (g, s) => {
+  g.fillStyle = '#c8c8c8'; g.fillRect(0,0,s,s);
+  for (let i=0;i<1800;i++){ const v = 150 + rnd()*105 | 0;
+    g.fillStyle = `rgba(${v},${v},${v},.5)`; g.beginPath();
+    g.arc(rnd()*s, rnd()*s, 2+rnd()*10, 0, 6.2832); g.fill(); }
+}, 60, 60);
+
+const barkTex = canvasTex(256, (g, s) => {
+  g.fillStyle = '#4b3a2b'; g.fillRect(0,0,s,s);
+  for (let i = 0; i < 220; i++) {
+    const x = rnd()*s, w = 2 + rnd()*10;
+    g.fillStyle = `rgba(${28+rnd()*40|0},${22+rnd()*30|0},${16+rnd()*22|0},${0.15+rnd()*.5})`;
+    g.fillRect(x, 0, w, s);
+  }
+  for (let i = 0; i < 90; i++) { // moss patches
+    g.fillStyle = `rgba(96,140,64,${0.06+rnd()*.20})`;
+    g.beginPath(); g.ellipse(rnd()*s, rnd()*s, 6+rnd()*26, 10+rnd()*34, rnd()*3, 0, 6.2832); g.fill();
+  }
+}, 3, 6);
+
+const furTex = canvasTex(256, (g, s) => {
+  g.fillStyle = '#ffffff'; g.fillRect(0,0,s,s);
+  for (let i = 0; i < 2600; i++) { // soft directional strand noise
+    const x = rnd()*s, y = rnd()*s, l = 5 + rnd()*16, v = rnd();
+    g.strokeStyle = v < .5 ? `rgba(0,0,0,${0.02+rnd()*.05})` : `rgba(255,255,255,${0.05+rnd()*.12})`;
+    g.lineWidth = .8 + rnd()*1.4;
+    g.beginPath(); g.moveTo(x, y); g.lineTo(x + (rnd()-.5)*4, y + l); g.stroke();
+  }
+}, 3, 3);
+
+/* fresnel rim: the soft "glowing edge" on the white ferret */
+const rimMat = new THREE.ShaderMaterial({
+  transparent:true, blending:THREE.AdditiveBlending, depthWrite:false, side:THREE.BackSide,
+  uniforms:{ uColor:{value:new THREE.Color(0x9fe8ff)}, uPower:{value:2.6}, uStrength:{value:0.9} },
+  vertexShader:`varying vec3 vN; varying vec3 vV;
+    void main(){ vec4 wp = modelMatrix*vec4(position,1.0);
+      vN = normalize(mat3(modelMatrix)*normal);
+      vV = normalize(cameraPosition - wp.xyz);
+      gl_Position = projectionMatrix*viewMatrix*wp; }`,
+  fragmentShader:`uniform vec3 uColor; uniform float uPower; uniform float uStrength;
+    varying vec3 vN; varying vec3 vV;
+    void main(){ float f = pow(1.0 - clamp(dot(normalize(vN), normalize(vV)),0.0,1.0), uPower);
+      gl_FragColor = vec4(uColor, f*uStrength); }`
+});
+
+/* ------------------------------------------------------------------ *
+ *  GROUND
+ * ------------------------------------------------------------------ */
+const groundGeo = new THREE.PlaneGeometry(1600, 1600, 170, 170);
+groundGeo.rotateX(-Math.PI/2);
+{
+  const p = groundGeo.attributes.position;
+  for (let i = 0; i < p.count; i++) {
+    const x = p.getX(i), z = p.getZ(i);
+    const d = Math.hypot(x, z);
+    const h = Math.sin(x*0.045)*Math.cos(z*0.038)*1.5
+            + Math.sin(x*0.011 + z*0.013)*2.6
+            + Math.sin(z*0.17)*0.28;
+    p.setY(i, h * Math.min(1, d/26) * (1 - Math.min(1, Math.max(0,(d-120))/420)));
+  }
+  groundGeo.computeVertexNormals();
+}
+const groundMat = new THREE.MeshStandardMaterial({
+  map: groundTex, roughnessMap: groundRough, roughness: 0.95, metalness: 0,
+  color: 0xbfd6a8
+});
+const ground = new THREE.Mesh(groundGeo, groundMat);
+ground.receiveShadow = true;
+scene.add(ground);
+
+groundTex.repeat.set(210, 210);
+groundRough.repeat.set(150, 150);
+
+/* ------------------------------------------------------------------ *
+ *  FOREST — instanced, recycled as the world streams past
+ * ------------------------------------------------------------------ */
+const TREE_SLOTS = 130;           // per side
+const SPAN = 420;                 // z depth of the stream
+const RECYCLE = SPAN;             // move this far then wrap
+
+const trunkGeo = new THREE.CylinderGeometry(0.9, 1.9, 1, 9, 1, false);
+trunkGeo.translate(0, 0.5, 0);
+const trunkMat = new THREE.MeshStandardMaterial({ map: barkTex, color: 0xa89179, roughness: 0.92 });
+const branchGeo = new THREE.CylinderGeometry(0.16, 0.42, 1, 6, 1, false);
+branchGeo.translate(0, 0.5, 0);
+const leafGeo = new THREE.IcosahedronGeometry(1, 1);
+const leafMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.88, flatShading: false });
+// per-instance tint
+leafMat.onBeforeCompile = (s) => {
+  s.vertexShader = s.vertexShader
+    .replace('#include <common>', '#include <common>\nvarying float vTint;')
+    .replace('#include <begin_vertex>', '#include <begin_vertex>\n vTint = fract(sin(instanceMatrix[3][0]*12.9898+instanceMatrix[3][2]*78.233)*43758.5453);');
+  s.fragmentShader = s.fragmentShader
+    .replace('#include <common>', '#include <common>\nvarying float vTint;')
+    .replace('#include <color_fragment>',
+      '#include <color_fragment>\n diffuseColor.rgb *= mix(vec3(0.55,0.75,0.5), vec3(1.05,1.1,0.85), vTint);');
+};
+
+const trunks = new THREE.InstancedMesh(trunkGeo, trunkMat, TREE_SLOTS * 2);
+const branches = new THREE.InstancedMesh(branchGeo, trunkMat, TREE_SLOTS * 2 * 3);
+const leaves = new THREE.InstancedMesh(leafGeo, leafMat, TREE_SLOTS * 2 * (6 + 3));
+[trunks, branches, leaves].forEach(m => { m.castShadow = true; m.receiveShadow = true;
+  m.frustumCulled = false; scene.add(m); });
+
+const trees = []; // {x,z,scale,rot,lean}
+{
+  for (let side = 0; side < 2; side++) {
+    for (let i = 0; i < TREE_SLOTS; i++) {
+      const s = side ? 1 : -1;
+      const near = rnd() < 0.3;
+      // inner edge kept clear: the side camera moves out to |x| ~ 12.5 and a
+      // trunk 11.5m out would sit right on the lens
+      const x = s * (near ? 15.5 + rnd()*8 : 24 + Math.pow(rnd(), .7) * 66);
+      trees.push({ x, z: -i*(SPAN/TREE_SLOTS) + rnd()*8,
+                   s: (near ? 0.62 : 0.85) + rnd()*1.15,
+                   rot: rnd()*6.28, side,
+                   canopy: 0.35 + rnd()*0.5 });   // how far this tree arches over the path
+    }
+  }
+}
+
+const _m = new THREE.Matrix4(), _q = new THREE.Quaternion(), _p = new THREE.Vector3(), _s = new THREE.Vector3();
+const _e = new THREE.Euler();
+function updateForest(worldZ) {
+  let ti = 0, bi = 0, li = 0;
+  for (const t of trees) {
+    const z = ((t.z + worldZ) % RECYCLE + RECYCLE) % RECYCLE - RECYCLE + 40; // stream toward camera
+    _e.set(0, t.rot, Math.sin(t.rot*3)*0.02);
+    _q.setFromEuler(_e);
+    const hgt = 34 * t.s, rad = 1.5 * t.s;
+
+    _p.set(t.x, -1.2, z); _s.set(rad, hgt, rad);
+    _m.compose(_p, _q, _s); trunks.setMatrixAt(ti++, _m);
+
+    for (let b = 0; b < 3; b++) {
+      const ang = t.rot + b * 2.1, tilt = 0.75 + b * 0.16;
+      _e.set(Math.cos(ang) * tilt, ang, -Math.sin(ang) * tilt);
+      _q.setFromEuler(_e);
+      _p.set(t.x + Math.cos(ang) * rad * 0.6, hgt * (0.52 + b * 0.14), z + Math.sin(ang) * rad * 0.6);
+      _s.set(0.9, 9 * t.s, 0.9);
+      _m.compose(_p, _q, _s); branches.setMatrixAt(bi++, _m);
+    }
+    // crown: 6 blobs around the trunk top
+    for (let l = 0; l < 6; l++) {
+      const ang = t.rot + l * 1.05, r = (2.2 + (l % 3) * 1.7) * t.s;
+      _p.set(t.x + Math.cos(ang) * r, hgt * (0.66 + (l % 3) * 0.12) + Math.sin(l) * 0.7, z + Math.sin(ang) * r);
+      const sq = (2.4 + (l % 2) * 1.3) * t.s;
+      _e.set(l * 0.7, ang, l * 0.3); _q.setFromEuler(_e);
+      _s.set(sq, sq * 0.6, sq);
+      _m.compose(_p, _q, _s); leaves.setMatrixAt(li++, _m);
+    }
+    // overhanging canopy: blobs pulled toward the corridor centre, well above the riders.
+    // This is what creates the dappled light and makes the path feel enclosed.
+    for (let l = 0; l < 3; l++) {
+      const f = t.canopy * (0.45 + l * 0.22);
+      const ang = t.rot + l * 2.4;
+      _p.set(t.x * (1 - f), hgt * (0.86 + l * 0.09), z + Math.sin(ang) * 3.4 * t.s);
+      const sq = (3.0 + l * 1.1) * t.s;
+      _e.set(l * 0.9, ang, l * 0.4); _q.setFromEuler(_e);
+      _s.set(sq * 1.25, sq * 0.5, sq);
+      _m.compose(_p, _q, _s); leaves.setMatrixAt(li++, _m);
+    }
+  }
+  trunks.instanceMatrix.needsUpdate = true;
+  branches.instanceMatrix.needsUpdate = true;
+  leaves.instanceMatrix.needsUpdate = true;
+}
+
+// far parallax tree line — pushed well out so it reads as depth, not as a wall.
+// The corridor itself is kept clear: a cone landing here would fill the frame.
+{
+  const farGeo = new THREE.ConeGeometry(1, 1, 6);
+  const farMat = new THREE.MeshBasicMaterial({ color: 0x4e7350, fog: true });
+  const far = new THREE.InstancedMesh(farGeo, farMat, 340);
+  far.frustumCulled = false;
+  let placed = 0, guard = 0;
+  while (placed < 340 && guard++ < 20000) {
+    const x = (rnd() - 0.5) * 1000;
+    const z = 220 - rnd() * 1300;
+    if (Math.abs(x) < 95 && z > -430) continue;   // never inside the running corridor
+    _p.set(x, 0, z);
+    const h = 45 + rnd() * 70;
+    _s.set(16 + rnd() * 18, h, 16 + rnd() * 18);
+    _m.compose(_p, _q.identity(), _s);
+    far.setMatrixAt(placed++, _m);
+  }
+  far.count = placed;
+  scene.add(far);
+}
+
+/* ---------- god rays ---------- */
+const rayMat = new THREE.ShaderMaterial({
+  transparent:true, depthWrite:false, blending:THREE.AdditiveBlending, side:THREE.DoubleSide,
+  uniforms:{ uTime:{value:0}, uColor:{value:new THREE.Color(0xffeec2)}, uOpacity:{value:0.5} },
+  vertexShader:`varying vec2 vUv; varying float vSeed;
+    void main(){ vUv=uv; vSeed = position.x*0.7+position.z*1.3;
+      gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+  fragmentShader:`uniform float uTime; uniform vec3 uColor; uniform float uOpacity;
+    varying vec2 vUv; varying float vSeed;
+    void main(){
+      float edge = smoothstep(0.0,0.35,vUv.x)*smoothstep(1.0,0.65,vUv.x);
+      float fall = pow(1.0 - vUv.y, 1.7);
+      float flick = 0.72 + 0.28*sin(uTime*0.7 + vSeed*3.0) * sin(uTime*1.31 + vSeed);
+      gl_FragColor = vec4(uColor, edge*fall*flick*uOpacity);
+    }`
+});
+const godRays = new THREE.Group(); scene.add(godRays);
+const rayGeo = new THREE.PlaneGeometry(1, 1, 1, 1);
+rayGeo.translate(0, -0.5, 0);
+for (let i = 0; i < 30; i++) {
+  const w = 2.5 + rnd()*6, h = 30 + rnd()*20;
+  const m = new THREE.Mesh(rayGeo, rayMat);
+  m.scale.set(w, h, 1);
+  m.rotation.set(-0.34 + rnd()*0.18, rnd() * 0.5 - 0.25, 0.14 + rnd() * 0.26);
+  // keep every shaft far down the corridor: a ray crossing the ground next to the
+  // camera shows up as a hard-edged bright quad slicing across the moss
+  m.position.set((rnd() - .5) * 62, 30 + rnd() * 16, -70 - rnd() * 360);
+  m.userData.drift = 0.5 + rnd();
+  godRays.add(m);
+}
+
+/* ---------- pollen / dust motes ---------- */
+function makeMotes(count, size, color, opacity, spreadY, spreadXZ, depth) {
+  const g = new THREE.BufferGeometry();
+  const pos = new Float32Array(count * 3);
+  const ph = new Float32Array(count);
+  for (let i = 0; i < count; i++) {
+    pos[i*3]   = (rnd() - .5) * spreadXZ;
+    pos[i*3+1] = rnd() * spreadY;
+    pos[i*3+2] = (rnd() - .5) * depth;
+    ph[i] = rnd() * 6.2832;
+  }
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  g.setAttribute('aPhase', new THREE.BufferAttribute(ph, 1));
+  const m = new THREE.ShaderMaterial({
+    transparent:true, depthWrite:false, blending:THREE.AdditiveBlending,
+    uniforms:{ uTime:{value:0}, uColor:{value:new THREE.Color(color)}, uSize:{value:size},
+               uOpacity:{value:opacity}, uDepth:{value:depth}, uScroll:{value:0} },
+    vertexShader:`attribute float aPhase; uniform float uTime,uSize,uDepth,uScroll;
+      varying float vA;
+      void main(){
+        vec3 p = position;
+        p.y += sin(uTime*0.5 + aPhase)*1.5 + mod(uTime*0.35 + aPhase*3.0, 1.0)*0.0;
+        p.x += sin(uTime*0.33 + aPhase*1.7)*2.2;
+        p.z = mod(p.z + uScroll + uDepth*0.5, uDepth) - uDepth*0.5;
+        vec4 mv = modelViewMatrix*vec4(p,1.0);
+        float d = -mv.z;
+        vA = smoothstep(90.0, 12.0, d) * (0.45 + 0.55*sin(uTime*1.6 + aPhase*3.0)*0.5+0.5);
+        // fade motes out very close to the lens, otherwise a near mote becomes a
+        // screen-filling white disc that reads as a rendering artifact
+        vA *= smoothstep(1.5, 7.0, d);
+        gl_PointSize = clamp(uSize * (300.0/ max(d, 1.0)), 1.0, 26.0);
+        gl_Position = projectionMatrix * mv;
+      }`,
+    fragmentShader:`uniform vec3 uColor; uniform float uOpacity; varying float vA;
+      void main(){
+        vec2 d = gl_PointCoord - 0.5;
+        float a = smoothstep(0.5, 0.02, length(d));
+        gl_FragColor = vec4(uColor, a*vA*uOpacity);
+      }`
+  });
+  const pts = new THREE.Points(g, m);
+  pts.frustumCulled = false;
+  scene.add(pts);
+  return m;
+}
+const moteNear = makeMotes(900, 2.6, 0xfff4d0, 0.95, 34, 70, 220);
+const moteFar  = makeMotes(700, 1.7, 0xd6ffcf, 0.5, 40, 160, 420);
+
+/* ---------- kicked-up debris ---------- */
+const DEBRIS = 420;
+const debris = (() => {
+  const g = new THREE.BufferGeometry();
+  const pos = new Float32Array(DEBRIS*3), life = new Float32Array(DEBRIS), vel = new Float32Array(DEBRIS*3);
+  for (let i = 0; i < DEBRIS; i++) { life[i] = 0; pos[i*3+1] = -999; }
+  g.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  g.setAttribute('aLife', new THREE.BufferAttribute(life,1));
+  const m = new THREE.ShaderMaterial({
+    transparent:true, depthWrite:false,
+    uniforms:{ uSize:{value:2.1} },
+    vertexShader:`attribute float aLife; uniform float uSize; varying float vL;
+      void main(){
+        vL = aLife;
+        vec4 mv = modelViewMatrix*vec4(position,1.0);
+        // clamp: an unclamped point a metre from the lens covers the whole frame
+        gl_PointSize = clamp(uSize*(1.0+aLife*1.6)*(240.0/max(-mv.z,1.0)), 1.0, 22.0);
+        gl_Position = projectionMatrix*mv;
+      }`,
+    fragmentShader:`varying float vL;
+      void main(){
+        vec2 d = gl_PointCoord-0.5; float a = smoothstep(0.5,0.05,length(d));
+        vec3 c = mix(vec3(0.30,0.24,0.13), vec3(0.52,0.58,0.36), vL);
+        gl_FragColor = vec4(c, a*vL*0.7);
+      }`
+  });
+  const p = new THREE.Points(g, m); p.frustumCulled = false; scene.add(p);
+  return { pts:p, pos, life, vel, next:0 };
+})();
+function emitDebris(x, y, z, power) {
+  for (let k = 0; k < 3; k++) {
+    const i = debris.next = (debris.next + 1) % DEBRIS;
+    debris.pos[i*3] = x + (rnd()-.5)*1.4;
+    debris.pos[i*3+1] = y + rnd()*0.4;
+    debris.pos[i*3+2] = z + (rnd()-.5)*1.2;
+    debris.vel[i*3]   = (rnd()-.5)*power;
+    debris.vel[i*3+1] = 1.4 + rnd()*3.2*power;
+    debris.vel[i*3+2] = (rnd()-.5)*power;
+    debris.life[i] = 1;
+  }
+}
+function updateDebris(dt) {
+  const p = debris.pos, v = debris.vel, l = debris.life;
+  for (let i = 0; i < DEBRIS; i++) {
+    if (l[i] <= 0) continue;
+    l[i] -= dt*0.85;
+    v[i*3+1] -= 11*dt;
+    p[i*3] += v[i*3]*dt; p[i*3+1] += v[i*3+1]*dt; p[i*3+2] += v[i*3+2]*dt;
+    if (l[i] <= 0) p[i*3+1] = -999;
+  }
+  debris.pts.geometry.attributes.position.needsUpdate = true;
+  debris.pts.geometry.attributes.aLife.needsUpdate = true;
+}
+
+/* ---------- forest spirits ---------- */
+const spiritTex = canvasTex(128, (g, s) => {
+  const grd = g.createRadialGradient(s/2, s/2, 0, s/2, s/2, s/2);
+  grd.addColorStop(0, 'rgba(255,255,255,1)');
+  grd.addColorStop(.22, 'rgba(190,255,225,.75)');
+  grd.addColorStop(.55, 'rgba(120,220,255,.22)');
+  grd.addColorStop(1, 'rgba(90,200,255,0)');
+  g.fillStyle = grd; g.fillRect(0,0,s,s);
+});
+const spriteMat = new THREE.MeshBasicMaterial({ map: spiritTex, transparent:true,
+  depthWrite:false, blending:THREE.AdditiveBlending, opacity:.95 });
+const spirits = [];
+for (let i = 0; i < 14; i++) {
+  const grp = new THREE.Group();
+  const core = new THREE.Mesh(new THREE.SphereGeometry(0.2, 10, 8), new THREE.MeshBasicMaterial({ color: 0xdcfff2 }));
+  const halo = new THREE.Sprite(spriteMat.clone());
+  halo.material.opacity = 0.34;
+  halo.scale.setScalar(1.5);
+  const tail = [];
+  for (let t = 0; t < 4; t++) {
+    const o = new THREE.Mesh(new THREE.SphereGeometry(0.12 - t*0.022, 8, 6),
+      new THREE.MeshBasicMaterial({ color: 0xbff5ff, transparent:true, opacity: 0.4 - t*0.08 }));
+    tail.push(o); grp.add(o);
+  }
+  // two faint dark eyes give the spirit a face without breaking the stylization
+  for (const sx of [-1, 1]) {
+    const e = new THREE.Mesh(new THREE.SphereGeometry(0.032, 6, 6),
+      new THREE.MeshBasicMaterial({ color: 0x0b1a18 }));
+    e.position.set(sx*0.07, 0.025, 0.17); grp.add(e);
+  }
+  grp.add(core, halo);
+  // kept well clear of the running line so they never block the shot
+  const side = i % 2 ? 1 : -1;
+  grp.userData = { ph: rnd()*6.28, sp: .5+rnd(), r: 1.2+rnd()*2.2,
+                   x: side * (13 + rnd()*22), y: 3.0 + rnd()*8, tail, halo };
+  scene.add(grp); spirits.push(grp);
+}
+
+/* ------------------------------------------------------------------ *
+ *  FERRET BUILDER
+ * ------------------------------------------------------------------ */
+function softSphere(r, mat, sx=1, sy=1, sz=1) {
+  const m = new THREE.Mesh(new THREE.SphereGeometry(r, 20, 14), mat);
+  m.scale.set(sx, sy, sz); m.castShadow = true; m.receiveShadow = true;
+  return m;
+}
+
+/* one animated leg: hip -> upper -> knee -> lower -> paw */
+function buildLeg(front, side, mats, scale) {
+  const hip = new THREE.Group();
+  const upper = new THREE.Group();
+  const upperMesh = new THREE.Mesh(new THREE.CapsuleGeometry(0.36*scale, 0.85*scale, 6, 10), mats.limb);
+  upperMesh.position.y = -(0.45*scale);
+  upperMesh.castShadow = true;
+  const lower = new THREE.Group();
+  lower.position.y = -(0.9*scale);
+  const lowerMesh = new THREE.Mesh(new THREE.CapsuleGeometry(0.27*scale, 0.82*scale, 6, 10), mats.limb);
+  lowerMesh.position.y = -(0.44*scale);
+  lowerMesh.castShadow = true;
+  const paw = new THREE.Mesh(new THREE.SphereGeometry(0.30*scale, 10, 8), mats.paw);
+  paw.scale.set(1, 0.74, 1.35);
+  paw.position.set(0, -(0.88*scale), 0.1*scale);
+  paw.castShadow = true;
+  lower.add(lowerMesh, paw); upper.add(upperMesh, lower); hip.add(upper);
+  // joint balls hide the seams where the capsules bend away from each other
+  const hipBall = new THREE.Mesh(new THREE.SphereGeometry(0.40*scale, 10, 8), mats.limb);
+  const kneeBall = new THREE.Mesh(new THREE.SphereGeometry(0.31*scale, 10, 8), mats.limb);
+  kneeBall.position.y = -(0.9*scale);
+  hipBall.add(kneeBall);
+  upper.add(hipBall);
+  hip.userData = { upper, lower, front, side };
+  return hip;
+}
+
+function buildFerret(opts) {
+  const S = opts.scale || 1;
+  const g = new THREE.Group();
+  const isTanuki = !!opts.tanuki;
+
+  const fur = new THREE.MeshStandardMaterial({
+    map: furTex, color: isTanuki ? C.tanuki : C.white,
+    roughness: isTanuki ? 0.86 : 0.95, metalness: 0
+  });
+  const furLight = new THREE.MeshStandardMaterial({ map: furTex, color: isTanuki ? C.tanukiCream : 0xffffff, roughness: 0.92 });
+  const furDark = new THREE.MeshStandardMaterial({ map: furTex, color: isTanuki ? C.tanukiDark : 0xe8eef0, roughness: 0.8 });
+  // mid-tone stripe: near-black rings read as hard gaps between the tail beads
+  const bandMat = new THREE.MeshStandardMaterial({ map: furTex, color: 0x8a6a48, roughness: 0.9 });
+  const mats = { body: fur, limb: furLight, paw: furDark };
+
+  // ---- body: a long, deep barrel rather than a ball, so the silhouette reads
+  // as a large animal from behind (rump + tail) and in profile (long back line).
+  const torso = softSphere(1, mats.body, 0.95*S, 1.0*S, 2.75*S);
+  torso.position.y = 3.25*S;
+  g.add(torso);
+  const chest = softSphere(1, isTanuki ? fur : furLight, 0.8*S, 0.82*S, 0.72*S);
+  chest.position.set(0, 3.18*S, -1.95*S);
+  g.add(chest);
+  const hind = softSphere(1, mats.body, 0.9*S, 0.95*S, 0.85*S);
+  hind.position.set(0, 3.2*S, 1.85*S);
+  g.add(hind);
+
+  // soft fur ruff riding on top of the back line
+  for (let i = 0; i < 20; i++) {
+    const t = i/19;
+    const f = new THREE.Mesh(new THREE.SphereGeometry((0.24 + Math.sin(t*3.14)*0.20)*S, 8, 6),
+      (i%3===0) ? mats.limb : mats.body);
+    f.position.set((rnd()-.5)*0.22*S, 4.16*S + Math.sin(t*3.14)*0.20*S, (t-0.5)*4.8*S);
+    f.castShadow = true;
+    g.add(f);
+  }
+
+  // ---- neck + head
+  const neck = new THREE.Group();
+  neck.position.set(0, 3.55*S, -2.2*S);
+  neck.rotation.x = 0.34;                        // carried forward, alert
+  const head = new THREE.Group();
+  head.position.set(0, 0.42*S, -0.85*S);
+  const skull = softSphere(1, mats.body, 0.66*S, 0.64*S, 0.82*S);
+  head.add(skull);
+  const muzzle = softSphere(1, isTanuki ? mats.limb : mats.body, 0.33*S, 0.29*S, 0.48*S);
+  muzzle.position.set(0, -0.17*S, -0.74*S);
+  head.add(muzzle);
+  const nose = new THREE.Mesh(new THREE.SphereGeometry(0.13*S, 10, 8),
+    new THREE.MeshStandardMaterial({ color: isTanuki ? 0x1a1310 : 0xe0899a, roughness: 0.45 }));
+  nose.position.set(0, -0.12*S, -1.14*S);
+  head.add(nose);
+  for (const sx of [-1, 1]) {
+    const ear = new THREE.Mesh(new THREE.SphereGeometry(0.25*S, 10, 8), mats.body);
+    ear.scale.set(1, 1, 0.5);
+    ear.position.set(sx*0.47*S, 0.48*S, 0.1*S);
+    ear.castShadow = true;
+    head.add(ear);
+  }
+  for (const sx of [-1, 1]) {
+    const eye = new THREE.Mesh(new THREE.SphereGeometry(0.15*S, 12, 10),
+      new THREE.MeshStandardMaterial({ color: isTanuki ? 0x120d09 : 0x2b3a3f, roughness: 0.18, metalness: .1 }));
+    eye.position.set(sx*0.4*S, 0.05*S, -0.58*S);
+    head.add(eye);
+    const glint = new THREE.Mesh(new THREE.SphereGeometry(0.052*S, 6, 6),
+      new THREE.MeshBasicMaterial({ color: 0xffffff }));
+    glint.position.set(sx*0.4*S + 0.05*S, 0.11*S, -0.68*S);
+    head.add(glint);
+  }
+  if (isTanuki) {
+    const mask = softSphere(1, mats.paw, 0.58*S, 0.38*S, 0.48*S);
+    mask.position.set(0, 0.02*S, -0.5*S);
+    head.add(mask);
+    for (const sx of [-1, 1]) {
+      const cheek = softSphere(1, mats.limb, 0.28*S, 0.25*S, 0.32*S);
+      cheek.position.set(sx*0.52*S, -0.10*S, -0.48*S);
+      head.add(cheek);
+    }
+  }
+  for (const sx of [-1, 1]) for (let i = 0; i < 3; i++) {
+    const w = new THREE.Mesh(new THREE.CylinderGeometry(0.012*S, 0.006*S, 0.9*S, 4),
+      new THREE.MeshBasicMaterial({ color: 0xffffff, transparent:true, opacity:.3 }));
+    w.position.set(sx*(0.28+ i*0.06)*S, -0.19*S - i*0.055*S, -1.05*S);
+    w.rotation.set(Math.PI/2 - 0.25, 0, sx*(0.5 + i*0.22));
+    w.translateY(-0.42*S);
+    head.add(w);
+  }
+  if (!isTanuki) {
+    const shell = new THREE.Mesh(skull.geometry, rimMat);
+    shell.scale.copy(skull.scale).multiplyScalar(1.16);
+    head.add(shell);
+  }
+  neck.add(head);
+  g.add(neck);
+  // rim glow over the whole white body, so the edge light reads from any angle
+  if (!isTanuki) {
+    const bodyShell = new THREE.Mesh(torso.geometry, rimMat);
+    bodyShell.scale.copy(torso.scale).multiplyScalar(1.1);
+    bodyShell.position.copy(torso.position);
+    g.add(bodyShell);
+  }
+
+  // ---- legs. [x, z, isFront, side]; the ferret faces -Z.
+  const legs = [];
+  const legPos = [[-0.72,-1.60, 1,-1],[-0.72,-1.60, 1, 1],[0.72, 1.50,-1,-1],[0.72, 1.50,-1, 1]];
+  legPos.forEach((lp) => {
+    const leg = buildLeg(lp[2], lp[3], mats, S);
+    leg.position.set(lp[0]*S, 2.42*S, lp[1]*S);
+    g.add(leg); legs.push(leg);
+  });
+
+  // ---- tail: big and carried up, the main read from behind.
+  // Segments are sized to overlap along the chain, otherwise it beads up like
+  // a string of pearls instead of reading as one bushy tail.
+  const tailRoot = new THREE.Group();
+  tailRoot.position.set(0, 3.3*S, 2.4*S);
+  tailRoot.rotation.x = -0.40;
+  const tail = [];
+  let parent = tailRoot;
+  for (let i = 0; i < 7; i++) {
+    const seg = new THREE.Group();
+    const r = (0.58 - i*0.038)*S;
+    const m = new THREE.Mesh(new THREE.SphereGeometry(r, 12, 10),
+      isTanuki ? (i % 2 ? mats.paw : mats.limb) : mats.body);
+    m.scale.set(1.05, 1.05, 1.2); m.castShadow = true;
+    m.position.z = 0.3*S;
+    seg.add(m);
+    // fur tufts break up the sphere silhouette
+    for (let f = 0; f < 2; f++) {
+      const a = (f/2)*6.2832 + i*1.3;
+      const tuft = new THREE.Mesh(new THREE.SphereGeometry(r*0.5, 6, 5),
+        isTanuki ? (i % 2 ? mats.paw : mats.limb) : mats.body);
+      tuft.position.set(Math.cos(a)*r*0.72, Math.sin(a)*r*0.72, 0.3*S + (f%2?0.1:-0.08)*S);
+      seg.add(tuft);
+    }
+    if (isTanuki) {
+      const band = new THREE.Mesh(new THREE.SphereGeometry(r*1.02, 12, 10), bandMat);
+      band.scale.set(1.04, 1.04, 0.34); band.position.z = 0.10*S; seg.add(band);
+    }
+    seg.position.z = i === 0 ? 0 : 0.46*S;
+    parent.add(seg); tail.push(seg);
+    parent = seg;
+  }
+  g.add(tailRoot);
+
+  g.userData = { head, neck, legs, tail, tailRoot, torso, S, tanuki:isTanuki, rider: null };
+  return g;
+}
+
+/* ------------------------------------------------------------------ *
+ *  RIDER
+ * ------------------------------------------------------------------ */
+function buildRider(coatColor, hairColor, skinColor) {
+  const g = new THREE.Group();
+  const skin = new THREE.MeshStandardMaterial({ color: skinColor, roughness: .78 });
+  const coat = new THREE.MeshStandardMaterial({ color: coatColor, roughness: .8 });
+  const pants = new THREE.MeshStandardMaterial({ color: 0x39414b, roughness: .85 });
+  const hair = new THREE.MeshStandardMaterial({ color: hairColor, roughness: .72 });
+
+  const hips = new THREE.Group();
+  g.add(hips);
+
+  const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.30, 0.52, 6, 12), coat);
+  torso.position.y = 0.95; torso.castShadow = true;
+  hips.add(torso);
+
+  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.11, 0.16, 8), skin);
+  neck.position.y = 1.30; hips.add(neck);
+
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.235, 18, 14), skin);
+  head.scale.set(1, 1.12, 1.02);
+  head.position.y = 1.52; head.castShadow = true;
+  hips.add(head);
+
+  // hair: cap + wind-reactive strands
+  const cap = new THREE.Mesh(new THREE.SphereGeometry(0.255, 16, 12, 0, 6.2832, 0, 1.5), hair);
+  cap.position.y = 1.55; cap.castShadow = true; hips.add(cap);
+  const strands = [];
+  for (let i = 0; i < 9; i++) {
+    const a = (i/9) * 6.2832;
+    const st = new THREE.Mesh(new THREE.CapsuleGeometry(0.045, 0.42, 4, 6), hair);
+    const p = new THREE.Group();
+    p.position.set(Math.cos(a)*0.16, 1.63, Math.sin(a)*0.16 - 0.03);
+    p.rotation.set(0.85 + Math.sin(a*2)*0.2, 0, 0);
+    st.position.y = -0.22;
+    p.add(st); hips.add(p);
+    strands.push({ p, base: p.rotation.x, a });
+  }
+  // ponytail
+  const tailG = new THREE.Group();
+  tailG.position.set(0, 1.66, 0.2);
+  for (let i = 0; i < 4; i++) {
+    const seg = new THREE.Mesh(new THREE.CapsuleGeometry(0.085 - i*0.014, 0.16, 4, 6), hair);
+    seg.position.set(0, -0.1 - i*0.15, 0.02 + i*0.03);
+    tailG.add(seg);
+  }
+  hips.add(tailG);
+
+  // arms reach forward/down to hold fur
+  const arms = [];
+  for (const sx of [-1, 1]) {
+    const sh = new THREE.Group();
+    sh.position.set(sx*0.29, 1.16, 0);
+    sh.rotation.x = -1.05; sh.rotation.z = sx * 0.28;
+    const upper = new THREE.Mesh(new THREE.CapsuleGeometry(0.082, 0.32, 4, 8), coat);
+    upper.position.y = -0.2; upper.castShadow = true;
+    const elbow = new THREE.Group(); elbow.position.y = -0.4;
+    const lower = new THREE.Mesh(new THREE.CapsuleGeometry(0.072, 0.3, 4, 8), coat);
+    lower.position.y = -0.18; lower.castShadow = true;
+    const hand = new THREE.Mesh(new THREE.SphereGeometry(0.088, 8, 8), skin);
+    hand.position.y = -0.36;
+    elbow.add(lower, hand); sh.add(upper, elbow);
+    hips.add(sh); arms.push({ sh, elbow });
+  }
+  // legs straddle the ferret's sides
+  const legs = [];
+  for (const sx of [-1, 1]) {
+    const hip = new THREE.Group();
+    hip.position.set(sx*0.3, 0.68, 0);
+    hip.rotation.z = sx * 0.72; hip.rotation.x = -0.2;
+    const thigh = new THREE.Mesh(new THREE.CapsuleGeometry(0.115, 0.4, 4, 8), pants);
+    thigh.position.y = -0.24; thigh.castShadow = true;
+    const knee = new THREE.Group(); knee.position.y = -0.5;
+    const shin = new THREE.Mesh(new THREE.CapsuleGeometry(0.098, 0.4, 4, 8), pants);
+    shin.position.y = -0.24; shin.castShadow = true;
+    const boot = new THREE.Mesh(new THREE.BoxGeometry(0.17, 0.14, 0.3), new THREE.MeshStandardMaterial({ color:0x2b2118, roughness:.7 }));
+    boot.position.set(0, -0.5, 0.05); boot.castShadow = true;
+    knee.add(shin, boot); hip.add(thigh, knee);
+    hips.add(hip); legs.push({ hip, knee });
+  }
+  // scarf — strong wind read. Parented to hips so it follows the rider's lean
+  // and bounce instead of floating behind them.
+  const scarfMat = new THREE.MeshStandardMaterial({ color: coatColor, roughness: .85, side: THREE.DoubleSide });
+  const scarf = [];
+  for (let i = 0; i < 6; i++) {
+    const s = new THREE.Mesh(new THREE.BoxGeometry(0.2 - i*0.014, 0.17, 0.42), scarfMat);
+    scarf.push(s);
+  }
+  const scarfRoot = new THREE.Group(); scarfRoot.position.set(0, 1.26, 0.02);
+  hips.add(scarfRoot);
+  let par = scarfRoot;
+  scarf.forEach((s) => { par.add(s); s.position.z = 0.21; const ng = new THREE.Group(); ng.position.z = 0.42; par.add(ng); par = ng; });
+
+  g.userData = { hips, head, strands, arms, legs, scarf, tailG, tailSegs: scarf };
+  return g;
+}
+
+/* ------------------------------------------------------------------ *
+ *  ASSEMBLE THE PAIR
+ * ------------------------------------------------------------------ */
+const runnerGroup = new THREE.Group();
+scene.add(runnerGroup);
+
+function makeRunner(tanuki, riderColors) {
+  const root = new THREE.Group();
+  const body = buildFerret({ tanuki, scale: 1.0 });
+  root.add(body);
+
+  const rider = buildRider(riderColors[0], riderColors[1], riderColors[2]);
+  rider.scale.setScalar(1.32);
+  rider.position.set(0, 3.80, 0.05);
+  root.add(rider);
+  body.userData.rider = rider;
+
+  // contact shadow blob (softens the shadow map, keeps them grounded)
+  const blob = new THREE.Mesh(new THREE.CircleGeometry(2.4, 24),
+    new THREE.MeshBasicMaterial({ color: 0x101a10, transparent: true, opacity: .35, depthWrite: false }));
+  blob.rotation.x = -Math.PI/2; blob.position.y = 0.12;
+  root.add(blob);
+
+  return { root, body, rider, blob };
+}
+const whiteRunner = makeRunner(false, [0x3f6f8c, 0x2c2620, 0xe8bb96]);
+const tanukiRunner = makeRunner(true,  [0x8c4a3f, 0x1f1a16, 0xd9a077]);
+whiteRunner.root.position.set(-3.1, 0, 0);
+tanukiRunner.root.position.set( 3.1, 0, 0);
+runnerGroup.add(whiteRunner.root, tanukiRunner.root);
+
+/* ---- gallop cycle ------------------------------------------------- */
+const GALLOP = 2.15; // strides per second (each ferret slightly offset)
+function animateFerret(F, phase, speedAmt, wind) {
+  const d = F.body.userData;
+  const S = d.S;
+  const p = phase * 6.2832;
+
+  // body bounce + pitch + roll
+  const bounce = Math.abs(Math.sin(p)) * 0.30 - 0.13;
+  const pitch  = Math.sin(p * 2) * 0.055 + 0.045;
+  const roll   = Math.sin(p) * 0.035;
+  F.body.position.y = bounce * S;
+  F.body.rotation.x = pitch;
+  F.body.rotation.z = roll;
+
+  // gallop footfall pattern: hind pair, then fore pair, offset half a cycle
+  const legs = d.legs;
+  for (let i = 0; i < 4; i++) {
+    const leg = legs[i];
+    const front = leg.userData.front > 0, side = leg.userData.side;
+    const off = front ? 0.5 : 0.0;
+    const dir = side > 0 ? 0.03 : -0.03;   // slight asymmetry
+    const q = p + off * 6.2832 + dir * 6.2832;
+    const s = Math.sin(q), c = Math.cos(q);
+
+    const swing = Math.max(0, s);           // forward reach
+    const stance = Math.max(0, -s);         // push back
+
+    leg.rotation.x = -0.30 + swing * 1.45 - stance * 0.70;
+    leg.userData.upper.rotation.x = swing * 0.35;
+    leg.userData.lower.rotation.x = -0.30 - Math.max(0, s) * 0.80 + Math.max(0, -s) * 0.45;
+    leg.position.y = (2.42 + bounce * 0.35) * S;
+
+    if (stance > 0.94) {
+      // footfall -> kick debris
+      const wx = F.root.position.x + leg.position.x * S;
+      const wz = F.root.position.z + leg.position.z * S;
+      emitDebris(wx, 0.15, wz, 0.55 * speedAmt);
+    }
+  }
+
+  // head bob + ears
+  d.head.rotation.x = -0.10 + Math.sin(p * 2 + 0.6) * 0.07;
+  d.head.rotation.y = Math.sin(p) * 0.045;
+  d.neck.rotation.x = 0.34 + Math.sin(p * 2 + 0.6) * 0.10;
+
+  // tail: flowing S-curve that lags the body
+  for (let i = 0; i < d.tail.length; i++) {
+    const t = d.tail[i];
+    const lag = p - i * 0.42;
+    t.rotation.y = Math.sin(lag) * (0.16 + i * 0.035) + wind * 0.05;
+    t.rotation.x = 0.06 + Math.sin(lag * 0.7 + 1.0) * 0.08;
+  }
+  d.tailRoot.rotation.x = -0.40 + Math.sin(p) * 0.10;
+  d.tailRoot.rotation.y = Math.sin(p * 0.5) * 0.14;
+
+  // rider reacts to the bounce
+  const r = F.rider.userData;
+  r.hips.position.y = Math.sin(p * 2 + 0.35) * 0.13;
+  r.hips.rotation.x = 0.30 + Math.sin(p * 2) * 0.07;   // lean into the run
+  r.hips.rotation.z = -roll * 1.3;
+  r.hips.position.x = Math.sin(p) * 0.06;
+
+  r.head.rotation.x = -0.16 + Math.sin(p * 2 + 0.9) * 0.05;
+  for (const s of r.strands) {
+    s.p.rotation.x = s.base - 0.35 - wind * 0.55 + Math.sin(p * 2 + s.a * 3) * 0.09;
+    s.p.rotation.z = Math.cos(p + s.a * 2) * 0.12;
+  }
+  r.tailG.rotation.x = 0.35 + wind * 0.7 + Math.sin(p * 2) * 0.12;
+  r.tailG.rotation.z = Math.sin(p) * 0.22;
+  for (let i = 0; i < r.legs.length; i++) {
+    const l = r.legs[i];
+    l.hip.rotation.x = -0.2 + Math.sin(p * 2 + i) * 0.06;
+    l.knee.rotation.x = 0.5 + Math.max(0, Math.sin(p * 2 + i)) * 0.3;
+  }
+  for (let i = 0; i < r.arms.length; i++) {
+    const a = r.arms[i];
+    a.sh.rotation.x = -1.05 + Math.sin(p * 2 + i * 0.8) * 0.06;
+    a.elbow.rotation.x = 0.28 + Math.sin(p * 2 + i) * 0.05;
+  }
+  // scarf streams back and slightly up, swaying with the stride
+  for (let i = 0; i < r.scarf.length; i++) {
+    const s = r.scarf[i];
+    s.rotation.x = -0.10 - wind * 0.22 - Math.sin(p * 2 + i * 0.6) * 0.14 - i * 0.03;
+    s.rotation.y = Math.sin(p * 1.5 + i * 0.8) * 0.20 + wind * 0.16;
+    s.rotation.z = Math.sin(p + i * 0.5) * 0.10;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ *  POST — radial speed blur, bloom-ish glow, grain, vignette
+ * ------------------------------------------------------------------ */
+const rt = new THREE.WebGLRenderTarget(1280, 720, {
+  minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter,
+  type: THREE.HalfFloatType, colorSpace: THREE.LinearSRGBColorSpace
+});
+const postScene = new THREE.Scene();
+const postCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+const postMat = new THREE.ShaderMaterial({
+  uniforms: {
+    tDiffuse:{value:rt.texture}, uTime:{value:0}, uSpeed:{value:0.4},
+    uAspect:{value:16/9}, uGrain:{value:0.045}, uVignette:{value:0.85},
+    uExposure:{value:renderer.toneMappingExposure}
+  },
+  vertexShader:`varying vec2 vUv; void main(){ vUv=uv; gl_Position=vec4(position.xy,0.0,1.0); }`,
+  fragmentShader:`
+    uniform sampler2D tDiffuse; uniform float uTime,uSpeed,uAspect,uGrain,uVignette,uExposure;
+    varying vec2 vUv;
+    float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7)))*43758.5453); }
+    // The scene is rendered into a float target, so three.js skips tone mapping and
+    // output encoding. Both are reapplied here, in that order.
+    vec3 aces(vec3 x){
+      const float a=2.51, b=0.03, c=2.43, d=0.59, e=0.14;
+      return clamp((x*(a*x+b))/(x*(c*x+d)+e), 0.0, 1.0);
+    }
+    vec3 toSRGB(vec3 c){
+      return mix(c*12.92, 1.055*pow(max(c,vec3(0.0)), vec3(1.0/2.4)) - 0.055, step(vec3(0.0031308), c));
+    }
+    void main(){
+      vec2 uv = vUv;
+      vec2 c = uv - 0.5;
+      float r = length(vec2(c.x*uAspect, c.y));
+      // radial (zoom) blur -> speed, strongest at the edges
+      float amt = uSpeed * 0.028 * smoothstep(0.10, 0.72, r);
+      vec3 col = vec3(0.0);
+      float wsum = 0.0;
+      for (int i = 0; i < 8; i++) {
+        float t = float(i)/7.0;
+        float w = 1.0 - t*0.72;
+        col += texture2D(tDiffuse, uv - c * amt * t).rgb * w;
+        wsum += w;
+      }
+      col /= wsum;
+      // subtle chromatic split at the edges
+      float ca = 0.0018 * uSpeed * smoothstep(0.2, 0.8, r);
+      col.r = mix(col.r, texture2D(tDiffuse, uv - c*ca).r, 0.8);
+      col.b = mix(col.b, texture2D(tDiffuse, uv + c*ca).b, 0.8);
+      // soft highlight bloom (still linear)
+      col += max(col - 0.85, 0.0) * 0.6;
+      // exposure -> filmic -> display space
+      col = toSRGB(aces(col * uExposure));
+      // gentle S-curve for a cinematic contrast
+      col = col*col*(3.0-2.0*col)*0.28 + col*0.72;
+      // vignette
+      col *= 1.0 - uVignette * smoothstep(0.45, 1.18, r) * 0.5;
+      // film grain, stronger in the shadows like real stock
+      float g = hash(uv * vec2(1280.0, 720.0) + fract(uTime)*97.31) - 0.5;
+      col += g * uGrain * (0.5 + 1.1*(1.0 - dot(col, vec3(0.3333))));
+      gl_FragColor = vec4(col, 1.0);
+    }`
+});
+postScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), postMat));
+
+/* ------------------------------------------------------------------ *
+ *  CAMERA — 15s choreographed track
+ * ------------------------------------------------------------------ */
+// keyframes: t, [x,y,z] relative to pair, [targetY offset], fov
+// NOTE: the ferrets are modelled facing -Z (they run toward -Z, deeper into the
+// woods), so every camera Z below is POSITIVE = behind them. Screen-left is -X,
+// which keeps the white ferret on the left as specified.
+const SHOTS = [
+  // distances are set so the full pair (animal + rider, roughly 9m tall) stays
+  // inside frame at every fov below; closer keyframes cropped them at the top
+  { t: 0.00, p:[  0.0, 3.2, 25.0], look:[0, 3.4], fov: 42, spd: 1.00 }, // low & behind
+  { t: 0.11, p:[ -2.4, 3.0, 30.0], look:[0, 3.2], fov: 44, spd: 1.15 },
+  { t: 0.22, p:[ -9.0, 4.2, 15.0], look:[0, 3.4], fov: 45, spd: 0.80 }, // swing alongside
+  { t: 0.34, p:[-12.0, 13.0,  7.0], look:[0, 3.4], fov: 48, spd: 0.55 }, // above, gentle orbit
+  { t: 0.44, p:[-10.5, 4.4, 17.5], look:[0, 3.4], fov: 38, spd: 1.05 },
+  { t: 0.52, p:[  0.8, 3.6, 21.5], look:[0, 3.6], fov: 36, spd: 1.30 }, // PUSH-IN
+  { t: 0.60, p:[  9.5, 4.2, 16.0], look:[0, 3.4], fov: 45, spd: 0.85 }, // cross to other side
+  { t: 0.70, p:[ 12.5, 12.0,  6.0], look:[0, 3.4], fov: 46, spd: 0.60 },
+  { t: 0.80, p:[  4.8, 4.0, 23.0], look:[0, 3.2], fov: 40, spd: 1.20 },
+  { t: 0.90, p:[  0.0, 3.2, 29.0], look:[0, 3.0], fov: 42, spd: 1.35 }, // low chase again
+  { t: 1.00, p:[  0.0, 3.2, 25.0], look:[0, 3.4], fov: 42, spd: 1.00 },
+];
+function sampleShot(u) {
+  u = ((u % 1) + 1) % 1;
+  let i = 0;
+  while (i < SHOTS.length - 2 && SHOTS[i+1].t < u) i++;
+  const a = SHOTS[i], b = SHOTS[i+1];
+  const raw = (u - a.t) / (b.t - a.t);
+  const k = raw * raw * (3 - 2 * raw);           // smoothstep for gentle accel/decel
+  return {
+    p: [ a.p[0]+(b.p[0]-a.p[0])*k, a.p[1]+(b.p[1]-a.p[1])*k, a.p[2]+(b.p[2]-a.p[2])*k ],
+    look: a.look[0] + (b.look[0]-a.look[0])*k,
+    fov: a.fov + (b.fov-a.fov)*k,
+    spd: a.spd + (b.spd-a.spd)*k,
+    k
+  };
+}
+
+/* ------------------------------------------------------------------ *
+ *  AUDIO — wind, birds, hoof impacts (no music)
+ * ------------------------------------------------------------------ */
+const Audio = (() => {
+  let ctx = null, nodes = null, on = false;
+  function noiseBuffer(sec) {
+    const n = ctx.sampleRate * sec, b = ctx.createBuffer(1, n, ctx.sampleRate), d = b.getChannelData(0);
+    for (let i = 0; i < n; i++) d[i] = Math.random()*2 - 1;
+    return b;
+  }
+  function init() {
+    if (ctx) return;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    ctx = new AC();
+    const master = ctx.createGain(); master.gain.value = 0.0; master.connect(ctx.destination);
+
+    // wind: filtered noise with a slowly wandering band
+    const wind = ctx.createBufferSource(); wind.buffer = noiseBuffer(4); wind.loop = true;
+    const wf = ctx.createBiquadFilter(); wf.type = 'bandpass'; wf.frequency.value = 480; wf.Q.value = 0.7;
+    const wg = ctx.createGain(); wg.gain.value = 0.16;
+    wind.connect(wf).connect(wg).connect(master); wind.start();
+    const lfo = ctx.createOscillator(); lfo.frequency.value = 0.07;
+    const lfoG = ctx.createGain(); lfoG.gain.value = 260;
+    lfo.connect(lfoG).connect(wf.frequency); lfo.start();
+
+    // leaves / rustle: high noise bed
+    const leaf = ctx.createBufferSource(); leaf.buffer = noiseBuffer(3); leaf.loop = true;
+    const lf = ctx.createBiquadFilter(); lf.type = 'highpass'; lf.frequency.value = 3200;
+    const lg = ctx.createGain(); lg.gain.value = 0.028;
+    leaf.connect(lf).connect(lg).connect(master); leaf.start();
+
+    // low forest drone (two detuned sines, very quiet)
+    const d1 = ctx.createOscillator(); d1.type = 'sine'; d1.frequency.value = 58;
+    const d2 = ctx.createOscillator(); d2.type = 'sine'; d2.frequency.value = 87.2;
+    const dg = ctx.createGain(); dg.gain.value = 0.035;
+    d1.connect(dg); d2.connect(dg); dg.connect(master); d1.start(); d2.start();
+
+    nodes = { master, wg, lg };
+  }
+  function thump(vel) {
+    if (!ctx) return;
+    const t = ctx.currentTime;
+    const o = ctx.createOscillator(); o.type = 'sine';
+    o.frequency.setValueAtTime(105, t);
+    o.frequency.exponentialRampToValueAtTime(38, t + 0.16);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.16 * vel, t + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.24);
+    o.connect(g).connect(nodes.master); o.start(t); o.stop(t + 0.26);
+    // earthy transient
+    const n = ctx.createBufferSource(); n.buffer = noiseBuffer(0.12);
+    const f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 900;
+    const ng = ctx.createGain();
+    ng.gain.setValueAtTime(0.05*vel, t); ng.gain.exponentialRampToValueAtTime(0.0001, t + 0.11);
+    n.connect(f).connect(ng).connect(nodes.master); n.start(t); n.stop(t + 0.12);
+  }
+  function bird() {
+    if (!ctx || Math.random() > 0.55) return;
+    const t = ctx.currentTime;
+    const o = ctx.createOscillator(); o.type = 'sine';
+    const base = 1500 + Math.random()*1400;
+    o.frequency.setValueAtTime(base, t);
+    o.frequency.exponentialRampToValueAtTime(base*1.6, t+0.05);
+    o.frequency.exponentialRampToValueAtTime(base*0.9, t+0.13);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.05, t+0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t+0.16);
+    o.connect(g).connect(nodes.master); o.start(t); o.stop(t+0.18);
+  }
+  return {
+    start() {
+      init(); if (!ctx) return;
+      // Only try to resume while suspended: calling resume() on an already-running
+      // context makes Chrome log an autoplay warning on every call.
+      if (ctx.state === 'suspended') ctx.resume();
+      if (nodes) nodes.master.gain.setTargetAtTime(0.9, ctx.currentTime, 0.8);
+      on = true;
+    },
+    thump, bird,
+    get on(){ return on; }
+  };
+})();
+
+/* ------------------------------------------------------------------ *
+ *  LOOP
+ * ------------------------------------------------------------------ */
+const clock = new THREE.Clock();
+let simTime = 0, lastStride = 0, paused = false, started = false;
+let fpsAcc = 0, fpsN = 0, fps = 60, sceneCalls = 0, sceneTris = 0;
+const statsEl = document.getElementById('stats');
+
+const SPEED = 13.5;             // world units / second (stream speed)
+const _lookTarget = new THREE.Vector3();
+
+function tick() {
+  requestAnimationFrame(tick);
+  const dt = Math.min(clock.getDelta(), 0.05);
+  if (!paused) simTime += dt;
+  if (simTime > LOOP) simTime -= LOOP;   // seamless loop
+
+  const u = simTime / LOOP;
+  const shot = sampleShot(u);
+  const worldZ = simTime * SPEED;
+  const wind = 0.55 + shot.spd * 0.35;
+
+  // ---- world stream
+  updateForest(worldZ);
+  groundTex.offset.y = -(worldZ / 1600) * 210;
+  groundRough.offset.y = -(worldZ / 1600) * 150;
+
+  // ---- ferrets
+  const stride = simTime * GALLOP * 2.0;  // two strides per cycle
+  animateFerret(whiteRunner, stride * 0.5, shot.spd, wind);
+  animateFerret(tanukiRunner, stride * 0.5 + 0.06, shot.spd, wind);
+
+  // small lateral body sway + vertical follow over terrain
+  for (const F of [whiteRunner, tanukiRunner]) {
+    const px = F.root.position.x;
+    const gy = Math.sin(px*0.045)*Math.cos(worldZ*0.038)*1.5 + Math.sin(px*0.011 + worldZ*0.013)*2.6;
+    F.root.position.y = gy * Math.min(1, Math.abs(px)/26) * 0.55;
+    F.root.rotation.z = Math.sin(simTime*1.7 + px)*0.012;
+    F.root.rotation.y = Math.sin(simTime*0.9 + px)*0.02;
+  }
+
+  // ---- debris
+  updateDebris(dt);
+
+  // ---- god rays + motes
+  rayMat.uniforms.uTime.value = simTime;
+  for (let i = 0; i < godRays.children.length; i++) {
+    const m = godRays.children[i];
+    let z = ((m.position.z + worldZ) % 420 + 420) % 420 - 420 + 40;
+    m.position.z = z;
+    m.rotation.z = 0.18 + Math.sin(simTime*0.35 + i) * 0.10;
+    // a shaft that reaches the lens becomes a flat white column across the frame,
+    // so retire it once it gets close and let the next one stream in
+    m.visible = (z - camera.position.z) < -22;
+  }
+  moteNear.uniforms.uTime.value = simTime; moteNear.uniforms.uScroll.value = worldZ;
+  moteFar.uniforms.uTime.value = simTime;  moteFar.uniforms.uScroll.value = worldZ * 0.7;
+
+  // ---- spirits
+  for (let i = 0; i < spirits.length; i++) {
+    const s = spirits[i], d = s.userData;
+    const t = simTime * d.sp + d.ph;
+    let z = ((s.position.z + worldZ * 0.92) % 260 + 260) % 260 - 130 + 30;
+    s.position.set(
+      d.x + Math.sin(t * 0.6) * d.r,
+      d.y + Math.sin(t * 0.9) * 1.2,
+      z
+    );
+    s.rotation.y = Math.atan2(
+      -(d.x + Math.sin((t+0.016)*0.6)*d.r - s.position.x), 1
+    );
+    s.lookAt(camera.position);
+    const pulse = 0.85 + Math.sin(t * 1.7) * 0.15;
+    s.scale.setScalar(pulse);
+    d.tail.forEach((o, k) => {
+      o.position.set(Math.sin(t*1.4 - k*0.6) * 0.12, -k*0.42 - 0.1, Math.cos(t*1.4 - k*0.6) * 0.12);
+      o.scale.setScalar(1 - k*0.12);
+    });
+  }
+
+  // ---- camera
+  const anchor = new THREE.Vector3(0, 0, 0);
+  // follow the pair's vertical bob for grounding
+  const pairY = (whiteRunner.root.position.y + tanukiRunner.root.position.y) * 0.5;
+  if (window.__camOverride) {
+    // debug/QA hook: pin the camera to inspect the scene layout
+    const o = window.__camOverride;
+    camera.position.set(o.p[0], o.p[1], o.p[2]);
+    camera.lookAt(o.t[0], o.t[1], o.t[2]);
+    if (o.fov) { camera.fov = o.fov; camera.updateProjectionMatrix(); }
+  } else {
+  // the pair rides up and down the terrain; tracking it only partially left the
+  // camera scraping the ground on the low shots, cropping the animals at the top
+  camera.position.set(
+    anchor.x + shot.p[0],
+    Math.max(2.4, anchor.y + shot.p[1] + pairY * 1.15),
+    anchor.z + shot.p[2]
+  );
+  _lookTarget.set(0, shot.look + pairY * 0.45, 0);
+  camera.lookAt(_lookTarget);
+  // tiny handheld float
+  camera.position.x += Math.sin(simTime * 0.9) * 0.18;
+  camera.position.y += Math.sin(simTime * 1.37) * 0.13;
+  camera.rotation.z += Math.sin(simTime * 0.63) * 0.012;
+  if (Math.abs(camera.fov - shot.fov) > 0.01) {
+    camera.fov += (shot.fov - camera.fov) * Math.min(1, dt * 3.2);
+    camera.updateProjectionMatrix();
+  }
+  }
+  sun.target.position.set(0, 0, -20);
+  sun.position.set(-24, 42, 18 + worldZ * 0.0);
+  sun.target.updateMatrixWorld();
+
+  // ---- audio triggers on footfalls
+  const strideNow = Math.floor(stride * 2.0);
+  if (started && strideNow !== lastStride) {
+    lastStride = strideNow;
+    Audio.thump(0.5 + shot.spd * 0.5);
+    if (Math.random() < 0.12) Audio.bird();
+  }
+
+  // ---- render through post
+  postMat.uniforms.uTime.value = simTime;
+  postMat.uniforms.uSpeed.value = shot.spd;
+  renderer.setRenderTarget(rt);
+  renderer.render(scene, camera);
+  sceneCalls = renderer.info.render.calls;
+  sceneTris = renderer.info.render.triangles;
+  renderer.setRenderTarget(null);
+  renderer.render(postScene, postCam);
+
+  // ---- fps
+  fpsAcc += dt; fpsN++;
+  if (fpsAcc > 0.5) {
+    fps = fpsN / fpsAcc; fpsAcc = 0; fpsN = 0;
+    if (statsEl.style.display !== 'block') statsEl.style.display = 'block';
+    statsEl.textContent = `${fps.toFixed(0)} fps · ${sceneCalls} calls · ${(sceneTris/1000).toFixed(0)}k tris`;
+  }
+}
+
+/* ---------- go ---------- */
+const gate = document.getElementById('gate');
+function begin() {
+  gate.classList.add('hidden');
+  setTimeout(() => gate.remove(), 900);
+  Audio.start();
+  started = true;
+}
+gate.addEventListener('click', begin);
+addEventListener('keydown', (e) => {
+  if (e.code === 'Space') { paused = !paused; clock.getDelta(); }
+  if (e.key === 'r' || e.key === 'R') { simTime = 0; }
+  if (e.code === 'KeyD') statsEl.style.display = statsEl.style.display === 'block' ? 'none' : 'block';
+});
+document.addEventListener('visibilitychange', () => { if (!document.hidden) clock.getDelta(); });
+
+// first frame render, then loop
+updateForest(0);
+tick();
+
+// --- diagnostics hook (used by the automated visual check; harmless at runtime)
+const __errors = [];
+addEventListener('error', (e) => __errors.push(String(e.message || e.error)));
+addEventListener('unhandledrejection', (e) => __errors.push('promise: ' + e.reason));
+window.__seek = (t) => { simTime = Math.max(0, Math.min(LOOP - 0.001, t)); };
+window.__diag = () => ({
+  errors: __errors.slice(),
+  fps: +fps.toFixed(1),
+  simTime: +simTime.toFixed(2),
+  drawCalls: sceneCalls,
+  triangles: sceneTris,
+  programs: renderer.info.programs.length,
+  camera: camera.position.toArray().map(v => +v.toFixed(2)),
+  fov: +camera.fov.toFixed(1),
+  ferretWorldX: [+whiteRunner.root.position.x.toFixed(2), +tanukiRunner.root.position.x.toFixed(2)],
+  activeDebris: debris.life.filter(v => v > 0).length,
+  audio: Audio.on
+});
+// honor #t=3.5 for a deterministic opening frame
+const mHash = /t=([\d.]+)/.exec(location.hash);
+if (mHash) { simTime = parseFloat(mHash[1]); }
+window.__scene = { renderer, scene, camera, sampleShot, get fps(){ return fps; } };
+window.__dbg = { trunks, branches, leaves, trees, runnerGroup, whiteRunner, tanukiRunner, godRays };
+</script>
+</body>
+</html>
