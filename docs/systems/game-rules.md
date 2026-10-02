@@ -32,11 +32,11 @@ RunはHPが0になることだけで終了しない。ビルドはRunの限界�
 
 - **Return**: プレイヤーがReturn Portalから脱出する、通常の任意終了。
 - **Incapacitation**: HPが0になるなど、戦闘不能になる。
-- **Anomaly Transformation**: Exposureなどにより通常プレイヤーとしてRunを継続できない状態に達する。
+- **Anomaly Transformation**: ExposureなどによりPlayer Anomalyへ変化する状態に達する。変化後も、固有の制約とRun LifetimeのもとでRunを継続する。
 - **Map / World Termination**: 時間制限、世界崩壊、戦場の終結、空間の閉鎖など、マップ状態により終了する。
 - **Triggered Termination**: 禁忌のアーカイブ閲覧、特定アイテムの使用、イベントの成立など、プレイヤー行動で終了フラグが成立する。
 
-「Anomaly Transformation」が即座のRun終了になるか、Player Anomalyとして別の状態で継続できるか、その場合の帰還方法は未決定である。Player Anomalyの原則的な代償と利点は[ゲームループとポータル遷移](game-loop.md)に従う。
+Player Anomalyは同時に1人までとする。Exposure閾値を超えたプレイヤーが複数いても、先行するPlayer Anomalyが死亡または帰還して退場するまで、後続者は通常プレイヤーとして待機する。サーバーは閾値超過順で待機キューを保持し、先行者の退場時は先頭の待機者をアノマリー化する。変化後の固有帰還とRuntime満了の扱いは[ゲームループとポータル遷移](game-loop.md)に従う。
 
 ## スキルビルドとマップ
 
@@ -75,6 +75,12 @@ Exposureはダメージ値ではなく、Anomaly発生、Individual Anomaly、�
 
 Party Runでは、サーバーがRun開始時のParty全員の博士Quest対象を重複なしで固定する。異なる対象はそれぞれ1.40倍、重複対象は一度だけ補正する。Run中の脱落・切断はこの初期状態を変えない。複数の異なる対象が補正されたRunが途中でソロ化した場合も、そのまま高い遭遇率を維持する。
 
+### プレイヤー間ダメージ
+
+通常プレイヤー同士のダメージでは、対象HPが最大HPの80%未満にならない下限を常に適用する。したがって通常プレイヤー同士はキルできない。
+
+Player Anomalyが関与する通常プレイヤーとの戦闘では、この下限を双方に適用しない。通常プレイヤーはPlayer Anomalyをキルでき、Player Anomalyも通常プレイヤーをキルできる。同時Player Anomaly数は1人のため、Player Anomaly同士のPvPは通常発生しない。
+
 ## クエストと探索
 
 - **Quest**は現在のRunの目的であり、特定アイテムの回収、地点への到達、対象の確認などを扱う。
@@ -102,7 +108,7 @@ Transition成立時に残っている活動中プレイヤーをどう扱うか�
 
 ## 未決事項
 
-- Anomaly TransformationとPlayer Anomalyの関係、および変化後にRunを継続できる条件。
+- Player Anomalyの待機状態の通知、固有Portal帰還・Runtime満了におけるQuest／資産／基本報酬の扱い。
 - 各終了条件における資産・Quest・Discoveryの持ち帰り扱い。
 - 4スキル枠の確定、スキル取得・強化・失効の詳細。
 - Anomaly Systemの出現判定順、個別確率から実際の出現を決める方法、Critical Anomalyの判断基準、マップごとの互換性・制約。

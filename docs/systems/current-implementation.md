@@ -188,7 +188,7 @@ Party全員が終了すると `RunService.CloseRun` が生成世界を破棄し�
 
 ## 最小Runの未確認・未決定
 
-- **異常化後のRun Lifetime満了の扱いは設計未確定。** 最小版では `TRANSFORMED_TIMEOUT` として失敗扱いにし、基本報酬を支払わない。異常化してから5分を過ごすと、生存したまま失敗が確定する経路になる。生存報酬や帰還手段の扱いを含めて別途決める必要がある。
+- **Player Anomalyの正式なRun継続仕様は未実装。** 設計では、同時発生を1人に制限し、Exposure閾値超過順の待機キューを持つ。通常帰還を封鎖して固有InteractionによるPortalまたはRuntime満了で帰還する。通常プレイヤー同士だけにHP 80%下限を適用し、Player Anomalyとの間は相互キル可能とする。現行最小版はこれを実装しておらず、`TRANSFORMED_TIMEOUT` を失敗扱いとして基本報酬を支払わない。待機キュー、固有Interaction、Portal、PvP下限切替、Runtime満了時の正式な精算は未実装である。
 - **`InventoryService` にはアイテムの所在情報がない。** 保持と喪失の判定と枠数だけを持ち、マップ上への配置、スタック、所有者、Item IDの規則は未実装。
 - **Secure Slotの拡張は未実装。** `SecureSlotCapacity` 属性で拡張値を読み取るが、拡張手段・上限・コストは未決定。
 - **受付開始はpolled 判定のため、入場から受付開始まで最大0.25秒の遅れがある。**

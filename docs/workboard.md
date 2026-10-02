@@ -212,9 +212,17 @@
 - [ ] **異常化後のRun終了を決定する**
   - 状態: `Needs Human`
   - 担当: 人間
-  - 判断対象: Player AnomalyとしてのRun継続可否、帰還方法、資産・Quest・報酬の扱い。
-  - 完了条件: 現行の`TRANSFORMED_TIMEOUT`仮実装を維持・変更・撤回のいずれかに判断できる。
+  - 決定済み: 同時Player Anomalyは1人まで。閾値超過者は先行者の死亡／帰還まで待機する。通常プレイヤー同士はHP 80%下限、Player Anomalyとの間は相互キル可能。固有InteractionのPortal帰還とRuntime満了帰還を設ける。
+  - 判断対象: 固有Portal帰還・Runtime満了時のQuest／資産／基本報酬の精算、待機者へのUI、実装優先順位。
+  - 完了条件: 現行の`TRANSFORMED_TIMEOUT`仮実装を置き換える終了・精算処理を実装指示へ展開できる。
   - 正本: [ゲームルール](systems/game-rules.md)、[現在の実装状況](systems/current-implementation.md)
+
+- [ ] **Player Anomaly待機者の選出順を決定する**
+  - 状態: `Done`
+  - 担当: 人間
+  - 決定: サーバーはExposure閾値を先に超えた順で待機キューを保持し、先行Player Anomalyの退場後に先頭をアノマリー化する。
+  - 残件: 待機状態のUIと、待機中の切断時の扱いは「異常化後のRun終了を決定する」で扱う。
+  - 正本: [019: Player Anomalyの単独発生、PvP、固有帰還](decisions/019-player-anomaly-runtime-pvp-and-return.md)、[ゲームループとポータル遷移](systems/game-loop.md)
 
 - [ ] **スキルビルドの最小仕様を決定する**
   - 状態: `Needs Human`
