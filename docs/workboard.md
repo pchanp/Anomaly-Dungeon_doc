@@ -1,7 +1,7 @@
 # 開発ワークボード
 
 **Status: Draft（運用開始前）**
-**更新日: 2026-10-01**
+**更新日: 2026-10-02**
 
 ## 目的
 
@@ -33,34 +33,123 @@
 ### P0: 実装・Studio検証
 
 - [ ] **最小Runの複数Client検証**
-  - 状態: `Ready`
-  - 担当: Studio操作担当
-  - 次アクション: 2人以上で、受付、30秒締切、満員、強制締切、途中参加拒否、切断、全員終了を確認する。
+  - 状態: `Blocked`（2026-10-02）
+  - 担当: Studio操作担当（要人間）
+  - 実施記録（2026-10-02）:
+    - 日付: 2026-10-02
+    - 対象コミット: `b316d14`
+    - Studioプレースへ反映した内容: なし。本セッションではStudioを操作していない。
+    - テスト環境: 実行せず
+    - 参加Client数: 0
+    - 実施者: 担当エージェント（Studio操作権限なし）
+    - 結果: `Blocked`
+    - 観察事項: チェックリストの「最小Run: 複数Client／Party Run」全7項目が未確認。`current-implementation.md` の既知未確認事項「複数人での挙動は未確認」はそのまま残る。コードは読み取りのみで変更していない。
+    - OutputのError・Warning: なし（Studio未起動のため取得していない）
+    - 残件と反映先: 全7項目の実プレース確認。`DEBUG 強制締切`プロンプトは `current-implementation.md` に「未配置で未確認」と記録があり、着手前に配置確認が必要。
+  - 実施記録（2026-10-02・2回目）:
+    - 日付: 2026-10-02
+    - 対象コミット: `b316d14`
+    - Studioプレースへ反映した内容: なし。本セッションでもStudioを操作していない。
+    - テスト環境: 実行せず
+    - 参加Client数: 0
+    - 実施者: 担当エージェント（Studio操作権限なし）
+    - 結果: `Blocked`
+    - 観察事項: 「複数Client／Party Run」全7項目が未確認のまま。`StudioMCP` は`opencode.json`に設定済みでバイナリも存在するが、2026-10-02T01:05Zの接続は `tools=0`、本セッション（01:56Z開始）には接続記録自体が無い。`StudioMCP` への直接stdioハンドシェイク（protocolVersion 2024-11-05 / 2025-06-18）も30秒間応答なし。`list_roblox_studios` が使えないためプレースの特定すらできていない。推測でPassにはしていない。
+    - OutputのError・Warning: 取得不能（`get_console_output` 利用不可、Output画面未参照）
+    - 残件と反映先: 全7項目。接続障害の詳細は [Studio検証チェックリスト](production/studio-verification-checklist.md) の「検証環境の記録」にある。
+  - Blocker理由: Studio MCPがツール0件で接続できず、Start Server + Playersで2Client以上を起動できない。仕様判断は不要だが、Studio操作と複数Clientの起動は人間（またはStudio操作可能なセッション）が必要。
+  - 次アクション: Studio操作可能な環境で、2人以上で受付、先着順、30秒締切、上限5人（6人目の拒否）、強制締切、途中参加拒否、切断、全員終了とマップ破棄・次のRun開始を確認する。
   - 完了条件: [Studio検証チェックリスト](production/studio-verification-checklist.md) の「複数Client／Party Run」結果を記録し、不具合は本書またはトラブルシューティングへ切り出す。
   - 正本: [現在の実装状況](systems/current-implementation.md)、[最小Runの範囲](decisions/005-minimum-lobby-run-scope.md)
 
 - [ ] **リザルトUIの実表示検証**
-  - 状態: `Ready`
+  - 状態: `Verify in Studio`
   - 担当: Studio操作担当
-  - 次アクション: 成功と失敗の両方で、獲得物、喪失物、Quest状況、Credits、都市ロビーへ戻る操作を確認する。
-  - 完了条件: クライアント画面で表示と復帰を確認し、未確認の表示・入力問題を記録する。
-  - 正本: [現在の実装状況](systems/current-implementation.md)
+  - 実施記録:
+    - 日付: 2026-10-02
+    - 対象コミット: `b316d14`
+    - Studioプレースへ反映した内容: なし。本セッションではStudioを操作していない。
+    - テスト環境: 実行せず
+    - 参加Client数: 0
+    - 実施者: 担当エージェント（Studio操作権限なし）
+    - 結果: `Blocked`
+    - 観察事項: チェックリストの「リザルト／Inventory」全5項目が未確認。`src/` の読み取りのみで、サーバー送信値（`RunService.Finish`）とクライアント描画（`RunResultController`）の対応は静的に確認したにとどまる。コードは変更していない。
+    - OutputのError・Warning: なし（Studio未起動のため取得していない）
+    - 残件と反映先: 全5項目の実プレース確認。判断を要する論点は下記「未確認の論点」。
+  - 実施記録（2026-10-02・2回目）:
+    - 日付: 2026-10-02
+    - 対象コミット: `b316d14`
+    - Studioプレースへ反映した内容: なし。本セッションでもStudioを操作していない。
+    - テスト環境: 実行せず
+    - 参加Client数: 0
+    - 実施者: 担当エージェント（Studio操作権限なし）
+    - 結果: `Blocked`
+    - 観察事項: 「リザルト／Inventory」全5項目が未確認のまま。Studio MCPは2026-10-02T01:05Zの接続で `tools=0`、本セッション（01:56Z開始）には接続記録が無く、`StudioMCP` の直接stdioハンドシェイクも30秒間応答なし。下記「未確認の論点」の前提となる画面確認は開始できておらず、論点の解消には至っていない。推測でPassにはしていない。
+    - OutputのError・Warning: 取得不能（`get_console_output` 利用不可、Output画面未参照）
+    - 残件と反映先: 全5項目と下記「未確認の論点」。接続障害の詳細は [Studio検証チェックリスト](production/studio-verification-checklist.md) の「検証環境の記録」にある。
+  - Blocker理由: Studio MCPがツール0件で接続できず、Play／複数Clientを起動できない。Studio操作可能なセッションまたは人間が必要。
+  - 未確認の論点（Studio表示前に仕様判断を要する可能性）:
+    - 死亡失敗時、`RunResultController` は `ResetOnSpawn=false` なのでリザルト画面は保持される。一方サーバー側は `CharacterAdded` の `character()` で `M.Reset(p)` と `lobby.SendToCity(p)` を実行する（`RunService.luau:239-241`）。このため「死亡リザルト表示中も都市ロビーへ移動済みの状態」になる可能性がある。死亡リザルトを保持したいか、それとも成功時のみResultへ留めるwantは未定義。`LobbyState=RESULT` と物理位置のどちらを優先するかの判断が必要。
+    - 失敗時の `Gained` / `Lost` は `Inventory.Settle(p, success)` の実装に依存する。Secure Slotのみ残す仕様が実装と一致するかはStudio未確認。
+  - 再現手順（Studio操作担当が実行）:
+    1. `src/` をStudioプレースへ反映し、反映経路と対象コミットを記録する。
+    2. Play Soloで都市ロビーへ入り、`DUNGEON ENTRANCE` で入口ロビー、`PartyField` に入る。
+    3. 成功経路: Map条件を解除して出口ポータルから帰還する。リザルト画面で獲得物・Quest達成状況・Credits変化・インベントリ／Secure枠表示を確認する。
+    4. 失敗経路: Run中に死亡させる（落下 或 泉の毒）。死亡直後のリザルト画面、喪失物表示、画面保持と都市ロビー位置を確認する。
+    5. いずれの画面でも「都市ロビーへ戻る」を押し、`LobbyState` が `CITY` へ戻り次の受付_buffを開始できることをOutputと 属性で確認する。
+    6. リザルト表示中にスキルとDashを試み、実行されないことを確認する。
+    7. 空の獲得物・喪失物が「なし」と表示されることを確認する。
+  - 完了条件: [Studio検証チェックリスト](production/studio-verification-checklist.md) の「リザルト／Inventory」5項目にPass／Failを記録し、不具合は本書またはトラブルシューティングへ切り出す。
+  - 正本: [現在の実装状況](systems/current-implementation.md)、[最小Runの範囲](decisions/005-minimum-lobby-run-scope.md)
 
 - [ ] **8月31日景観変更のStudio検証**
   - 状態: `Verify in Studio`
-  - 担当: Studio操作担当
+  - 担当: Studio操作担当（要人間）
+  - 実施記録（2026-10-02）:
+    - 日付: 2026-10-02
+    - 対象コミット: `b316d14`
+    - Studioプレースへ反映した内容: なし。本セッションではStudioを操作していない。
+    - テスト環境: 実行せず
+    - 参加Client数: 0
+    - 実施者: 担当エージェント（Studio操作権限なし）
+    - 結果: `Blocked`
+    - 観察事項: チェックリストの「8月31日: 景観・フェーズ」全5項目が未確認。`008` の「検証が必要な事項」5項目も未確認のまま。DAY／EVENING／NIGHT／AUG_32の遷移確認は実プレースを起動できないため着手できていない。`StudioMCP` は2026-10-02T01:05Zの接続で `tools=0`、本セッション（01:56Z開始）には接続記録が無く、直接stdioハンドシェイク（protocolVersion 2024-11-05 / 2025-06-18）も30秒間応答なし。`list_roblox_studios` が使えないため、Gitの`src/`とStudioプレースの反映関係の確認にも着手できていない。推測でPassにはしていない。
+    - OutputのError・Warning: 取得不能（`get_console_output` 利用不可、Output画面未参照。ゼロであることは意味しない）
+    - 残件と反映先: 全5項目。復旧手順は [Studio検証チェックリスト](production/studio-verification-checklist.md) の「復旧後に必要な手順」を参照。
+  - 備考: 本項目には本セッションのほかに実施記録が無い。上記が最初の記録である。
+  - Blocker理由: Studio MCPがツール0件で接続できず、Playを起動できない。Gitソースとプレースの反映関係の確認にもStudio操作を要する。Studio再起動は破壊的な操作のため、勝手に試行せず人間に委ねる。
   - 次アクション: Trail、Prompt、カメラ、移動、8/32遷移、負荷とStreamingを実プレースで確認する。
   - 完了条件: [008](decisions/008-august-31-landscape-composition.md) の検証事項を記録し、GitソースとStudioプレースの反映関係を確認する。
   - 正本: [008: 8月31日の景観構成](decisions/008-august-31-landscape-composition.md)
 
 - [ ] **TSUTAYA「閉店直後のアーカイブ」改修のStudio検証**
   - 状態: `Verify in Studio`
-  - 担当: Studio操作担当
+  - 担当: Studio操作担当（要人間）
+  - 実施記録（2026-10-02）:
+    - 日付: 2026-10-02
+    - 対象コミット: `b316d14`
+    - Studioプレースへ反映した内容: なし。本セッションではStudioを操作していない。
+    - テスト環境: 実行せず
+    - 参加Client数: 0
+    - 実施者: 担当エージェント（Studio操作権限なし）
+    - 結果: `Blocked`
+    - 観察事項: チェックリストの「TSUTAYA: 閉店直後のアーカイブ」全5項目が未確認。`009` の「検証が必要な事項」5項目も未確認のまま。棚追加のPart数・PointLight数・負荷は実プレースを起動できないため計測できていない。`StudioMCP` は2026-10-02T01:05Zの接続で `tools=0`、本セッション（01:56Z開始）には接続記録が無く、直接stdioハンドシェイク（protocolVersion 2024-11-05 / 2025-06-18）も30秒間応答なし。Archive Shelf／CRT／試聴／出口端末の操作可否確認にも着手できていない。推測でPassにはしていない。
+    - OutputのError・Warning: 取得不能（`get_console_output` 利用不可、Output画面未参照。ゼロであることは意味しない）
+    - 残件と反映先: 全5項目。復旧手順は [Studio検証チェックリスト](production/studio-verification-checklist.md) の「復旧後に必要な手順」を参照。
+  - 備考: 本項目には本セッションのほかに実施記録が無い。上記が最初の記録である。
+  - Blocker理由: Studio MCPがツール0件で接続できず、Playを起動できない。Gitソースとプレースの反映関係の確認にもStudio操作を要する。Studio再起動は破壊的な操作のため、勝手に試行せず人間に委ねる。
   - 次アクション: 背表紙、小物、照明が通路、Prompt、Raycast、移動、負荷を阻害しないか確認する。
   - 完了条件: [009](decisions/009-tsutaya-closing-time-archive.md) の検証事項を記録し、必要なら改修案を `Inbox` として追加する。
   - 正本: [009: TSUTAYAを「閉店直後のアーカイブ」として再構成する](decisions/009-tsutaya-closing-time-archive.md)
 
 ### P1: 最小Runを継続可能なゲームへつなぐ基盤
+
+- [ ] **編集テンプレートとRuntimeマップの境界を決定する**
+  - 状態: `Needs Human`
+  - 担当: 人間
+  - 判断対象: 編集原本の置き場所とPlay時の扱い、先行マップ（`AUGUST_31`／`TSUTAYA`）、静的テンプレートとRun固有状態の境界、座標系、既存Generatorからの移行方法、Seedの役割、ロビーを対象に含めるか。
+  - 完了条件: `ETR-01`から`ETR-04`を決定し、先行マップ1件のテンプレート化を安全な実装指示へ展開できる。
+  - 正本: [編集テンプレートとRuntimeマップ](systems/editor-templates-and-runtime-maps.md)、[006: 最小Runの実装で確定したサーバー境界](decisions/006-minimum-run-server-boundaries.md)
 
 - [ ] **正式Inventory／ItemStackの最小仕様を決定する**
   - 状態: `Needs Human`

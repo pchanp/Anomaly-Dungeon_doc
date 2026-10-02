@@ -15,6 +15,7 @@
 - [ゲームルール](game-rules.md)
 - [マップとギミック案](map-gimmick-ideas.md)
 - [ロビー／ワールドマップ](lobby-world-map.md)
+- [編集テンプレートとRuntimeマップ](editor-templates-and-runtime-maps.md)
 - [クエスト](quests.md)
 - [経済と成長](economy-and-progression.md)
 - [アノマリー相互作用](anomaly-interaction.md)
@@ -26,6 +27,7 @@
 - [ゲームルール](game-rules.md) - Run、終了条件、ビルド、戦闘、Return、Transition、Server / Client責務の草案。
 - [マップとギミック案](map-gimmick-ideas.md) - 基盤システムを異なる文脈で活用するマップ案と設計原則。
 - [ロビー／ワールドマップ](lobby-world-map.md) - 2D都市マップ、施設内3D、ダンジョンへの導線の草案。
+- [編集テンプレートとRuntimeマップ](editor-templates-and-runtime-maps.md) - Studio編集用のマップ原本と、Run単位のRuntimeコピーを分離するための草案。
 - [クエスト](quests.md) - 明確な目的と不明な対象を両立する依頼設計の草案。
 - [経済と成長](economy-and-progression.md) - 換金、レアルート、コレクター、スキル強化の世界内解釈の草案。
 - [アノマリー相互作用](anomaly-interaction.md) - 既存の行動・アイテム・環境イベントを個別アノマリーへ接続する共通設計の草案。
