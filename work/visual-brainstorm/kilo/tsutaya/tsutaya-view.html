@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>Abandoned TSUTAYA — 2D 設定画</title>
+<style>
+html,body{margin:0;padding:0;overflow:hidden;background:#000}
+canvas{display:block}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+const c=document.getElementById('c'); const ctx=c.getContext('2d');
+const W=1600,H=900; c.width=W; c.height=H;
+
+// 天井（蛍光灯の明かりと暗さの帯）
+const ceil=ctx.createLinearGradient(0,0,0,H);
+ceil.addColorStop(0,'#3A3028'); ceil.addColorStop(0.35,'#5A4A38');
+ceil.addColorStop(0.5,'#4A3A2A'); ceil.addColorStop(1,'#2E2620');
+ctx.fillStyle=ceil; ctx.fillRect(0,0,W,H);
+
+// 蛍光灯の発光（部屋ごとに生存率）
+function lamp(x,y,w,h,alive,brightness){
+  if(!alive) return;
+  const lx=x+w/2,ly=y+h/2,lw=w*0.8,lh=h*0.25;
+  const g=ctx.createRadialGradient(lx,ly,1,lx,ly,lw*1.5);
+  g.addColorStop(0,'rgba(255,250,220,'+brightness+')');
+  g.addColorStop(0.4,'rgba(255,240,180,'+(brightness*0.4)+')');
+  g.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=g; ctx.fillRect(x,y,w,h);
+  ctx.fillStyle='rgba(255,255,255,'+(0.3+brightness*0.3)+')';
+  ctx.fillRect(lx-lw/2,ly-lh/2,lw,lh);
+}
+
+// 前景：入口とレジ
+ctx.fillStyle='#3A2E22'; ctx.fillRect(100,720,400,180);
+ctx.fillStyle='#C9B9A0'; ctx.fillRect(160,760,200,40); // レジカウンター
+ctx.fillStyle='#2A221A'; ctx.fillRect(200,800,120,100); // レジ本体
+ctx.fillStyle='#8A7A6A'; ctx.fillRect(220,700,80,60); // 会員端末 CRT
+ctx.fillStyle='#BFD9E8'; ctx.fillRect(230,710,60,40); // CRT 画面
+ctx.fillStyle='#E8E0D0'; ctx.fillRect(240,718,40,22); // 光る文字
+// 入口ドア
+ctx.fillStyle='#2E241C'; ctx.fillRect(120,640,140,160);
+ctx.fillStyle='#6A5A4A'; ctx.fillRect(124,644,10,152);
+ctx.fillStyle='#8A7A6A'; ctx.fillRect(124,700,10,40);
+
+// 中景：棚列（背表紙密度）
+function shelf(x,y,w,h,density){
+  ctx.fillStyle=density?'#4A3A2A':'#5A4A3A';
+  ctx.fillRect(x,y,w,h);
+  ctx.fillStyle=density?'#8A6A5A':'#7A6A5A';
+  for(let i=0;i<w*0.018;i++){
+    const xx=x+Math.random()*w, yy=y+Math.random()*h*0.9;
+    ctx.fillRect(xx,yy,3,Math.random()*h*0.7+4);
+  }
+}
+// VHS/DVD/CD タイトルの帯
+function titleband(x,y,w,h,colors){
+  ctx.fillStyle='#2E241C'; ctx.fillRect(x,y,w,h);
+  for(let i=0;i<colors.length;i++){
+    ctx.fillStyle=colors[i];
+    ctx.fillRect(x+2+i*(w-4)/colors.length,y+2,(w-4)/colors.length-2,h-4);
+  }
+}
+
+// 中央通路
+ctx.fillStyle='#4A3A30'; ctx.fillRect(520,400,360,500);
+
+// 左棚列
+shelf(180,420,220,460,true);
+shelf(420,430,90,450,false);
+// 右棚列
+shelf(920,430,90,450,false);
+shelf(1040,420,260,460,true);
+// メディア帯（CD/DVD）
+titleband(220,640,160,60,['#C9A67C','#8F5A2E','#5F7A9A','#A87A5E','#7A4A2A','#9A7A6E']);
+titleband(1100,620,200,70,['#5E7A9A','#7A6A5A','#8F5A2E','#6E5A4A','#9A8A7E']);
+
+// 落下ケース（少数）
+ctx.fillStyle='#8B7A6A'; ctx.fillRect(680,780,70,30);
+ctx.fillStyle='#6A5A4A'; ctx.fillRect(690,770,50,20);
+ctx.fillStyle='#A89888'; ctx.fillRect(760,790,50,25);
+
+// 中景奥：VHS/DVD チャンネル
+for(let i=0;i<8;i++){
+  const x=560+i*42,y=460;
+  ctx.fillStyle='#1A1410'; ctx.fillRect(x,y,36,120);
+  ctx.fillStyle='#3A2E22'; ctx.fillRect(x+3,y+6,30,24);
+}
+
+// 奥：放送室（暗く）
+const bc=ctx.createLinearGradient(520,0,520,H);
+bc.addColorStop(0,'#1E1812'); bc.addColorStop(0.6,'#14100C'); bc.addColorStop(1,'#0E0C0A');
+ctx.fillStyle=bc; ctx.fillRect(520,0,560,400);
+// 放送卓
+ctx.fillStyle='#2E241C'; ctx.fillRect(700,180,200,100);
+ctx.fillStyle='#4A3A2A'; ctx.fillRect(730,195,60,40);
+ctx.fillStyle='#2A221A'; ctx.fillRect(810,200,80,30);
+ctx.fillStyle='#1A1410'; ctx.fillRect(750,210,40,20);
+// 棚（未整理ケース）
+ctx.fillStyle='#3A2E22'; ctx.fillRect(1050,140,130,220);
+ctx.fillStyle='#6A5A4A';
+for(let i=0;i<18;i++){ ctx.fillRect(1060+i*7,155,6,18); }
+
+// CRT 3 台（停波ノイズ）
+function crt(x,y,on,color){
+  ctx.fillStyle='#1A1410'; ctx.fillRect(x-10,y-10,180,130);
+  ctx.fillStyle='#2E241C'; ctx.fillRect(x,y,160,115);
+  const g=ctx.createRadialGradient(x+80,y+35,2,x+80,y+35,75);
+  if(on){ g.addColorStop(0,color); g.addColorStop(0.5,'rgba(200,220,255,0.3)'); g.addColorStop(1,'rgba(0,0,0,0)'); }
+  else{ g.addColorStop(0,'#2A2A2A'); g.addColorStop(0.5,'#1A1A1A'); g.addColorStop(1,'rgba(0,0,0,0)'); }
+  ctx.fillStyle=g; ctx.fillRect(x,y,160,115);
+  if(on){
+    ctx.fillStyle='rgba(255,255,255,0.15)';
+    for(let i=0;i<60;i++){ ctx.fillRect(x+Math.random()*160,y+Math.random()*115,2,2); }
+  }
+}
+crt(300,320,true,'#7FD9E9');
+crt(1000,330,true,'#E9D97F');
+crt(700,560,false,'#3A3A3A');
+
+// 蛍光灯
+lamp(260,60,260,16,true,0.7);  // 店頭
+lamp(640,70,300,14,true,0.5);  // 売場
+lamp(1000,65,240,14,true,0.6); // 売場
+lamp(620,160,220,12,false,0);  // 放送室（消灯）
+lamp(1100,150,200,12,true,0.3); // 作業場（弱）
+
+// ラベル
+ctx.fillStyle='rgba(255,255,255,0.85)'; ctx.font='14px sans-serif'; ctx.textAlign='left';
+const labels=[
+  {x:140,y:600,t:'入口・レジ'},
+  {x:90,y:500,t:'VHS/DVD 棚（背表紙密度）'},
+  {x:1360,y:500,t:'CD 棚'},
+  {x:560,y:430,t:'中央通路'},
+  {x:560,y:600,t:'VHS 選曲コーナー'},
+  {x:800,y:120,t:'放送室（暗）'},
+  {x:1060,y:100,t:'未整理ケース棚'},
+  {x:1020,y:820,t:'落下ケース'}
+];
+labels.forEach(l=>ctx.fillText(l.t,l.x,l.y));
+</script>
+</body>
+</html>

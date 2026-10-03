@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>8月31日 — 2D設定画</title>
+<style>
+html,body{margin:0;padding:0;overflow:hidden;background:#111}
+canvas{display:block}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+const c=document.getElementById('c'); const ctx=c.getContext('2d');
+const W=1600,H=900; c.width=W; c.height=H;
+
+// 空
+const sky=ctx.createLinearGradient(0,0,0,H);
+sky.addColorStop(0,'#87CEEB'); sky.addColorStop(0.55,'#9FD8E6'); sky.addColorStop(1,'#BCE3F0');
+ctx.fillStyle=sky; ctx.fillRect(0,0,W,H);
+
+// 太陽光の霞
+ctx.fillStyle='rgba(255,248,220,0.12)';
+ctx.fillRect(0,0,W,H/2);
+
+// 遠景の稜線
+function hill(x0,y0,x1,y1,color){
+  ctx.fillStyle=color; ctx.beginPath(); ctx.moveTo(0,H);
+  ctx.lineTo(x0,y0); ctx.lineTo(x1,y1); ctx.lineTo(W,H); ctx.fill();
+}
+hill(0,620,400,480,'#6E9A7D');   // 遠くの丘
+hill(200,440,700,420,'#7AA886'); hill(500,460,1200,300,'#8FC29A'); // 山
+hill(900,340,1600,560,'#82B290');
+// 稜線の木々
+function trees(x,y,r,skyColor,leaf){
+  for(let i=0;i<14;i++){
+    const xx=x+Math.random()*(r-60);
+    ctx.fillStyle=leaf; ctx.beginPath(); ctx.arc(xx,y,Math.random()*14+10,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#4A6B4E'; ctx.beginPath(); ctx.arc(xx,y+8,Math.random()*8+6,0,Math.PI*2); ctx.fill();
+  }
+}
+trees(280,445,420,'#7AA886'); trees(560,425,640,'#8FC29A');
+trees(980,355,560,'#82B290');
+
+// 湖
+const lake=ctx.createLinearGradient(0,560,0,760);
+lake.addColorStop(0,'#5FA8C8'); lake.addColorStop(0.5,'#6FB8D8'); lake.addColorStop(1,'#5A9AB8');
+ctx.fillStyle=lake; ctx.fillRect(300,560,1000,240);
+// 湖の岸の葦
+ctx.fillStyle='#7FA36B';
+for(let i=0;i<260;i++){
+  const x=340+Math.random()*920; const h=Math.random()*18+10;
+  ctx.fillRect(x,548,h,2);
+}
+// 湖の石
+ctx.fillStyle='#8B8B83';
+for(let i=0;i<30;i++){
+  const x=400+Math.random()*800,y=552+Math.random()*40;
+  ctx.beginPath(); ctx.ellipse(x,y,Math.random()*9+5,Math.random()*5+3,0,0,Math.PI*2); ctx.fill();
+}
+
+// 河原の帯
+ctx.fillStyle='#C2B28E'; ctx.fillRect(260,680,1080,70);
+// 河原の石
+ctx.fillStyle='#A89878';
+for(let i=0;i<40;i++){
+  ctx.beginPath(); ctx.ellipse(300+Math.random()*1000,695+Math.random()*60,Math.random()*8+4,Math.random()*5+2,0,0,Math.PI*2); ctx.fill();
+}
+
+// 田（緑の区画）
+ctx.fillStyle='#A5C96E';
+for(let i=0;i<6;i++){
+  const x=180+i*210,y=720;
+  ctx.fillRect(x,y,180,90);
+  // 田の水路
+  ctx.strokeStyle='#8BC46A'; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(x+10,y+30); ctx.lineTo(x+170,y+30); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x+10,y+60); ctx.lineTo(x+170,y+60); ctx.stroke();
+}
+// 田の草のまとまり
+ctx.fillStyle='#7FB04B';
+for(let i=0;i<15;i++){
+  const x=200+Math.random()*1000,y=730+Math.random()*50;
+  ctx.beginPath(); ctx.arc(x,y,Math.random()*6+3,0,Math.PI*2); ctx.fill();
+}
+
+// 道
+ctx.fillStyle='#B8A888'; ctx.fillRect(90,700,220,340); // 谷を登る道
+ctx.strokeStyle='#A89878'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(160,700); ctx.lineTo(130,820); ctx.stroke();
+
+// 送電柱
+function pylon(x,y){
+  ctx.fillStyle='#8B7D6B'; ctx.fillRect(x,y,7,180);
+  ctx.fillStyle='#6B5D4B'; ctx.fillRect(x-46,y+26,97,6);
+  ctx.fillRect(x-50,y+20,15,18); ctx.fillRect(x+35,y+20,15,18);
+  // 電線
+  ctx.strokeStyle='#4A4036'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(x-50,y+28); ctx.bezierCurveTo(300,y+60,600,y+90,x+50,y+30); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x-50,y+28); ctx.bezierCurveTo(200,y+70,700,y+110,x+50,y+32); ctx.stroke();
+}
+pylon(140,760); pylon(620,640); pylon(1050,590); pylon(1380,560);
+
+// 集落（道路沿い）
+const houseColor=['#D9CBB2','#C9B9A0','#E0D4BC','#CDC1A8'];
+function house(x,y,w,h,roofColor){
+  ctx.fillStyle=houseColor[Math.floor(Math.random()*houseColor.length)]; ctx.fillRect(x,y,w,h);
+  ctx.fillStyle=roofColor; ctx.beginPath();
+  ctx.moveTo(x-8,y); ctx.lineTo(x+w/2,y-34); ctx.lineTo(x+w+8,y); ctx.fill();
+  // 扉
+  ctx.fillStyle='#5C4E3A'; ctx.fillRect(x+w/2-12,y+h-30,24,30);
+  // 窓
+  ctx.fillStyle='#BFD9E8'; ctx.fillRect(x+14,y+14,22,22);
+  ctx.fillRect(x+w-36,y+14,22,22);
+  // 日除け
+  ctx.fillStyle='#8B5A2F'; ctx.fillRect(x+10,y+h-24,w-20,8);
+  ctx.fillStyle='#C9A67C';
+  for(let k=0;k<7;k++) ctx.fillRect(x+14+k*11,y+h-18,4,8);
+}
+house(600,600,70,55,'#7A4A2A'); house(760,630,62,48,'#6E4426');
+house(860,585,78,60,'#824F2E'); house(1180,610,66,50,'#7A4A2A');
+
+// 団地（遠景）
+function apartment(x,y,w,h){
+  ctx.fillStyle='#B4B8C0'; ctx.fillRect(x,y,w,h);
+  for(let r=0;r<5;r++){ for(let c=0;c<3;c++){
+    if(Math.random()>0.25) ctx.fillStyle='#7FB3D9'; else ctx.fillStyle='#AAB0B8';
+    ctx.fillRect(x+10+c*18,y+8+r*14,14,10);
+  }}
+}
+apartment(1100,400,140,90); apartment(1300,420,130,85);
+// 団地前広場
+ctx.fillStyle='#9DB095'; ctx.fillRect(1080,500,400,70);
+// 広場の植栽
+ctx.fillStyle='#5F875C';
+for(let i=0;i<12;i++){ const x=1100+Math.random()*360; ctx.beginPath(); ctx.arc(x,502,Math.random()*8+5,0,Math.PI*2); ctx.fill(); }
+
+// 鳥
+ctx.strokeStyle='#3A3A3A'; ctx.lineWidth=1.2;
+ctx.beginPath(); ctx.moveTo(700,200); ctx.lineTo(685,210); ctx.lineTo(670,200); ctx.stroke();
+ctx.beginPath(); ctx.moveTo(450,150); ctx.lineTo(440,160); ctx.lineTo(430,150); ctx.stroke();
+
+// バス停（前景）
+const bg=ctx.createLinearGradient(0,720,0,900); bg.addColorStop(0,'#8FB06E'); bg.addColorStop(1,'#6A8A4D');
+ctx.fillStyle=bg; ctx.fillRect(0,720,W,180);
+// 草
+ctx.fillStyle='#5A7A3D';
+for(let i=0;i<120;i++){
+  const x=Math.random()*W,y=730+Math.random()*150;
+  ctx.fillRect(x,y,Math.random()*3+1,Math.random()*10+4);
+}
+ctx.fillStyle='#4A6634';
+for(let i=0;i<80;i++){
+  const x=Math.random()*W,y=740+Math.random()*130;
+  ctx.beginPath(); ctx.arc(x,y,Math.random()*4+2,0,Math.PI*2); ctx.fill();
+}
+// バス停ポール
+ctx.fillStyle='#3A4A3E'; ctx.fillRect(260,760,10,140);
+// 屋根
+ctx.fillStyle='#35453A'; ctx.beginPath(); ctx.moveTo(220,760); ctx.lineTo(360,760); ctx.lineTo(340,730); ctx.lineTo(240,730); ctx.fill();
+// 標識
+ctx.fillStyle='#E8E8E0'; ctx.fillRect(245,745,80,24);
+ctx.fillStyle='#2A3A32'; ctx.font='bold 13px "Yu Mincho", "Hiragino Mincho ProN", serif'; ctx.textAlign='center';
+ctx.fillText('STOP HERE',285,761);
+// バス停時刻表枠
+ctx.fillStyle='#D8D0C0'; ctx.fillRect(210,790,140,70);
+ctx.fillStyle='#4A4036'; ctx.fillRect(214,794,132,4);
+ctx.fillStyle='#3A3028'; ctx.font='11px "Yu Mincho","Hiragino Mincho ProN",serif'; ctx.textAlign='left'; ctx.fillText('A8 — 谷の道',222,812);
+ctx.fillText('10:14',222,826);
+ctx.fillText('A8 — 湖側',222,840);
+// ベンチ
+ctx.fillStyle='#6B5238'; ctx.fillRect(380,810,130,8);
+ctx.fillRect(388,810,6,52); ctx.fillRect(500,810,6,52);
+ctx.fillStyle='#5C442E'; ctx.fillRect(388,818,116,6);
+// 標識プレート
+ctx.fillStyle='#8A7A6A'; ctx.fillRect(262,760,6,140);
+ctx.fillStyle='#2A3A32'; ctx.font='11px sans-serif'; ctx.textAlign='center';
+ctx.fillText('8月31日',265,742);
+
+// ラベル
+ctx.fillStyle='rgba(30,30,30,0.9)'; ctx.font='13px "Yu Mincho","Hiragino Mincho ProN",serif'; ctx.textAlign='left';
+let labels=[
+  {x:340,y:555,t:'湖 葦と石'},
+  {x:1260,y:395,t:'団地（遠景）'},
+  {x:430,y:730,t:'田 水路と草'},
+  {x:130,y:685,t:'道'},
+  {x:710,y:605,t:'集落'},
+  {x:270,y:870,t:'バス停 標識・ベンチ'}
+];
+labels.forEach(l=>{ ctx.fillText(l.t,l.x,l.y+12); });
+</script>
+</body>
+</html>

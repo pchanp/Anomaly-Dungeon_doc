@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>視覚仮説ボード ／ Anomaly Dungeon — OpenCode</title>
+<link rel="stylesheet" href="vis.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <h1>Anomaly Dungeon ／ 視覚仮説ボード（OpenCode 担当分）</h1>
+  <div class="sub">
+    アノマリー5体と登場NPC2名の「2Dイメージ案」を、視覚仮説の探索としてまとめたものです。
+    仕様確定ではなく、外見未定の対象は確定した姿として描かず、複数のシルエットや現象の痕跡を並べています。
+    Roblox Studio 上の現行外観は参照していません。根拠はすべて <code>docs/</code> の Draft 文書です。
+  </div>
+  <div class="badges">
+    <span class="badge hyp">Visual hypothesis — 仮説</span>
+    <span class="badge unconf">Unconfirmed — 未確定</span>
+    <span class="badge">Type: Anomaly Entity ×5</span>
+    <span class="badge">NPC ×2</span>
+    <span class="badge">Player Anomaly は本ボードの対象外</span>
+  </div>
+</header>
+
+<div class="doc">
+  <h2>このボードの扱い</h2>
+  <p>
+    各ページは (a) 根拠文書、(b) 描画上の仮説、(c) 未確定要素 を分けて記載しています。
+    具体的な顔・衣装・人体構造・意匠の細部を描き切ったものは、すべて <span class="hyp-t">仮案</span> として扱ってください。
+    世界の謎の答え、アノマリーの正体、人物の年齢や経歴は描いていません。
+  </p>
+  <div class="note">
+    <b>混同しないこと:</b> Player Anomaly（<code>Visible / Invisible Inversion</code>）は本ボードの作図対象外です。
+    Memory Swapper の「通常プレイヤーには見えない／Inversion 発生中のプレイヤーには見える」は Player Anomaly 側の性質として、
+    Memory Swapper 自身の外見の確定には使わず、参照関係としてだけ注記しています。
+  </div>
+</div>
+
+<h2 style="font-size:13px;color:#e2f0f7;letter-spacing:.1em;font-weight:400;border-left:2px solid #2d3f4c;padding-left:8px;">全体ボード</h2>
+<div class="board">
+<svg viewBox="0 0 1120 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="視覚仮説7件の全体ボード">
+  <rect width="1120" height="300" fill="#07090b"/>
+
+  <!-- 背景のグリッド -->
+  <g stroke="#131c22" stroke-width="1">
+    <path d="M0 60H1120M0 120H1120M0 180H1120M0 240H1120"/>
+    <path d="M160 0V300M320 0V300M480 0V300M640 0V300M800 0V300M960 0V300"/>
+  </g>
+
+  <!-- 1 MiW : 棺 + 猫シルエット -->
+  <g transform="translate(60,60)">
+    <text class="lbl-h" x="0" y="-14">01 MiW</text>
+    <g class="mid-s"><path d="M14 46h64l-6-22H20z"/><path d="M46 24V14"/></g>
+    <path fill="#5b7484" d="M30 42c0-8 4-13 10-13 3-4 10-4 12 0 7 0 12 5 12 13z"/>
+    <circle cx="46" cy="20" r="3" fill="#8a4fbf"/>
+    <text class="lbl-s" x="0" y="62">棺に収まる猫型</text>
+  </g>
+
+  <!-- 2 /dev/null : 鎖の断絶 -->
+  <g transform="translate(220,60)">
+    <text class="lbl-h" x="0" y="-14">02 /dev/null</text>
+    <g class="mid-s"><rect x="0" y="20" width="26" height="14"/><rect x="60" y="20" width="26" height="14"/></g>
+    <path class="hz2" d="M26 27h34" />
+    <path stroke="#b8452f" stroke-width="1.6" d="M40 22l8 10M48 22l-8 10"/>
+    <text class="lbl-s" x="0" y="52">入力と結果の断絶</text>
+  </g>
+
+  <!-- 3 Memory Swapper : 位置のずれ -->
+  <g transform="translate(380,60)">
+    <text class="lbl-h" x="0" y="-14">03 Memory Swapper</text>
+    <g class="mid-s"><rect x="0" y="20" width="22" height="16"/><rect x="66" y="20" width="22" height="16"/></g>
+    <rect x="5" y="25" width="10" height="8" fill="#2fbfa0" opacity=".8"/>
+    <rect x="71" y="25" width="10" height="8" fill="none" stroke="#2fbfa0" stroke-dasharray="3 2"/>
+    <path class="hz2" d="M16 20C34 0 54 0 77 20"/>
+    <text class="lbl-s" x="0" y="52">同じ物が別の位置にある</text>
+  </g>
+
+  <!-- 4 Mad Stomper : 巨人の足と眼 -->
+  <g transform="translate(540,40)">
+    <text class="lbl-h" x="0" y="-14">04 Mad Stomper</text>
+    <path fill="#2fbfa0" opacity=".9" d="M22 96c-4-30 2-52 14-58l4-16 10 6 12-10 8 14c14 6 20 30 16 64z"/>
+    <g fill="#e2f0f7">
+      <circle cx="40" cy="40" r="2"/><circle cx="52" cy="34" r="2"/><circle cx="63" cy="42" r="2"/>
+      <circle cx="46" cy="50" r="2"/><circle cx="58" cy="54" r="2"/>
+    </g>
+    <circle cx="30" cy="86" r="7" fill="none" stroke="#c9a227" stroke-dasharray="3 2"/>
+    <text class="lbl-s" x="0" y="112">青緑・眼・巨大な足</text>
+  </g>
+
+  <!-- 5 whisper : 不可視の実体 -->
+  <g transform="translate(700,40)">
+    <text class="lbl-h" x="0" y="-14">05 whisper</text>
+    <circle cx="46" cy="52" r="26" class="hz2"/>
+    <circle cx="46" cy="52" r="16" class="hz2"/>
+    <circle cx="46" cy="52" r="6" fill="none" stroke="#8a4fbf"/>
+    <path class="hz" d="M72 52h24"/>
+    <rect x="96" y="34" width="30" height="36" fill="none" stroke="#2d3f4c"/>
+    <path stroke="#8a4fbf" stroke-dasharray="2 3" d="M99 40h24M99 46h24M99 52h16M99 58h20"/>
+    <text class="lbl-s" x="0" y="96">不可視／実体あり</text>
+  </g>
+
+  <!-- 6 博士 : 断定しないシルエット群 -->
+  <g transform="translate(860,46)">
+    <text class="lbl-h" x="0" y="-20">06 博士</text>
+    <path class="mid-s" d="M6 84V52l10-14 10 14v32z"/>
+    <path class="hz" d="M38 84V48l12-18 12 18v36z"/>
+    <path class="hz" d="M74 84V56l8-10 8 10v28z"/>
+    <text class="lbl-s" x="0" y="102">3案のみ（未確定）</text>
+  </g>
+
+  <!-- 7 元同僚 : 痕跡 -->
+  <g transform="translate(980,46)">
+    <text class="lbl-h" x="0" y="-20">07 元同僚</text>
+    <g class="mid-s"><rect x="4" y="56" width="44" height="28"/><path d="M4 56l22-14 22 14"/></g>
+    <circle cx="66" cy="46" r="8" class="hz"/>
+    <circle cx="90" cy="42" r="8" class="hz"/>
+    <path class="hz2" d="M60 78h42" stroke-dasharray="5 6"/>
+    <text class="lbl-s" x="0" y="102">不在の痕跡のみ</text>
+  </g>
+
+  <text class="lbl-s" x="24" y="284">STATUS: Draft（草案）／ Visual hypothesis ／ 2026-10-03 OpenCode ／ 実装指示ではない</text>
+</svg>
+</div>
+
+<h2 style="font-size:13px;color:#e2f0f7;letter-spacing:.1em;font-weight:400;border-left:2px solid #2d3f4c;padding-left:8px;">各案</h2>
+<table>
+  <tr><th>No</th><th>対象</th><th>Type</th><th>作図の主眼</th><th>ファイル</th></tr>
+  <tr><td class="k">01</td><td>MiW</td><td>Anomaly Entity</td><td>棺に収まる猫型。古代エジプト的意匠。観察・接触リスクとRun情報の痕跡。</td><td><a href="01-miw.html">HTML</a> ／ <a href="01-miw.md">MD</a></td></tr>
+  <tr><td class="k">02</td><td>/dev/null</td><td>Anomaly Entity</td><td>入力→処理→結果の対応断絶。ゴミ箱表現は採用しない。</td><td><a href="02-dev-null.html">HTML</a> ／ <a href="02-dev-null.md">MD</a></td></tr>
+  <tr><td class="k">03</td><td>Memory Swapper</td><td>Anomaly Entity</td><td>物の位置と記憶のずれ。Innocent。通常プレイヤーには不可視。</td><td><a href="03-memory-swapper.html">HTML</a> ／ <a href="03-memory-swapper.md">MD</a></td></tr>
+  <tr><td class="k">04</td><td>Mad Stomper（<code>GIANT</code>）</td><td>Anomaly Entity</td><td>青緑色の身体、多数の眼、巨大な足、左足の花の胞子。撃破ではなく通過の障害。</td><td><a href="04-mad-stomper.html">HTML</a> ／ <a href="04-mad-stomper.md">MD</a></td></tr>
+  <tr><td class="k">05</td><td>whisper</td><td>Anomaly Entity</td><td>Invisible だが実体あり。音響・Signal UI・選択UI・追従で存在を示唆。</td><td><a href="05-whisper.html">HTML</a> ／ <a href="05-whisper.md">MD</a></td></tr>
+  <tr><td class="k">06</td><td>博士</td><td>NPC</td><td>確信が強い。外見は未定のため複数シルエットと居室・記録の痕跡のみ。</td><td><a href="06-professor.html">HTML</a> ／ <a href="06-professor.md">MD</a></td></tr>
+  <tr><td class="k">07</td><td>元同僚</td><td>NPC</td><td>研究倫理上の対立と不在の痕跡。顔・年齢・服装を確定させない。</td><td><a href="07-former-colleague.html">HTML</a> ／ <a href="07-former-colleague.md">MD</a></td></tr>
+</table>
+
+<div class="doc">
+  <h2>共通制約（描画上加えた仮定）</h2>
+  <p>
+    舞台設定が許容する意匠（古代エジプト的様式、平成的な記号など）の範囲内で描いています。
+    具体的な顔、衣装、人体構造、意匠の細部、人物の年齢は、すべて各ページの「仮案」として扱っています。
+    ダンジョンの起源、アノマリー発生の原因、各アノマリーの正体は描いていません。
+  </p>
+</div>
+
+<footer class="top">
+  Anomaly Dungeon visual brainstorm / OpenCode 分。仕様確定ではない。Studio現行実装は参照対象外。
+</footer>
+</div>
+</body>
+</html>

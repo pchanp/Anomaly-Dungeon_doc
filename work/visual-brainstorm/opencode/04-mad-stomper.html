@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>04 Mad Stomper (GIANT) ／ 視覚仮説</title>
+<link rel="stylesheet" href="vis.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <h1>04 ／ Mad Stomper — <code>GIANT</code> と同じ個体</h1>
+  <div class="sub">
+    System ID: <code>GIANT</code> ／ 現行プロトタイプ表示名: <code>Giant Anomaly</code> ／ 設計上の名称: <code>Mad Stomper</code>。
+    撃破ではなく、通過を妨げる巨大な環境アノマリー。鎮静化してから通過する。
+  </div>
+  <div class="badges">
+    <span class="badge">Type: Anomaly Entity</span>
+    <span class="badge">Prototype: Partially Implemented</span>
+    <span class="badge hyp">人体構造・眼の配置は仮案</span>
+    <span class="badge unconf">鎮静後の挙動・再活性化は未確定</span>
+  </div>
+  <div class="nav"><a href="index.html">← ボードトップ</a><a href="03-memory-swapper.html">← Memory Swapper</a><a href="05-whisper.html">次: whisper →</a></div>
+</header>
+
+<div class="doc">
+  <h2>(a) 根拠文書</h2>
+  <p>
+    <code>docs/anomalies/mad-stomper.md</code>（Status: Draft）:
+    <code>GIANT</code> は <code>Mad Stomper</code> と同一。表示名を <code>Mad Stomper</code> にするかは未決定。
+    青緑色の異形の身体、多数の眼、巨大な足。感染・異常生物を想起させる外見。
+    巨大人型。歩行時は片足を大きく持ち上げてから地面へストンピングし、地響き・足音・低周波衝撃音・環境反応を起こす。
+    画面揺れは視認性を損なうほど強くしない。
+    HPを削って倒す敵にせず、Heal系スキルで<b>鎮静化</b>して通過する構造。
+    左足を肥大化させている花の胞子が、沈静化の相互作用で得られる関連アイテム（専用スキルではない）。
+    装置のまま「巨大な敵を倒す」にしない。動いている巨大な異常現象として扱う。
+  </p>
+  <p>
+    <code>docs/world/information-design.md</code> / <code>docs/anomalies/cognitive-anomalies.md</code>: 過程より痕跡で伝える。HPバーでの正解提示にしない。
+  </p>
+</div>
+
+<div class="doc">
+  <h2>(b) 描画上の仮説</h2>
+  <ol style="max-width:78ch;color:#9fb6c4">
+    <li><b>絶対スケールは数字で出さない。</b>巨大さは「通路との対比」だけで示す。プレイヤーを数体並べた手前の影と、并置した巨人のシルエットで読ませる。</li>
+    <li><b>視認性は眼より足元。</b>大量の眼は印象付けのためだけに面相へ並べず、<b>膝から下の体積</b>で「踏まれる場所」を読ませる。眼は「見ている」感じの記号として散らす。</li>
+    <li><b>眼の数は描かない。</b>「多数の眼」は無数の小さな点と少数の大きな点で表現し、個数を確定させない。</li>
+    <li><b>身体は一枚の塊として描く。</b>関節・骨格の正体を確定させず、胴と腕が連続した異形の塊にする（最終的に差し替える前提のプロトタイプ案）。</li>
+    <li><b>色の記号を統一する。</b>青緑色=本体、体色より明るい青緑=鎮静の予兆、花の胞子=唯一の例外色（琥珀系）。この3色は画面上の可読性のためだけの仮置き。</li>
+    <li><b>左足だけ非対称。</b>資料どおり左足を肥大化させ、花の胞子を載せる。右足との差を視認の主役にしない（廊下での見失いを避けるため）。</li>
+  </ol>
+  <div class="note">
+    <b>描かなかったもの:</b> 眼球の配置と数、顔と面の構成、四肢の関節構造、鎮静後の姿、专用スキルの名称と効果。
+  </div>
+</div>
+
+<!-- 図1: シルエットとスケール -->
+<h2 style="font-size:13px;color:#e2f0f7;letter-spacing:.1em;font-weight:400;border-left:2px solid #2d3f4c;padding-left:8px;">図1 ／ 巨人と通路 — 絶対スケールではなく対比で描く</h2>
+<div class="board">
+<svg viewBox="0 0 1120 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mad Stomper 通路対比">
+  <rect width="1120" height="420" fill="#07090b"/>
+
+  <!-- 廊下 -->
+  <g class="mid-s" opacity=".55">
+    <path d="M40 40H1080M40 380H1080"/>
+    <path d="M180 40L60 380M940 40L1060 380"/>
+  </g>
+  <g stroke="#141d23" stroke-width="1">
+    <path d="M300 40V380M820 40V380"/>
+  </g>
+
+  <!-- 巨人本体 -->
+  <g transform="translate(430,20)">
+    <!-- 胴〜脚の塊 -->
+    <path fill="#2fbfa0" opacity=".85" d="M40 350c-14-6-24-18-26-34-4-30-2-58 6-84 6-20 4-42 8-62 4-22 16-38 34-44l10-30 14 16 18-14 12 24c24 10 36 34 36 62 0 26-6 46-2 68 4 22 6 46-4 68-6 14-18 22-32 24-16 4-70 4-74-4z"/>
+    <!-- 腕の塊 -->
+    <path fill="#26a68b" opacity=".8" d="M18 150c-14 18-18 44-14 68 2 14 10 22 20 22 8 0 12-8 12-20-2-24 2-48 12-64z"/>
+    <path fill="#26a68b" opacity=".8" d="M162 146c16 16 22 42 20 66-2 14-8 22-18 22-8 0-12-8-12-20 2-24 0-48-10-64z"/>
+    <!-- 多数の眼（数を確定させない） -->
+    <g transform="translate(0,80)">
+    <g fill="#e2f0f7">
+      <circle cx="66" cy="86" r="4.5"/><circle cx="90" cy="70" r="3"/><circle cx="112" cy="88" r="5"/>
+      <circle cx="52" cy="112" r="3"/><circle cx="78" cy="122" r="2.4"/><circle cx="104" cy="120" r="4"/>
+      <circle cx="130" cy="112" r="2.4"/><circle cx="60" cy="146" r="3.4"/><circle cx="92" cy="150" r="2.4"/>
+      <circle cx="124" cy="146" r="3"/>
+    </g>
+    <g fill="#e2f0f7" opacity=".5">
+      <circle cx="82" cy="98" r="1.4"/><circle cx="98" cy="106" r="1.4"/><circle cx="70" cy="134" r="1.4"/>
+      <circle cx="112" cy="134" r="1.4"/><circle cx="86" cy="164" r="1.4"/><circle cx="116" cy="164" r="1.4"/>
+      <circle cx="58" cy="98" r="1.4"/><circle cx="136" cy="98" r="1.4"/>
+    </g>
+    </g>
+    <!-- 巨大な足 -->
+    <path fill="#2fbfa0" d="M36 262c-4 34-4 62 4 84 4 12 14 18 26 18 12 0 20-6 22-18 4-22 4-52 2-84z"/>
+    <path fill="#2fbfa0" d="M104 262c-2 34-2 62 4 84 4 12 14 18 26 18 12 0 20-6 22-18 4-22 4-52 2-84z"/>
+    <!-- 左足の花の胞子 -->
+    <g transform="translate(26,246)">
+      <path class="hyp-t" d="M22 40c-10-8-14-20-8-30 4-8 12-10 18-6 4-8 14-10 20-4 8 6 8 18 0 26-8 8-22 14-30 14z" fill="#c9a227" opacity=".55"/>
+      <g fill="#e0c15a">
+        <circle cx="16" cy="16" r="3.4"/><circle cx="30" cy="10" r="4"/><circle cx="42" cy="18" r="3"/>
+        <circle cx="24" cy="28" r="3"/><circle cx="38" cy="30" r="2.6"/>
+      </g>
+      <path class="hz2" d="M46 30c14 8 22 22 22 36"/>
+      <text class="lbl-s" x="-22" y="76">左足</text>
+    </g>
+    <!-- 鎮静の予兆（色） -->
+    <text class="hyp-t" x="150" y="120">体色が明るくなる＝鎮静の予兆</text>
+    <path class="hz2" d="M150 112C170 150 170 200 152 250"/>
+    <text class="lbl-s" x="150" y="140">（表現案。確定していない）</text>
+  </g>
+
+  <!-- プレイヤー対比 -->
+  <g transform="translate(240,268)">
+    <g fill="#5b7484">
+      <circle cx="10" cy="0" r="5"/><path d="M4 6h12v22H4z"/>
+      <circle cx="40" cy="0" r="5"/><path d="M34 6h12v22H34z"/>
+    </g>
+    <text class="lbl-s" x="66" y="16">プレイヤー（対比のための記号）</text>
+  </g>
+
+  <!-- 不可通の通路 -->
+  <g transform="translate(760,120)">
+    <rect x="0" y="0" width="300" height="180" fill="none" stroke="#b8452f" stroke-dasharray="6 4"/>
+    <text class="lbl-h" x="10" y="22" fill="#b8452f">通れない</text>
+    <g stroke="#b8452f" stroke-width="1.6">
+      <path d="M20 44l28 28M48 44l-28 28"/>
+      <path d="M250 44l28 28M278 44l-28 28"/>
+    </g>
+    <text class="lbl-s" x="10" y="104">解ける手は一つではない</text>
+    <text class="lbl-s" x="10" y="122">Healを積んだプレイヤーに通常戦闘と</text>
+    <text class="lbl-s" x="10" y="140">違う価値を作る（設計方針）</text>
+    <text class="lbl-s" x="10" y="166">他ビルドにも余地を残す</text>
+  </g>
+
+  <text class="lbl-s" x="40" y="404">STATUS: Draft ／ 眼の数・関節構造・最終リグは未確定。最終アニメーションは後工程で差し替える前提。</text>
+</svg>
+</div>
+
+<!-- 図2: 歩行と鎮静 -->
+<h2 style="font-size:13px;color:#e2f0f7;letter-spacing:.1em;font-weight:400;border-left:2px solid #2d3f4c;padding-left:8px;">図2 ／ ストンピング歩行と鎮静 — 過程は痕跡で見せる</h2>
+<div class="board">
+<svg viewBox="0 0 1120 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mad Stomper 歩行と鎮静">
+  <rect width="1120" height="300" fill="#07090b"/>
+
+  <!-- 4コマ -->
+  <g transform="translate(40,50)">
+    <text class="lbl-h" x="0" y="0">歩行：片足持ち上げ → 地面へ</text>
+    <g transform="translate(0,16)">
+      <!-- 1 -->
+      <g transform="translate(0,0)">
+        <text class="lbl-s" x="0" y="0">1 接地</text>
+        <g fill="#2fbfa0" opacity=".8">
+          <rect x="14" y="12" width="26" height="66" rx="6"/>
+          <rect x="46" y="12" width="26" height="66" rx="6"/>
+        </g>
+        <path class="dim-s" d="M0 80h84"/>
+        <path class="hz" d="M6 88h70"/>
+      </g>
+      <!-- 2 -->
+      <g transform="translate(110,0)">
+        <text class="lbl-s" x="0" y="0">2 持ち上げ</text>
+        <g fill="#2fbfa0" opacity=".8">
+          <rect x="14" y="12" width="26" height="66" rx="6"/>
+          <rect x="46" y="-6" width="26" height="52" rx="6"/>
+        </g>
+        <path class="dim-s" d="M0 80h84"/>
+        <path class="hz" d="M6 88h70" opacity=".4"/>
+      </g>
+      <!-- 3 -->
+      <g transform="translate(220,0)">
+        <text class="lbl-s" x="0" y="0">3 振り下ろし前</text>
+        <g fill="#2fbfa0" opacity=".8">
+          <rect x="14" y="12" width="26" height="66" rx="6"/>
+          <rect x="46" y="10" width="26" height="64" rx="6"/>
+        </g>
+        <path class="dim-s" d="M0 80h84"/>
+        <path class="hz2" d="M40 74c6-8 14-8 20 0"/>
+      </g>
+      <!-- 4 -->
+      <g transform="translate(330,0)">
+        <text class="lbl-s" x="0" y="0">4 ストンピング</text>
+        <g fill="#2fbfa0" opacity=".9">
+          <rect x="14" y="12" width="26" height="66" rx="6"/>
+          <rect x="46" y="30" width="26" height="48" rx="6"/>
+        </g>
+        <path class="dim-s" d="M0 80h84"/>
+        <g stroke="#b8452f" stroke-width="1.4" fill="none">
+          <path d="M40 84c8-10 20-10 28 0M44 90c6-6 14-6 20 0"/>
+        </g>
+        <path class="hz2" d="M86 86C110 100 130 100 150 88"/>
+      </g>
+      <text class="lbl-s" x="0" y="112">地面の輪（衝撃の波紋）を痕跡として残す</text>
+      <text class="lbl-s" x="0" y="128">画面揺れは視認性を損なわない程度に（設計方針）</text>
+    </g>
+  </g>
+
+  <!-- 鎮静 -->
+  <g transform="translate(600,50)">
+    <text class="lbl-h" x="0" y="0">鎮静：HPを削るのではなく「正常化」</text>
+    <g transform="translate(0,16)">
+      <g fill="none" stroke="#2fbfa0" stroke-width="1.2" opacity=".9">
+        <circle cx="90" cy="90" r="80" opacity=".25"/>
+        <circle cx="90" cy="90" r="58" opacity=".45"/>
+        <circle cx="90" cy="90" r="36" opacity=".7"/>
+      </g>
+      <g fill="#2fbfa0" opacity=".8">
+        <rect x="72" y="26" width="36" height="110" rx="8"/>
+      </g>
+      <g fill="#e2f0f7" opacity=".7">
+        <circle cx="90" cy="52" r="4"/><circle cx="90" cy="72" r="3"/><circle cx="90" cy="92" r="2.4"/>
+      </g>
+      <text class="lbl-s" x="190" y="46">Heal Field（仮称）</text>
+      <text class="lbl-s" x="190" y="66">HP回復ではなくアノマリーを</text>
+      <text class="lbl-s" x="190" y="84">正常化する能力として扱う</text>
+      <text class="unc-t" x="190" y="112">鎮静後の姿・再活性化は未確定</text>
+      <text class="unc-t" x="190" y="130">攻撃を受けた場合の反応も未確定</text>
+    </g>
+  </g>
+
+  <!-- 胞子アイテム -->
+  <g transform="translate(600,210)">
+    <g transform="translate(0,0)">
+      <text class="lbl-s" x="0" y="0">左足の花の胞子／関連アイテム</text>
+      <g transform="translate(0,8)">
+        <path d="M28 40c-8-6-10-16-4-22 4-6 10-6 14-2 4-6 12-6 16 0 6 6 4 16-2 22-8 6-18 6-24 2z" fill="#c9a227" opacity=".5"/>
+        <g fill="#e0c15a">
+          <circle cx="22" cy="18" r="3"/><circle cx="34" cy="14" r="3.4"/><circle cx="44" cy="20" r="2.6"/>
+          <circle cx="30" cy="28" r="2.6"/><circle cx="42" cy="30" r="2"/>
+        </g>
+      </g>
+      <text class="lbl-s" x="70" y="30">Quest報告の直接報酬ではない</text>
+      <text class="lbl-s" x="70" y="46">相互作用の成立で出現する</text>
+      <text class="lbl-s" x="70" y="62">RunのParty全員を対象</text>
+      <text class="unc-t" x="70" y="84">専用スキルの名称・効果は未決定</text>
+    </g>
+  </g>
+
+  <text class="lbl-s" x="40" y="288">色記号（本稿の仮置き）: 青緑=本体／明るい青緑=鎮静予兆／琥珀=胞子のみ</text>
+</svg>
+</div>
+
+<div class="doc">
+  <h2>(c) 未確定要素</h2>
+</div>
+<table>
+  <tr><th>要素</th><th>本ボードでの扱い</th><th>確定に必要な判断</th></tr>
+  <tr><td class="k">眼の数・配置</td><td>大小の点として散らす（数を確定させない）</td><td>意匠としての眼の整理</td></tr>
+  <tr><td class="k">関節・骨格</td><td>連続した塊（プロトタイプ前提）</td><td>リグ方針、最終メッシュ</td></tr>
+  <tr><td class="k">体色の上限</td><td>青緑色として指示どおり。鎮静の予兆に明度を追加（仮）</td><td>鎮静の可読性のかせん</td></tr>
+  <tr><td class="k">鎮静後の姿</td><td>描かない</td><td>挙動・再活性化条件</td></tr>
+  <tr><td class="k">攻撃への反応</td><td>描かない</td><td>被弾時の挙動</td></tr>
+  <tr><td class="k">Player Anomalyとの関係</td><td>対象外</td><td>mad-stomper.md「未決事項」のまま</td></tr>
+  <tr><td class="k">表示名</td><td>表題は設計名＋System IDを併記</td><td>プレイヤー向け表示名を Mad Stomper にするか</td></tr>
+</table>
+
+<footer class="top">
+  OpenCode 分／ work/visual-brainstorm/opencode/ 所有。Draft資料に基づく視覚仮説であり、実装指示ではない。
+</footer>
+</div>
+</body>
+</html>

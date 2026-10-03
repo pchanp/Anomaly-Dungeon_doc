@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>03 Memory Swapper ／ 視覚仮説</title>
+<link rel="stylesheet" href="vis.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <h1>03 ／ Memory Swapper — 物の位置と記憶のずれ</h1>
+  <div class="sub">
+    Anomaly Entity / Friendliness: <b>Innocent</b> / Behavior: Wandering / Primary Effect: Item relocation / Combat Intent: なし。
+    悪意ある存在ではなく、認識による補完の結果として位置が変わる現象。
+  </div>
+  <div class="badges">
+    <span class="badge">Type: Anomaly Entity</span>
+    <span class="badge">Prototype: Not Implemented</span>
+    <span class="badge hyp">外見は固定しない（仮説）</span>
+    <span class="badge unconf">移動演出・選定優先順位は未確定</span>
+  </div>
+  <div class="nav"><a href="index.html">← ボードトップ</a><a href="02-dev-null.html">← /dev/null</a><a href="04-mad-stomper.html">次: Mad Stomper →</a></div>
+</header>
+
+<div class="doc">
+  <h2>(a) 根拠文書</h2>
+  <p>
+    <code>docs/anomalies/memory-swapper.md</code>（Status: Draft）:
+    物体に対する人間の認識や記憶による補完が具現化したアノマリー。
+    通常のプレイヤーには見えない。Visible / Invisible Inversion系のPlayer Anomalyを持つプレイヤーには見え、そのプレイヤーを認識すると逃げる。
+    <b>外見は固定しない。</b>「アイテムの位置が誰かの認識に合わせて変化している」現象を中心に置く。
+    ItemStackはItemsとLastRecognizedPlayerを持ち、Memory SwapperはItemStack間を移動し、
+    対象プレイヤーに関連付けられたアイテムを追尾する。追尾不成立・対象退出時は最寄りのItemStackへ戻る。
+    盗みではない。Innocentであり、攻撃は正当な敵対行動とは限らない（敵対行動はExposureを増大させる可能性）。
+  </p>
+  <p>
+    <code>docs/anomalies/player-anomalies/visible-invisible-inversion.md</code>（Player Anomaly・本ボードの対象外）:
+    可視性対応が反転する。見えた対象の意味を誤認し得る。
+  </p>
+  <p>
+    <code>docs/anomalies/cognitive-anomalies.md</code>: Recognitionは「対象が異常である」ことを把握する段階。情報の不一致をトレードオフとして扱う。
+  </p>
+</div>
+
+<div class="doc">
+  <h2>(b) 描画上の仮説</h2>
+  <ol style="max-width:78ch;color:#9fb6c4">
+    <li><b>本体を描かない。</b>3つの候補表現（軌跡／棚の並びのずれ／視線の有利な位置）を並べるだけで、どれも<b>存在の輪郭を持たない</b>。</li>
+    <li><b>主角は「物」と「記憶マーカ」。</b>同じアイテムが2箇所に同時に見えた状態と、LastRecognizedPlayer の三点（棚・人・線）を主役に据える。</li>
+    <li><b>認識差は線で描く。</b>誰の記憶で動いてるかだけを色（通常プレイヤー=見せない／Inversion持ち=見せる）で分岐表示する。これはPlayer Anomaly側の性質であり、Memory Swapper自体の外見ではない。</li>
+    <li><b>Innocentの描き方。</b>追尾線に「追いかけ」「囲む」の要素を入れない。認識されたら元の位置へ戻る矢印のみ入れる。</li>
+    <li><b>窃盗に見せない。</b>鍵・袋・覆いなど「持ち去る」記号を使わない。移動は「そこに在ったはず」の線として描く。</li>
+  </ol>
+  <div class="note">
+    <b>描かなかったもの:</b> Memory Swapperの具体的形状、移動演出の内容、対象選定の優先順位、2〜3スロットの選択方式、転移中の視認処理。
+  </div>
+</div>
+
+<!-- 図1: 位置のずれ -->
+<h2 style="font-size:13px;color:#e2f0f7;letter-spacing:.1em;font-weight:400;border-left:2px solid #2d3f4c;padding-left:8px;">図1 ／ 位置のずれ — 同じ物が別の場所にある</h2>
+<div class="board">
+<svg viewBox="0 0 1120 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Memory Swapper 位置のずれ">
+  <rect width="1120" height="340" fill="#07090b"/>
+  <g stroke="#111a20" stroke-width="1"><path d="M0 90H1120M0 250H1120M280 0V340M840 0V340"/></g>
+
+  <!-- 左: 断定できない視界 -->
+  <g transform="translate(40,36)">
+    <text class="lbl-h" x="0" y="0">通常のプレイヤーの視界</text>
+    <g transform="translate(0,16)">
+      <rect x="0" y="0" width="220" height="200" fill="none" stroke="#1e2a33"/>
+      <!-- 棚A -->
+      <text class="lbl-s" x="8" y="18">ItemStack A</text>
+      <g stroke="#3d5464" stroke-width="1" fill="#0e1418">
+        <rect x="8" y="26" width="40" height="34" rx="3"/>
+        <rect x="54" y="26" width="40" height="34" rx="3"/>
+        <rect x="100" y="26" width="40" height="34" rx="3" stroke="#2fbfa0"/>
+      </g>
+      <g fill="#2fbfa0"><rect x="110" y="38" width="20" height="10"/></g>
+      <!-- 棚B -->
+      <text class="lbl-s" x="8" y="90">ItemStack B</text>
+      <g stroke="#3d5464" stroke-width="1" fill="#0e1418">
+        <rect x="8" y="98" width="40" height="34" rx="3"/>
+        <rect x="54" y="98" width="40" height="34" rx="3" stroke="#2fbfa0"/>
+        <rect x="100" y="98" width="40" height="34" rx="3" stroke="#2fbfa0"/>
+      </g>
+      <g fill="none" stroke="#2fbfa0" stroke-width="1.2">
+        <rect x="60" y="108" width="20" height="10" stroke-dasharray="3 2"/>
+        <rect x="106" y="108" width="20" height="10" stroke-dasharray="3 2"/>
+      </g>
+      <!-- 記憶マーカ -->
+      <circle cx="180" cy="150" r="12" class="hz2"/>
+      <text class="lbl-s" x="150" y="178">LastRecognized</text>
+      <text class="lbl-s" x="150" y="190">Player（所在のみ）</text>
+      <text class="unc-t" x="8" y="212">誰が移動させたかは</text>
+      <text class="unc-t" x="8" y="226">この視界からは分からない</text>
+    </g>
+    <text class="lbl-s" x="0" y="266">本体は描かない（存在の輪郭を持たない）</text>
+  </g>
+
+  <!-- 中央: ずれの構造 -->
+  <g transform="translate(320,30)">
+    <text class="lbl-h" x="0" y="0">ずれの構造 / 本体不在</text>
+    <!-- 位置A -->
+    <g transform="translate(0,20)">
+      <rect x="0" y="0" width="60" height="44" fill="none" stroke="#3d5464"/>
+      <rect x="10" y="10" width="20" height="12" fill="#2fbfa0"/>
+      <text class="lbl-s" x="70" y="20">「あそこに在った」</text>
+    </g>
+    <!-- 位置B -->
+    <g transform="translate(200,20)">
+      <rect x="0" y="0" width="60" height="44" fill="none" stroke="#3d5464"/>
+      <rect x="10" y="10" width="20" height="12" fill="none" stroke="#2fbfa0" stroke-dasharray="3 2"/>
+      <text class="lbl-s" x="70" y="20">「ここにある」</text>
+    </g>
+    <!-- 位相の線（記憶 → 場所） -->
+    <path class="hz2" d="M60 42C120 20 180 20 200 42"/>
+    <path class="hz" d="M30 64C100 110 160 110 230 64"/>
+    <text class="lbl-s" x="86" y="128">記憶と現実が二重に存在する</text>
+
+    <!-- 三点の線（棚・人・線） -->
+    <g transform="translate(0,160)">
+      <text class="lbl-s" x="0" y="0">LastRecognizedPlayer → ItemStack 間の移動</text>
+      <g stroke="#3d5464" stroke-width="1" fill="#0e1418">
+        <rect x="0" y="10" width="46" height="40" rx="3"/>
+        <rect x="200" y="10" width="46" height="40" rx="3"/>
+      </g>
+      <rect x="8" y="22" width="18" height="10" fill="#2fbfa0"/>
+      <rect x="208" y="22" width="18" height="10" fill="none" stroke="#2fbfa0" stroke-dasharray="3 2"/>
+      <!-- 人（対象） -->
+      <g class="mid-s" transform="translate(112,10)">
+        <path d="M10 40V20l10-14 10 14v20z"/>
+        <circle cx="20" cy="14" r="1" fill="#8a4fbf"/>
+      </g>
+      <text class="lbl-s" x="92" y="66">対象プレイヤー</text>
+      <path class="hz2" d="M46 30C74 30 92 30 112 30"/>
+      <path class="hz2" d="M132 30C160 30 178 30 200 30"/>
+      <!-- 帰還（追尾不成立） -->
+      <path class="hz" d="M246 52C300 96 300 96 20 96" opacity=".7"/>
+      <text class="lbl-s" x="96" y="112">追尾不成立／退出 → 最寄りへ戻る</text>
+    </g>
+  </g>
+
+  <!-- 右: 可視性の分岐 -->
+  <g transform="translate(880,36)">
+    <text class="lbl-h" x="0" y="0">可視性の分岐</text>
+    <g transform="translate(0,16)">
+      <g fill="none" stroke="#2d3f4c" stroke-width="1">
+        <rect x="0" y="0" width="200" height="76"/>
+      </g>
+      <text class="lbl-s" x="10" y="20">通常プレイヤー</text>
+      <text class="lbl-s" x="10" y="38">本体：不可視</text>
+      <text class="lbl-s" x="10" y="54">見えるのは位置の差だけ</text>
+      <text class="lbl-s" x="10" y="70">（痕跡として）</text>
+
+      <g fill="none" stroke="#8a4fbf" stroke-width="1" stroke-dasharray="6 4">
+        <rect x="0" y="92" width="200" height="76"/>
+      </g>
+      <text class="lbl-s" x="10" y="112">Inversion 発生中のプレイヤー</text>
+      <text class="lbl-s" x="10" y="130">本体：可視</text>
+      <text class="lbl-s" x="10" y="146">認識すると逃げる</text>
+      <text class="unc-t" x="10" y="162">Player Anomaly側の性質</text>
+
+      <text class="lbl-s" x="0" y="196">「見える」こと自体が答えではない</text>
+      <text class="lbl-s" x="0" y="212">（誤認の可能性が残る）</text>
+      <text class="lbl-s" x="0" y="236">この分岐は本ボードの対象外資料</text>
+      <text class="lbl-s" x="0" y="250">（Player Anomaly）に属する</text>
+    </g>
+  </g>
+
+  <text class="lbl-s" x="40" y="316">STATUS: Draft ／ 図は概念図。ItemStack状態モデル・移動演出は未実装・未確定。</text>
+</svg>
+</div>
+
+<!-- 図2: 外見候補3案 -->
+<h2 style="font-size:13px;color:#e2f0f7;letter-spacing:.1em;font-weight:400;border-left:2px solid #2d3f4c;padding-left:8px;">図2 ／ 外見の候補3案 — いずれも「輪郭を持たない」前提</h2>
+<div class="board">
+<svg viewBox="0 0 1120 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Memory Swapper 外見候補3案">
+  <rect width="1120" height="250" fill="#07090b"/>
+
+  <!-- 案1: 軌跡 -->
+  <g transform="translate(50,50)">
+    <text class="lbl-h" x="0" y="0">案1 ／ 軌跡のみ</text>
+    <text class="lbl-s" x="0" y="18">本体は描かず、軌跡だけを残す</text>
+    <g transform="translate(0,26)">
+      <rect x="0" y="0" width="220" height="110" fill="none" stroke="#1e2a33"/>
+      <path class="hz2" d="M20 90C60 20 160 20 200 90"/>
+      <path class="hz2" d="M20 90C70 60 150 60 200 90" opacity=".5"/>
+      <rect x="12" y="80" width="18" height="10" fill="#2fbfa0"/>
+      <rect x="192" y="80" width="18" height="10" fill="none" stroke="#2fbfa0" stroke-dasharray="3 2"/>
+      <text class="lbl-s" x="30" y="104">移動の痕跡が本体代わり</text>
+    </g>
+  </g>
+
+  <!-- 案2: 棚の並びのずれ -->
+  <g transform="translate(400,50)">
+    <text class="lbl-h" x="0" y="0">案2 ／ 棚の並びのずれ</text>
+    <text class="lbl-s" x="0" y="18">空間全体で「記憶との不一致」を示す</text>
+    <g transform="translate(0,26)">
+      <rect x="0" y="0" width="220" height="110" fill="none" stroke="#1e2a33"/>
+      <g stroke="#3d5464" stroke-width="1" fill="#0e1418">
+        <rect x="14" y="20" width="34" height="28" rx="3"/>
+        <rect x="54" y="20" width="34" height="28" rx="3"/>
+        <rect x="94" y="20" width="34" height="28" rx="3"/>
+        <rect x="134" y="20" width="34" height="28" rx="3" stroke="#2fbfa0"/>
+        <rect x="174" y="20" width="34" height="28" rx="3"/>
+      </g>
+      <rect x="142" y="30" width="18" height="10" fill="#2fbfa0"/>
+      <path class="hz2" d="M100 62h74"/>
+      <text class="lbl-s" x="14" y="88">並びの空白が「そこに在ったはず」</text>
+      <text class="lbl-s" x="14" y="102">の記憶として残る</text>
+    </g>
+  </g>
+
+  <!-- 案3: 視線の有利な位置 -->
+  <g transform="translate(750,50)">
+    <text class="lbl-h" x="0" y="0">案3 ／ 視線の有利な位置にだけ残る</text>
+    <text class="lbl-s" x="0" y="18">視線が通ったときだけ痕跡が残る</text>
+    <g transform="translate(0,26)">
+      <rect x="0" y="0" width="300" height="110" fill="none" stroke="#1e2a33"/>
+      <g class="mid-s"><path d="M30 100V34l40-22 40 22v66z"/></g>
+      <path class="hz2" d="M110 56L250 34M110 56L250 78" opacity=".8"/>
+      <rect x="248" y="26" width="18" height="10" fill="none" stroke="#2fbfa0" stroke-dasharray="3 2"/>
+      <rect x="248" y="70" width="18" height="10" fill="#2fbfa0"/>
+      <path class="hz" d="M110 92C160 106 220 106 254 88" opacity=".6"/>
+      <text class="lbl-s" x="14" y="102">視線が交差する位置にだけ痕跡が残る</text>
+    </g>
+  </g>
+
+  <text class="lbl-s" x="50" y="232">3案とも「小型の実体」を前提にしていない。「拾う・運ぶ」記号（鍵・袋・箱）は意図的に使わない。</text>
+</svg>
+</div>
+
+<div class="doc">
+  <h2>(c) 未確定要素</h2>
+</div>
+<table>
+  <tr><th>要素</th><th>本ボードでの扱い</th><th>確定に必要な判断</th></tr>
+  <tr><td class="k">外見</td><td>候補3案を併記。輪郭を持たない</td><td>実体の有無、可視化の方式</td></tr>
+  <tr><td class="k">移動演出</td><td>軌跡・空白・視線の3種を仮置き</td><td>クライアントへの見せ方</td></tr>
+  <tr><td class="k">2〜3スロットの選択方式</td><td>描かない</td><td>選定規則</td></tr>
+  <tr><td class="k">追尾対象の優先順位</td><td>単一対象の線のみ</td><td>複数候補がいる場合の規則</td></tr>
+  <tr><td class="k">視覚化される「認識差」</td><td>分岐線のみ（要素のみ）</td><td>他プレイヤーへの見え方の演出</td></tr>
+  <tr><td class="k">Innocentの態度</td><td>追尾線のみ（追いかけ要素なし）</td><td>攻撃を受けた場合の反応</td></tr>
+</table>
+
+<footer class="top">
+  OpenCode 分／ work/visual-brainstorm/opencode/ 所有。Draft資料に基づく視覚仮説であり、実装指示ではない。
+</footer>
+</div>
+</body>
+</html>

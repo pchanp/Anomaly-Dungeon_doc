@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>KOROHKAN — 2D 設定画</title>
+<style>html,body{margin:0;padding:0;overflow:hidden;background:#000}canvas{display:block}</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+const c=document.getElementById('c'); const ctx=c.getContext('2d');
+const W=1600,H=900; c.width=W; c.height=H;
+
+// 空（黄昏）
+const sky=ctx.createLinearGradient(0,0,0,H);
+sky.addColorStop(0,'#3E2A1A'); sky.addColorStop(0.45,'#8A5A34');
+sky.addColorStop(0.7,'#BE7A48'); sky.addColorStop(1,'#D29A6A');
+ctx.fillStyle=sky; ctx.fillRect(0,0,W,H);
+
+// 遠景山
+function hill(x0,y0,x1,y1,c){ ctx.fillStyle=c; ctx.beginPath(); ctx.moveTo(0,H); ctx.lineTo(x0,y0); ctx.lineTo(x1,y1); ctx.lineTo(W,H); ctx.fill(); }
+hill(0,600,500,460,'#3E3228'); hill(300,500,900,430,'#5A4A3C'); hill(700,480,1600,600,'#4A3C30'); hill(0,520,1600,600,'#3A2E24');
+
+// 外郭門
+ctx.fillStyle='#2E241C'; ctx.fillRect(700,500,200,300);
+for(let i=0;i<8;i++){ for(let j=0;j<3;j++){ ctx.fillStyle=i%2===0?'#5A4A3C':'#4A3A2A'; ctx.fillRect(720+i*22,515+j*90,18,76); }}
+ctx.fillStyle='#4A3A2A'; ctx.fillRect(760,520,80,120);
+
+// 砦の石垣
+ctx.fillStyle='#3E3428'; ctx.fillRect(100,660,1400,140);
+for(let i=0;i<28;i++){ ctx.fillStyle=['#5A4F42','#4A3F32','#3E3428'][i%3]; ctx.fillRect(120+i*50,680+30*(i%3),44,30); }
+
+// 塔
+function tower(x,y,w,h){
+  ctx.fillStyle='#2E241C'; ctx.fillRect(x,y,w,h);
+  for(let i=0;i<4;i++){ for(let j=0;j<3;j++){ ctx.fillStyle='#1A1410'; ctx.fillRect(x+10+i*24,y+15+j*28,14,22); }}
+  ctx.fillRect(x-8,y-30,w+16,24,'#1A1410'); ctx.fillRect(x+8,y-50,8,34,'#1A1410');
+}
+tower(200,440,120,220); tower(1300,480,110,200);
+
+// 兵士
+function soldier(x,y,h,d){
+  ctx.fillStyle='#1A1410'; ctx.fillRect(x,y-h/2,6,h); ctx.fillRect(x-2,y-h/2-2,10,4);
+  ctx.strokeStyle='#1A1410'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(x+3+20*d,y-h/2); ctx.lineTo(x+3+40*d,y-h/2-16); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x,y+h/2); ctx.lineTo(x+Math.random()*10-5,y+h/2+8); ctx.stroke();
+}
+for(let k=0;k<3;k++){
+  let xbase=[150,900,1250][k]; let base=[760,770,750][k]; let n=[18,20,16][k];
+  for(let i=0;i<n;i++){ let x=xbase+Math.random()*180-90; let y=base+Math.random()*50; soldier(x,y,26+Math.random()*18,(i%3==0)?-1:1); }
+}
+
+// ラベル
+ctx.fillStyle='rgba(255,255,255,0.8)'; ctx.font='14px sans-serif'; ctx.textAlign='left';
+ctx.fillText('外郭の門',400,480); ctx.fillText('砦の石垣',300,620);
+ctx.fillText('塔',260,420); ctx.fillText('守る兵（城壁）',1000,430);
+ctx.fillText('攻める兵団（前景）',500,780);
+</script>
+</body>
+</html>

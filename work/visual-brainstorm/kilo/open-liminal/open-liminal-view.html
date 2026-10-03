@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>Observation / Open Liminal Map — 2D 設定画</title>
+<style>html,body{margin:0;padding:0;overflow:hidden;background:#000}canvas{display:block}</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+const c=document.getElementById('c'); const ctx=c.getContext('2d');
+const W=1600,H=900; c.width=W; c.height=H;
+
+// 空（薄明かり・霧）
+ctx.fillStyle='#686E78'; ctx.fillRect(0,0,W,280);
+ctx.fillStyle='#828C96'; ctx.fillRect(0,280,W,190);
+ctx.fillStyle='#A0AABB'; ctx.fillRect(0,470,W,430);
+for(let k=0;k<6;k++){
+  let cx=200+k*260,cy=60+Math.random()*60,r=70+Math.random()*40;
+  const g=ctx.createRadialGradient(cx,cy,5,cx,cy,r);
+  g.addColorStop(0,'rgba(220,230,240,0.6)'); g.addColorStop(1,'rgba(220,230,240,0)');
+  ctx.fillStyle=g; ctx.fillRect(cx-r,cy-r,r*2,r*2);
+}
+
+// 地面
+ctx.fillStyle='#4A5A44'; ctx.fillRect(0,560,W,340);
+for(let i=0;i<400;i++){
+  let x=Math.random()*W,y=570+Math.random()*300;
+  ctx.fillRect(x,y,Math.random()*8+2,Math.random()*4+2,'#5A6A54');
+}
+
+// 道
+ctx.fillStyle='#5A4A36'; ctx.fillRect(700,640,200,260);
+for(let i=0;i<3;i++) ctx.fillRect(730+i*50,660,40,220,'#4A3A26');
+
+// 小施設
+function small(x,y,w,h){
+  ctx.fillStyle='#7A8A76'; ctx.fillRect(x,y,w,h);
+  ctx.fillStyle='#3A4A36'; ctx.fillRect(x+8,y+8,w-16,20);
+  ctx.fillStyle='#4A3A26'; ctx.fillRect(x+4,y+28,12,16);
+}
+small(300,660,90,60); small(1100,640,100,70); small(1350,700,70,50);
+
+// 街灯
+function lamp(x,y){
+  ctx.fillStyle='#2E241C'; ctx.fillRect(x,y,6,140); ctx.fillRect(x-24,y,52,8,'#4A3A2A');
+  for(let r of [12,24,40,55]){
+    const g=ctx.createRadialGradient(x,y,5,x,y,r);
+    let col;
+    if(r===12) col='rgba(255,240,180,0.9)';
+    else if(r===24) col='rgba(255,230,140,0.7)';
+    else if(r===40) col='rgba(255,200,80,0.5)';
+    else col='rgba(255,160,40,0.3)';
+    ctx.fillStyle=g; ctx.fillRect(x-r,y-r,r*2,r*2);
+  }
+}
+lamp(500,620); lamp(900,680); lamp(1150,640);
+
+// 人物
+for(let i=0;i<8;i++){
+  let x=400+Math.random()*800; let y=700+Math.random()*180;
+  ctx.fillStyle='#1A1410'; ctx.fillRect(x,y-30,12,30); ctx.fillRect(x-6,y-42,14,14,'#2A2218');
+}
+
+// 遠景の物体（徐々に変化）
+for(let i=0;i<12;i++){
+  let x=Math.random()*W,y=560+Math.random()*100,size=10+Math.random()*18;
+  ctx.fillStyle=Math.random()>0.3?'#78828C':'#96A0AA'; ctx.fillRect(x,y,size,size);
+  if(Math.random()>0.5) ctx.fillRect(x+size/3,y+size/3,size/3,size/3,'#B4BEC8');
+}
+
+// 視線誘導の筋
+ctx.strokeStyle='rgba(200,210,220,0.3)'; ctx.lineWidth=1;
+for(let i=0;i<4;i++){
+  let x=400+i*300;
+  ctx.beginPath(); ctx.moveTo(x,560); ctx.lineTo(x-50,900); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x+160,560); ctx.lineTo(x+110,900); ctx.stroke();
+}
+
+// ラベル
+ctx.fillStyle='rgba(255,255,255,0.8)'; ctx.font='14px sans-serif'; ctx.textAlign='left';
+ctx.fillText('観察対象の物体（遠景）',320,650);
+ctx.fillText('開けた風景・草地',800,800);
+ctx.fillText('道',800,750);
+ctx.fillText('街灯・照明',500,600);
+ctx.fillText('小施設',1150,660);
+ctx.fillText('霧・光の筋',700,520);
+</script>
+</body>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>07 元同僚 ／ キャラクター視覚仮説</title>
+<link rel="stylesheet" href="vis.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <h1>07 ／ 元同僚 — 対立と、不在の痕跡</h1>
+  <div class="sub">
+    NPC。博士と過去に共同研究をしていた元同僚。アノマリーを制御・分析することそのものへ疑問を抱き、
+    考え方の違いから博士のもとを去った人物。<b>顔・年齢・服装は確定させない。</b>
+    主角は人物そのものではなく、<b>研究倫理の対立と不在の痕跡</b>。
+  </div>
+  <div class="badges">
+    <span class="badge">Type: NPC</span>
+    <span class="badge hyp">人物の造形は仮案（描かない範囲を明記）</span>
+    <span class="badge unconf">年齢・経歴・去った理由は未確定</span>
+    <span class="badge">顔・年齢は描かない</span>
+  </div>
+  <div class="nav"><a href="index.html">← ボードトップ</a><a href="06-professor.html">← 博士</a></div>
+</header>
+
+<div class="doc">
+  <h2>(a) 根拠文書</h2>
+  <p>
+    <code>docs/anomalies/whisper.md</code>（Status: Draft）:
+    研究所マップには博士と過去に共同研究をしていた元同僚がいる。
+    アノマリーを制御・分析することそのものへ疑問を抱き、考え方の違いから博士のもとを去った人物。
+    <b>なぜその人物がダンジョン内の研究所で研究を続けているのかは説明しない。</b>
+    プレイヤーが元同僚と会話すると、この人物に関する博士Questを受注できる。
+    博士は元同僚への不満を示しつつも、追従するアノマリーを本人に見せることを依頼する。
+    <b>ただし、元同僚を殺すこと自体は目的にしない。</b>
+    Quest流程: 会話して受注 → 研究所マップで whisper に付き従われる → whisper を伴って元同僚へ接触 →
+    追従先が元同僚へ移る → 元同僚が恐怖し研究機材へ閉じこもる → 研究機材を開くと元同僚と whisper は消え、装置だけが残る →
+    Quest達成、装置を博士へ渡す。博士は装置の正体を説明せず「危険だから処分する」として回収する。
+    <b>装置の正体、元同僚と whisper がどうなったか、博士が実際に処分するかは不明のままにする。</b>
+  </p>
+  <p>
+    <code>docs/world/information-design.md</code>: NPCは説明役ではなく生活する存在。「説明」ではなく「痕跡」で提示する。
+  </p>
+</div>
+
+<div class="doc">
+  <h2>(b) 描画上の仮説</h2>
+  <ol style="max-width:78ch;color:#9fb6c4">
+    <li><b>顔・年齢は描かない。</b>人物は「輪郭（距離で曖昧）」と「姿勢の意味」だけで示す。服装も記号のみ。</li>
+    <li><b>対立は「同じ資料の二種類の扱い」で描く。</b>博士側は整った記録と順序のある整理、元同僚側は順序の崩れた紙の記録と余白の書き込み。両者が向き合っている対象は同じ資料である。</li>
+    <li><b>不在を主役にする。</b>空いた椅子、認証が切れた端末、時刻の異なる2つの身影の重なり、閉じた研究機材。「誰がいつ消えたか」は描かない。</li>
+    <li><b>恐怖の場面は結論を描かない。</b>研究機材へ閉じこもる → 開くと空、という2枚絵だけにし、「消えた」先の絵は一切描かない。</li>
+    <li><b>博士と並べない。</b>二人の会話そのものは描かず、同じ画面に並べたときの不一致を痕跡（紙資料の散らばり方）で示す。</li>
+    <li><b>殺さない構造を視覚でも保つ。</b>「狙える」「弱そうな」気配（共通化の輪郭、攻撃を誘う構図）を入れない。</li>
+  </ol>
+  <div class="note">
+    <b>描かなかったもの:</b> 顔、目、年齢、性別、身高、服装の具体、去った理由、閉じこもる前の台詞、装置の正体、消えた後の行方。
+  </div>
+</div>
+
+<!-- 図1: 対立の跡 -->
+<h2 style="font-size:13px;color:#e2f0f7;letter-spacing:.1em;font-weight:400;border-left:2px solid #2d3f4c;padding-left:8px;">図1 ／ 対立の跡 — 同じ資料、二つの扱い</h2>
+<div class="board">
+<svg viewBox="0 0 1120 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="元同僚 対立の跡">
+  <rect width="1120" height="330" fill="#07090b"/>
+  <g transform="translate(40,44)">
+    <text class="lbl-h" x="0" y="0">博士側／管理された記録</text>
+    <g transform="translate(0,18)">
+      <rect x="0" y="0" width="240" height="210" fill="#05080a" stroke="#1e2a33"/>
+      <g stroke="#2d3f4c" stroke-width="1" fill="#0e1418">
+        <rect x="14" y="14" width="212" height="34"/>
+        <rect x="14" y="54" width="212" height="34"/>
+        <rect x="14" y="94" width="212" height="34"/>
+        <rect x="14" y="134" width="212" height="34"/>
+      </g>
+      <g fill="#3d5464">
+        <rect x="20" y="24" width="70" height="5"/><rect x="96" y="24" width="40" height="5"/><rect x="142" y="24" width="30" height="5"/>
+        <rect x="20" y="64" width="60" height="5"/><rect x="86" y="64" width="50" height="5"/><rect x="142" y="64" width="30" height="5"/>
+        <rect x="20" y="104" width="80" height="5"/><rect x="106" y="104" width="30" height="5"/><rect x="142" y="104" width="40" height="5"/>
+        <rect x="20" y="144" width="66" height="5"/><rect x="92" y="144" width="44" height="5"/><rect x="142" y="144" width="30" height="5"/>
+      </g>
+      <g stroke="#2fbfa0" stroke-width="1" opacity=".8">
+        <path d="M14 48h212M14 88h212M14 128h212M14 168h212"/>
+      </g>
+      <text class="lbl-s" x="14" y="196">同じ列、同じ並び、同じ欄幅</text>
+      <text class="unc-t" x="14" y="212">項目の意味は書かない</text>
+    </g>
+  </g>
+
+  <g transform="translate(300,44)">
+    <text class="lbl-h" x="0" y="0">元同僚側／順序の崩れた紙の記録</text>
+    <g transform="translate(0,18)">
+      <rect x="0" y="0" width="240" height="210" fill="#05080a" stroke="#1e2a33"/>
+      <g fill="#111a20" stroke="#2d3f4c" stroke-width="1">
+        <rect x="16" y="18" width="88" height="30" transform="rotate(-5 60 33)"/>
+        <rect x="96" y="30" width="88" height="30" transform="rotate(4 140 45)"/>
+        <rect x="26" y="66" width="88" height="30" transform="rotate(8 70 81)"/>
+        <rect x="110" y="80" width="88" height="30" transform="rotate(-3 154 95)"/>
+        <rect x="20" y="116" width="88" height="30" transform="rotate(-8 64 131)"/>
+        <rect x="104" y="128" width="88" height="30" transform="rotate(5 148 143)"/>
+      </g>
+      <!-- 余白の書き込み（括弧書き） -->
+      <g stroke="#c9a227" stroke-width="1" opacity=".8" fill="none">
+        <path d="M62 76c8-4 16-4 22 0"/>
+        <path d="M150 100c8-4 18-4 24 0"/>
+        <path d="M56 140c10-6 20-6 26 0"/>
+      </g>
+      <text class="lbl-s" x="14" y="196">余白に書き込み。顺序が変わった</text>
+      <text class="unc-t" x="14" y="212">何と書いたかは書かない</text>
+    </g>
+  </g>
+
+  <g transform="translate(560,44)">
+    <text class="lbl-h" x="0" y="0">対立の構造（図式のみ）</text>
+    <g transform="translate(0,18)">
+      <rect x="0" y="0" width="500" height="210" fill="#05080a" stroke="#1e2a33"/>
+      <!-- 同じ対象 -->
+      <g transform="translate(0,20)">
+        <rect x="140" y="0" width="220" height="34" fill="none" stroke="#2fbfa0" stroke-dasharray="5 4"/>
+        <text class="lbl-s" x="150" y="22">同じ対象（アノマリー）</text>
+      </g>
+      <path class="hz" d="M200 54L120 100M340 54L420 100"/>
+      <text class="lbl-s" x="228" y="80">同じ対象に対して</text>
+      <!-- 2つの立场 -->
+      <g transform="translate(30,100)">
+        <rect x="0" y="0" width="190" height="86" fill="none" stroke="#3d5464"/>
+        <text class="lbl-s" x="10" y="20">「制御・分析する」</text>
+        <text class="lbl-s" x="10" y="40">利用価値として扱う</text>
+        <text class="lbl-s" x="10" y="58">記録が残る</text>
+        <text class="lbl-s" x="10" y="76">（博士・仮）</text>
+      </g>
+      <g transform="translate(280,100)">
+        <rect x="0" y="0" width="190" height="86" fill="none" stroke="#8a4fbf"/>
+        <text class="lbl-s" x="10" y="20">「制御できるか」を問う</text>
+        <text class="lbl-s" x="10" y="40">倫理上の疑義が残る</text>
+        <text class="lbl-s" x="10" y="58">記録が散る</text>
+        <text class="lbl-s" x="10" y="76">（元同僚・仮）</text>
+      </g>
+      <text class="lbl-s" x="10" y="202">どちらが正しいかは書かない</text>
+    </g>
+  </g>
+
+  <text class="lbl-s" x="40" y="316">STATUS: Draft ／ 資料の中身・項目名・書き込みの文面は未確定。</text>
+</svg>
+</div>
+
+<!-- 図2: 在不在の跡 -->
+<h2 style="font-size:13px;color:#e2f0f7;letter-spacing:.1em;font-weight:400;border-left:2px solid #2d3f4c;padding-left:8px;">図2 ／ 在不在の跡 — 不在を主役にする</h2>
+<div class="board">
+<svg viewBox="0 0 1120 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="元同僚 在不在の跡">
+  <rect width="1120" height="320" fill="#07090b"/>
+
+  <!-- A: 在る頃（輪郭のみ） -->
+  <g transform="translate(40,44)">
+    <text class="lbl-h" x="0" y="0">A ／ 奥の痕跡（距離で曖昧）</text>
+    <g transform="translate(0,16)">
+      <rect x="0" y="0" width="200" height="200" fill="none" stroke="#1e2a33"/>
+      <!-- 背景の影 -->
+      <g fill="#0c1216">
+        <path d="M40 60c-2-14 6-22 18-22s20 8 18 22c-2 12-8 18-18 18s-16-6-18-18z"/>
+      </g>
+      <!-- 輪郭：顔は描かない -->
+      <g class="mid-s">
+        <path d="M46 176V96l6-24 12 6 12-10 12 10 12-6 6 24v80z"/>
+      </g>
+      <path class="hz" d="M56 96C46 110 44 130 48 148M104 96c10 14 12 34 8 52"/>
+      <circle cx="76" cy="72" r="1" fill="#8a4fbf"/>
+      <text class="lbl-s" x="8" y="196">顔・年齢は描かない</text>
+    </g>
+  </g>
+
+  <!-- B: 椅子と端末 -->
+  <g transform="translate(270,44)">
+    <text class="lbl-h" x="0" y="0">B ／ 空白（空席・ログアウト）</text>
+    <g transform="translate(0,16)">
+      <rect x="0" y="0" width="220" height="200" fill="none" stroke="#1e2a33"/>
+      <!-- 椅子 -->
+      <g class="mid-s" opacity=".7">
+        <path d="M60 176v-40h44v40zM60 136v-24h44v24z"/>
+        <path d="M104 118c8-2 12-8 12-16"/>
+      </g>
+      <text class="lbl-s" x="120" y="60">空席</text>
+      <!-- 端末：ログインしていない -->
+      <g stroke="#2d3f4c" stroke-width="1.2" fill="#0b1014">
+        <rect x="30" y="86" width="120" height="76"/>
+      </g>
+      <g stroke="#2d3f4c" stroke-width="1" opacity=".8">
+        <path d="M40 100h50M40 112h80M40 124h64"/>
+      </g>
+      <text class="lbl-s" x="30" y="82">認証が切れている端末</text>
+      <text class="unc-t" x="30" y="180">最後の記録時刻は書かない</text>
+    </g>
+  </g>
+
+  <!-- C: 時刻の違う2つの身影 -->
+  <g transform="translate(520,44)">
+    <text class="lbl-h" x="0" y="0">C ／ 2つの身影の重なり（別々であることを示す）</text>
+    <g transform="translate(0,16)">
+      <rect x="0" y="0" width="260" height="200" fill="none" stroke="#1e2a33"/>
+      <g class="mid-s">
+        <path d="M70 180V100l8-28 14 8 14-12 14 12 14-8 8 28v80z"/>
+      </g>
+      <g class="mid-s" opacity=".45">
+        <path d="M104 180V100l8-28 14 8 14-12 14 12 14-8 8 28v80z"/>
+      </g>
+      <text class="lbl-s" x="10" y="196">同じ人物の2時点／別の人物かは示さない</text>
+      <text class="unc-t" x="10" y="26">時刻も並びも書かない</text>
+    </g>
+  </g>
+
+  <!-- D: 閉じこもった機械 -->
+  <g transform="translate(810,44)">
+    <text class="lbl-h" x="0" y="0">D ／ 閉じこもった機械（空）</text>
+    <g transform="translate(0,16)">
+      <rect x="0" y="0" width="260" height="200" fill="none" stroke="#1e2a33"/>
+      <g fill="none" stroke="#2d3f4c" stroke-width="1.4">
+        <rect x="30" y="60" width="120" height="90"/>
+        <path d="M38 60l-8-26M142 60l8-26M30 104h120"/>
+      </g>
+      <g stroke="#b8452f" stroke-width="1.2" fill="none" opacity=".8">
+        <path d="M150 82h56M150 96h40M150 110h48"/>
+      </g>
+      <text class="lbl-s" x="30" y="52">研究機材</text>
+      <text class="lbl-s" x="150" y="74">音だけ</text>
+      <text class="unc-t" x="30" y="174">中身は描かない</text>
+      <text class="unc-t" x="30" y="190">消えた先の絵は描かない</text>
+    </g>
+  </g>
+
+  <text class="lbl-s" x="40" y="304">STATUS: Draft ／ 人物の造形は仮案。空白・不在の描き方は提案であり、Quest進行の実装仕様ではない。</text>
+</svg>
+</div>
+
+<!-- 図3: 2枚絵 -->
+<h2 style="font-size:13px;color:#e2f0f7;letter-spacing:.1em;font-weight:400;border-left:2px solid #2d3f4c;padding-left:8px;">図3 ／ 2枚絵 — 恐怖と、およびその後の空白</h2>
+<div class="board">
+<svg viewBox="0 0 1120 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="元同僚 2枚絵">
+  <rect width="1120" height="220" fill="#07090b"/>
+
+  <g transform="translate(40,40)">
+    <text class="lbl-h" x="0" y="0">絵1 ／ 閉じこもる（この瞬間だけ描く）</text>
+    <g transform="translate(0,16)">
+      <rect x="0" y="0" width="480" height="120" fill="#05080a" stroke="#1e2a33"/>
+      <g class="mid-s">
+        <path d="M70 100V56l8-24 14 8 14-12 14 12 14-8 8 24v44z"/>
+      </g>
+      <!-- 括り込まれる動き -->
+      <path class="hz2" d="M120 68C150 68 170 68 196 68"/>
+      <g fill="none" stroke="#2d3f4c" stroke-width="1.4">
+        <rect x="200" y="34" width="120" height="72"/>
+      </g>
+      <text class="lbl-s" x="200" y="26">研究機材へ</text>
+      <!-- 追従先として動いた whisper の波紋 -->
+      <g transform="translate(280,52)">
+        <circle cx="8" cy="10" r="8" fill="none" stroke="#8a4fbf" opacity=".9"/>
+        <circle cx="8" cy="10" r="18" fill="none" stroke="#8a4fbf" stroke-dasharray="3 5" opacity=".6"/>
+      </g>
+      <text class="lbl-s" x="296" y="72">追従先がここへ移った</text>
+      <!-- 恐怖：内側だけ帰り -->
+      <path class="hz2" d="M70 44C70 24 70 24 70 12" opacity=".7"/>
+      <text class="unc-t" x="340" y="100">恐怖の表現は内側のみ</text>
+    </g>
+  </g>
+
+  <g transform="translate(580,40)">
+    <text class="lbl-h" x="0" y="0">絵2 ／ 開けた後（人・whisper はいない）</text>
+    <g transform="translate(0,16)">
+      <rect x="0" y="0" width="500" height="120" fill="#05080a" stroke="#1e2a33"/>
+      <g fill="none" stroke="#2d3f4c" stroke-width="1.4">
+        <rect x="30" y="40" width="120" height="70"/>
+        <path d="M38 40l-8-24M142 40l8-24"/>
+      </g>
+      <path class="dim-s" d="M30 76h120" opacity=".6"/>
+      <text class="lbl-s" x="30" y="32">開いた機材（装置が残る）</text>
+      <!-- 装置 -->
+      <g fill="none" stroke="#c9a227" stroke-width="1.2">
+        <rect x="180" y="56" width="50" height="38"/>
+        <path d="M186 56l-4-10M224 56l4-10"/>
+      </g>
+      <text class="lbl-s" x="180" y="48">装置</text>
+      <g class="lbl-s">
+        <text x="248" y="66">正体は説明されない</text>
+        <text x="248" y="84">博士に渡すと「処分する」</text>
+        <text x="248" y="102">実際に処分したかは不明</text>
+      </g>
+      <g class="unc-t">
+        <text x="248" y="34">人影も、whisper も描かない</text>
+      </g>
+    </g>
+  </g>
+
+  <text class="lbl-s" x="40" y="204">STATUS: Draft ／ 元同僚を殺すことが目的にないこと、を視覚でも崩さない構成。</text>
+</svg>
+</div>
+
+<div class="doc">
+  <h2>(c) 未確定要素</h2>
+</div>
+<table>
+  <tr><th>要素</th><th>本ボードでの扱い</th><th>確定に必要な判断</th></tr>
+  <tr><td class="k">顔・年齢・性別</td><td>描かない</td><td>キャラクターデザインの作成と採用</td></tr>
+  <tr><td class="k">服装・持ち物</td><td>記号のみ</td><td>装具と小道具</td></tr>
+  <tr><td class="k">対立の中身</td><td>記録の扱い方の差のみ</td><td>対立の主題（制御か分析か以外か）</td></tr>
+  <tr><td class="k">博士のもとを去った理由</td><td>描かない</td><td>quest の背景</td></tr>
+  <tr><td class="k">なぜダンジョン内にいるか</td><td>描かない（明示的に未確定）</td><td>説明しない方針の維持</td></tr>
+  <tr><td class="k">閉じこもる／消えた後</td><td>空白のみ</td><td>行方・正体（不明のままの維持）</td></tr>
+  <tr><td class="k">Quest終了条件</td><td>2枚絵の構造のみ</td><td>whisper.md の未決定事項</td></tr>
+</table>
+
+<footer class="top">
+  OpenCode 分／ work/visual-brainstorm/opencode/ 所有。Draft資料に基づく視覚仮説であり、実装指示ではない。
+</footer>
+</div>
+</body>
+</html>

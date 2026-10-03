@@ -1,0 +1,26 @@
+# SEKIGAHARA — 2D 設定画（Visual Brainstorm）
+
+**Status: Visual brainstorm（非正典・制作途中）**
+
+歴史的な関ヶ原そのものを再現せず、なぜか延々と続く巨大な戦場として扱うマップの 2D 設定画。Studio 実装の外観は無視。
+
+## 根拠（MD）
+
+- [マップとギミック案](../../../../docs/systems/map-gimmick-ideas.md) — SEKIGAHARA: 歴史的な関ヶ原そのものを再現せず、なぜか延々と続く巨大な戦場として扱う案。複数勢力の NPC が常時戦闘し、プレイヤーは戦闘回避、戦場を利用した探索、弱った NPC の撃破、戦闘介入、乱戦への参加を選べる。NPC は有限数を常時生成せず、Active NPC 数の上限を設け、倒された NPC を後方から補充。プレイヤーには戦争が永遠に続くように見せる。
+- `Attack / Attack / Attack / Attack` のような Full Attack Build が強く機能する状況。単体処理、範囲処理、ノックバック、突進、遠距離攻撃などが異なる戦場攻略を可能に。
+- 攻撃型 Individual Anomaly と組み合わさると、戦場を一人で破壊できるほどの戦闘力が偶発的に発生し得る。
+- 主役: Skill Build、Combat Events。副役: Multiplayer、Secure Slot、Risk Management。
+
+## 描画物
+
+- `sekigahara-view.svg` — 夕焼けの空、霞む山並み、地平線まで続く戦場、複数の兵団（左翼・中央・右翼）、炎、前景の血痕・欠片を斜め上面視点で。
+- `sekigahara-view.html` — 同上を Canvas 描画でブラウザ表示可能に。
+- `draw_sekigahara_svg.py` — SVG 描画スクリプト。
+
+## 未確定事項（仮案）
+
+- 兵団の人数・配置、服装・兵装は仮案。
+- 地形の高低・戦場の規模は未決定。
+- NPC の勢力区分・関係性は未決定。
+- 炎の位置・規模は仮案。
+- Full Attack Build が機能する具体的な状況は設計中。
