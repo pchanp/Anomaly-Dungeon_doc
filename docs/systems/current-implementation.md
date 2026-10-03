@@ -1,7 +1,7 @@
 # 現在の実装状況
 
 **Status: Implemented（実装棚卸し）**
-**Studio確認日: 2026-09-30**
+**Studio確認日: 2026-09-30（2026-10-03に一部のみ再確認。対象コミットと `DEBUG 強制締切` プロンプトの配置のみ）**
 
 この資料は、Roblox Studioのプレース「異変のダンジョン」を直接確認して記録した実装状況である。設計の採用を意味する資料ではない。`Draft` や `Idea` の内容が偶然プロトタイプに含まれていても、設計確定とは扱わない。
 
@@ -149,6 +149,10 @@
 
 上記のGit構成は2026-09-27に整理した。Studio確認時のInstance構成は本資料冒頭の確認日の状態であり、自動同期されていない。
 
+**Gitとプレースの対応関係（2026-10-03確認）。** `src/` を最後に変更したコミットは `c74a276`（`fix: build the dungeon off the party reception thread`）である。`c74a276` までの間に開かれたプレース「異変のダンジョン」（placeId 99417611378273）内の主要7モジュール（`LobbyConfig` / `RunConfig` / `MapDrawConfig` / `PartyService` / `LobbyService` / `RunService` / `MapDrawService`）が `src/` とバイト一致することを、長さ・バイト和・位置重み付き和の照合で確認した。したがってプレスは `c74a276` までを含む。**ただし `src/` をプレースへ反映した操作の経路そのものは未記録のままである。** 記録は [Studio検証チェックリスト](../production/studio-verification-checklist.md) の「検証環境の記録」にある。
+
+なお、これまでに記録されている対象コミット `b316d14` は `docs: add whisper anomaly design` で `src/` を変更していない。検証対象のコード指定には `c74a276` を使用すること。
+
 ## 最小Runの実装（2026-09-29追加）
 
 都市ロビーからダンジョン入口ロビーを経て、抽選された1マップを探索してリザルトを挟み都市ロビーへ戻る、最小Runの縦一列为実装済み。正式Runの候補は `TSUTAYA` と `AUGUST_31` の2種で、`CLOSED_STACKS` はデバッグ用途に残した。Transition Portal、Party State、パーティ別の並列Runは範囲外である。
@@ -193,10 +197,12 @@ Party全員が終了すると `RunService.CloseRun` が生成世界を破棄し�
 - **Secure Slotの拡張は未実装。** `SecureSlotCapacity` 属性で拡張値を読み取るが、拡張手段・上限・コストは未決定。
 - **受付開始はpolled 判定のため、入場から受付開始まで最大0.25秒の遅れがある。**
 - **`DebugInventoryTerminal` の配置は都市ロビーのSpawn脇の固定位置で、ロビー構造を変更しても追随しない。**
-- **複数人での挙動は未確認。** Play Soloは1人セッションだったため、パーティ上限5人、強制締切による即時出発、切断者を含む複数人でのRun終了順序は未確認。
+- **複数人での挙動は未確認。** Studio MCPの`start_stop_play`はClient数を指定できず、2026-09-30と2026-10-03の検証はいずれも1人セッション（Play Solo）だった。そのためパーティ上限5人、切断者を含む複数人でのRun終了順序、進行中Runへの途中参加拒否は未確認のままである。1人セッションでも確認できたのは、受付中にフィールド外へ出ると出発参加者に残らないこと、30秒満了で`DEPARTING`から`ACTIVE`へ進むこと、全参加者の終了後に生成マップが破棄されて次の受付が始まること（終了経路は落下死亡）である。
+- **`DEBUG 強制締切` プロンプトは配置済みで、分岐の実行だけ未確認。** 2026-10-03に実プレースで `Workspace.DungeonEntranceLobby.ForceClose` 内の `ProximityPrompt` として存在することを確認した（`ActionText="受付を強制締切する"`、`ObjectText="DEBUG 強制締切"`、`Enabled=true`、`HoldDuration=0.35`、`MaxActivationDistance=12`、`RequiresLineOfSight=false`、`ClickablePrompt=true`、親に属性 `DebugOnly=true`）。**これは手動配置したものではなく `LobbyService` の `buildEntrance` が実行時に生成するものである。** Editモードのプレースには `DungeonEntranceLobby` 自体が存在しないため、配置作業は不要である。`PartyService` の `depart("FORCE_CLOSE")` が即時出発することは未確認であり、受信者は `ReplicatedStorage.AnomalyNotice` への通知のみでサーバー上に記録されないため、事後に `TIME_UP` と区別する手段も無い。
+- **Run終了時の `LobbyState` と物理位置の不整合が疑われる。** 2026-10-03の1人セッションで、落下死亡によりRunが終了した直後にキャラクタが都市ロビー（`-1600, 6.1, 50`）へ移動しているのに、プレイヤーの `LobbyState` が `CITY` ではなく `ENTRANCE` のままであった。`RunService` の `character()` が `task.defer` で `lobby.SendToCity`（`LobbyState=CITY`）を呼ぶのに対し、`PartyService` の0.25秒周期ループが `remove()` で `LobbyState=ENTRANCE` を上書きするため、実行順序が競合している可能性がある。**`Unconfirmed（未確認）`。** 影響範囲は未調査であり、仕様判断は [020: Run終了後のLobbyStateと物理位置の同期](../decisions/020-lobby-state-authority-and-physical-location.md) に記録した（判断未採用）。
 - **クライアントのリザルト画面は未確認。** サーバー側の結果確定とRemote送信までは確認済みだが、リザルト画面そのものの表示確認はしていない。
 - **マップ生成は `PartyService` の受付ループではなく別スレッドで走らせる。** 同一スレッドで走らせると、受付ループの実行予算と合算してマップ生成が script timeout で中断された。
 - **2026-09-29にPlay Soloで見つかった3件の修正。** 2026-09-30に`src/`の内容でプレース本体へ反映した。反映状況は次のとおり。
-  1. `Services/PartyService`: `depart` の `host.StartRun` を `task.spawn` で別スレッドに逃がす。**2026-09-30に適用。** Play SoloでTIME_UP経路を実測し、例外なく `DEPARTING` から `ACTIVE` へ進み、参加者が生成マップへ移動されることを確認済み。生成は0.1秒未満で終わり、受付ループ0.25秒周期の `syncField` は `DEPARTING` 中に一度も走らない。`FORCE_CLOSE` はデバッグ用プロンプトが未配置で未確認。
+  1. `Services/PartyService`: `depart` の `host.StartRun` を `task.spawn` で別スレッドに逃がす。**2026-09-30に適用。** Play SoloでTIME_UP経路を実測し、例外なく `DEPARTING` から `ACTIVE` へ進み、参加者が生成マップへ移動されることを確認済み。生成は0.1秒未満で終わり、受付ループ0.25秒周期の `syncField` は `DEPARTING` 中に一度も走らない。**`FORCE_CLOSE` は2026-10-03に「プロンプトは配置済み」を確認したが、分岐の実行は未確認。** 詳細は「最小Runの未確認・未決定」を参照。
   2. `Services/RunService`: `M.Tick` の先頭で `local current=world` に取り込み、反復中は `current` を使う。`Finish` が `CloseRun` を呼んで `world` をnilにするため、そのまま `world.KillY` を読むと `attempt to index nil` になる。末尾の `if world~=current then return end` は必須。**2026-09-30に適用。** Run Lifetime満了で `Finish` が同期的に `CloseRun` する状況をPlay Soloで再現し、`Tick` が例外を投げず `world=nil` へ到達することを確認済み。
   3. `Debug/DebugInventoryTerminal`: `pad.CFrame` の初期化でCFrameにCFrameを渡していたのを `lobby.CityLobbySpawn.CFrame+Vector3.new(14,0,6)` に変更。反映済み。
