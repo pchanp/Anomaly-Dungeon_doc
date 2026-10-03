@@ -1,7 +1,7 @@
 # 開発ワークボード
 
 **Status: Draft（運用開始前）**
-**更新日: 2026-10-02**
+**更新日: 2026-10-03**
 
 ## 目的
 
@@ -57,9 +57,31 @@
     - 観察事項: 「複数Client／Party Run」全7項目が未確認のまま。`StudioMCP` は`opencode.json`に設定済みでバイナリも存在するが、2026-10-02T01:05Zの接続は `tools=0`、本セッション（01:56Z開始）には接続記録自体が無い。`StudioMCP` への直接stdioハンドシェイク（protocolVersion 2024-11-05 / 2025-06-18）も30秒間応答なし。`list_roblox_studios` が使えないためプレースの特定すらできていない。推測でPassにはしていない。
     - OutputのError・Warning: 取得不能（`get_console_output` 利用不可、Output画面未参照）
     - 残件と反映先: 全7項目。接続障害の詳細は [Studio検証チェックリスト](production/studio-verification-checklist.md) の「検証環境の記録」にある。
-  - Blocker理由: Studio MCPがツール0件で接続できず、Start Server + Playersで2Client以上を起動できない。仕様判断は不要だが、Studio操作と複数Clientの起動は人間（またはStudio操作可能なセッション）が必要。
-  - 次アクション: Studio操作可能な環境で、2人以上で受付、先着順、30秒締切、上限5人（6人目の拒否）、強制締切、途中参加拒否、切断、全員終了とマップ破棄・次のRun開始を確認する。
+  - 実施記録（2026-10-03・3回目）:
+    - 日付: 2026-10-03
+    - 対象コミット: `57e2c7a`（HEAD。`docs/` のみ）。**`src/` を最後に変更したコミットは `c74a276`**。従来の記録にある `b316d14` は `src/` を変更していないdocsコミットであり訂正が必要。
+    - Studioプレースへ反映した内容: なし。**ただしプレース内7モジュール（`LobbyConfig` / `RunConfig` / `MapDrawConfig` / `PartyService` / `LobbyService` / `RunService` / `MapDrawService`）が `src/` とバイト一致することをlength・バイト和・位置重み付き和で照合した。** プレースは既に `c74a276` までを含む。同期操作自体は行っていない。
+    - テスト環境: Play Solo（`start_stop_play`）。2回起動し、2回目は入力経路の回復を試すための再起動。
+    - 参加Client数: **1**（目標2以上）
+    - 実施者: 担当エージェント（Studio MCP経由。`tools>0` で接続済み）
+    - 結果: **`Blocked`（項目1・2・4・5・6）／`Pass`（項目3・7）**
+    - 観察事項:
+      - 項目3「受付中にフィールド外へ出たプレイヤーが残らない」は `Pass`。`RunState=RECRUITING` 中にフィールド外へ出ると `RunState=IDLE`、`LobbyState=ENTRANCE`、参加者 `0 / 5`、看板「受付していません」へ戻り、次の受付を開始できた。
+      - 項目7「全員終了後に生成マップが破棄され次のRunが開始できる」は条件付き `Pass`。唯一の参加者が終了すると `workspace.AnomalyDungeon` が消滅し `RunState=IDLE` へ戻り、再入域で新しい受付（30秒）が始まった。**ただし終了経路はハーネスによる落下死亡で、成功帰還・依頼未達帰還での確認はできていない。**
+      - 項目4「途中参加拒否」は1Clientでは成立しない。唯一の参加者は常に `InDungeon=true` で、入口ロビーへ移動すると `RunService.Tick` の `KillY` 判定で死亡する（実際に確認）。進行中Runに居ないClientが必要。
+      - 項目5「`DEBUG 強制締切`」は `Blocked`。Proンプト自体は配置済みだが（`Workspace.DungeonEntranceLobby.ForceClose`、`ActionText="受付を強制締切する"`、`ObjectText="DEBUG 強制締切"`、Editモードには無く `LobbyService` が実行時生成）、`FORCE_CLOSE` 分岐を起動できなかった。
+      - **ワークボードの「`DEBUG 強制締切` プロンプトは未配置」という前提は誤りだった。** 実行時生成のため手動配置は不要。`current-implementation.md` の「未配置で未確認」も訂正してよい。
+      - 1Clientでも確認できた付随事項: 受付開始（`RunState=RECRUITING` / `LobbyState=PARTY`）、参加者数と残り秒数の表示（フィールド看板・`EntranceBoard`）、30秒満了での `DEPARTING` → `ACTIVE`、Map抽選（1回目 `TSUTAYA` / 2回目 `AUGUST_31`、毎回別seed）、`Room` の実際の部屋名への更新。
+      - `RunState` 属性はプレイヤー属性ではなく **`ReplicatedStorage.AnomalyState`（`Folder`）の属性**である。`current-implementation.md` の `AnomalyState:RunState` はこのパスを指す。
+      - 死亡でRun終了した直後、キャラクタは都市ロビー（`-1600, 6.1, 50`）にいるのに `LobbyState` が `CITY` ではなく `ENTRANCE` だった。下記「未確認の論点」と同一の論点。
+    - OutputのError・Warning: **ゲームのScript Error / Warningは0件**。Outputに残ったエラー2件は担当エージェントの `execute_luau` 診断スクリプトの失敗（`KeyboardEnabled is not a valid member of ProximityPrompt`、`attempt to index nil with '__keyProbe'`）であり、ゲームの不具合ではない。
+    - 残件と反映先: 項目1・2・4・5・6の5項目。`current-implementation.md` の「複数人での挙動は未確認」は、人数上限・切断・途中参加・強制締切が未確認のまま残る。ツール障害は [制作トラブルシューティング](production/troubleshooting.md) へ記載。
+  - Blocker理由: 複数Clientを起動できないこと。`start_stop_play` は `is_start` と `studio_id` のみを受け付け、Client数やサーバーモードの指定引数が存在しない。Studioの「Start Server and Players」の人数設定はStudioのUIにのみありMCPから変更できない（`roblox_studio` MCPはResourcesも公開していない）。Roblox APIにサーバー側での `Player` 生成方法が無いため、1人セッションから2人目を湧かせることも不可能。加えて、合成キーボード入力と `screen_capture` がセッション途中に途絶し、`DEBUG 強制締切` のProximityPromptを操作できなかった。
+  - 次アクション: 人間がStudioのPlayテスト設定を「Start Server and Players / 2人以上」に変更したうえでPlayを起動する。2Clientで受付先着順と途中参加拒否、6Clientで上限5人、2Clientで切断を実行する。`DEBUG 強制締切` は受付開始直後にプロンプトを操作し、30秒を待たずに出発することと参加者だけが出発することを確認する。
   - 完了条件: [Studio検証チェックリスト](production/studio-verification-checklist.md) の「複数Client／Party Run」結果を記録し、不具合は本書またはトラブルシューティングへ切り出す。
+  - 未確認の論点（2026-10-03追加）:
+    - Runが死亡で終わった直後に、キャラクタは都市ロビーにいるのに `LobbyState` が `ENTRANCE` になる。`RunService.character()` の遅延 `lobby.SendToCity`（`CITY`）と、`PartyService` の0.25秒周期 `remove()`（`ENTRANCE`）の順序の競合が疑われる。都市ロビー滞在中に `ENTRANCE` が残る影響範囲は確認していない。**論点と判断候補は [020: Run終了後のLobbyStateと物理位置の同期](decisions/020-lobby-state-authority-and-physical-location.md) に記録した（判断未採用・要人間判断）。**
+    - 影響は主として `RunController` の目的表示に限られ、受付ループは `LobbyState` ではなく `ReplicatedStorage.AnomalyState.RunState` を分岐条件にしているため受付機構は崩れない。
   - 正本: [現在の実装状況](systems/current-implementation.md)、[最小Runの範囲](decisions/005-minimum-lobby-run-scope.md)
 
 - [ ] **リザルトUIの実表示検証**
