@@ -21,27 +21,53 @@ Layout Definition
 
 ## 起動方法
 
+### 前提条件（初回のみ）
+
+Node.js 20.19以上と pnpm が必要です。macOSでHomebrewを使う場合は次で導入できます。
+
+```bash
+brew install node pnpm
+node --version
+pnpm --version
+```
+
+ディレクトリ名は **`ui-layout-editor`** です（末尾に `j` は付きません）。
+
+### リポジトリルートから起動する
+
 ```bash
 cd tools/ui-layout-editor
-npm install
-npm run dev
+pnpm install --frozen-lockfile
+pnpm run dev
 ```
 
 表示されたURLをブラウザで開きます。起動時にサンプルレイアウト（`samples/inventory.yaml`）が読み込まれます。
+
+すでに依存関係を導入済みなら、2回目以降は `pnpm run dev` だけで起動できます。通常は `http://localhost:5173/` が表示されます。終了は起動したターミナルで `Ctrl+C` です。
+
+別の場所から実行する場合は、リポジトリの絶対パスへ移動してから起動してください。
 
 ### その他のスクリプト
 
 | コマンド | 内容 |
 | --- | --- |
-| `npm run dev` | 開発サーバー |
-| `npm run build` | 型チェック + 本番ビルド（`dist/`） |
-| `npm run preview` | ビルド結果の確認 |
-| `npm run typecheck` | 型チェックのみ |
-| `npm run test` | 単体テスト + 描画スモークテスト |
+| `pnpm run dev` | 開発サーバー |
+| `pnpm run build` | 型チェック + 本番ビルド（`dist/`） |
+| `pnpm run preview` | ビルド結果の確認 |
+| `pnpm run typecheck` | 型チェックのみ |
+| `pnpm run test` | 単体テスト + 描画スモークテスト |
 
-`npm` 以外でも動きます。`pnpm install && pnpm run dev` でも同じです。
+依存の固定には `pnpm-lock.yaml` を使用しているため、このツールの正本手順は pnpm です。`npm install` は使用しないでください。
 
-依存の固定は `pnpm-lock.yaml` で行っています。検証は pnpm で実施しましたが、`scripts` は npm 互換で書いてあるため `npm install` でもそのまま動きます。
+### 起動できないとき
+
+| 症状 | 原因と対処 |
+| --- | --- |
+| `command not found: npm` / `node` | Node.jsが未導入です。`brew install node` を実行します |
+| `command not found: pnpm` | pnpmが未導入です。`brew install pnpm` を実行します |
+| `Unsupported URL Type "workspace:"` | `npm install` を実行しています。`pnpm install --frozen-lockfile` を使用します |
+| `cd: no such file or directory: tools/ui-layout-editor` | リポジトリルート以外にいます。先に `Anomaly-Dungeon_doc` へ移動します。ディレクトリ名に末尾の `j` はありません |
+| 5173番ポートが使用中 | Viteが表示した別ポート（例: `http://localhost:5174/`）を開きます |
 
 ## YAMLフォーマット
 

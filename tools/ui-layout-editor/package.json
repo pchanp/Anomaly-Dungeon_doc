@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "description": "Prototype editor for Anomaly Dungeon 2D UI layout definitions (YAML).",
   "scripts": {
     "dev": "vite",
