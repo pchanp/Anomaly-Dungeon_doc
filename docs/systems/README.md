@@ -13,6 +13,7 @@
 - [未実装機能の優先順位](implementation-priorities.md)
 - [ゲームループとポータル遷移](game-loop.md)
 - [ゲームルール](game-rules.md)
+- [通常スキルとビルド](skill-build.md)
 - [マップとギミック案](map-gimmick-ideas.md)
 - [ロビー／ワールドマップ](lobby-world-map.md)
 - [編集テンプレートとRuntimeマップ](editor-templates-and-runtime-maps.md)
@@ -25,6 +26,7 @@
 
 - [ゲームループとポータル遷移](game-loop.md) - ランの循環、Secure Slot、Player Anomaly、ポータル遷移、Party Stateの現時点の草案。
 - [ゲームルール](game-rules.md) - Run、終了条件、ビルド、戦闘、Return、Transition、Server / Client責務の草案。
+- [通常スキルとビルド](skill-build.md) - 4系統、ランク・レベル・奥義、通常攻撃の連携と現時点の個別スキル案。
 - [マップとギミック案](map-gimmick-ideas.md) - 基盤システムを異なる文脈で活用するマップ案と設計原則。
 - [ロビー／ワールドマップ](lobby-world-map.md) - 2D都市マップ、施設内3D、ダンジョンへの導線の草案。
 - [編集テンプレートとRuntimeマップ](editor-templates-and-runtime-maps.md) - Studio編集用のマップ原本と、Run単位のRuntimeコピーを分離するための草案。
