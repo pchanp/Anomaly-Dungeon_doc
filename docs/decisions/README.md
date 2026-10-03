@@ -35,3 +35,4 @@
 - [018: whisperの元同僚Quest、anxiety、他マップ出現解放](018-whisper-colleague-quest-and-anxiety.md) - 追従先移送を軸とするQuest、専用スキル、永続的な候補解放を定める判断。
 - [019: Player Anomalyの単独発生、PvP、固有帰還](019-player-anomaly-runtime-pvp-and-return.md) - 同時発生上限、閾値超過者の待機、PvP下限、固有PortalとRuntime満了による帰還を定める判断。
 - [020: Run終了後のLobbyStateと物理位置の同期](020-lobby-state-authority-and-physical-location.md) - Run終了後に `LobbyState` と物理位置が食い違う論点と、そこにある複数の書き込み経路。**判断は未採用。判断内容と影響範囲は[開発ワークボード](../workboard.md) に据え置き、人間判断待ちとする。**
+- [021: 共通Effect分類、保存境界、重ね掛けの既定規則](021-effect-categories-lifetime-and-stacking.md) - 7種のEffect、4種の保存境界、非加算を既定とする重ね掛け・解除方針。

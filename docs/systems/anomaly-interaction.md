@@ -36,6 +36,8 @@ Player Action / Item / Skill / Environment Event
 
 アクション自体の通常効果と、アノマリーへの追加効果は分離する。たとえば Heal は通常どおりプレイヤーを回復できる一方、対象アノマリーが明示的に `Heal Interaction` を受理する場合だけ、鎮静など別の状態変化を起こせる。
 
+ここでの Interaction Kind は入力の分類である。成立後に何が変わるか、効果の保存境界と重ね掛け・解除の既定規則は[共通Effectと保存境界](effect-components.md)を参照する。
+
 ## Interaction Context
 
 個別の相互作用を定義するときは、少なくとも次を記録する。
@@ -165,6 +167,7 @@ Player Action / Item / Skill / Environment Event
 
 ## 関連資料
 
+- [共通Effectと保存境界](effect-components.md)
 - [観察・認識システム](observation-and-recognition.md)
 - [認知アノマリー](../anomalies/cognitive-anomalies.md)
 - [Mad Stomper](../anomalies/mad-stomper.md)
