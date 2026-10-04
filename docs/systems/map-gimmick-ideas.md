@@ -13,6 +13,7 @@
 | SEKIGAHARA | Idea（アイデア） | 未実装 |
 | KOROHKAN | Idea（アイデア） | 未実装 |
 | Observation / Open Liminal Map | Idea（アイデア） | 未実装 |
+| [戦場](map-battlefield.md) | Idea（アイデア・未採用） | 未実装 |
 
 実装済みでも設計として採用済みではない。Transition Portal、Party State、以及Map間の遷移条件は未実装であり、TSUTAYAはデバッグフロアから直接読み込む形式である。
 
@@ -184,6 +185,14 @@ Focus / Recognitionの視野・遮蔽・継続観察の判定は、個別Map固�
 完全に観察しなくても帰還できる一方、深く観察するとRare Loot、FILE、特殊情報、新しいAnomalyを得られる可能性がある。観察するほど危険になる設計も検討対象とする。
 
 **主役:** Exploration、Observation、Information
+
+## 戦場
+
+**Status: Idea（アイデア・未採用）**
+
+反復する塹壕地帯で、危険が常態となり、帰宅を願う声や将来の会話など日常的な出来事が異常に感じられる認知の反転を扱う案。前進はループとレアルート品の可能性、後退は認知的な負荷の増加と、最初から存在するReturn / Transitionの両ポータルへ接続する。
+
+アノマリー同時発生数0、通常プレイヤー間のPvP安全下限解除と非説明をマップ固有の候補として記録する。既存の共通ルールや現行最小Runの範囲を変更するものではない。詳細・既存仕様との矛盾・未確定事項は[マップ案「戦場」](map-battlefield.md)を参照する。
 
 ## マップ設計原則
 
