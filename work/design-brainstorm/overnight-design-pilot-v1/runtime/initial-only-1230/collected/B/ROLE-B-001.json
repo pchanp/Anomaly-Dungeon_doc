@@ -1,0 +1,292 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-001",
+  "role": "B",
+  "title": "保留札（仮題）: Run内だけで通常枠1つをSecure枠へ移す消費可能 explorations品",
+  "design_status": "Draft",
+  "review_status": "unreviewed",
+  "primary_map": "8/31",
+  "classification": "マップ固有",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "## 作用範囲と保存境界",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "保存境界は永続／同一Run中／同一マップ中／一時の四つを基本とし、「同一Run中」は「当該Runの終了で破棄する」と定義されている。Run内だけ有効な枠区分をEffectの保存境界として書く根拠になる。"
+    },
+    {
+      "path": "docs/decisions/010-real-route-secure-slot-progression.md",
+      "section": "## 未決事項",
+      "source_status": "Status: Accepted（採用）",
+      "claim": "「Secure Slotへの入出庫時点と、Player Anomaly時の利用制約」「Secure ConversionとCapacity Expansionの必要量、段階的な増加、上限」が未決と列挙されている。Secure枠を操作する余地は採用 record での確定事項ではない。"
+    },
+    {
+      "path": "docs/systems/current-implementation.md",
+      "section": "## 未実装",
+      "source_status": "Status: Implemented（実装棚卸し）",
+      "claim": "「Secure Slotと正式なInventory／ItemStack」「Secure Slotの拡張手段、拡張上限、コスト、入出庫タイミング、Player Anomaly時の制約」が未実装・未決と明記され、デバッグ付与端末だけが物品を作る実装になっている。取得源・スタック・所有者は未実装である。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "### 初期状態と帰還",
+      "source_status": "Status: Prototype: Implemented（実装済みプロトタイプ）",
+      "claim": "8月31日は「夕方になるとReturn Portalが出現し、プレイヤーは帰還または探索継続を選べる」という時間構造を持つ。探索を長く続けるか途中で持ち帰るかを決める圧が、この文脈の判断の中心になる。"
+    },
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "## 未決事項",
+      "source_status": "Status: Draft（草案）",
+      "claim": "「特定アイテムが変更できる出現コンポーネント、変動の重ね方、Run終了時の破棄」「Secure Slotの拡張上限、対象、入出庫タイミング」が未決として残されている。本候補は出現率へ作用しないことで、この未決領域に踏み込まない。"
+    },
+    {
+      "path": "docs/systems/economy-and-progression.md",
+      "section": "## 未決事項",
+      "source_status": "Status: Draft（草案）",
+      "claim": "「価格、通貨、売却UI、買い取り先ごとの条件」「各レアルート品とアノマリー固有の交換品のItem ID、出現確率」が未決。売却経路の成立可否を今回確定できない根拠になる。"
+    }
+  ],
+  "design_hypothesis": "8/31の文脈で、探索者が床で拾う小さな札を1回だけ使い、そのRunのあいだだけ「通常スロット1枠をSecure Slot扱いへ 바꾸る」消費可能アイテムとして提案する。判断010が定める研究室での永続Secure Conversionとは別の操作として分離し、取得・消費・帰還時の扱いだけ propose する。出現率や同時出現数には作用せず、Run状態を書き換えるのも使��時の枠区分と個人通知だけに限る。",
+  "experience": {
+    "goal": "「持ち帰るものを送る_vs_捨てられるもの」の判断を、etro 物品そのものではなく Ran 内の1枠で语言化する。8/31では夕方以降に帰還か継続かを選べるため、探索urerと安全化のどちらに1枠を使うかをRun中に迫る。",
+    "player_choice": "拾った直後に使う（送 싶은高リスク品を今すぐ1枠だけ守る）／.Renderに残す（後で拾うものが出た时的用に残す）／もう1枠は要らない 判断で捨てる の3択。使用すると札は消費され、通常の探索枠が1つ埋まるままになる。",
+    "sacrifice_or_risk": "使うほど手持ちの通常枠が減り、Run終了時に『 Secure Slot として送れるもの』が1つ増えるだけになる。使わない場合は Run 終了時に通常枠の品と共に失う。永続的な枠増加ではないため、death 時の守りは限定される。"
+  },
+  "placement_assumption": "新しい地形・建物・部屋は作らず、既存の各ルームの配置規約（ItemPoints）の範囲に、床に落ちた小物として置く案にとどめる。どのルームに置くかは既存資料から決められないため未確定。マップ構造への提案ではない。",
+  "components": [
+    {
+      "component": "InventoryBoundary",
+      "availability": "catalog",
+      "usage": "総20枠・初期Secure Slot 4枠のサーバー権威境界と、Run終了時の獲得物／喪失物分類を前提にする。"
+    },
+    {
+      "component": "ItemLifecycle",
+      "availability": "catalog",
+      "usage": "拾う・所持する・使う（消費する）・Run終了時に持ち帰るか失うか、を同じ語彙で書くための参照。ただし正式な取得源とItemStackは未実装。"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "使用による枠区分の変更（通常スロットからRun内Secure扱いへ）。"
+    },
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "他プレイヤーの札消費を本人にだけ通知する。共有世界は変えない。"
+    },
+    {
+      "component": "PlacementContext",
+      "availability": "catalog",
+      "usage": "既存ルームのItemPoints規約内の配置として扱うため。"
+    },
+    {
+      "component": "RunScopedSlotReclassify",
+      "availability": "proposed",
+      "usage": "Run内だけ有効な一時的な枠区分の変更。共通パックの記述語彙には無く、既存の永続Secure Conversion（判断010）とは別操作として新規に定義が要るため proposed とした。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "対象プレイヤーが保留札をインベントリ内で1回使用する。",
+      "condition": "対象がRun開始後に帰還可能在中で生存している、かつ対象のインベントリに通常スロットが1枠以上あること。実際の空き判定・使用可能UIは未実装であり、本候補では未確定とする。他プレイヤーが同時に枠を消費している場合の扱いは未確定。",
+      "result": "対象プレイヤーのインベントリの通常スロット1枠を、Run内に限りSecure Slot扱いへ変更する。総インベントリ枠数は増えず、変化は枠の区分だけに限られる。",
+      "target": "使用者のインベントリの枠区分",
+      "scope": "個人（使用者のみ）。PartyやRun全体への共有結果は作らない。",
+      "lifetime": "同一Run中",
+      "resolution": "instant",
+      "end_conditions": [
+        "Run終了時に破棄される。帰還時の獲得物／喪失物分類は、Run終了時点の区分を基準に確定する。",
+        "札は使用時点で消費されるため、同じ札による再適用は起こらない。",
+        "使用者の切断・死亡でも、この区分は直ちに意味を失う（Run側のDestroyed扱いは未実装）。"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "使用による即時確定と、Run終了・対象消滅による破棄のいずれかで終わる。消費済みのため元へ戻す解除手段は持たない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effect・同一対象は非加算1件。1回の使用で移動する枠数は1枠に固定する。複数枚を続けて使う場合、1回あたりの枠数が積み上がるか1枠で止まるかは未確定とし、ここで加算の例外を宣言しない。",
+        "conflict_resolution": "博士Questの1.40倍補正（数値）や発生ごとの0.90倍減衰（確率）と同じ対象値へ作用しないため競合しない。/dev/nullによる使用結果のnull化が実装された場合、成立・不成立のどちらになるかは未定義のため保留する。"
+      },
+      "server_validation": "サーバーが RunState が ACTIVE であること、対象が生存しRun参加中であること、対象の枠構成と空き数を検証する。不成立なら枠構成を変更せず、理由を含む feedback のみ返す。クライアント表示の枠数だけでは適用しない。",
+      "client_presentation": "使用済み／未使用の個数と、Secure側の区画数は本人の個人表示にのみ出す。他のプレイヤーの所持・使用は本人には出さない。",
+      "feedback": {
+        "success": "本人表示の Secure 側の区画が1つ増え、未使用札の表示が1つ減る。枠区分の移動だけが変化として出る。",
+        "failure": "枠構成も札の個数も変わらず、使用時の入力だけが反応する。失敗理由は個人表示では完全には示さない（理由表示は未実装）。",
+        "ambiguous": "同時に別の表示（帰還面の開放通知、Anomaly Exposure の増加など）が重なると、どちらが枠構成に影響したか判別できない提示になる。数値は同一境界の別Effectと分離して扱う。"
+      }
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "誰かが保留札を消費して上のStateChangeが成立する。",
+      "condition": "消費したプレイヤーと、その通知を受け取れる別のプレイヤーが同一Runのマップ内にいること。個人提示の範囲は本人に限る。",
+      "result": "消費していない側の個人表示に「札が1枚消費された」ことを通知する。消費者の身元は表示しない。共有世界の状態（出現率・Portal・帰還可否・帰還面の状態）は一切変化しない。",
+      "target": "通知先プレイヤーの個人表示",
+      "scope": "個人（通知先のみ）。Run共有結果ではない。",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "個人表示の表示時間が満了すると消える（表示時間は未確定）。",
+        "Run終了時に破棄される。",
+        "通知先プレイヤーの切断・死亡で消える。"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "個人提示の終了条件を複数並べ、いずれか一つで本人への提示だけを消す。共有事実ではないため、他者への影響は発生しない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effect・同一対象は非加算1件。再通知では残り時間だけ更新し、個数を加算しない（更新処理は未実装）。",
+        "conflict_resolution": "MiWの個人向けRun情報HUDなど、同じ個人表示領域を使う設計が存在する。表示枠の競合規則は未定義のため保留し、自動合算も後勝ちも決めない。"
+      },
+      "server_validation": "サーバーが消費成立を確定し、通知は対象個人にのみ送る。個人通知をRun共有状態に書き換えない。切断済みプレイヤーを通知先へ加えない。",
+      "client_presentation": "通知は「1枚消費された」事実のみ。誰が使ったかは本人にもサーバーにも表示しない。演出はHUDの一行注記を想定（実装は未確認）。",
+      "feedback": {
+        "success": "通知を受けた本人の個人表示に1件の注記が残る。",
+        "failure": "同一Run内に通知先が存在しない、または通知先の表示が別Effectで塞がれている場合は何も表示しない（未確認）。",
+        "ambiguous": "消費者が自分だった場合に、自分の操作の反映と他者からの通知表示が同じ形式になるため区別できない。"
+      }
+    }
+  ],
+  "provides_traits": [
+    "NPCや新ギミックの追加実装なしで、所持者の判断だけで成立する消費可能アイテムの1例（提示先・.Success条件が無く、所持と使用だけで完結する）",
+    "個人提示（InformationChange）だけでRun共有状態を変えない分離の例",
+    "同一Run中で、Run終了時に破棄されるEffectの破棄境界の例"
+  ],
+  "connection_tags": [
+    "ItemLifecycle",
+    "InventoryBoundary",
+    "AugustPhase",
+    "PlacementContext"
+  ],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": [
+        "8/31マップ側に、落ちている小物を「操作」できる既存の配置点またはPromptを持つ（新規ギミックではなく既存規約上で成立する）",
+        "その操作を個人単位૰のEffectとして قلできるルールを持つ"
+      ],
+      "reason": "peer-snapshotsが管理側から配布されておらず、A／Cの候補が未作成のため、入力点としてACYできる対象を特定できない。予約IDだけを根拠に接続を確定するのは避ける。相手のギミックやHPReportedそのものは作成していない。",
+      "adoption_blocker": false
+    }
+  ],
+  "conflicts": [
+    {
+      "source_path": "docs/systems/current-implementation.md",
+      "existing_rule": "「Secure Slotの拡張手段、拡張上限、コスト、入出庫タイミング、Player Anomaly時の制約」は未実装・未決であり、拡張値の受け口だけが SecureSlotCapacity で用意されている。永続Secure Conversionは判断010で研究室・レアルート品を消費する操作として採用されている。",
+      "proposal_difference": "本候補は永続強化ではなく、Run内に限り通常枠1つをSecure扱いへ移す消費可能アイテムの操作を提案する。永続枠の増加を伴わない。",
+      "correction": "採用する場合は (1) 永続Secure Conversion（判断010）とは別の操作として名前・操作・UI・適用対象を明確に分離し、(2) 1Runで使用できる枚数と1枚あたりの枠数を未確定のまま設計表に残し、(3) 取得源・ItemStack・帰還時の持帰とは別の効果としてSecure Slot拡張手段の未決項目Manipulate影响力を睿智しない。",
+      "reason_correctable": "既存の未決項目を「確定」するのではなく未決領域内の追加案として差せるため、矛盾を消さずに候補として残せる。永続枠数や成長曲線には影響しない点が補正可能である。",
+      "decision_needed": "Run内の一時的な枠区分変更を、正式なSecure Slotの拡張手段の1種として採用するか、根本没��デバッグ専用の練習機能に留めるか。"
+    }
+  ],
+  "uncertainties": [
+    "取得源を確定できない。正式な取得源・ItemStack・スタック規則が未実装（SRC-01）であり、拾える場所も個数も出現確率も未定。複数枚の入手可能性は未確定。",
+    "使用可能なタイミングの上限（1Runで何枚まで）を決めていない。非加算1件という既定と「枠が増える」という結果の関係が未確定。",
+    "他プレイヤーへの個人通知を維持すべきか、Server共有に上げるべきかが未確定。共有へ上げる場合は所有権の可視化という別の設計になる。",
+    "Place（地面に落として他者に拾わせる）経路は未実装で、放置中の所有者と消費権の扱いは未確定。",
+    "Present（手渡す）経路は未実装で、所有権・消費権・同時使用の競合は未確定。",
+    "Secure Slot枠 relocateInto が失败了ときの表示が、个人提示と枠表示で二重に出る可能性がある。表示の優先順位は未確定。",
+    "8/32（帰還面閉鎖・Exposure 2.4倍・Run Lifetime 300秒の強制帰還）との先后関係は未実装のRun Lifetimeと競合するため、強制帰還との優先順位は未確定。",
+    "Secure Conversion／Capacity Expansionの交換レート・上限（判断010）と本候補の消費速度を同じ成長曲線として扱うかは未確定。別枠として置くか統合するかは判断要。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "「是否符合条件的安全容器」を贬もの側からではなく、从った物体そのものを反応型にずらす。小さな札1枚で『送 싶은ものはどこに入れるか』を選べるが、その一行に数目もerseった表示もない。安全装置ではなく、境界を挪す一侧の票据として扱う点が既視感をずらす。",
+    "in_world_rationale": "アノマリーを『模型からの逸脱』と捉える世界では、物の『どこ中所SAFEか』も逸脱し得る。探索者は差し出された小紙片で自分だけの『持ち帰れる場所』をRun内に一時的に作り、それを使い切れば消える——という状態遷移が、物の価値の非公開のまま成立する。世界の起源や博士の真意は説明しない。",
+    "meaning_left_ambiguous": "札が誰の手で刷られ、誰に渡されたのか。消費されたとき世界が本当に変わったのか Representationだけだったのか。永久に枠が増えるのか遺忘なのかは確定しない。紙面にも日付にも由来は書かない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "現状の InventoryService は付与・枠の制約・Run終了時の獲得／喪失分類だけを持ち、アイテムの所在・所有者・スタック規則・取得源は未実装。物品を消費して枠区分を変更する操作、帰還時分類への「使用済み」の取り込み、個人通知の送信経路はいずれも新しい処理が必要。デバッグ付与端末があるだけでは正当化できない。",
+  "new_logic": [
+    "Run内に限り有効な枠区分の再分類（RunScopedSlotReclassify）の定義と、Secure Slot拡張手段（判断010）との別操作としての切り分け",
+    "物品の消費と個人通知の送信（Serverで消費成立を確定し個人へ送る経路）",
+    "帰還時の獲得物／喪失物分類に『使用による枠変更済み』を含める処理"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "試作は既存RoomのItemPointsに1個置くだけで配置できるが、Karena正式なItemStackと所有者モデルが無く、消費→枠区分変更→Run終了分類→個人通知の4経路を通す必要がある。WorldChangeや出現率補正を含まないので計算系の作業は発生しないが、RunOutcome分類とClient提示の両方に触れるため小ではない。",
+    "implementation_steps": [
+      "デバッグRetentionと同じ権限で1物品を既存ItemPointsへ置き、拾えることを確認する。",
+      "InventoryService 相当に『使用』操作を追加し、通常枠1つをRun内Secure扱いへ変更する（永続枠数は増やさない）。",
+      "Run終了時の分類に『使用で枠区分がSecureになった品』を獲得物側へ含める。",
+      "消費時に他の同一Runプレイヤーへ個人通知を送る（身元は出さない）。",
+      "帰還面閉鎖・Run Lifetime満了と同じ時刻に使用した場合の挙動を1つだけ決め、記録する。"
+    ],
+    "assumed_existing_parts": [
+      "InventoryService の20枠／初期Secure4枠のサーバー権威境界",
+      "RunService.Finish へ集約された終了処理とRunOutcomesの終了種別",
+      "既存Roomの配置規約（ItemPoints）とデバッグ付与端末",
+      "既存の個人向けRun情報HUDの表示枠"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Proposed",
+        "detail": "既存のItemPoints規約内に、床の落し物として1個置く案。どのルームに置くかは既存資料から決められないため未確定。正式な取得源は未実装（SRC-01）なので出現確率も個数も決めない。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "通常スロット1枠を消費して保持する。Secure Slotが既に4枠埋まっている dilemma として『今使うか、後で使うか』が生じる。持тусत疲れた状態での保持コストを成立要件にする案。"
+      },
+      {
+        "route": "Use",
+        "status": "Proposed",
+        "detail": "1回だけ使用し、Run内に限り通常枠1つをSecure扱いへ変更して消費する。Skill枠・/consumable트리の別枠は作らない。1Runの使用回数上限は未確定。"
+      },
+      {
+        "route": "Present",
+        "status": "Undecided",
+        "detail": "他プレイヤーへ手渡す経路は未実装。所有権の转移・消費権の所在・同時使用の競合は未確定。採用する場合は所有権の转移をServerで確定する必要がある。"
+      },
+      {
+        "route": "Place",
+        "status": "Undecided",
+        "detail": "地面に落として取得可能にする経路は未実装。放置中に他プレイヤーが消費した場合の所有者と消費権が未確定。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "死亡・未達帰還では、未使用なら通常枠の品と共に喪失する。使用済みならRun終了で枠変更が破棄され、その枠の品は獲得物として分類される（分類の粒度はRun終了時点）。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "Run内のみの一時Secure化であり永続枠の増加ではない。判断010の永続Secure Conversion（研究室でレアルート品を消費）とは別の操作として分離する。Transfer枠の上限・コストは未確定。"
+      },
+      {
+        "route": "Sell",
+        "status": "Undecided",
+        "detail": "経済と成長の価格・通貨・売却UIが未決のため換金の可否を確定できない。判断011の汎用スキルレアルート品・スロットレアルート品・固有交換品のいずれの系統にも属さない案で、レアルート扱いにしない。"
+      },
+      {
+        "route": "Quest",
+        "status": "NotApplicable",
+        "detail": "判断011/012で定義された報酬系（汎用スキルレアルート品・スロットレアルート品・アノマリー固有交換品）に属さないため、クエスト報酬としての指定は行わない。依頼主への提出も想定していない。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "Undecided",
+        "detail": "Item Interaction の入力として扱う。/dev/null のnull化対象になり得ると同文書が候補として挙げるのみで未実装。8/31個別の異常や稀に共有される異常Item経路は未実装のAnomaly Systemに依存するため、解釈を確定しない。"
+      }
+    ],
+    "ownership_state": "個人所持が状態本体。1個の札に対する所有者は個人で、消費権も本人に閉じる。他プレイヤーの所持・使用は本人HUDに出さず、消費だけを個人通知する。個人状態はRun終了時に破棄されるだけで、永続データへ転ばない。",
+    "server_run_state": "Run状態を書き換えるのは『使用による枠区分』のみ。WorldChange（出現率・同時出現数）は提案せず、RunUnitItemMutationRunStateへの干渉はもしない。Run終了時に必ず破棄される 것을契約とし、同時にServer権威で枠区分を確定する。"
+  },
+  "html_file": "ROLE-B-001.html"
+}

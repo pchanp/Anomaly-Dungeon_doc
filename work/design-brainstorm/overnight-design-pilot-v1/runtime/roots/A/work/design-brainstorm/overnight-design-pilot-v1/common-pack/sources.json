@@ -1,0 +1,568 @@
+{
+  "run_id": "overnight-design-pilot-v1",
+  "snapshot_created_at": "2026-10-04T00:43:27.699257+00:00",
+  "git_head": "fe1db5c621f793de5995e0b6d9b9a1a7f141c8f8",
+  "snapshot_basis": "working_tree_bytes",
+  "note": "HEADだけでなく採取時の実ファイルを固定。未コミットの参照HTMLもハッシュで識別する。",
+  "entries": [
+    {
+      "path": "AGENTS.md",
+      "snapshot": "snapshots/AGENTS.md",
+      "sha256": "d75edd62c3959ecea2cad4b66cc11f9b1347cf04df21acf41543e8ee7aa66153",
+      "status_declarations": [
+        "Status: Unconfirmed（文書に明記なし）"
+      ]
+    },
+    {
+      "path": "README.md",
+      "snapshot": "snapshots/README.md",
+      "sha256": "c5980a96fdbc3ab7743e1af6216f615e148e970f3d01047a4307e460dabe1041",
+      "status_declarations": [
+        "Status: Unconfirmed（文書に明記なし）"
+      ]
+    },
+    {
+      "path": "docs/anomalies/README.md",
+      "snapshot": "snapshots/docs/anomalies/README.md",
+      "sha256": "b67c60a18351702a76e313837174dafa9bfd7dd1ef0411ae8e39fe858596e3ee",
+      "status_declarations": [
+        "Status: Unconfirmed（文書に明記なし）"
+      ]
+    },
+    {
+      "path": "docs/anomalies/cognitive-anomalies.md",
+      "snapshot": "snapshots/docs/anomalies/cognitive-anomalies.md",
+      "sha256": "366ac3951cef42f168201291d1d59fb0e633c75bc9297dde1d6f1b05ca0551ee",
+      "status_declarations": [
+        "Status: Draft（草案）"
+      ]
+    },
+    {
+      "path": "docs/anomalies/dev-null.md",
+      "snapshot": "snapshots/docs/anomalies/dev-null.md",
+      "sha256": "8485c6de8ef753a34c3d01d456c6265a42ef85b043f9aa1d623e5a7853788503",
+      "status_declarations": [
+        "Status: Draft（草案）",
+        "Prototype: Partially Implemented（Studio確認: 2026-09-26）"
+      ]
+    },
+    {
+      "path": "docs/anomalies/mad-stomper.md",
+      "snapshot": "snapshots/docs/anomalies/mad-stomper.md",
+      "sha256": "9cdad6209d07d695c1b98eaaa933ce1f402e9ffa68af271f84fd437e0670f5e0",
+      "status_declarations": [
+        "Status: Draft（草案）",
+        "Prototype: Partially Implemented（Studio確認: 2026-09-26）",
+        "Status: Draft（専用スキルの詳細は未決定）"
+      ]
+    },
+    {
+      "path": "docs/anomalies/memory-swapper.md",
+      "snapshot": "snapshots/docs/anomalies/memory-swapper.md",
+      "sha256": "692e325852bb2faf4b130228cb254d18223cf24dc4fa08535b0bad56b805c426",
+      "status_declarations": [
+        "Status: Draft（草案）",
+        "Prototype: Not Implemented（Studio確認: 2026-09-26）"
+      ]
+    },
+    {
+      "path": "docs/anomalies/miw.md",
+      "snapshot": "snapshots/docs/anomalies/miw.md",
+      "sha256": "adb72dc086f6f24be2dc3adb1876db78e37e24ed9a13253bed83204599372b15",
+      "status_declarations": [
+        "Status: Draft（草案）",
+        "Prototype: Implemented（Studio確認: 2026-09-26）"
+      ]
+    },
+    {
+      "path": "docs/anomalies/player-anomalies/visible-invisible-inversion.md",
+      "snapshot": "snapshots/docs/anomalies/player-anomalies/visible-invisible-inversion.md",
+      "sha256": "bbbfefdb6439c61c363682df0749a5cd14e8fe321123a1fc20d728c2b551789d",
+      "status_declarations": [
+        "Status: Draft（草案）",
+        "Prototype: Not Implemented（Studio確認: 2026-09-26）"
+      ]
+    },
+    {
+      "path": "docs/anomalies/whisper.md",
+      "snapshot": "snapshots/docs/anomalies/whisper.md",
+      "sha256": "235e85355ce45d0468e663398f1689273388147cf036bd771b66a0e65f596639",
+      "status_declarations": [
+        "Status: Draft（草案）"
+      ]
+    },
+    {
+      "path": "docs/decisions/001-game-loop-and-portal-transitions.md",
+      "snapshot": "snapshots/docs/decisions/001-game-loop-and-portal-transitions.md",
+      "sha256": "d1bca70463be74577510eb64035e9b285b0abf9e9f6362763da8370542f5c0c1",
+      "status_declarations": [
+        "Status: Draft（草案）"
+      ]
+    },
+    {
+      "path": "docs/decisions/002-animation-retarget-tool.md",
+      "snapshot": "snapshots/docs/decisions/002-animation-retarget-tool.md",
+      "sha256": "26e6946f73077fe5e897badbc10dab6f1824af5d3b36f90d27a3310a394cfd1b",
+      "status_declarations": [
+        "Status: Accepted（採用）"
+      ]
+    },
+    {
+      "path": "docs/decisions/003-august-31-time-and-phase-design.md",
+      "snapshot": "snapshots/docs/decisions/003-august-31-time-and-phase-design.md",
+      "sha256": "8f3d6299ab0e1fae697e48b8612ad83e1ebe9b569cdd9e3bcdbf5787d1b84036",
+      "status_declarations": [
+        "Status: Prototype: Implemented（実装済みプロトタイプ）"
+      ]
+    },
+    {
+      "path": "docs/decisions/004-city-entry-and-information-design.md",
+      "snapshot": "snapshots/docs/decisions/004-city-entry-and-information-design.md",
+      "sha256": "7fab399374ce7c57d169a63aed6b0145b5e19aed2f1f02a2ba2e3f53505f9f99",
+      "status_declarations": [
+        "Status: Draft（草案）"
+      ]
+    },
+    {
+      "path": "docs/decisions/005-minimum-lobby-run-scope.md",
+      "snapshot": "snapshots/docs/decisions/005-minimum-lobby-run-scope.md",
+      "sha256": "812694f3d8513b2818d7d073c9f171bb65c9427b412efd6cbab494dfb2cb7f5d",
+      "status_declarations": [
+        "Status: Draft（草案）"
+      ]
+    },
+    {
+      "path": "docs/decisions/006-minimum-run-server-boundaries.md",
+      "snapshot": "snapshots/docs/decisions/006-minimum-run-server-boundaries.md",
+      "sha256": "2a6f0b2bca1e81cffeda7b43487fc05609f2976e329209f38674844adc293d17",
+      "status_declarations": [
+        "Status: Draft（草案）"
+      ]
+    },
+    {
+      "path": "docs/decisions/007-august-31-terrain-lake-and-clocktime.md",
+      "snapshot": "snapshots/docs/decisions/007-august-31-terrain-lake-and-clocktime.md",
+      "sha256": "f159a35e67516cab21cf63f5d36fd10e278dbf85be0c917b2e5ec90f69306be4",
+      "status_declarations": [
+        "Status: Prototype: Implemented（実装済みプロトタイプ）"
+      ]
+    },
+    {
+      "path": "docs/decisions/008-august-31-landscape-composition.md",
+      "snapshot": "snapshots/docs/decisions/008-august-31-landscape-composition.md",
+      "sha256": "15b58e1a3b5f9fb68aa62b14217166235403a5564fa3ab638ca0e7c27de569ce",
+      "status_declarations": [
+        "Status: Draft（ソース反映済み・Studio未確認）"
+      ]
+    },
+    {
+      "path": "docs/decisions/009-tsutaya-closing-time-archive.md",
+      "snapshot": "snapshots/docs/decisions/009-tsutaya-closing-time-archive.md",
+      "sha256": "3eaac0d9c0697d7bb777a4348695993b479aafae89878232b3a5ef991edc748c",
+      "status_declarations": [
+        "Status: Draft（ソース反映済み・Studio未確認）"
+      ]
+    },
+    {
+      "path": "docs/decisions/010-real-route-secure-slot-progression.md",
+      "snapshot": "snapshots/docs/decisions/010-real-route-secure-slot-progression.md",
+      "sha256": "ddc1cc6cc3ba9fa5d7432fa408e9f6d03fcb0d6dd6a1e9ac5a647593708179a9",
+      "status_declarations": [
+        "Status: Accepted（採用）"
+      ]
+    },
+    {
+      "path": "docs/decisions/011-real-route-acquisition.md",
+      "snapshot": "snapshots/docs/decisions/011-real-route-acquisition.md",
+      "sha256": "7d2fa84a53423bdbe96c644647a9acbd9fc75c64843493538f3cdcaa78a8525c",
+      "status_declarations": [
+        "Status: Accepted（採用）"
+      ]
+    },
+    {
+      "path": "docs/decisions/012-anomaly-linked-skill-acquisition.md",
+      "snapshot": "snapshots/docs/decisions/012-anomaly-linked-skill-acquisition.md",
+      "sha256": "427593aadbc908ed205f5a9f48b4557188a7a3b353d4f9d41d8347352fa4cf1c",
+      "status_declarations": [
+        "Status: Accepted（採用）"
+      ]
+    },
+    {
+      "path": "docs/decisions/013-mad-stomper-giant-identity.md",
+      "snapshot": "snapshots/docs/decisions/013-mad-stomper-giant-identity.md",
+      "sha256": "7ff0f1cba4409d3475b6e91958c56a891a066587f67e9b5c2ae8d3c1e963b29e",
+      "status_declarations": [
+        "Status: Accepted（採用）"
+      ]
+    },
+    {
+      "path": "docs/decisions/014-quest-discovery-and-research-unlocks.md",
+      "snapshot": "snapshots/docs/decisions/014-quest-discovery-and-research-unlocks.md",
+      "sha256": "c8220e87283c2ad007b618e12cfa181c246fcb8ca7fbeabc73702190e998ade8",
+      "status_declarations": [
+        "Status: Accepted（採用）"
+      ]
+    },
+    {
+      "path": "docs/decisions/015-professor-quest-anomaly-spawn.md",
+      "snapshot": "snapshots/docs/decisions/015-professor-quest-anomaly-spawn.md",
+      "sha256": "54b5664c7a11770293a65b83f248505de59cf5692e4194ff258ae11fbe31ccff",
+      "status_declarations": [
+        "Status: Accepted（採用）"
+      ]
+    },
+    {
+      "path": "docs/decisions/016-party-professor-quest-spawn-snapshot.md",
+      "snapshot": "snapshots/docs/decisions/016-party-professor-quest-spawn-snapshot.md",
+      "sha256": "5952c0375ed118b7666e683da81d6c0bd90366bc5b3f1c75b9c6752f1d92cf67",
+      "status_declarations": [
+        "Status: Accepted（採用）"
+      ]
+    },
+    {
+      "path": "docs/decisions/017-run-anomaly-spawn-components.md",
+      "snapshot": "snapshots/docs/decisions/017-run-anomaly-spawn-components.md",
+      "sha256": "dd3ded84cb7b13187e0d4eb15f977915254860ad8a8cb0b70df3a90023e53016",
+      "status_declarations": [
+        "Status: Accepted（採用）"
+      ]
+    },
+    {
+      "path": "docs/decisions/018-whisper-colleague-quest-and-anxiety.md",
+      "snapshot": "snapshots/docs/decisions/018-whisper-colleague-quest-and-anxiety.md",
+      "sha256": "98da28eceb186690c0b66bc3115c5decdbca16077d27690f19786d7854072869",
+      "status_declarations": [
+        "Status: Accepted（採用済み）"
+      ]
+    },
+    {
+      "path": "docs/decisions/019-player-anomaly-runtime-pvp-and-return.md",
+      "snapshot": "snapshots/docs/decisions/019-player-anomaly-runtime-pvp-and-return.md",
+      "sha256": "206119ec3fb58f46f38431df87f65ef4dbc8988d151cc651e4bbf3e5406de0d8",
+      "status_declarations": [
+        "Status: Accepted（採用済み）"
+      ]
+    },
+    {
+      "path": "docs/decisions/020-lobby-state-authority-and-physical-location.md",
+      "snapshot": "snapshots/docs/decisions/020-lobby-state-authority-and-physical-location.md",
+      "sha256": "72321c1246cfa561ae7d4ac064e857963ba0c589ee915fbaac02d64fab327566",
+      "status_declarations": [
+        "Status: Draft（論点の記録・要人間判断）"
+      ]
+    },
+    {
+      "path": "docs/decisions/021-effect-categories-lifetime-and-stacking.md",
+      "snapshot": "snapshots/docs/decisions/021-effect-categories-lifetime-and-stacking.md",
+      "sha256": "931076638b23fe9460da314193223d64904a558bb7d4819c1538e17f03fb39c5",
+      "status_declarations": [
+        "Status: Accepted（共通の既定規則として採用。個別Effectと実装は未確定）"
+      ]
+    },
+    {
+      "path": "docs/decisions/README.md",
+      "snapshot": "snapshots/docs/decisions/README.md",
+      "sha256": "5bfa46eb817f11fc8e4059598aaa90daca99557ad885cfc1f064da40a9cf3d67",
+      "status_declarations": [
+        "Status: Unconfirmed（文書に明記なし）"
+      ]
+    },
+    {
+      "path": "docs/production/README.md",
+      "snapshot": "snapshots/docs/production/README.md",
+      "sha256": "45561f0acb2c119c797a1c9bfe41e22b48ad22c457aed899332db2bf416d5440",
+      "status_declarations": [
+        "Status: Unconfirmed（文書に明記なし）"
+      ]
+    },
+    {
+      "path": "docs/production/animation-pipeline.md",
+      "snapshot": "snapshots/docs/production/animation-pipeline.md",
+      "sha256": "e1d0a14ca8a21a16648a89752c1708c509eaebac70ce5ded2cce90549d20992f",
+      "status_declarations": [
+        "Status: Draft（草案）"
+      ]
+    },
+    {
+      "path": "docs/production/asset-pipeline.md",
+      "snapshot": "snapshots/docs/production/asset-pipeline.md",
+      "sha256": "b64f6518293516ca3dcb01b1168bf04c934545a0aeb7bbc23db3200201e2d7d7",
+      "status_declarations": [
+        "Status: Draft（草案）"
+      ]
+    },
+    {
+      "path": "docs/production/blender-workflow.md",
+      "snapshot": "snapshots/docs/production/blender-workflow.md",
+      "sha256": "96b34bc61317b338bce983235af0e56c8b3db27770226443272eb8ec2eee6b5f",
+      "status_declarations": [
+        "Status: Draft（草案）"
+      ]
+    },
+    {
+      "path": "docs/production/character-pipeline.md",
+      "snapshot": "snapshots/docs/production/character-pipeline.md",
+      "sha256": "b200589d69da0fcc1422416620c1df1e485f811ee2bffa46e48a01454e06c5f7",
+      "status_declarations": [
+        "Status: Draft（草案）"
+      ]
+    },
+    {
+      "path": "docs/production/roblox-import.md",
+      "snapshot": "snapshots/docs/production/roblox-import.md",
+      "sha256": "8988315c3d3a727804486ec68e9e0a3b7a56a4eebeef0d209f28a742ecb57854",
+      "status_declarations": [
+        "Status: Draft（草案）"
+      ]
+    },
+    {
+      "path": "docs/production/studio-verification-checklist.md",
+      "snapshot": "snapshots/docs/production/studio-verification-checklist.md",
+      "sha256": "bf06a3074de8b12338595357d548d9141c4a3c414b26f403fdd6758dcc7d7ee3",
+      "status_declarations": [
+        "Status: Draft（最小Runとマップ改修向け）"
+      ]
+    },
+    {
+      "path": "docs/production/troubleshooting.md",
+      "snapshot": "snapshots/docs/production/troubleshooting.md",
+      "sha256": "bb96ce87883c6768194a901a29b41a04a244055108eea3f1868d4fb2a706710a",
+      "status_declarations": [
+        "Status: Unconfirmed（文書に明記なし）"
+      ]
+    },
+    {
+      "path": "docs/references/README.md",
+      "snapshot": "snapshots/docs/references/README.md",
+      "sha256": "5030bb4ba70b10f7538e0b96800c5399873ef1495210ddd3f44a2315385ba737",
+      "status_declarations": [
+        "Status: Unconfirmed（文書に明記なし）"
+      ]
+    },
+    {
+      "path": "docs/references/blender.md",
+      "snapshot": "snapshots/docs/references/blender.md",
+      "sha256": "d4c5fdd6b3d6dc23a61a2ab1d35ce51cff6696a6b5d288b68d7a594b2550f90f",
+      "status_declarations": [
+        "Status: Unconfirmed（文書に明記なし）"
+      ]
+    },
+    {
+      "path": "docs/references/deepmotion.md",
+      "snapshot": "snapshots/docs/references/deepmotion.md",
+      "sha256": "84f1713744ee5823d033d827882865f694db401603ae05cb6ff60b9baeb0175a",
+      "status_declarations": [
+        "Status: Unconfirmed（文書に明記なし）"
+      ]
+    },
+    {
+      "path": "docs/references/retarget.md",
+      "snapshot": "snapshots/docs/references/retarget.md",
+      "sha256": "fb078aacd362f541818299c289f9ce04e7a06438c3f9be0b405ea2d54885469d",
+      "status_declarations": [
+        "Status: Unconfirmed（文書に明記なし）"
+      ]
+    },
+    {
+      "path": "docs/references/rigify.md",
+      "snapshot": "snapshots/docs/references/rigify.md",
+      "sha256": "22bf3cb253d767d294df00f116329c5a125e179391530e4d260cb9776f5e4c5e",
+      "status_declarations": [
+        "Status: Unconfirmed（文書に明記なし）"
+      ]
+    },
+    {
+      "path": "docs/references/roblox.md",
+      "snapshot": "snapshots/docs/references/roblox.md",
+      "sha256": "b8141d105d09c61c6552365917751acc6aa2da7d9201109076cab795b5846b5b",
+      "status_declarations": [
+        "Status: Unconfirmed（文書に明記なし）"
+      ]
+    },
+    {
+      "path": "docs/references/ui-layout-editor.md",
+      "snapshot": "snapshots/docs/references/ui-layout-editor.md",
+      "sha256": "e9a43f8670c4c2e10d8c15216e68ffeebfa53c59e0ef56f47a5b863d2db7dec9",
+      "status_declarations": [
+        "Status: Implemented（実装済み・Prototype）"
+      ]
+    },
+    {
+      "path": "docs/systems/README.md",
+      "snapshot": "snapshots/docs/systems/README.md",
+      "sha256": "c18e0f96cdc67508a1f0ae2ee79e0eadf63f33a95c61947275c81f442005b75d",
+      "status_declarations": [
+        "Status: Unconfirmed（文書に明記なし）"
+      ]
+    },
+    {
+      "path": "docs/systems/anomaly-interaction.md",
+      "snapshot": "snapshots/docs/systems/anomaly-interaction.md",
+      "sha256": "3d1de55155d10cfd7b7f7f1fac40decdcb5a022d0668b01f4041fc37a8ef9bed",
+      "status_declarations": [
+        "ステータス: Draft"
+      ]
+    },
+    {
+      "path": "docs/systems/current-implementation.md",
+      "snapshot": "snapshots/docs/systems/current-implementation.md",
+      "sha256": "84c5898543ba14030bbdea2517276c719684643b23ba623cbf9504c8f2dabc86",
+      "status_declarations": [
+        "Status: Implemented（実装棚卸し）"
+      ]
+    },
+    {
+      "path": "docs/systems/economy-and-progression.md",
+      "snapshot": "snapshots/docs/systems/economy-and-progression.md",
+      "sha256": "6ac8ec83ebba50a9599df03a65bee6452511f2a77acd1f1255c6eb284a114efd",
+      "status_declarations": [
+        "Status: Draft（草案）"
+      ]
+    },
+    {
+      "path": "docs/systems/editor-templates-and-runtime-maps.md",
+      "snapshot": "snapshots/docs/systems/editor-templates-and-runtime-maps.md",
+      "sha256": "c88916eaa16a68f01361957fa902f92b9fbd3a3ff35a7f18b045004ef093ae21",
+      "status_declarations": [
+        "Status: Draft（設計選択肢の整理。未実装）"
+      ]
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "snapshot": "snapshots/docs/systems/effect-components.md",
+      "sha256": "6f16f913181d24c29b7655cc3316effc939eb0ff4c16e09d746211b71d8e5f9a",
+      "status_declarations": [
+        "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）"
+      ]
+    },
+    {
+      "path": "docs/systems/game-loop.md",
+      "snapshot": "snapshots/docs/systems/game-loop.md",
+      "sha256": "f5dc0b033d576f736648b480cb211d0846f694fc4fa9d6e5bdb454043aabbe27",
+      "status_declarations": [
+        "Status: Draft（草案）"
+      ]
+    },
+    {
+      "path": "docs/systems/game-rules.md",
+      "snapshot": "snapshots/docs/systems/game-rules.md",
+      "sha256": "6120aa964e136e75a56e69f8c1badcb096bd4adc5189628fe48eae0393b58f6d",
+      "status_declarations": [
+        "Status: Draft（草案）"
+      ]
+    },
+    {
+      "path": "docs/systems/implementation-priorities.md",
+      "snapshot": "snapshots/docs/systems/implementation-priorities.md",
+      "sha256": "78a4abc211761c4ac8fbbf9e8543a1745be3f1571e1d9a75744ab104bec9471b",
+      "status_declarations": [
+        "Status: Draft（実装計画）"
+      ]
+    },
+    {
+      "path": "docs/systems/lobby-world-map.md",
+      "snapshot": "snapshots/docs/systems/lobby-world-map.md",
+      "sha256": "1610b5fa66910a7d88255ad3fab55f5925431e7ef44d7eea489c0240dbd4856c",
+      "status_declarations": [
+        "Status: Draft（草案）"
+      ]
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "snapshot": "snapshots/docs/systems/map-gimmick-ideas.md",
+      "sha256": "cbe9c8e1068a8b67c734e052ef8d736095fc0103ae0981c5c47543a1a6335071",
+      "status_declarations": [
+        "Status: Mixed（案ごとに下記）",
+        "Status: Prototype: Implemented（実装済みプロトタイプ）"
+      ]
+    },
+    {
+      "path": "docs/systems/observation-and-recognition.md",
+      "snapshot": "snapshots/docs/systems/observation-and-recognition.md",
+      "sha256": "5fde4001fe1646f066ec55be4485b45f09c54eb07b5b5909e3cfce24e67f1de6",
+      "status_declarations": [
+        "Status: Draft（草案）"
+      ]
+    },
+    {
+      "path": "docs/systems/project-structure.md",
+      "snapshot": "snapshots/docs/systems/project-structure.md",
+      "sha256": "561616272df38614ea69be15d7fdef673647eb87f32c5b63ad8a937e2a199a16",
+      "status_declarations": [
+        "Status: Designed（構成方針）"
+      ]
+    },
+    {
+      "path": "docs/systems/quests.md",
+      "snapshot": "snapshots/docs/systems/quests.md",
+      "sha256": "3f65d6a7a711950cc916a1408dace2619312eb0ee2441faad1b775a32a58df9c",
+      "status_declarations": [
+        "Status: Draft（草案）"
+      ]
+    },
+    {
+      "path": "docs/systems/skill-build.md",
+      "snapshot": "snapshots/docs/systems/skill-build.md",
+      "sha256": "b3b4abb8e24e3b2fa0810d4ff6f86199a4848b70cc4bb6886aef1f9e4f822ac3",
+      "status_declarations": [
+        "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）"
+      ]
+    },
+    {
+      "path": "docs/workboard.md",
+      "snapshot": "snapshots/docs/workboard.md",
+      "sha256": "8dd04b0c557a2fe47ce764ec39c5f8a7c718d2f2aaf07fca094895558c0026e7",
+      "status_declarations": [
+        "Status: Draft（運用開始前）"
+      ]
+    },
+    {
+      "path": "docs/world/README.md",
+      "snapshot": "snapshots/docs/world/README.md",
+      "sha256": "bfea3f1e92ea3ac5e4439b92f66ef06dbbab436af9d24dafb8d66b8a7ce533b7",
+      "status_declarations": [
+        "Status: Unconfirmed（文書に明記なし）"
+      ]
+    },
+    {
+      "path": "docs/world/anomaly-worldview.md",
+      "snapshot": "snapshots/docs/world/anomaly-worldview.md",
+      "sha256": "81287772d45664163a70fe60d9065bd3607724ac00cd2e029db64492c71d2991",
+      "status_declarations": [
+        "Status: Draft（草案）"
+      ]
+    },
+    {
+      "path": "docs/world/information-design.md",
+      "snapshot": "snapshots/docs/world/information-design.md",
+      "sha256": "207003be344ed6c1487d6ccec655354cefb7fb1f0b4e039e2e51a75fe68e7ac9",
+      "status_declarations": [
+        "Status: Draft（草案）"
+      ]
+    },
+    {
+      "path": "docs/world/setting.md",
+      "snapshot": "snapshots/docs/world/setting.md",
+      "sha256": "f878c2b1ed56979d3c8b58f66ee6aac263e9986cb4a65a9640477cc7c6577e62",
+      "status_declarations": [
+        "Status: Draft（草案）"
+      ]
+    },
+    {
+      "path": "work/visual-brainstorm/opencode/01-miw.html",
+      "snapshot": "reference/01-miw.html.txt",
+      "sha256": "27103c854b03781141479de8f03c08fbcf13bd7d03320fc12c0db0ad0ff9ff51",
+      "status_declarations": [
+        "Reference（形式参考。内容は流用しない）"
+      ]
+    },
+    {
+      "path": "work/visual-brainstorm/opencode/vis.css",
+      "snapshot": "reference/vis.css.txt",
+      "sha256": "7956b7452bc696e9ec522cbbcbfe4e1f0764a7a40e481d9243efe61bbe4eb017",
+      "status_declarations": [
+        "Reference（形式参考。内容は流用しない）"
+      ]
+    }
+  ]
+}

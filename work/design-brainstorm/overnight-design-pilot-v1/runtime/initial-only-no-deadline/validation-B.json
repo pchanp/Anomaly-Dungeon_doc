@@ -1,0 +1,476 @@
+{
+  "run_id": "overnight-design-pilot-v1",
+  "errors": [],
+  "review_items": [
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-001",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "個人インベントリからRunの預け簿へ品物の所在を移す『預け』と、預け簿から個人へ戻す『取り出し』の2操作を、即時解決のStateChangeとして書く。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-001",
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "Run情報HUDに『預け中の品がある』ことだけを個人へ提示する。内容・総量は個人にも出さない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-001",
+      "component": "InventoryBoundary",
+      "availability": "catalog",
+      "usage": "20枠・初期Secure Slot 4枠のサーバー権威境界を前提として参照するが、預け簿はこの境界の外側に置く。デバッグ付与のみという実装状況を無視しない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-001",
+      "component": "ItemLifecycle",
+      "availability": "catalog",
+      "usage": "正式な取得源・ItemStack・識別経路が未実装であることを前提とする。預け簿の所在管理自体が未実装範囲なので、requires_code を true とする。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-001",
+      "component": "RunDepositLedger（案名・proposed）",
+      "availability": "proposed",
+      "usage": "Run単位で個人とは別の所在を保持する『預け簿』。永続枠を一切消費しないことを前提条件とする。共通パックのcomponents.jsonには未掲載の新規提案であり、実装もカタログ追加も行わない。"
+    },
+    {
+      "type": "spec_conflict",
+      "candidate_id": "ROLE-B-001",
+      "source_path": "docs/systems/current-implementation.md",
+      "existing_rule": "Inventory／Secure Slotのサーバー権威データ境界。総20枠、初期Secure Slot 4枠。成功時は全持ち帰り対象を獲得物、失敗時はSecure Slot内だけを獲得物・それ以外を喪失物として分類する。",
+      "proposal_difference": "本候補はRun終了時に個人インベントリにもSecure Slotにも属さない第三の所在（預け簿）を置き、さらに8/32遷移でその中の品物を回収不能にする。",
+      "correction": "実装済みの分類処理自体は変更しない。預け簿の品物を、成功なら獲得物・失敗なら喪失物へ明示的に割り当てる分岐を1つ追加する必要がある。",
+      "reason_correctable": "獲得物と喪失物の分類はRun終了時に持ち帰れたかどうかに基づく既存ルールなので、所在のソースを1つ追加するだけで同じ判定規則のまま表現できる。",
+      "decision_needed": "預け簿の品物を成功時の獲得物に含めるか。8/32遷移で取り出せなかった品も成功扱いの獲得物として表示してよいか。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-001",
+      "note": "預け簿の枠数上限と、何をどこまで預けられるか（サイズ・重量・アイテム種別の制限）。上限を設けない場合の破綻も未検証"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-001",
+      "note": "Acquire経路が未確定。8/31には通常NPC・施設・依頼発行者が未実装であり、誰が配るかは候補側で創作しない"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-001",
+      "note": "取得した預け札が1枚だけか複数枚か。複数枚にすると容量の上限設計が先に必要になる"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-001",
+      "note": "成功時のリザルトで『預けたもの』を別枠で表示するかは未決"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-001",
+      "note": "切断・再接続時に預け簿の所属を個人間で引き継ぐかは未決。再接続とItemStackの仕様が決まるまで触らない（判断012と同じ留保）"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-001",
+      "note": "Player Anomaly中の制約が未決。判断010の未決事項『Player Anomaly時の利用制約』と同じ論点として扱う"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-001",
+      "note": "Run終了種別にMap／World Terminationが含まれる場合にも預け簿を破棄するかは未確認"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-001",
+      "note": "矛盾の確認範囲：効果7分類・保存境界・重ね掛け・博士Quest1.40倍補正と発生毎0.90倍減衰・8/32の帰還閉鎖とExposure2.4倍・Secure Slot枠数・Robux変換経路がIdeaであること（判断010・判断011・経済と成長）を照合した。Robux経路は採用済みにせず、本候補も触れていない"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-001",
+      "note": "未解決の前提が2点ある。既存資料にRun内別所在の定義がなく、A-002も未作成のため、本候補は帰還面が世界イベントを発火すると仮定して書いてある"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-004",
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "個人試聴の結果を個人提示として返す。共有BGMは変化させず、個人にだけ閉じる提示として書く。音源が無いため、内容の同定は行わない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-004",
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "共有BGMというWorldの共有状態をServerが更新する。Run単位の保存境界を持ち、Run終了で破棄する。個人表示からServerの共有状態を書かない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-004",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "共有へ出した時点で媒体が消費され、共有BGMの音源として固定される状態遷移。この遷移で個人側へ戻せなくする。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-004",
+      "component": "ArchiveMedia",
+      "availability": "catalog",
+      "usage": "検索UIとCRTと試聴の枠組み。媒体の実内容と共有BGMの選択は未実装という実装状況を前提とし、候補は未実装部分を埋めない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-004",
+      "component": "SoundInteraction",
+      "availability": "catalog",
+      "usage": "音の到達と遮蔽と同期という入力分類。候補はこれをアノマリーへの受理として扱わず、共有世界状態への変更として書く。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-004",
+      "note": "既有案との差分：map-gimmick-ideas.mdの『CDはListening Stationで個人試聴でき、Back Roomなどで再生すると店舗のShared Bgmを変えられる』という案は既に存在する。本候補は媒体を一本の運べる品として個体化し、個人試聴と共有提示の前に選ばせる点、および共有へ出した媒体をRun中に戻せない点が異なる。既有案へ本候補の媒体個体化を加えるかは採用判断とし、正本の書き換えはしない"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-004",
+      "note": "音の同定ができない。実在の作品名と製品名と店名と曲名は使わず、候補は名前と選択結果のみを扱う"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-004",
+      "note": "同じ媒体を二度試聴したときに内容が変化する場合の扱い。判断009にも既存案にも音の実体に関する記載が無いため、二度目はどうなるかは未確定として扱う"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-004",
+      "note": "共有へ出した媒体を上書きで別の音源に置き換えられるか、元へ戻せるかも未確定。戻せる場合は公開が撤回できる設計になり、戻せない場合は本候補の不可逆性が核になる"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-004",
+      "note": "同時に2人が共有へ出した場合の選択規則が未定。先着順か投票かサーバーのキューかを候補側で決めない"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-004",
+      "note": "離線時の扱い。試聴機の個別再生と共有の再生履歴はRun内で閉じるが、再接続時に何を復元するかは未決。判断012と同じ留保"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-004",
+      "note": "AnomalyInteractionは対象外としたが、共通Anomaly Systemが導入された場合はアイテム操作の無効化やアイテムと認識の干渉と競合しうる。共通の未決であり候補側で決めない"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-004",
+      "note": "衝突の確認範囲：判断010の枠強化、判断011のレアルート3系統とItem ID未決、判断014から016の博士Quest補正、判断021とeffect-componentsの効果分類と保存境界、map-gimmick-ideasの個人試聴と共有BGMの独立、判断009の配置と既存Prompt非改変を照合した。Robux変換経路はIdeaとして扱った。矛盾は見つからなかったため conflicts は空配列にしてある"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-004",
+      "note": "本候補は世界の意味の完成形を持たない。メディアが誰の手元から生まれ、誰が収納していたのかを断定しない"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-013",
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "通常存在しないRun中のSecure Slot入出庫という操作を、1操作だけ許可する。適用対象をこの操作に限定し、無制限の受け皿にしない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-013",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "操作の対価として対象個人のAnomaly Exposureを1段上げる。段の単位そのものは既存仕様にないため、候補側で確定しない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-013",
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "残り操作が1回だけであることを個人HUDへ提示する。使用済みか未使用かのみを示し、他者へは共有しない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-013",
+      "component": "InventoryBoundary",
+      "availability": "catalog",
+      "usage": "20枠と初期Secure Slot 4枠のサーバー権威境界。枠数を増やさず、Run中の操作だけを追加する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-013",
+      "component": "SkillActivation",
+      "availability": "catalog",
+      "usage": "既存の3スキルと4枠UIの前提。ビルド取得と強化は未実装であり、本候補はこれを前提にしない。"
+    },
+    {
+      "type": "spec_conflict",
+      "candidate_id": "ROLE-B-013",
+      "source_path": "docs/decisions/011-real-route-acquisition.md",
+      "existing_rule": "汎用スキルレアルート品（博士の過去の研究成果から抽出した汎用スキルの獲得と強化）、スロットレアルート品（Secure Conversion と Capacity Expansion）、およびアノマリー固有の交換品（対応する専用スキル）の3系統を定義する。",
+      "proposal_difference": "枠数を増やさずRun中の入出庫タイミングだけを可能にする消費品を、Secure Slotの運用に作用的レアルート品として置こうとする。Secure ConversionやCapacity Expansionの消費品ではない。",
+      "correction": "判断011の3系統自体は変更しない。本件をスロット系の別系統として追記するか、新しい系統を立てるかは採用判断とする。枠数を増やさず永続強化の枠を消費しないため、判断010が除外している別種のスロット強化には該当しないと判断している。",
+      "reason_correctable": "判断010が列挙から外しているのは枠数を増やす永続強化の追加であり、Run内の一時的な運用緩和ではない。効果の目的が枠数ではなくタイミングであるため、スロット系の文脈に置く説明が成立する。",
+      "decision_needed": "本件を判断011へ追記するか、新しい分類を立てるか。どちらを選ぶかによって配布経路と消費内容の記述が変わる。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-013",
+      "note": "Exposureの1段という単位そのものを設計していない。既存仕様に段という表現は無い。段と書いたのは意図的な近似であり、実装時には単位と上限を決める必要がある"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-013",
+      "note": "残り操作回数1回の初期値と、対象を同一品だけとするか枠内の全品とするかは未確定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-013",
+      "note": "Run中の入出庫操作の入口が専用端末か所持時の操作かは未確定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-013",
+      "note": "/dev/nullなど結果傍受系のEffectとの評価順が未定義。候補側で先に評価すると決めない"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-013",
+      "note": "判断019はPlayer AnomalyのRuntime満了時を通常Returnと同じ帰還処理とするが、current-implementation.mdには暫定の失敗処理が残る。この差が残るため、異常性へ近づく副次効果を数値で説明しきれない部分がある"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-013",
+      "note": "通常プレイヤー同士のHP80%下限が変わると、この札で1枠を守る判断の重みが変わる。数値は候補側で計算しない"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-013",
+      "note": "Secure Slotへの入出庫時点は判断010の未決事項。本候補はその1つの解として提示するが、Run中の入出庫を認めない方針などを否定するものではない"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-013",
+      "note": "衝突の確認範囲：判断010と011のレアルート定義と枠強化の除外、判断019とcurrent-implementation.mdの満了処理の差、判断021とeffect-componentsのRuleOverrideの記述要求、game-rules.mdのExposureの位置づけ、8/32のExposure取得速度2.4倍、博士Questの1.40倍補正と発生毎0.90倍減衰を照合した。Robux変換経路はIdeaとして扱い、本候補はRobux経路を設計していない"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-013",
+      "note": "全マップ共通として書いたが、特定のマップでの配置や入手を保証しない。TSUTAYAと8/31のどちらでも成立し得るという主張にとどまる"
+    },
+    {
+      "type": "visual_check_pending_or_unavailable",
+      "role": "B",
+      "note": "このセッションではブラウザを使用できないため、実ブラウザでのHTMLおよびSVGの目視確認を行っていない。SVGのviewBox・role=img・aria-label・XML構文はファイルの記述として確認したが、目視確認済みとは扱わない。共通パックのvalidation-report.mdも同様に目視確認 Unconfirmed と記録している。管理側での目視確認をお願いする。",
+      "missing_ids": [
+        "ROLE-B-001",
+        "ROLE-B-004",
+        "ROLE-B-013"
+      ]
+    },
+    {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-B-001",
+      "target_id": "ROLE-A-002",
+      "required_traits": [
+        "マップ側から帰還面の開閉が起きたことを世界イベントとして発火できる"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-B-001",
+      "target_id": "ROLE-A-002",
+      "required_traits": [
+        "マップ側から帰還面の開閉が起きたことを世界イベントとして発火できる"
+      ],
+      "reason": "peer-snapshotsが本セッションに配布されておらず、A-002の本文とprovides_traitsを確認できない。予約IDが存在することだけを根拠に解決扱いにしない。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-B-001",
+      "target_id": null,
+      "required_traits": [
+        "Run内に個人インベントリともSecure Slotとも別の所在を保持するサーバー権威の簿を定義する資料"
+      ],
+      "reason": "既存MDは永続枠（Secure Conversion / Capacity Expansion）とデバッグ付与しか扱っておらず、Run内の別所在を規定する文言が存在しない。判断010と判断011への新設が必要になるが、候補側では正本を書き換えない。",
+      "adoption_blocker": true
+    },
+    {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-B-004",
+      "target_id": "ROLE-A-005",
+      "required_traits": [
+        "メディアの選択結果を個人提示へ変換し、選択結果を世界状態から分離して扱えるNPCまたはギミック"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-B-004",
+      "target_id": "ROLE-A-005",
+      "required_traits": [
+        "メディアの選択結果を個人提示へ変換し、選択結果を世界状態から分離して扱えるNPCまたはギミック"
+      ],
+      "reason": "peer-snapshotsが本セッションに配布されておらず、A-005の本文とprovides_traitsを確認できない。予約枠の存在だけを根拠に解決扱いにしない。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-B-004",
+      "target_id": null,
+      "required_traits": [
+        "個人入力からServerの共有BGM差し替えを検証する経路"
+      ],
+      "reason": "既存MDは共有BGMがServer Stateで管理されることまでしか記されておらず、どの入力から差し替えられるかの権限規定がない。共有BGMの選択UIは未実装であり、候補側で実装経路を確定しない。",
+      "adoption_blocker": true
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-B-013",
+      "target_id": null,
+      "required_traits": [
+        "アイテム操作の入力について、どのEffectを先に評価するかを規定する共通規則"
+      ],
+      "reason": "dev-null.mdはアイテム操作の無効化を候補に挙げるが、anomaly-interaction.mdでも傍受系と通常結果の優先順位は未決事項のままである。優先順位を規則として置けないため、採用側の判断として残す。",
+      "adoption_blocker": true
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-B-013",
+      "target_id": null,
+      "required_traits": [
+        "Anomaly Exposureの単位（段階か絶対加算か）と上限を定義する資料"
+      ],
+      "reason": "既存MDはExposureが閾値へ達すると異常化すると書くが、段階表現と単位を定めていない。候補側で1段の意味を決めれば実装仕様を創作することになるため、未決として残す。",
+      "adoption_blocker": true
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-B-013",
+      "target_id": null,
+      "required_traits": [
+        "判断011のレアルート品分類に本件を置くか、新しい系統を立てるかの判断"
+      ],
+      "reason": "判断011はスロットレアルート品を Secure Conversion と Capacity Expansion の消費品と定義しており、本件はそのどちらにも当たらない。予約されているのは担当IDのみで、系統定義の更新は正本の判断事項として残す。",
+      "adoption_blocker": false
+    }
+  ],
+  "candidate_summaries": [
+    {
+      "candidate_id": "ROLE-B-001",
+      "title": "預け札（帰還面脇のRun枠外置き場）— 作業用見出し",
+      "primary_map": "8/31",
+      "category": "Item",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "20枠とSecure Slotの枠数境界、リザルト分類は既にサーバー権威で動いているため、既存部品を壊さずに足せる。しかし物品の所在そのものをサーバーで持つ層が未実装（デバッグ付与のみ）で、預け簿は新しい所在データ型と移管処理と取得源を要する。演出やUIの拡張は小さいので大ではない。現行2マップの最小Runへの組み込みは正式仕様側の判断であり、候補だけでは確定しない。",
+        "implementation_steps": [
+          "InventoryServiceの枠データに、Run内で消える第三の所在を1つ持たせる。永続枠は増やさない",
+          "8/31の既存帰還面脇に、預け操作のプロンプト1個と取り出し操作のプロンプト1個を置く。地形は増やさない",
+          "Server側で帰還面が既に開いているかだけを条件に、預けと取り出しを検証して即時に所在を移す",
+          "Run終了時に預け簿を破棄し、破棄済みの品を既存のリザルト獲得物と喪失物の分類へ割り当てる。分類処理自体は変えない",
+          "HUDに『預け中の品がある』印だけを出す。個数と内容は出さない",
+          "Play Soloの1人セッションで、DAY中は預けられないこと、8/32遷移後に取り出せないこと、死亡時に全品が喪失物になることを確認する。複数人と切断と再接続は今回確認しない"
+        ],
+        "assumed_existing_parts": [
+          "InventoryService（20枠・初期Secure Slot 4枠・枠制約・獲得と喪失の分類）",
+          "RunService.FinishとRunOutcomesの終了種別集約（成功・未達帰還・死亡・切断・8/32のRun Lifetime満了）",
+          "August31Serviceの DAY→EVENING→NIGHT→AUG_32 進行と ExitUnlocked による帰還面の開閉",
+          "クライアントRunControllerの既存Run情報HUD",
+          "マップ生成時の配置point規約（座標の選定自体は候補では確定しない）"
+        ]
+      },
+      "connection_tags": [
+        "Item",
+        "Environment"
+      ],
+      "conflict_count": 1,
+      "unresolved_count": 2
+    },
+    {
+      "candidate_id": "ROLE-B-004",
+      "title": "未整理ケースの1本（個人試聴か共有BGMか）— 作業用見出し",
+      "primary_map": "廃TSUTAYA",
+      "category": "Item",
+      "design_status": "Draft",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "試聴機とCRTと共有BGMの枠組み、そしてServer Stateで管理される共有音は既に実装済みで、Archive Selection UIも名前と選択結果まで存在する。追加が必要なのは個人所持品から共有音を更新する1本の入力と公開不可の消費、そして提示UIの区別だけなので中程度。音の実体が未実装であるため試作では音の入れ替えを確認できず、名前と選択結果の表示変化だけを検証し実音の質には触れない。",
+        "implementation_steps": [
+          "既存のデバッグ付与で媒体1本を渡せるようにする。正式な取得源は未実装なのでデバッグで代用する",
+          "既存の共有BGM（Server Stateで管理されているもの）に対してServer管理の一時差し替え口を設ける。固定音源のループはそのまま残す",
+          "対象Roomの共有再生経路で個人所持の媒体を提示すると、Serverが所持と経路とRun参加を検証してから差し替える",
+          "差し替え確定と同時に個人側の媒体を除去し、Run中は戻せないようにする",
+          "試聴機での個人試聴は既存のPreviewDurationのまま動かし、共有音には触れないことを1人で確認する",
+          "Play Soloの1人セッションで、個人試聴が共有BGMを変えないこと、提示で共有音が変わること、提示後に媒体が戻せないことを確認する。複数人の同時提示と切断は今回確認しない"
+        ],
+        "assumed_existing_parts": [
+          "TsutayaGenerator（7ルームと通路。地形は増やさない）",
+          "TsutayaArchiveServiceとArchiveSelectionController（棚の検索UIと名前および選択結果）",
+          "試聴機3台とPreviewDurationによる個人試聴の自動終了",
+          "CRT4台とチャンネルの切り替え",
+          "マップモデル直下に保持されServer Stateで管理される共有BGMのSound",
+          "InventoryServiceの枠境界（枠数は増やさない）"
+        ]
+      },
+      "connection_tags": [
+        "Item",
+        "Sound",
+        "Interface"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 2
+    },
+    {
+      "candidate_id": "ROLE-B-013",
+      "title": "入出庫札（安全を1段買うたび異常性に近づく）— 作業用見出し",
+      "primary_map": "全マップ共通",
+      "category": "Item",
+      "design_status": "Draft",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "20枠と初期Secure Slot 4枠の枠数境界とRun終了時の分類は既にサーバー権威で動く。追加はRun中に枠を移動させる操作1本と、対価としてのExposure更新1本と、残り回数の表示だけで、UIの拡張は小さい。正式なInventoryとItemStackが未実装で取得源がないため、そこはデバッグ付与で代用する前提になる。効果の絶対的な強さは未設計なので、大とも小とも断定できない。",
+        "implementation_steps": [
+          "デバッグ付与で入出庫札1個を持たせる。正式な取得源は未実装なのでデバッグで代用する",
+          "InventoryServiceにRun中の枠移動操作を1つ足す。枠数の増加とSecure Conversionの処理は変更しない",
+          "その操作の残り回数を個人単位に1回だけ保持し、操作成立時にExposureの個人値を更新する",
+          "HUDに残り操作が1回か0回かの印だけを出す。段や内訳は出さない",
+          "Play Soloの1人セッションで、操作が成立すること、枠数が変わらないこと、Exposureの表示が更新されること、残り回数が1回だけであることを確認する",
+          "複数人、切断と再接続、異常化と満了の扱いは今回確認しない"
+        ],
+        "assumed_existing_parts": [
+          "InventoryService（20枠・初期Secure Slot 4枠・枠制約・獲得と喪失の分類）",
+          "SecureSlotCapacity属性（拡張値の受け口。既存の値は使わない）",
+          "ExposureServiceとAnomaly ExposureのプレイヤーAttribute",
+          "RunService.FinishとRunOutcomesの終了種別集約",
+          "クライアントRunControllerの既存Run情報HUDと既存のExposure表示"
+        ]
+      },
+      "connection_tags": [
+        "Item",
+        "Interface",
+        "Rule"
+      ],
+      "conflict_count": 1,
+      "unresolved_count": 3
+    }
+  ],
+  "counts": {
+    "B:8/31": 1,
+    "B:廃TSUTAYA": 1,
+    "B:全マップ共通": 1
+  },
+  "visual_render_verified": false,
+  "worldview_content_verified": false,
+  "mechanical_validation": "passed"
+}

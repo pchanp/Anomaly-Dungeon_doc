@@ -1,0 +1,21 @@
+{
+  "status": "completed_with_remaining_issue",
+  "session_id": "cmut7mrmt2kkkoi5cwr2luk9x",
+  "model": "opencode/space-bunny-free",
+  "candidate_count": 0,
+  "checks": {
+    "initial_native_read_write": "passed",
+    "stop": "passed",
+    "resume_without_inherited_handoff_env": "passed",
+    "conversation_memory_after_resume": "passed",
+    "same_opencode_session_id": "passed",
+    "native_write_after_standard_resume": "permission_pending",
+    "explicit_permission_direct_happier_opencode_resume": "failed_missing_session_attach_secret",
+    "write_isolation_enforcement": "not_tested"
+  },
+  "probe_content": "READ_CHECK=violet-742\n",
+  "resumed_file_exists": false,
+  "session_active_after_final_attempt": false,
+  "deadline_watch_stopped": true,
+  "finished_at": "2026-10-04T02:42:13.999603+00:00"
+}

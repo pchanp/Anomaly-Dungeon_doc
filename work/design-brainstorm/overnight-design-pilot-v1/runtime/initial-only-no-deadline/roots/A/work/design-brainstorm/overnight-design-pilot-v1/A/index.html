@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ROLE-A 設計候補一覧 — overnight-design-pilot-v1（試走3件）</title>
+  <link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+  <header class="top">
+    <p class="sub">overnight-design-pilot-v1 ／ ROLE=A ／ PILOT_ONLY ／ 状態: awaiting_pilot_review</p>
+    <h1>ROLE-A 設計候補一覧（試走3件）</h1>
+    <p>ギミックイベントと通常NPC、そしてイベントから生まれる通常モブの3件です。設計候補であり、正本の仕様変更、実装、採用は行っていません。</p>
+    <div class="badges"><span class="badge hyp">design_status: Draft / Idea</span><span class="badge">review_status: unreviewed</span><span class="badge unknown">実表示・機械検証は管理側の担当</span><span class="badge">完了 3件 / 予約 15件</span></div>
+  </header>
+
+  <section id="list">
+    <h2>作成済みの候補</h2>
+    <table><tbody>
+      <tr><th>ROLE-A-001</th><td><a href="ROLE-A-001.html">水位を読む人 — DAMの記録役</a><br>8/31（マップ固有）／ GimmickEvent ／ design_status: Draft ／ requires_code: true ／ 試作コスト: 中 ／ conflicts: 3件 ／ unresolved_refs: 3件</td></tr>
+      <tr><th>ROLE-A-004</th><td><a href="ROLE-A-004.html">返却待ちの一本 — 廃TSUTAYAの店頭</a><br>廃TSUTAYA（マップ固有）／ NPC ／ design_status: Draft ／ requires_code: true ／ 試作コスト: 中 ／ conflicts: 2件 ／ unresolved_refs: 3件</td></tr>
+      <tr><th>ROLE-A-013</th><td><a href="ROLE-A-013.html">開いた通路の個体 — イベント由来の通常モブ</a><br>全マップ共通（分類: 全マップ共通）／ MobEnemy ／ design_status: Idea ／ requires_code: true ／ 試作コスト: 中 ／ conflicts: 2件 ／ unresolved_refs: 3件</td></tr>
+    </tbody></table>
+    <div class="note">3件は担当Aの試走枠（001、004、013）です。013はイベントから生まれる通常モブの候補で、発生条件、上限、非戦闘対応、退場条件、Anomaly Entityとの差をmob_contractに記載しています。</div>
+  </section>
+
+  <section id="reserved">
+    <h2>予約済みだが未作成のID</h2>
+    <p>以下のIDは予約枠であり、内容は未指定です。作成していないためリンクは置いていません。ファイルが増えても立项を意味しません。</p>
+    <table><tbody>
+      <tr><th>8/31</th><td>ROLE-A-002（未作成）、ROLE-A-003（未作成）</td></tr>
+      <tr><th>廃TSUTAYA</th><td>ROLE-A-005（未作成）、ROLE-A-006（未作成）</td></tr>
+      <tr><th>SEKIGAHARA</th><td>ROLE-A-007（未作成）、ROLE-A-008（未作成）、ROLE-A-009（未作成）</td></tr>
+      <tr><th>研究所</th><td>ROLE-A-010（未作成）、ROLE-A-011（未作成）、ROLE-A-012（未作成）</td></tr>
+      <tr><th>全マップ共通</th><td>ROLE-A-014（未作成）、ROLE-A-015（未作成）</td></tr>
+    </tbody></table>
+    <p class="sub">担当BとCの候補（各15件）は管理側から配布された peer-snapshots がないため、本ページからはリンクしていません。各候補の refs は要求する性質の語彙だけを記し、相手の内容を創作していません。</p>
+  </section>
+
+  <section id="status">
+    <h2>未確認事項</h2>
+    <p>実ブラウザでのHTMLとSVGの表示確認は未実施です（担当セッションではブラウザを使用していない）。validate.py による pack-only 検証と --stage pilot 検証も未実施で、管理側の担当です。日時・モデル・費用は、観測できたものだけを記録し、観測できなかったものは null としました。詳細は handoff.md を参照してください。</p>
+    <p class="sub"><a href="handoff.md">handoff.md（記載された要約はページ内に転記）</a></p>
+  </section>
+
+  <footer>overnight-design-pilot-v1 ／ ROLE=A ／ 試走3件 ／ 採用判断は行っていない。</footer>
+</main>
+</body>
+</html>

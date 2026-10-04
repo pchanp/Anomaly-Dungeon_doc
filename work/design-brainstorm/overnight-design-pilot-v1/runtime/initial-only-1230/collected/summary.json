@@ -1,0 +1,141 @@
+{
+  "collected_at": "2026-10-04T04:10:36.755867+00:00",
+  "completed_candidates": 0,
+  "expected_candidates": 9,
+  "stop_reason": "deadline_2026-10-04T12:30:00+09:00",
+  "roles": {
+    "A": {
+      "files": [
+        {
+          "file": "ROLE-A-001.json",
+          "bytes": 30879,
+          "sha256": "4643429fc62e1c947adc1343d4f5d8a2cfc3f047a4b2fd8be0b8a9bee55591bb"
+        },
+        {
+          "file": "board.css",
+          "bytes": 2115,
+          "sha256": "b60a8131daca7a7868f34b8293106d810d218194a4a304fcd1abd0f47e6e0a31"
+        },
+        {
+          "file": "events.jsonl",
+          "bytes": 3129,
+          "sha256": "762beac935a68a5e596fdbed1e14be5889240aa8e59e9929351be141cd2442ad"
+        }
+      ],
+      "candidates": [
+        {
+          "file": "ROLE-A-001.json",
+          "json_valid": false,
+          "error": "Expecting ',' delimiter: line 336 column 103 (char 13654)",
+          "line": 336,
+          "column": 103,
+          "html_exists": false
+        }
+      ],
+      "completed_pairs": 0,
+      "validation_exit": 2,
+      "errors": [
+        "input/pack problem: [Errno 2] No such file or directory: '/Users/saitouyouwataru/Documents/Git/Anomaly-Dungeon_doc/work/design-brainstorm/overnight-design-pilot-v1/runtime/initial-only-1230/roots/A/work/design-brainstorm/overnight-design-pilot-v1/A/manifest.json'"
+      ],
+      "started_at": "2026-10-04T03:19:54.836640+00:00",
+      "final_status": false,
+      "observation": {
+        "seconds_start_to_deadline": 605.2,
+        "completion_time": null,
+        "context_used_last_observed": 178712,
+        "context_used_is_not_cumulative_billed_tokens": true,
+        "codesearch_calls_in_recent_history": 1,
+        "history_limit": 100
+      }
+    },
+    "B": {
+      "files": [
+        {
+          "file": "ROLE-B-001.json",
+          "bytes": 24798,
+          "sha256": "6be507360d4708d86900d76f57dfcf0e64dd0da86cfd40da45347e9b33a13e21"
+        },
+        {
+          "file": "board.css",
+          "bytes": 2115,
+          "sha256": "b60a8131daca7a7868f34b8293106d810d218194a4a304fcd1abd0f47e6e0a31"
+        },
+        {
+          "file": "events.jsonl",
+          "bytes": 1087,
+          "sha256": "6c1e7d577dc627bf8ac534a6351406920419d5a4dac64b544cecfb51fea88984"
+        }
+      ],
+      "candidates": [
+        {
+          "file": "ROLE-B-001.json",
+          "json_valid": true,
+          "id": "ROLE-B-001",
+          "title": "保留札（仮題）: Run内だけで通常枠1つをSecure枠へ移す消費可能 explorations品",
+          "map": "8/31",
+          "requires_code": true,
+          "html_exists": false
+        }
+      ],
+      "completed_pairs": 0,
+      "validation_exit": 2,
+      "errors": [
+        "input/pack problem: [Errno 2] No such file or directory: '/Users/saitouyouwataru/Documents/Git/Anomaly-Dungeon_doc/work/design-brainstorm/overnight-design-pilot-v1/runtime/initial-only-1230/roots/B/work/design-brainstorm/overnight-design-pilot-v1/B/manifest.json'"
+      ],
+      "started_at": "2026-10-04T03:20:01.280534+00:00",
+      "final_status": false,
+      "observation": {
+        "seconds_start_to_deadline": 598.7,
+        "completion_time": null,
+        "context_used_last_observed": 161743,
+        "context_used_is_not_cumulative_billed_tokens": true,
+        "codesearch_calls_in_recent_history": 0,
+        "history_limit": 100
+      }
+    },
+    "C": {
+      "files": [
+        {
+          "file": "ROLE-C-001.json",
+          "bytes": 38665,
+          "sha256": "41fe4af709a44535309634d03560726dc31f92035713681c3282f8c7160b9f54"
+        },
+        {
+          "file": "board.css",
+          "bytes": 2115,
+          "sha256": "b60a8131daca7a7868f34b8293106d810d218194a4a304fcd1abd0f47e6e0a31"
+        },
+        {
+          "file": "events.jsonl",
+          "bytes": 1586,
+          "sha256": "474128b50e1caefdf2ff63382dcbf06e046475ebc279fcaeff1b266af7180d24"
+        }
+      ],
+      "candidates": [
+        {
+          "file": "ROLE-C-001.json",
+          "json_valid": false,
+          "error": "Expecting ',' delimiter: line 128 column 46 (char 7428)",
+          "line": 128,
+          "column": 46,
+          "html_exists": false
+        }
+      ],
+      "completed_pairs": 0,
+      "validation_exit": 2,
+      "errors": [
+        "input/pack problem: [Errno 2] No such file or directory: '/Users/saitouyouwataru/Documents/Git/Anomaly-Dungeon_doc/work/design-brainstorm/overnight-design-pilot-v1/runtime/initial-only-1230/roots/C/work/design-brainstorm/overnight-design-pilot-v1/C/manifest.json'"
+      ],
+      "started_at": "2026-10-04T03:20:06.671572+00:00",
+      "final_status": false,
+      "observation": {
+        "seconds_start_to_deadline": 593.3,
+        "completion_time": null,
+        "context_used_last_observed": 151555,
+        "context_used_is_not_cumulative_billed_tokens": true,
+        "codesearch_calls_in_recent_history": 1,
+        "history_limit": 100
+      }
+    }
+  }
+}

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ROLE=B 設計候補一覧 — overnight-design-pilot-v1（試走3件）</title>
+  <link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+  <header class="top">
+    <p class="sub">overnight-design-pilot-v1 ／ ROLE=B ／ モード PILOT_ONLY ／ 状態: 試走3件のみ（本番12件へ進んでいない）</p>
+    <h1>ROLE=B アイテム — 設計候補一覧（001 / 004 / 013）</h1>
+    <p>Bの予約IDは001〜015の15件。PILOT_ONLYのため今回は001・004・013の3件だけを作成した。完成件数に数えるのはHTMLとJSONの組のみであり、この一覧・manifest・CSS・進捗・ログ・handoffは件数に含めない。</p>
+    <div class="badges"><span class="badge hyp">Idea 1件 / Draft 2件</span><span class="badge">review_status: unreviewed</span><span class="badge unknown">requires_code: true（3件）</span><span class="badge unknown">実ブラウザ確認: unavailable</span></div>
+    <p class="sub">候補名は作業用の見出しであり、正式なSystem IDやゲーム内名称ではない。採用・実装・コミットは行っていない。</p>
+  </header>
+
+  <section>
+    <h2>作成した3件</h2>
+    <table><tbody>
+      <tr>
+        <th>ROLE-B-001</th>
+        <td>
+          <p><strong>預け札（帰還面脇のRun枠外置き場）— 作業用見出し</strong> ／ 8/31 ／ マップ固有 ／ Item ／ <strong>Idea</strong> ／ 通常探索品 ／ requires_code: true ／ 試作コスト: 中</p>
+          <p>帰還面が既に開いている時間帯にだけ機能する置き場。預けた品はRun中には使えず、8/32へ進むと回収不能。Secure Slotが「死んでも残る枠」なら本候補は「生還して回収できたときだけ効く枠」。conflicts: 1（current-implementation.md の獲得物／喪失物分類）／ unresolved_refs: 2（うち adoption_blocker 1）</p>
+          <p><a href="ROLE-B-001.html">ROLE-B-001.html を開く</a> ／ <a href="ROLE-B-001.json">ROLE-B-001.json</a></p>
+        </td>
+      </tr>
+      <tr>
+        <th>ROLE-B-004</th>
+        <td>
+          <p><strong>未整理ケースの1本（個人試聴か共有BGMか）— 作業用見出し</strong> ／ 廃TSUTAYA ／ マップ固有 ／ Item ／ <strong>Draft</strong> ／ item_kind 未確定 ／ requires_code: true ／ 試作コスト: 中</p>
+          <p>再生を1本の「運べる品」として個体化。試聴なら個人提示だけ、共有再生経路へ提示するとServerの共有BGMが差替わり、その媒体はRun中に戻せなくなる。conflicts: 0（照合範囲は候補本文に記す）／ unresolved_refs: 2（うち adoption_blocker 1）</p>
+          <p><a href="ROLE-B-004.html">ROLE-B-004.html を開く</a> ／ <a href="ROLE-B-004.json">ROLE-B-004.json</a></p>
+        </td>
+      </tr>
+      <tr>
+        <th>ROLE-B-013</th>
+        <td>
+          <p><strong>入出庫札（安全を1段買うたび異常性に近づく）— 作業用見出し</strong> ／ 全マップ共通 ／ 全マップ共通 ／ Item ／ <strong>Draft</strong> ／ スロットレアルート品 ／ requires_code: true ／ 試作コスト: 中</p>
+          <p>枠数は増やさずにRun中のSecure Slot入出庫を1回だけ許可し、対価としてExposureを1段上げる。判断010の未決「Secure Slotへの入出庫時点」に対する1つの解。conflicts: 1（判断011の3系統定義）／ unresolved_refs: 3（うち adoption_blocker 2）／ refs: 空</p>
+          <p><a href="ROLE-B-013.html">ROLE-B-013.html を開く</a> ／ <a href="ROLE-B-013.json">ROLE-B-013.json</a></p>
+        </td>
+      </tr>
+    </tbody></table>
+  </section>
+
+  <section>
+    <h2>未作成の予約枠（12件）</h2>
+    <p>下記は予約されたIDであり、内容が作成されたものではない。リンクは置かず、文字としてのみ示す。存在しないファイルへリンクしないため、リンクなしのIDとして扱う。</p>
+    <table><tbody>
+      <tr><th>8/31（マップ固有）</th><td>ROLE-B-002 ／ ROLE-B-003 — 未作成</td></tr>
+      <tr><th>廃TSUTAYA（マップ固有）</th><td>ROLE-B-005 ／ ROLE-B-006 — 未作成</td></tr>
+      <tr><th>SEKIGAHARA（マップ固有）</th><td>ROLE-B-007 ／ ROLE-B-008 ／ ROLE-B-009 — 未作成</td></tr>
+      <tr><th>研究所（マップ固有）</th><td>ROLE-B-010 ／ ROLE-B-011 ／ ROLE-B-012 — 未作成</td></tr>
+      <tr><th>全マップ共通</th><td>ROLE-B-014 ／ ROLE-B-015 — 未作成</td></tr>
+    </tbody></table>
+  </section>
+
+  <section>
+    <h2>この一覧の意味と制限</h2>
+    <ul>
+      <li>ROLE-A-002 と ROLE-A-005 は予約IDとしてのみ参照した。peer-snapshots が配布されていないため、相手の本文や provides_traits を確認しておらず、解決扱いにしていない。</li>
+      <li>3件はいずれも HTML と JSON の組で1件として数える。index.html / manifest.json / board.css / progress.json / events.jsonl / handoff.md は件数に含めない。</li>
+      <li>機械検証（scripts/validate.py）は管理側の担当である。このセッションでは実行しておらず、終了コードも参照結果もない。</li>
+      <li>実ブラウザでのHTML／SVG目視確認は行っていない。visual_check は unavailable として進捗に記録した。</li>
+      <li>採用判断・実装・コミットはいずれも行っていない。RUN_ID、モード、時刻の実測値、費用、モデルは未確認であり null のまま残した。</li>
+    </ul>
+  </section>
+
+  <footer>overnight-design-pilot-v1 ／ ROLE=B ／ 試走3件の索引。generated files: index.html, manifest.json, board.css, progress.json, events.jsonl, handoff.md は候補件数に含めない。</footer>
+</main>
+</body>
+</html>

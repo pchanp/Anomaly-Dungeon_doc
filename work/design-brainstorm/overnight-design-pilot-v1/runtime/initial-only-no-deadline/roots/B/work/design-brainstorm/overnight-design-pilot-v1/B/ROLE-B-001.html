@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ROLE-B-001 預け札（帰還面脇のRun枠外置き場）— 作業用見出し</title>
+  <link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+  <header class="top">
+    <p class="sub">overnight-design-pilot-v1 ／ ROLE=B ／ 001 ／ 主対象マップ: 8/31（使用文脈。限定入手・限定使用を確定するものではない）</p>
+    <h1>ROLE-B-001 預け札（帰還面脇のRun枠外置き場）— 作業用見出し</h1>
+    <p>帰還面が既に開いている時間帯にだけ、「成功すれば取り出せるが失敗すれば全部消える置き場」をRunの中に一段足す案。Secure Slotが『死んでも残る枠』なのに対し、本案は『生還して回収できたときだけ効く枠』にする。鍵でも数値上昇品でもなく、置き場と回収時刻そのものを判断材料にする。</p>
+    <div class="badges"><span class="badge hyp">Idea</span><span class="badge">unreviewed</span><span class="badge">マップ固有</span><span class="badge">Item / 通常探索品</span><span class="badge unknown">requires_code: true</span><span class="badge unknown">試作コスト: 中</span><span class="badge unknown">未解決の前提2点</span></div>
+    <p class="sub">作業用の見出しであり、正式なSystem IDやゲーム内名称に昇格させない。候補自体は設計候補で、採用・実装・Studio確認は一切行っていない。</p>
+    <nav class="nav"><a href="index.html">← B候補一覧（index.html）</a></nav>
+  </header>
+
+  <section id="sources">
+    <h2>(a) 根拠文書と出典Status</h2>
+    <table><tbody>
+      <tr><th>文書 / 節</th><td>docs/systems/economy-and-progression.md ／「Secure Conversion（確定）」</td></tr>
+      <tr><th>出典Status</th><td>Status: Draft（草案）</td></tr>
+      <tr><th>根拠となる記述</th><td>都市ロビーのアノマリー研究室でレアルート品を消費し、通常スロット1枠をSecure Slotへ変換する。総インベントリ枠数は増えず、失敗時の保持判定は変換後のSecure Slotへ適用される。</td></tr>
+    </tbody></table>
+    <table><tbody>
+      <tr><th>文書 / 節</th><td>docs/systems/economy-and-progression.md ／「入出庫時点は未決定」</td></tr>
+      <tr><th>出典Status</th><td>Status: Draft（草案）</td></tr>
+      <tr><th>根拠となる記述</th><td>交換レート、強化上限、入出庫時点は未決定である。既存仕様には『いつどの地点で枠へ出し入れするか』に関する規定がない。</td></tr>
+    </tbody></table>
+    <table><tbody>
+      <tr><th>文書 / 節</th><td>docs/systems/map-gimmick-ideas.md ／「夕方になるとReturn Portalが出現し、プレイヤーは帰還または探索継続を選べる」</td></tr>
+      <tr><th>出典Status</th><td>Status: Prototype: Implemented（実装済みプロトタイプ）</td></tr>
+      <tr><th>根拠となる記述</th><td>8/31はEVENING以降に帰還面が開き、プレイヤーは帰還か探索継続を選べる。候補の主対象文脈であり、実装済みの境界としてのみ扱う。</td></tr>
+    </tbody></table>
+    <table><tbody>
+      <tr><th>文書 / 節</th><td>docs/systems/map-gimmick-ideas.md ／「8/32ではReturn Portalが閉じる」</td></tr>
+      <tr><th>出典Status</th><td>Status: Prototype: Implemented（実装済みプロトタイプ）</td></tr>
+      <tr><th>根拠となる記述</th><td>NIGHTが終わると8/32へ移行し、Return Portalが閉じる。Exposure取得速度は2.4倍、Run Lifetime 300秒で強制帰還となる。</td></tr>
+    </tbody></table>
+    <table><tbody>
+      <tr><th>文書 / 節</th><td>docs/systems/effect-components.md ／ 保存境界表の「同一Run中」の行</td></tr>
+      <tr><th>出典Status</th><td>Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）</td></tr>
+      <tr><th>根拠となる記述</th><td>保存境界は永続・同一Run中・同一マップ中・一時の四つ。候補は同一Run中の境界を預け簿に適用する。</td></tr>
+    </tbody></table>
+    <table><tbody>
+      <tr><th>文書 / 節</th><td>docs/systems/current-implementation.md ／「InventoryService にはアイテムの所在情報がない」</td></tr>
+      <tr><th>出典Status</th><td>Status: Implemented（実装棚卸し）</td></tr>
+      <tr><th>根拠となる記述</th><td>InventoryServiceは保持と喪失の判定と枠数だけを持ち、マップ上への配置、スタック、所有者、Item IDの規則は未実装。物品の所在システム自体が存在しない。</td></tr>
+    </tbody></table>
+    <p><strong>既存のどこまでが根拠か:</strong> Secure Slotが唯一の保険枠であること・入出庫時点が未確定であること・8/31の帰還面が時間帯で開閉することは既存の設計／実装済みの事実。<strong>どこからが今回の提案か:</strong> 第三の所在（預け簿）、帰還面が時刻条件になること、8/32遷移で回収不能になることはすべて今回の提案であり、既存のAccepted判断の書き換えではない。</p>
+    <p><strong>未解決の前提が2点ある。</strong> 既存資料にRun内別所在の定義が存在しないこと（adoption_blocker）と、ROLE-A-002が未作成であること。この2点は候補側で埋めない。</p>
+  </section>
+
+  <section id="hypothesis">
+    <h2>(b) 設計仮説とプレイヤーの選択</h2>
+    <p><strong>設計仮説:</strong> 既存仕様が持つのは『Secure Slot 4枠＋総20枠』という単一の保険枠だけで、失敗時の損失をどう割り振るかを設計する余地が狭い。本案はRun内に『成功を前提にして初めて効く置き場』を一段だけ足す。要素は『帰還面脇の預け札』であり、8/31で帰還面が既に開いている時間帯にだけ機能する。置いた品はRun中には使えず、帰還面が閉じた8/32では回収もできなくなる。Secure Slotが『死んでも残る枠』であるのに対し本候補は『生還して回収できたときだけ効く枠』である。枠外容量を与えて誘惑を持たせるが、中身はRun終了まで触れない、という二重の代償を設計の核に置く。</p>
+    <div class="grid">
+      <div class="card"><h3>狙う体験</h3><p>EVENINGでの『もう帰る』と『もう少し見る』の境目に、新しい判断材料を置く。Secure Slotへ入れた品と預け札へ置いた品が、8/32へ進むかどうかで別の結果へ分かれることを、直前の選択として感じさせる。安全を永続成長で買わず、その場の時間指定で買う構造にする。</p></div>
+      <div class="card"><h3>判断と代償</h3><p>① 帰還面の脇で預ける＝枠外へ逃がす。ただし使えず、8/32へ進むと回収不能。② Secure Slotへ入れる＝死んでも残る。ただし枠を1つ永続消費。③ 通常枠のまま運ぶ＝両方使えるが枠を圧迫し、失敗時は消える。④ 捨てる。EVENINGに①を選んだ場合、その後8/32へ進むかどうかが実質的な第二判断になる。失うのは、中身の使用機会、枠の永久消費、そして生還という前提そのもの。</p></div>
+    </div>
+  </section>
+
+  <section id="diagram">
+    <h2>作用図 — 時間帯・置き場・回収条件の関係</h2>
+    <p>上の帯は8/31のフェーズ進行（実装済み）、中央は3つの置き場、下の矢印は2つの操作経路。個人HUDに出る印も示す。</p>
+    <div class="board">
+      <svg viewBox="0 0 980 440" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="8/31のフェーズ進行の帯と、個人インベントリ・Secure Slot・預け簿という3つの置き場の関係。預けは帰還面が開いている時間帯にだけ成立し、取り出しは帰還面が閉じるまでのみ可能で、Run終了時に預け簿は破棄される">
+        <rect width="980" height="440" fill="#0a1118"/>
+        <text x="30" y="20" class="small">8/31のフェーズ進行（実装済みの範囲のみ）</text>
+        <rect x="30" y="28" width="210" height="56" rx="6" fill="#142330" stroke="#8ba2b3"/>
+        <text x="44" y="52" class="label">DAY</text>
+        <text x="44" y="74" class="small">帰還面 未開放</text>
+        <rect x="255" y="28" width="210" height="56" rx="6" fill="#142330" stroke="#70c9c3"/>
+        <text x="269" y="52" class="label">EVENING</text>
+        <text x="269" y="74" class="small">帰還面 開放</text>
+        <rect x="480" y="28" width="210" height="56" rx="6" fill="#142330" stroke="#70c9c3"/>
+        <text x="494" y="52" class="label">NIGHT</text>
+        <text x="494" y="74" class="small">帰還面 開放</text>
+        <rect x="705" y="28" width="245" height="56" rx="6" fill="#142330" stroke="#ea9380"/>
+        <text x="719" y="52" class="label">8/32</text>
+        <text x="719" y="74" class="small">帰還面 閉鎖 / Lifetime 300秒</text>
+        <text x="30" y="106" class="small" fill="#ea9380">DAY中は預けられない</text>
+        <path d="M165 150 V126 H785 V142" class="active"/>
+        <path d="M777 134 l8 8 8 -8" class="active"/>
+        <text x="180" y="118" class="small">預ける（Place）: 帰還面が既に開いている時間帯だけ成立</text>
+        <rect x="30" y="150" width="270" height="150" rx="8" fill="#142330" stroke="#70c9c3"/>
+        <text x="46" y="178" class="label">個人インベントリ 総20枠</text>
+        <text x="46" y="204" class="small">Run中は使用できる</text>
+        <text x="46" y="226" class="small">アノマリー相互作用の入力にできる</text>
+        <text x="46" y="248" class="small">Secure Slot 4枠を内包する</text>
+        <text x="46" y="278" class="small">失敗時は枠外の物が喪失物</text>
+        <rect x="330" y="150" width="250" height="150" rx="8" fill="#142330" stroke="#d3b653"/>
+        <text x="346" y="178" class="label">Secure Slot 初期4枠</text>
+        <text x="346" y="204" class="small">失敗時も獲得物として残る</text>
+        <text x="346" y="226" class="small">死亡しても失われない</text>
+        <text x="346" y="248" class="small">1枠ごとに永続強化を消費</text>
+        <text x="346" y="278" class="small">総枠数は増えない（Secure Conversion）</text>
+        <rect x="620" y="150" width="330" height="150" rx="8" fill="#142330" stroke="#c4a0ec"/>
+        <text x="636" y="178" class="label">預け簿 枠外・proposed</text>
+        <text x="636" y="204" class="small">成功して回収できた分だけ獲得物</text>
+        <text x="636" y="226" class="small">Run中は使用できない</text>
+        <text x="636" y="248" class="small">帰還面が閉じると回収不能になる</text>
+        <text x="636" y="278" class="small">Run終了で簿ごと破棄する</text>
+        <path d="M785 300 V340 H165 V310" class="hyp-line"/>
+        <path d="M157 318 l8 -8 8 8" class="hyp-line"/>
+        <text x="196" y="362" class="small">取り出す（Use）: 帰還面が閉じるまで。8/32へ進むと恒久に不成立</text>
+        <text x="30" y="392" class="small">個人HUDには『預け中の品がある』印だけが出る。内容と総量は個人にも出ない（InformationChange / 個人）</text>
+        <text x="30" y="414" class="small">これは作用と時間の模式図であり、地図・配置図・正式レイアウトではない。枠数・上限・効果量はすべて未確定。</text>
+      </svg>
+    </div>
+    <p><strong>この図で分かること:</strong> 3つの置き場が別物であること、預けと取り出しが両方とも帰還面の開閉に条件付けされていること、Secure Slotは死んでも残る代わりに枠を永久に消費し、預け簿は枠外だが回収の成功に依存すること。</p>
+    <p><strong>図で確定しないこと:</strong> 置き場の具体的な座標、当たり判定、預け簿の枠数上限、取得源、所要時間、正式な配置。図は物品の地図を示すものではない。</p>
+  </section>
+
+  <section id="effects">
+    <h2>(c) Trigger・Condition・Effectの契約</h2>
+    <p>Effectは3件。StateChangeが2件（預け・取り出し）、InformationChangeが1件（個人提示）。WorldChangeは発生させない（出現率・同時出現数を変更しないため）。複数Effectは表を分けている。</p>
+
+    <h3>Effect 1: 預ける（StateChange / instant）</h3>
+    <table><tbody>
+      <tr><th>Trigger</th><td>帰還面が既に開いている状態で、所持個人が帰還面の脇で『預ける』操作を行う</td></tr>
+      <tr><th>Condition</th><td>RunがACTIVE、帰還面が既に開放済み（DAY中は不成立）、対象品が個人のインベントリ内、預け簿の枠数上限内。枠数上限は未確定</td></tr>
+      <tr><th>Effect種別・結果</th><td>StateChange。対象品の所在が個人インベントリからRunの預け簿へ移る。以後その品は個人が使用できず、アノマリー相互作用の入力にもならない</td></tr>
+      <tr><th>対象・作用範囲</th><td>対象の品1点と操作した個人。個人からRun共有の保存先へ所在を移す</td></tr>
+      <tr><th>保存境界・終了</th><td>同一Run中／即時。Run終了（成功・失敗・切断、8/32のRun Lifetime満了を含む）で預け簿ごと破棄。帰還面の閉鎖（8/32遷移）は破棄ではなく『取り出し不可』にする</td></tr>
+      <tr><th>終了規則</th><td>end_mode: any。既定。2条件は別々の性質を持ち、Run終了が唯一の破棄条件。両方成立時に片方だけを破棄扱いにする例外は定めない</td></tr>
+      <tr><th>重ね掛け</th><td>同一品への重複『預け』は成立しない（もう一方のRun共有側に所在するため）。別の品への預けは非加算1件のまま累積。固定秒数は持たない。別Effectが同じ品に所在変更を要求した場合は解決規則未定義のため保留し記録する</td></tr>
+      <tr><th>Server / Client</th><td>ServerがRun状態・帰還面の開閉フラグ（既存 ExitUnlocked に相当）・所有物・枠数上限を検証し、不成立時は状態を一切変更しない。Clientは操作可否の表示のみ</td></tr>
+      <tr><th>Feedback</th><td>成功＝品が足元から消え、HUDの『預け中』印が1つ増える（確定音なし）。失敗＝操作が反応せず同じ不成立表示、理由の文章は出さない。不明＝印の意味を説明する文は出さない</td></tr>
+    </tbody></table>
+
+    <h3>Effect 2: 取り出す（StateChange / instant）</h3>
+    <table><tbody>
+      <tr><th>Trigger</th><td>帰還面が開いている状態で、預け札の個人操作として『取り出す』を行う</td></tr>
+      <tr><th>Condition</th><td>RunがACTIVE、帰還面がまだ開いている（8/32遷移後は不成立）、対象品が当該個人の預け簿にある、空き枠が個人インベントリに存在</td></tr>
+      <tr><th>Effect種別・結果</th><td>StateChange。対象品の所在が預け簿から個人インベントリへ戻り、その個人が再び使用できる。Secure Slotへは入らない</td></tr>
+      <tr><th>対象・作用範囲</th><td>対象の品1点と操作した個人。Run共有の預け簿側だけが書き換わる</td></tr>
+      <tr><th>保存境界・終了</th><td>同一Run中／即時。入出庫の1操作が解決した時点で結果は確定。Run終了で預け簿が破棄された後は対象が存在せず条件は恒久に不成立。切断時の再接続後の所属移動は未決とし、Serverは個人をまたいだ所在移動を許可しない</td></tr>
+      <tr><th>終了規則</th><td>end_mode: any。解決済みの操作は再適用対象外。破棄後の再試行は対象不在という不成立として扱う</td></tr>
+      <tr><th>重ね掛け</th><td>1操作1件。回数・時間制限は持たない。上限を設ける場合は同じEffectへの明示的な例外として本文に書く。別の操作と同時に成立する場合はServer側で同一フレーム内の二重解決を拒否するが、優先順位の規則は未確定</td></tr>
+      <tr><th>Server / Client</th><td>Serverが帰還面の開閉・対象品がこの個人の預け簿に属すること・空き枠を検証する。個人HUDの表示回数やクライアント要求を根拠に所在を移動させない。Clientは操作可否と結果表示のみ</td></tr>
+      <tr><th>Feedback</th><td>成功＝印が減り通常のインベントリ枠表示が1つ増える（確定音なし）。失敗＝印が減らず注意表示が1回だけ出て、理由の区別は日本語で出さない。不明＝8/32遷移後に印が残った状態は、失敗なのかまだ取り出せるのかをUIで区別しない</td></tr>
+    </tbody></table>
+
+    <h3>Effect 3: 個人提示（InformationChange / sustained）</h3>
+    <table><tbody>
+      <tr><th>Trigger</th><td>預けまたは取り出しが成立した、あるいは不成立になったあと、Run情報HUDが個人状態を再描画する</td></tr>
+      <tr><th>Condition</th><td>対象個人がそのRunの参加中で、Run情報HUDの表示が有効なとき</td></tr>
+      <tr><th>Effect種別・結果</th><td>InformationChange。『預け中の品がある』ことを示す印と、最後の操作が成功だったかのみを更新する。内容・個数・総量は個人にも出さない</td></tr>
+      <tr><th>対象・作用範囲</th><td>対象個人のみ。共有のRun状態は書き換えない</td></tr>
+      <tr><th>保存境界・終了</th><td>同一Run中／持続。Run終了またはHUD非表示で解除。切断で個人提示は破棄し、再接続時に復元するかは未決</td></tr>
+      <tr><th>終了規則</th><td>end_mode: any。HUD表示と個人状態の寿命は結びついているため別規則を定めない</td></tr>
+      <tr><th>重ね掛け</th><td>同一個人への同一提示は非加算1件。残り時間を更新せず状態を上書きする。既存のRun情報HUDやQuestObjective表示と競合する場合、表示枠の優先順位が未決定なので強制作業しない</td></tr>
+      <tr><th>Server / Client</th><td>Serverは預け簿が空か空でないかだけを返す。総量や内容は返さない。HUDの描画権限はClient側の表現に限る。他者のHUDに同じ印を出さないことで個人提示であることを明確にする</td></tr>
+      <tr><th>Feedback</th><td>成功＝印が点いた状態のときだけ再描画される。失敗＝印が変化しない。不明＝印の意味を説明する文は表示せず、本人だけが判断する</td></tr>
+    </tbody></table>
+
+    <h3>他のEffectとの競合</h3>
+    <p>本候補はアノマリー出現コンポーネント（個別出現確率・同時出現数）を変更しないため、博士Questの1.40倍補正や発生毎0.90倍減衰、判断017のRun単位変動と競合しない。WorldChangeのEffectは発生させていない。異なるEffectが同じ品や同じ枠へ作用する場合の解決規則は未定義であり、競合適用は保留して記録する。</p>
+  </section>
+
+  <section id="uncertainties">
+    <h2>(d) 未確定事項・矛盾・世界観上の異化</h2>
+    <table><tbody>
+      <tr><th>未確定事項</th><td>預け簿の枠数上限と何をどこまで預けられるか（サイズ・重量・アイテム種別の制限）。上限を設けない場合の破綻も未検証。Acquire経路が未確定で、8/31には通常NPC・施設・依頼発行者が未実装のため誰が配るかは創作しない。取得した預け札が1枚か複数枚か。成功時のリザルトで『預けたもの』を別枠表示するか。切断・再接続時の所属移動。Player Anomaly中の制約（判断010の未決事項と同じ論点）。Run終了種別にMap／World Terminationが含まれる場合にも破棄するかは未確認。</td></tr>
+      <tr><th>既存仕様との矛盾</th><td>docs/systems/current-implementation.md（Status: Implemented）「Inventory／Secure Slotのサーバー権威データ境界。総20枠、初期Secure Slot 4枠。成功時は全持ち帰り対象を獲得物、失敗時はSecure Slot内だけを獲得物・それ以外を喪失物として分類する。」／ 本案はRun終了時に個人インベントリにもSecure Slotにも属さない第三の所在（預け簿）を置き、さらに8/32遷移でその中の品物を回収不能にする。</td></tr>
+      <tr><th>補正と理由</th><td>実装済みの分類処理自体は変更せず、預け簿の品物を『成功なら獲得物・失敗なら喪失物』へ明示的に割り当てる分岐を1つ追加する。獲得物／喪失物分類は『Run終了時に持ち帰れたか』に基づく既存ルールなので、所在のソースを1つ追加するだけで同じ判定規則のまま表現できる。</td></tr>
+      <tr><th>残る採用判断</th><td>預け簿の品物を成功時の獲得物に含めるか。8/32遷移で取り出せなかった品も成功扱いの獲得物として表示してよいか。この表示の判断が、本候補が『生還前提』である性格を実際に押し上げるかを決める。</td></tr>
+      <tr><th>矛盾なしとした確認範囲</th><td>効果7分類（Effect・StateChange・InformationChange）・保存境界4種・重ね掛け既定・博士Quest1.40倍補正と発生毎0.90倍減衰・8/32の帰還閉鎖とExposure2.4倍・Secure Conversion／Capacity Expansion・Robux変換経路がIdeaであること（判断010・判断011・経済と成長）を照合した。Robux経路は採用済みとして扱わず、本候補も触れていない。</td></tr>
+      <tr><th>異化したもの</th><td>『安全は成長で積み上げるもの』という前提を外し、Runの中に『片側だけ安全な置き場』を足した。Secure Slotが『死んでも残る枠』なら、本候補は『生還して回収できたときだけ効く枠』であり、両者が同じ保証に見えて実は別の代償を持つ。</td></tr>
+      <tr><th>世界内の成立理由</th><td>既に総20枠と初期4枠という物理的な限界があり、探索者がもう一段の受け止め先を必要とする状況は成立する。世界側はアノマリーの正体を知らなくても、危険な持ち物を『回収できる場所』へ移す操作だけを理解すればよい。判断010が描く研究者像（正体不明の価値を持つ物を受け取り、危険な資産を確保できる状態へ変える立場）とも矛盾しない。</td></tr>
+      <tr><th>曖昧に残す意味</th><td>預け札が誰から受け渡された物なのか、預け場が本来は何のための設備だったのか、誰が全ての預け品を集めようとしたのか、博士の主張と関係するのかは確定しない。ルール（帰還面が開いている間だけ預けられる）は明確に見せ、その意味は説明しない。ダンジョンの起源や博士の真意の断定にも踏み込まない。</td></tr>
+    </tbody></table>
+  </section>
+
+  <section id="connections">
+    <h2>(e) 他担当への接続</h2>
+    <p><strong>接続タグ:</strong> Item / Environment</p>
+    <p><strong>components:</strong> Effect.StateChange（catalog）／Effect.InformationChange（catalog）／InventoryBoundary（catalog）／ItemLifecycle（catalog）／RunDepositLedger（案名・proposed）。proposed は本パックのcomponents.jsonに未掲載の新規提案であり、実装もカタログ追加も行わない。catalog の記載は実装済み保証ではない。</p>
+    <p><strong>他候補から期待できる性質（provides_traits）:</strong></p>
+    <ul>
+      <li>Run枠外の所在を個人から切り離して保持し、Run終了時にのみ破棄される保存境界を持つ</li>
+      <li>Useの成立がマップ側の時間進行（帰還面の開閉）に条件付けされている</li>
+      <li>個人所持とServerのRun状態を別の権限として分離して扱う例</li>
+    </ul>
+    <table><tbody>
+      <tr><th>予約参照</th><td>ROLE-A-002 ／ optional_connection ／ 必要な性質:「マップ側から帰還面の開閉が起きたことを世界イベントとして発火できる」／ resolution: reserved_unresolved</td></tr>
+      <tr><th>代替（fallback）</th><td>既存の August31Service の DAY→EVENING→NIGHT→AUG_32 進行と ExitUnlocked の変化だけで判定できる。A-002が成立しなくても本候補は成立する。</td></tr>
+      <tr><th>未解決参照</th><td>ROLE-A-002: peer-snapshotsが本セッションに配布されておらず、A-002の本文とprovides_traitsを確認できないため。adoption_blocker: false（既存イベントで代替できる）</td></tr>
+      <tr><th>ID未指定の要求</th><td>Run内に個人インベントリともSecure Slotとも別の所在を保持するサーバー権威の簿を定義する資料。既存MDには該当文言がないため、判断010・判断011への新設が要る。adoption_blocker: true</td></tr>
+    </tbody></table>
+    <p><strong>接続先なしでどこまで成立するか:</strong> 帰還面の開閉は既に実装済みのイベントなので、ROLE-A-002の有無は本候補の成立を左右しない。ただし『Run内別所在を規定する資料』がないため、これはadoption blockerとして残る。取得元の人物や施設は創作していない。</p>
+    <div class="note">予約IDは未作成であり得ます。他担当の内容を創作したり、存在しないページへリンクしたりしていません。ROLE-A-002はpeer-snapshotsが配布されるまで本文を一切読んでおらず、予約枠の存在だけを根拠に解決扱いにしていません。</div>
+  </section>
+
+  <section id="cost">
+    <h2>(f) 新規ロジックと試作コスト</h2>
+    <p><code>requires_code: true</code> — InventoryServiceは20枠・初期Secure Slot 4枠とRun終了時の獲得物／喪失物の分類だけを持ち、アイテムの所在情報がないことを明記されている（current-implementation.md）。預け簿は第三の所在を新設し、預け・取り出し・破棄の3経路をServer権威で処理する必要があるため true とする。共通Effect分類だけで成立するとみなして false とする根拠はない。Effect IDの識別形式など未確定の部分は実装仕様の未決であり、true の一部が未確定である点を分けて書いた。</p>
+    <p><strong>試作コスト: 中</strong> — 20枠とSecure Slotの枠数境界、リザルト分類は既にサーバー権威で動いているため既存部品を壊さずに足せる。しかし物品の所在そのものをサーバーで持つ層が未実装（デバッグ付与のみ）で、預け簿は新しい所在データ型と移管処理と取得源を要する。演出とUIの拡張は小さいので大ではない。現行2マップの最小Runへの組み込みは正式仕様側の判断であり、候補だけでは確定しない。</p>
+    <h3>必要な新規ロジック</h3>
+    <ul>
+      <li>Run内に個人インベントリともSecure Slotとも異なる第三の所在（預け簿）をServer権威で保持する簿。永続枠を消費しない前提を明示する。</li>
+      <li>帰還面の開閉（既存の ExitUnlocked に相当）を、このアイテムのPlaceとUseが成立する時間帯条件として評価する経路。</li>
+      <li>預け簿の品物をRun終了時の獲得物と喪失物の分類へ割り当てる分岐。既存の分類処理自体は変更しない。</li>
+      <li>Effect IDと出所と対象と範囲を識別するデータ形式。effect-components.mdの未決事項に一致するため、候補側で実装案を確定しない。</li>
+    </ul>
+    <h3>想定する既存部品</h3>
+    <ul>
+      <li>InventoryService（20枠・初期Secure Slot 4枠・枠制約・獲得と喪失の分類）</li>
+      <li>RunService.Finish と RunOutcomes の終了種別集約（成功・未達帰還・死亡・切断・8/32のRun Lifetime満了）</li>
+      <li>August31Service の DAY→EVENING→NIGHT→AUG_32 進行と ExitUnlocked による帰還面の開閉</li>
+      <li>クライアントRunControllerの既存Run情報HUD</li>
+      <li>マップ生成時の配置point規約（座標の選定自体は候補では確定しない）</li>
+    </ul>
+    <h3>試作手順（ゲーム内試作コストの見積もりであり、生成に実際にかかった時間とは別）</h3>
+    <ol>
+      <li>InventoryServiceの枠データに、Run内で消える第三の所在を1つ持たせる。永続枠は増やさない</li>
+      <li>8/31の既存帰還面脇に、預け操作のプロンプト1個と取り出し操作のプロンプト1個を置く。地形は増やさない</li>
+      <li>Server側で帰還面が既に開いているかだけを条件に、預けと取り出しを検証して即時に所在を移す</li>
+      <li>Run終了時に預け簿を破棄し、破棄済みの品を既存のリザルト獲得物と喪失物の分類へ割り当てる。分類処理自体は変えない</li>
+      <li>HUDに『預け中の品がある』印だけを出す。個数と内容は出さない</li>
+      <li>Play Soloの1人セッションで、DAY中は預けられないこと、8/32遷移後に取り出せないこと、死亡時に全品が喪失物になることを確認する。複数人と切断と再接続は今回確認しない</li>
+    </ol>
+  </section>
+
+  <section id="role-details">
+    <h2>(g) 担当固有の経路・制約</h2>
+    <p><strong>item_kind: 通常探索品</strong> — 汎用スキルレアルート品でもスロットレアルート品でもアノマリー固有交換品でもない。博士研究室で永続強化へ交換する用途を持たせず、Run内での置き場そのものを価値にする。Robux変換経路はIdea（未採用）であり、本候補はこれにふれない。</p>
+    <table><tbody>
+      <tr><th>Acquire</th><td><strong>Undecided</strong> — 誰が配るかは未確定。8/31には通常NPCと施設と依頼発行者が未実装であり、人物や組織を創作しない。判断011の取得経路（相互作用成立・低難度以外のQuest・チュートリアル）のどれに載せるかを決めるまで条件は決めない。試作のみデバッグ付与で代用する。</td></tr>
+      <tr><th>Hold</th><td><strong>Proposed</strong> — Run中は通常どおり使用できる品なので1枠を消費し、Secure Slotと枠を取り合う。8/32のRun Lifetime 300秒とExposure 2.4倍の下では、残り時間のために枠を空けたい圧力と、預けたい圧力が同時に出る。スタック規則と上限は未確定。</td></tr>
+      <tr><th>Use</th><td><strong>Proposed</strong> — 使用が2つある。帰還面の脇で預ける（個人からRun共有の保存先へ所在を移す）と、取り出す（Run共有から個人へ戻す）。どちらも帰還面が開いている間だけ成立し、8/32遷移後は成立済みの預けについても取り出しが恒久に不成立になる。</td></tr>
+      <tr><th>Present</th><td><strong>NotApplicable</strong> — 受け取る側の人物と機関を8/31文脈で確定していない。博士へ渡して永続強化へ交換する用法は判断010と判断011が既に定めるレアルート品の経路と二重になるため、本案では受け渡し先を創作せず対象外とする。</td></tr>
+      <tr><th>Place</th><td><strong>Proposed</strong> — 本候補の中核。帰還面の脇という既存の共有装置の周辺に置き、Runの共有状態を更新する。新たな地形・部屋・装置は提案しない。DAY中は置いても効果が生じない、という条件不成立そのものが判断材料になる。</td></tr>
+      <tr><th>Lose</th><td><strong>Proposed</strong> — Run終了（成功・失敗とも）で預け簿ごと破棄する。失敗時はSecure Slot内の物だけが獲得物になるため、預けた品は全部喪失物になる。成功時は回収済みの品のみ獲得物、8/32へ進んで回収不能だった品は獲得物にならない。切断と再接続時の所属移動は未決。</td></tr>
+      <tr><th>SecureSlot</th><td><strong>Proposed</strong> — 核心的な競合点。預け札をSecure Slotに入れて死亡に備えると、死んでも残る手段の中に生還者だけが回収できる手段が混ざる。Secure Slotは確実だが枠を1つ永続消費し、預け簿は枠外だが8/32で効かなくなる。どちらに何個入れるかはプレイヤーのリスク選択であり、既定最適は作らない。</td></tr>
+      <tr><th>Sell</th><td><strong>NotApplicable</strong> — 換金しない。博士研究室へ渡して成長資源へ交換する経路へ戻すと判断010と判断011が既に定めた経路と二重になり、枠外容量という本候補の性格が崩れる。回収物として価値がありそうなことは痕跡としてWorldにだけ残し、価格は決めない。</td></tr>
+      <tr><th>Quest</th><td><strong>Undecided</strong> — 依頼主と依頼種別と報酬額はいずれも未確定。博士Questの枠へ置くと受注中の出現確率補正と衝突するため、置かないという判断も保留する。判断014が定める固有品と専用スキルの交換とも別系統であることを明確にしないと経路が混線する。</td></tr>
+      <tr><th>AnomalyInteraction</th><td><strong>NotApplicable</strong> — 8/31は共通Anomaly Systemが未実装で、判断017のAnomalySpawnもNotImplementedであるため、本マップにはアノマリーEntityの受理先が存在しない。よって本候補をAnomaly Interactionとして作らない。将来の予約アノマリーが出現した場合に必要な例外ルールはAnomalyInteraction側のUndecided項目として別途残す。</td></tr>
+    </tbody></table>
+    <table><tbody>
+      <tr><th>ownership_state（個人所持）</th><td>預け札そのものとRun中の個人所持はplayer単位の個人状態。預け操作の瞬間から対象品だけ所在が個人を離れ、ServerのRun共有である預け簿のentryへ移る。HUDに示すのは本人だけの印で、所在の確定はServerが行う。再接続時に所有者のいない品として扱う規則は未決。</td></tr>
+      <tr><th>server_run_state（ServerのRun状態）</th><td>預け簿はServer権威のRun状態を保持し、個人とは共有しない。Run開始で空、Run終了（成功・失敗・切断・8/32のRun Lifetime満了）で破棄する。出現率と同時出現数というアノマリー出現コンポーネントはこの候補では変更しないため、WorldChangeのEffectは発生させずStateChangeとInformationChangeのみとする。破棄時にのみ既存のリザルト分類へ割り当てる。</td></tr>
+    </tbody></table>
+  </section>
+
+  <footer>overnight-design-pilot-v1 ／ ROLE=B ／ 設計候補（unreviewed）。採用判断は行っていない。索引は <a href="index.html">index.html</a>。</footer>
+</main>
+</body>
+</html>

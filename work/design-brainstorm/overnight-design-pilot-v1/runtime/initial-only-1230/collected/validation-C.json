@@ -1,0 +1,12 @@
+{
+  "run_id": "overnight-design-pilot-v1",
+  "errors": [
+    "input/pack problem: [Errno 2] No such file or directory: '/Users/saitouyouwataru/Documents/Git/Anomaly-Dungeon_doc/work/design-brainstorm/overnight-design-pilot-v1/runtime/initial-only-1230/roots/C/work/design-brainstorm/overnight-design-pilot-v1/C/manifest.json'"
+  ],
+  "review_items": [],
+  "candidate_summaries": [],
+  "counts": {},
+  "visual_render_verified": false,
+  "worldview_content_verified": false,
+  "mechanical_validation": "not_completed"
+}

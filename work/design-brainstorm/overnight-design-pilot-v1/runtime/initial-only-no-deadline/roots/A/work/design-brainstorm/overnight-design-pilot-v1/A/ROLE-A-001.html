@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ROLE-A-001 水位を読む人 — DAMの記録役</title>
+  <link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+  <header class="top">
+    <p class="sub">overnight-design-pilot-v1 ／ ROLE-A-001 ／ 主対象: 8/31（マップ固有）／ 区分: GimmickEvent</p>
+    <h1>水位を読む人 — DAMの記録役</h1>
+    <p>既存のDAMゾーンを巡回する通常NPCが1体だけいて、その測定値が個人へ提示される。帰還判断（EVENINGで帰還するか、探索を続けるか）に、観察による先行きを一つ足す案。危険度の表現そのものは増やさない。</p>
+    <div class="badges"><span class="badge hyp">design_status: Draft</span><span class="badge">review_status: unreviewed</span><span class="badge unknown">数値と実装は未定</span><span class="badge">requires_code: true</span></div>
+    <p class="sub">見出しは作業用であり、正式System IDでもゲーム内名称でもない。正本MDの変更・実装・採用は行っていない。</p>
+    <nav class="nav"><a href="index.html">← 候補一覧</a><a href="ROLE-A-004.html">次: ROLE-A-004 返却待ちの一本 →</a><a href="ROLE-A-013.html">→ ROLE-A-013 開いた通路の個体</a></nav>
+  </header>
+
+  <section id="sources">
+    <h2>(a) 根拠文書と出典Status</h2>
+    <table><tbody>
+      <tr><th>MDと節</th><td>docs/systems/map-gimmick-ideas.md「### 実装済みの範囲」（Status: Prototype: Implemented）</td></tr>
+      <tr><th>根拠の記述</th><td>8/31はServer側がDAYからEVENING、NIGHTの順に時間を進行させ、NIGHTが終わると8/32へ遷移する。EVENING以降は依頼未達成でもReturn Portalが開く。進行はマップ内に探索者がいる間だけである。</td></tr>
+      <tr><th>MDと節</th><td>docs/systems/current-implementation.md「## 実装済みの基盤」（Status: Implemented）</td></tr>
+      <tr><th>根拠の記述</th><td>8/32では帰還面が閉鎖され、Exposureの取得速度が2.4倍になり、Run Lifetime 300秒の強制帰還が始まる。Rare Lootと強制Anomaly発生は未実装で、危険度上昇はExposureの取得速度と帰還閉鎖だけで表現されている。</td></tr>
+      <tr><th>MDと節</th><td>docs/decisions/003-august-31-time-and-phase-design.md「### 8月32日の扱い」「## 未決事項」（Status: Prototype: Implemented）</td></tr>
+      <tr><th>根拠の記述</th><td>8/32は別Map IDではなくphaseの進行で表現し、帰還経路を閉じた上でRun Lifetimeを残す。フェーズ長480/300/300秒は実測調整前であり確定値ではない。</td></tr>
+      <tr><th>MDと節</th><td>docs/decisions/019-player-anomaly-runtime-pvp-and-return.md「## 決定」（Status: Accepted）</td></tr>
+      <tr><th>根拠の記述</th><td>Player Anomalyは通常NPCおよび通常のReturn PortalとInteractionできない。同時に存在できるPlayer Anomalyは1人までである。</td></tr>
+      <tr><th>MDと節</th><td>docs/systems/effect-components.md「## 重ね掛けの既定規則」（Status: Designed）</td></tr>
+      <tr><th>根拠の記述</th><td>同じEffectの再適用は既定で非加算1件、固定秒数は残り時間を更新。競合先の解決規則が未定義なら適用を保留し記録する。</td></tr>
+    </tbody></table>
+    <p>既存のどこまでが根拠で、どこからが今回の提案か: 上記の「フェーズ進行」「8/32の帰還閉鎖とExposure上昇」「フェーズ長が未確定」「Player Anomalyと通常NPCの非Interaction」「Effectの既定規則」は既存文書の記述である。点検役という通常NPC、Serverが保持する測定値、個人への1行提示、攻撃による巡回停止は今回の提案であり、既存実装の延長ではない。</p>
+  </section>
+
+  <section id="hypothesis">
+    <h2>(b) 設計仮説とプレイヤーの選択</h2>
+    <p><strong>設計仮説:</strong> 既存のDAMゾーンに、その場所の仕事だけを行う通常NPC（点検役）が巡回している。Serverは点検役の測定値をRunの事実として保持し、対象の測定条件を満たしている間だけ、その値を個人へ提示する。提示するのは測定値だけで、単位も基準も残り時間も出さない。点検役が攻撃を受けると巡回は止まり、最後の測定値だけが残る。地形、部屋、正式配置、新しい小物は追加しない。</p>
+    <div class="grid">
+      <div class="card"><h3>狙う体験</h3><p>観察したものが帰還判断の材料になる。ただし数字の読み方は説明されないので、Credibilityを自分で決める。記録は個人単位なので、同じフェーズでも全員の値は一致しない。</p></div>
+      <div class="card"><h3>判断と代償</h3><p>待つ（読む）／通り過ぎる／攻撃して止める。読むにはその場の時間を消費する。止めると記録源を失う。記録源を失っても資産の消費や固定ペナルティはないため、攻撃が常に最適解にはならない。</p></div>
+    </div>
+  </section>
+
+  <section id="diagram">
+    <h2>作用図 — Serverが記録を保ち、提示は個人、攻撃は記録源を止める</h2>
+    <div class="board">
+      <svg viewBox="0 0 1120 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Serverが段階的な記録を保持し、点検役が巡回中は個人に測定値が提示され、攻撃を受けると巡回が止まって更新が止まるという3段階の模式図">
+        <rect width="1120" height="470" fill="#0a1118"/>
+        <text class="label" x="24" y="28">Serverが保持する記録（個人へ送る前の状態）</text>
+        <text class="label" x="400" y="28">点検役の状態</text>
+        <text class="label" x="712" y="28">プレイヤーが受け取る結果</text>
+
+        <path d="M40 210h320" stroke="#2a3c49" stroke-width="1"/>
+        <path d="M60 210v-14h80v14" stroke="#70c9c3" stroke-width="2" fill="none"/>
+        <path d="M140 196v-16h80v16" stroke="#70c9c3" stroke-width="2" fill="none"/>
+        <path d="M220 180v-16h80v16" stroke="#70c9c3" stroke-width="2" fill="none"/>
+        <path d="M300 164v-18" stroke="#ea9380" stroke-width="2"/>
+        <path d="M300 140h80" stroke="#ea9380" stroke-width="1" stroke-dasharray="5 4"/>
+        <text class="small" x="52" y="228">DAY</text>
+        <text class="small" x="150" y="228">EVENING</text>
+        <text class="small" x="228" y="228">NIGHT</text>
+        <text class="small" x="300" y="228">8/32</text>
+        <text class="small" x="40" y="128">測定値は1段ずつ進む（周期・単位は未定）</text>
+        <text class="small" x="40" y="248">赤線＝追加案。実装済みの範囲は帰還閉鎖とExposure 2.4倍とRun Lifetime 300秒</text>
+
+        <path d="M362 176h40" class="active"/>
+        <path d="M396 170l9 6-9 6" class="active"/>
+
+        <rect x="410" y="60" width="250" height="72" rx="8" fill="#142330" stroke="#70c9c3"/>
+        <text class="label" x="424" y="88">巡回中</text>
+        <text class="small" x="424" y="112">測る、記録する、次の測点へ</text>
+
+        <rect x="410" y="160" width="250" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text class="label" x="424" y="188">一巡完了（位置が変わる）</text>
+        <text class="small" x="424" y="212">他プレイヤーには位置だけが見える</text>
+
+        <rect x="410" y="272" width="250" height="72" rx="8" fill="#142330" stroke="#ea9380"/>
+        <text class="label" x="424" y="300">巡回停止（攻撃を受けた後）</text>
+        <text class="small" x="424" y="324">測定を止め、最後の値を保持する</text>
+
+        <path d="M535 132v28" class="hyp-line"/>
+        <path d="M536 160l-6-9h12z" fill="#d3b653"/>
+        <path d="M535 232v40" class="hyp-line"/>
+        <path d="M536 272l-6-9h12z" fill="#d3b653"/>
+        <path d="M410 96h-28" class="active"/>
+        <text class="small" x="300" y="100">攻撃</text>
+        <path d="M388 92l-9 4 9 4z" fill="#ea9380"/>
+
+        <rect x="700" y="60" width="400" height="72" rx="8" fill="#142330" stroke="#70c9c3"/>
+        <text class="label" x="714" y="88">個人HUDに測定値が1行出る</text>
+        <text class="small" x="714" y="112">待つ。単位も基準も残秒も出ない</text>
+
+        <rect x="700" y="160" width="400" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text class="label" x="714" y="188">痕跡として位置が見える</text>
+        <text class="small" x="714" y="212">測定値は共有されない。通過の選択と組み合わせる</text>
+
+        <rect x="700" y="272" width="400" height="72" rx="8" fill="#142330" stroke="#ea9380"/>
+        <text class="label" x="714" y="300">更新が止まる。最後の表示だけが残る</text>
+        <text class="small" x="714" y="324">説明文は出ない。Player Anomaly中は成立しない</text>
+
+        <path d="M662 96h32" class="active"/><path d="M688 90l9 6-9 6" class="active"/>
+        <path d="M662 196h32" class="active"/><path d="M688 190l9 6-9 6" class="active"/>
+        <path d="M662 308h32" stroke="#ea9380" stroke-width="2" fill="none"/><path d="M688 302l9 6-9 6" stroke="#ea9380" stroke-width="2" fill="none"/>
+
+        <text class="small" x="24" y="386">この図で分かること: 測定値はServerが保持し、提示は個人単位である。攻撃は巡回を止めるという結果だけを生む。</text>
+        <text class="small" x="24" y="410">巡回停止は「正解の否定」ではない。帰還判断の材料を失うだけである。放置でも候補は成立する。</text>
+        <text class="small" x="24" y="434">この図で確定しないこと: 測定周期、距離閾値、値の単位と意味、赤線が8/32の予告かどうか、配置座標。</text>
+        <text class="small" x="24" y="458">判断019によりPlayer Anomalyは通常NPCとInteractionできないため、測定値の取得は通常プレイヤーのみに成立する。</text>
+      </svg>
+    </div>
+    <p><strong>この図で分かること:</strong> 記録の保持、点検役の状態、個人提示の3段階が別である。攻撃は記録源を止める結果になり、進行自体を早めない。</p>
+    <p><strong>図では確定しないこと:</strong> 測定周期、距離閾値、値の単位と意味、赤線と8/32の関係、配置座標、地形。図の縦軸は模式であり、地図や正式レイアウトではない。</p>
+  </section>
+
+  <section id="effects">
+    <h2>(c) Trigger・Condition・Effectの契約</h2>
+    <p>Effectは3件。1と3は作用先が個人、2はServer共有の個体で、状態を分ける。</p>
+    <table><tbody>
+      <tr><th>Effect 1: InformationChange</th><td>持続（sustained）／保存境界: 一時</td></tr>
+      <tr><th>Trigger</th><td>Serverが点検役の測定完了を確定し、測定値が存在し、対象が測定条件を満たしている。</td></tr>
+      <tr><th>Condition</th><td>点検役が巡回中であること。対象が通常のプレイヤーであること。対象が測定条件を満たす位置にいること。測定間隔と提示範囲の閾値は未定。</td></tr>
+      <tr><th>結果</th><td>個人HUDに最新の測定値を1行提示し、記録番号を併記する。世界側に刻まれる板や装置は追加しない。</td></tr>
+      <tr><th>対象・作用範囲</th><td>対象: 測定値を閲覧する個人。範囲: 個人。Party HUDやRun共有表示にはしない。</td></tr>
+      <tr><th>保存境界・終了</th><td>終了条件: 測定条件を満たす位置から離れた／点検役が巡回を停止した／マップから離れた／Run終了（帰還、死亡、切断、期限切れを含む）。いずれかが成立すれば閉じる（any）。</td></tr>
+      <tr><th>重ね掛け</th><td>例外ではない。同一Effectかつ同一対象は非加算1件。再取得は残り時間を更新し、測定値は累計しない。別の情報提示Effectとの競合規則は本候補の範囲外であり、規則未定のため保留。</td></tr>
+      <tr><th>Server / Client</th><td>Serverが対象個体、対象の属性、測定条件、巡回状態、測定値の有効性を検証し、不成立なら値を返さない。Clientは個人HUDの1行だけを表現する。</td></tr>
+      <tr><th>Feedback</th><td>成功: 測定の所作とHUD更新が同期する。失敗: 近づいても更新しない。判別不能: 単位も基準も残秒も出さず、前回より値の向きが変わったことだけを読ませる。</td></tr>
+    </tbody></table>
+    <table><tbody>
+      <tr><th>Effect 2: StateChange</th><td>持続（sustained）／保存境界: 同一マップ中</td></tr>
+      <tr><th>Trigger</th><td>点検役が測点から次へ移動し、測定、記録、移動の一巡が完了した。</td></tr>
+      <tr><th>Condition</th><td>点検役が巡回中であること。移動中の挙動は未実装のため、移動の区切りでのみ成立すると仮定する。</td></tr>
+      <tr><th>結果</th><td>個体の状態が一巡完了へ移り、次の一巡を開始する。他プレイヤーの目には位置の変化としてだけ見え、測定値は共有されない。</td></tr>
+      <tr><th>対象・作用範囲</th><td>対象: 点検役の個体（Server Run共有）。範囲: Run共有の個体。位置は全Clientに表現されるが測定値は個人。</td></tr>
+      <tr><th>保存境界・終了</th><td>終了条件: 巡回停止へ移行／Run終了／マップ終了。停止からの再開は別個体の新規生成を要するものとし、同じ個体の一巡再開は定めない。</td></tr>
+      <tr><th>重ね掛け</th><td>例外ではない。同一個体の進行はイベントごとに1件。同じ個体へ他の状態異常が重なる場合の順序は共通既定に従い、回復は本Effectの解除を意味しない。</td></tr>
+      <tr><th>Server / Client</th><td>Serverが現在位置と巡回状態を検証し、未初期化または破棄済みの個体には遷移させない。Clientは移動表現のみ。移動速度、経路、測点の総数はUIに出さない。</td></tr>
+      <tr><th>Feedback</th><td>成功: 一定時間測ってから次の測点へ動く。失敗: 測定中に次へ進まない（測定時間は未定）。判別不能:何を測っているのかは行動からは読めない。</td></tr>
+    </tbody></table>
+    <table><tbody>
+      <tr><th>Effect 3: StateChange</th><td>持続（sustained）／保存境界: 同一マップ中／攻撃による巡回停止</td></tr>
+      <tr><th>Trigger</th><td>点検役が攻撃を受け、対象のHP相当が減少した。</td></tr>
+      <tr><th>Condition</th><td>巡回中でも一巡完了後でも、攻撃ダメージが一度でも成立した場合。ダメージ量の閾値は未定。</td></tr>
+      <tr><th>結果</th><td>巡回を停止する。個体は測定と移動をやめ、最後の測定値を保持したまま現位置で静止する。以後の測定値は更新されない。</td></tr>
+      <tr><th>対象・作用範囲</th><td>対象: 点検役の個体（Server Run共有）。範囲: Run共有。停止状態は他のプレイヤーからも観測できる。</td></tr>
+      <tr><th>保存境界・終了</th><td>終了条件: Run終了／マップ終了のみ。回復しても再開しない（再開は別個体の新規生成として扱う）。</td></tr>
+      <tr><th>重ね掛け</th><td>例外ではない。同一個体の停止は非加算1件。Stunなど別のEffectとの順序は共通既定に従い、回復は停止の解除を意味しない。</td></tr>
+      <tr><th>Server / Client</th><td>Serverが攻撃ダメージの成立と対象個体を検証し、取り消された攻撃や対象外の攻撃では停止しない。Clientは測定の所作が止まる表現のみ。停止が仕様である旨の説明は出さない。</td></tr>
+      <tr><th>Feedback</th><td>成功: プレイヤー側の成功は存在せず、記録源が止まる結果だけが返る。失敗: 攻撃が当たらなければ巡回は維持される。判別不能: 理由を示す文章を出さない。</td></tr>
+    </tbody></table>
+  </section>
+
+  <section id="uncertainties">
+    <h2>(d) 未確定事項・矛盾・異化と留保</h2>
+    <table><tbody>
+      <tr><th>未確定事項</th><td>測定周期、測点の順序、提示範囲の閾値、値の単位はすべて未定で、数値を決めていない。何を測るのか（堤防の水位か、日付板との関係か、別の量か）も未確定。記録が8/32の予告として読めるかも未確定であり、候補は予告としての位置づけを明示しない。8/32移行時に点検役が退場するか残るかは未確定。測定に時間を使う代償が帰還判断へどう影響するかは未検証。実プレイでの時間圧と、実装の有無は未確認（Studio未操作）。</td></tr>
+      <tr><th>既存仕様との矛盾</th><td>3件を conflicts に記録している。（1）map-gimmick-ideasの「8/32の危険度上昇はExposureの取得速度と帰還閉鎖だけ」に対し、本候補は第三の先行手掛かりを足す。（2）判断003の「フェーズ長480/300/300秒は未確定」に対し、提示が残秒の手掛かりに読める危険があるため残秒を出さない。（3）current-implementationに通常NPCの状態機械が無いため、8/31マップ側か共通NPC基盤かを実装判断とする。</td></tr>
+      <tr><th>補正と理由</th><td>危険度の表現はExposure速度と帰還閉鎖のまま維持し、候補は方向の手掛かりに限定する。残秒・基準時刻・測定間隔は表示せず、既存フェーズ長から導出しない。所有権は判断003がマップ固有に定めた段階進行の側に置く。いずれも既存の実装範囲と所有権を変えないため補正可能と考える。</td></tr>
+      <tr><th>異化したもの</th><td>夏の光景を、依頼でも戦闘でもない一つの仕事として抽出し、その仕事の結果をゲーム内UIの進行バーではなく、個人がその場で読む一行動と一つの数値に置き換えた点が異化。異常を発生させず、情報源を人間の測定に結び付ける。</td></tr>
+      <tr><th>世界内の成立理由</th><td>舞台設定は、高性能な機械の横にCRT端末があり、高性能な機械から紙の記録が出力される文明を想定する。測る、記録する、巡回する手順は、この場所が異常な空間へ変わっても成立する。崩れないからだけ、8/32へ進む段階変化が測れる差として表に現れる。</td></tr>
+      <tr><th>曖昧に残す意味</th><td>なぜ値が段階的に変わるのか。点検役は誰が雇った人物で、何のために測っているのか。記録された値の正しい読み方は何か。8/32との関係は何か。いずれも痕跡として提示するが、世界設定としては確定しない。世界の起源、アノマリーの正体、博士の真意には触れない。</td></tr>
+    </tbody></table>
+  </section>
+
+  <section id="connections">
+    <h2>(e) 他担当への接続</h2>
+    <p><strong>接続タグ:</strong> Observation / NPCState / Environment / AugustPhase / Combat / InformationSharing</p>
+    <p><strong>使用するコンポーネント:</strong> catalog: NPCState、Effect.InformationChange、Effect.StateChange、AugustPhase。proposed: NpcPatrolSchedule、PersonalHintDelivery。catalogのIDは記述語彙であり、StudioのComponent IDや実装Serviceを保証しない。</p>
+    <p><strong>他候補へ提供できる性質:</strong> 既存のフェーズ進行を入力として受ける（段階変化の手掛かりとしてだけ使う）／Server権威の値を個人提示へ落とす／攻撃されないことを条件に挙動が変わる通常NPCが1体いる／残秒、単位、基準を表示しない手掛かりを構成できる。</p>
+    <table><tbody>
+      <tr><th>予約参照</th><td>ROLE-C-001（optional_connection、resolution: reserved_unresolved）。要求する性質: 回避判断の材料として提示できる（遠距離または非接触でも読める、または接近を避けながら読める）。代替: 接続がなくても、読む・通り過ぎる・攻撃して止めるは移動、攻撃、待機の既存操作だけで成立する。Cの候補が実在しない場合も、個人提示と巡回停止という結果自体は残る。</td></tr>
+      <tr><th>予約参照</th><td>ROLE-B-001（optional_connection、resolution: reserved_unresolved）。要求する性質: 取得と所持を個人単位の状態として保持できる。代替: 測定値はアイテムにせず個人提示に留める。Bの候補が無くても成立し、記録は持ち帰れないままRunの事実として消える。</td></tr>
+      <tr><th>未解決の理由</th><td>B-001: 正式なItemStackと取得源は未実装（SRC-01）のため、測定値をアイテムとして所持できるかは判断できない。C-001: Cの候補は管理側から配布されておらず、Cの001が何を定義するか不明。いずれも要求する性質の語彙だけを記し、相手の内容を創作していない。</td></tr>
+      <tr><th>ID未指定の要求</th><td>個人提示を既存HUDへ載せるか専用UIにするか。測定条件を近接・視認・時間条件のどれにするか。いずれも候補IDでは特定できないため共通設計側の判断が必要（adoption_blocker: true）。</td></tr>
+    </tbody></table>
+    <div class="note">予約IDは未作成であり得ます。peer-snapshotsが管理側から配布されていないため、相手の本文を読んでいません。存在しないページへのリンクは置いていません。</div>
+  </section>
+
+  <section id="cost">
+    <h2>(f) 新規ロジックと試作コスト</h2>
+    <p><code>requires_code: true</code> — 既存の8/31マップには通常NPCの状態機械、個人向け提示UI、測定の周期処理が存在しない。Server権威の測定値保持、個人提示の送信、攻撃による巡回停止という経路はいずれも新規実装を要する。外見だけの実装では値が個人ごとに違うこと、攻撃で記録が止まることが再現できないためtrueとする。これは必要性の記録であり、コード生成の許可ではない。</p>
+    <p><strong>新規ロジック:</strong> Serverが保持する定点の測定値とその進行／測定値を個人HUDへ送る提示経路と残存管理／通常NPC個体の巡回状態機械と攻撃による巡回停止／測定条件（通常のプレイヤーであること、測定条件を満たす位置であること）のServer検証。</p>
+    <p><strong>試作コスト: 中。</strong> 1体だけのNPCに限定すれば、Server側の巡回状態機械と個人HUDの1行表示で試せる。ただし通行、カメラ、Promptとの干渉、他マップのNPC案との共通化の要否、提示UIの設計は試作前に決める必要がある。8/31は地表タイルが1マップあたり約13,000 BasePartという記録があり（判断007）、その中での配置と動作確認は未確認。実時間の見積もりは出していない。</p>
+    <p><strong>想定する既存部品:</strong> 8/31のServer側フェーズ進行（August31Service）とフェーズ別状態／8/32の帰還閉鎖、Exposureの取得速度2.4倍、Run Lifetime 300秒（実装済み）／既存のServer権威のPlayer Anomaly属性と判定／既存のマップ生成とPromptの骨格。</p>
+  </section>
+
+  <section id="role-details">
+    <h2>(g) 担当固有（ROLE-A）の記述</h2>
+    <table><tbody>
+      <tr><th>NPCの目的</th><td>DAMの堤防で値を測るだけの点検役。目的はその場所の仕事であり、プレイヤーへの依頼でもクエ受理でも世界の説明でもない。world/information-design.mdが禁じる説明役を避け、会話で得られるのは今ここで何かを測っていることだけで、何がそうさせるのかには答えない。巡回の中断はプレイヤー側の入力の結果としてのみ起こり、世界設定とは切り離す。個体数は常に1体で、放置しても巡回は続くので放置でも成立する。</td></tr>
+      <tr><th>具体的な選択</th><td>待つ（測定値を読む）／通り過ぎる（他の観察へ時間を回す）／攻撃する（巡回を止める）／別の用事を先に済ませる。いずれも結果だけが返り、正解の提示はしない。</td></tr>
+      <tr><th>Player Anomalyの扱い</th><td>判断019によりPlayer Anomalyは通常NPCとInteractionできないため、測定値の取得は成立しない。巡回と測定はServerが続けるので、他の通常プレイヤーが読み取った値は他の個人の表示としてしか見えない。Player Anomaly自身が最後に記録を取り損ねた場合の扱い（記録が残るか消えるか）は未確定であり、地図の情報が全員分止まる扱いにはしない。</td></tr>
+      <tr><th>mob_contract: 対象外</th><td>spawn_condition: 通常モブ敵の発生を含まない。イベントから通常モブが生まれる契約はROLE-A-013で扱う。／population_cap: 個体数は常に1体で、上限と補充の概念を持たない。湧き枠の扱いはROLE-A-013側だけに置く。／non_combat_response: 戦闘ではない。攻撃と回避はプレイヤー側のみで、NPCに攻撃の選択肢はない。／exit_condition: 退場は巡回停止、マップ終了、Run終了のみ。湧き、補充、自然消滅の機構を持たない。／entity_distinction: 通常NPCでありAnomaly Entityではない。受理するInteraction Kindは測定条件を満たす近接の観測のみ。巨人の状態実装も出現計算も根拠にしない。</td></tr>
+    </tbody></table>
+  </section>
+
+  <footer>overnight-design-pilot-v1 ／ ROLE-A-001 ／ design_status: Draft ／ review_status: unreviewed ／ 実表示の確認は未実施（担当セッションではブラウザを使用していない）。</footer>
+</main>
+</body>
+</html>

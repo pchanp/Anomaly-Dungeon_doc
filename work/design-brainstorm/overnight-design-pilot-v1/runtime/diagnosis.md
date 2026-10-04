@@ -1,0 +1,25 @@
+# Happier/OpenCode 試走の調査結果
+
+Status: Draft。生成セッションの再起動はしていない。
+
+## 許可待ち
+
+ローカルHappier 0.2.12のpackage-dist/api-C99s_10r.mjs:95598にあるresolveOpenCodeFamilyPermissionConfigではsafe-yoloはread/edit/writeをallowとするがbash/task/external_directoryはask。workspace_writeの設定応答はsafe-yolo。今回の最初の操作はBashであり待機はこの設定と一致する。
+
+同ファイル95648のcreateOpenCodeBackendはユーザー環境の後にHappier生成OPENCODE_PERMISSIONを設定する。99317のOpenCode transportもセッションpermission rulesetを生成する。このため起動スクリプトのOPENCODE_CONFIG_CONTENTのbash:allowだけでは無人実行を保証できない。今回、モード変更後もpendingRequestsCount=2が残った。
+
+以前の「担当フォルダだけ書ける設定」という説明は強すぎた。Happierによる権限上書きとBashのファイル書き込みを含め、技術的隔離は未検証。別rootと読み取り専用パックは衝突軽減でありOSのsandboxではない。
+
+## 再開エラー
+
+readPendingFirstInputFromEnv (同ファイル143728付近) はHAPPIER_DAEMON_PENDING_FIRST_INPUTが存在すればJSON.parseとschema検証を行い、不正なら今回のエラーを投げる。現在の呼出元環境で同変数が存在し、JSONとして不正なことを内容を出力せず確認した。長さ308。11:17:51-pid-22003.logのstackもこの経路と一致する。
+
+起動済みセッションの初回指示は履歴へ配送済み。再開エラーは既存OpenCode履歴の破損を示す証拠ではない。環境変数を子プロセスのenvから外す確認ではhandoff_env_present=false。実際のresume成功と履歴連続性は未検証。
+
+対策案:管理側が独立したhappier resumeを呼ぶ際に限りsubprocess用envコピーから当該handoff変数を除去する。実行中Codexやdaemonの環境を変更しない。daemonが新規生成用に作る有効なhandoffは除去しない。
+
+## 次の試走案
+
+まず候補を作らない最小セッションでread/edit、停止、上記env対策付きresumeを確認。workspace_writeで生成担当はネイティブread/editを使いBash検証は管理側が実施する構成を優先。ブラウザや外部調査は未使用ならunavailable/unconfirmedと記録する。追加の出力制限の有効性も確認する。yoloへ無条件変更して境界確認を省略しない。
+
+元の終了期限2026-10-04 12:00 JSTを維持する。今回3セッションは停止済み。完成候補0件。再試走も期限を越えて自動継続しない。

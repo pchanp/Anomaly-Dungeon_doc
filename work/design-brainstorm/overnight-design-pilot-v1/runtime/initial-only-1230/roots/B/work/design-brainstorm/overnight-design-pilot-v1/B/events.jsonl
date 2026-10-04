@@ -1,0 +1,4 @@
+{"at":"2026-10-04T03:19:54.863960+00:00","event":"session_start","candidate_ids":[],"note":"管理側指示で与えられた観測開始時刻を転記した。自分による時刻取得は不可（Bash・実行ツール禁止）のため、以後の時刻はnullで記録する。"}
+{"at":null,"event":"reading_start","candidate_ids":[],"note":"時計情報を持ち合わせないため時刻不明。共通パック契約（README/scope/invariants/effect-contract/components/candidate-format/ownership/pilot-and-timing/review-rules/prompts/schema/reserved-ids/pack-integrity/sources.json）の読み込みを開始。"}
+{"at":null,"event":"reading_end","candidate_ids":[],"note":"時刻不明。snapshotsの必読MDと、ROLE=B指示の追加指定（判断010-012、economy-and-progression.md）と全アノマリー資料を読み終えた。pack-only検証は管理側が担当し、自分は実行していない。"}
+{"at":null,"event":"batch_start","candidate_ids":["ROLE-B-001","ROLE-B-004","ROLE-B-013"],"note":"時刻不明。试走3件のJSONとHTMLの作成を開始。"}

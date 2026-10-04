@@ -1,0 +1,89 @@
+{
+  "run_id": "overnight-design-pilot-v1",
+  "role": "B",
+  "state": "awaiting_pilot_review",
+  "mode": "PILOT_ONLY",
+  "completed_ids": [
+    "ROLE-B-001",
+    "ROLE-B-004",
+    "ROLE-B-013"
+  ],
+  "next_ids": [
+    "ROLE-B-002",
+    "ROLE-B-003",
+    "ROLE-B-005",
+    "ROLE-B-006",
+    "ROLE-B-007",
+    "ROLE-B-008",
+    "ROLE-B-009",
+    "ROLE-B-010",
+    "ROLE-B-011",
+    "ROLE-B-012",
+    "ROLE-B-014",
+    "ROLE-B-015"
+  ],
+  "started_at": null,
+  "ended_at": null,
+  "stop_reason": null,
+  "execution": {
+    "provider": null,
+    "model": null,
+    "session_id": null
+  },
+  "sessions": [],
+  "batches": [
+    {
+      "batch": 1,
+      "candidate_ids": [
+        "ROLE-B-001",
+        "ROLE-B-004",
+        "ROLE-B-013"
+      ],
+      "note": "試走3件。8/31・廃TSUTAYA・全マップ共通を各1件。生成と図作成を同じbatch内に含む。",
+      "at": null
+    }
+  ],
+  "usage": {
+    "input_tokens": null,
+    "output_tokens": null,
+    "cost": null,
+    "currency": null,
+    "measurement_source": null
+  },
+  "visual_check": {
+    "status": "unavailable",
+    "checked_ids": [],
+    "note": "このセッションではブラウザを使用できないため、実ブラウザでのHTMLおよびSVGの目視確認を行っていない。SVGのviewBox・role=img・aria-label・XML構文はファイルの記述として確認したが、目視確認済みとは扱わない。共通パックのvalidation-report.mdも同様に目視確認 Unconfirmed と記録している。管理側での目視確認をお願いする。"
+  },
+  "validation": {
+    "pack_only": "not_run_by_this_role",
+    "pilot": "not_run_by_this_role",
+    "note": "今回の担当指示はPython検証と実表示確認を管理側の担当とし、自分では実行しないことになっている。終了コードと出力は参照していない。"
+  },
+  "measurement_notes": [
+    "すべての時刻は null。Bashや時刻取得を使わない指示のため、観測できない時刻を推測で埋めていない。管理側の観測開始時刻は提示されたが、自分のセッションの実時刻として転記していない。",
+    "所要時間とゲーム内試作コストは別物。prototype_cost の band は設計上の試作見積もりであり、生成にかかった時間ではない。",
+    "トークン数と費用は管理サービスが実測値を提供していないため null。モデルの自己申告も使用していない。",
+    "セッションID・プロバイダ・モデルは実行時に確認できたものをのみ記録する指示だが、確認手段を持っていなかったため null のままにした。",
+    "参照資料の読み込み時間とbatch生成時間と待機時間を分離した集計は、実時刻が取れなかったため算出していない。"
+  ],
+  "deliverables": {
+    "candidate_files": 6,
+    "candidate_count": 3,
+    "supporting_files": [
+      "index.html",
+      "manifest.json",
+      "board.css",
+      "progress.json",
+      "events.jsonl",
+      "handoff.md"
+    ]
+  },
+  "review_items_for_humans": [
+    "ROLE-B-001: current-implementation.md の獲得物／喪失物分類に第三の所在（預け簿）を足す案。conflicts として記録済み。採用時に獲得物表示の判断が必要。",
+    "ROLE-B-004: map-gimmick-ideas.md の既存案（Back Room再生で共有BGMが変わる）へ媒体個体化と公開不可の消費を加える案。差分の採用判断が必要。",
+    "ROLE-B-013: 判断011のレアルート品3系統に本件を置くか新しい系統を立てるかの判断。conflicts として記録済み。",
+    "全3件: Anomaly Exposure の単位、Run内別所在の定義、結果傍受系との評価順は正本側の規則欠落。adoption blocker として unresolved_refs に記録した。",
+    "全3件: ROLE-A-002 と ROLE-A-005 は予約IDのみ。peer-snapshots 未配布のため相手の provides_traits 未確認。"
+  ]
+}

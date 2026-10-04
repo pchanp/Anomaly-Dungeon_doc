@@ -1,0 +1,17 @@
+{
+  "status": "stopped_launch_test_failed",
+  "candidate_count": 0,
+  "model": "opencode/space-bunny-free",
+  "reason": [
+    "initial Bash operations remained pending under acceptEdits and after workspace_write update",
+    "happier resume failed: Pending first input handoff is malformed"
+  ],
+  "stopped_sessions": [
+    "cmut6vspq205soi5c0lr467y4",
+    "cmut6vxuk20asoi5c829lxft3",
+    "cmut6w1rt20dyoi5cxh3e29h0"
+  ],
+  "finished_at": "2026-10-04T02:18:21.912439+00:00",
+  "supervisor_stopped": true,
+  "backend_substituted": false
+}

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>overnight-design-pilot-v1 ／ ROLE=C 設計候補一覧（試走3件）</title>
+  <link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+  <header class="top">
+    <p class="sub">overnight-design-pilot-v1 ／ ROLE=C ／ 試走（PILOT_ONLY）</p>
+    <h1>ROLE=C 設計候補一覧 — 001 / 004 / 013</h1>
+    <p>スキル担当として作成した設計候補の配列。3件とも予約枠 001（8/31）、004（廃TSUTAYA）、013（全マップ共通）に対応する。すべて design_status は Idea、review_status は unreviewed であり、採用の判断はしていない。</p>
+    <div class="badges">
+      <span class="badge hyp">PILOT_ONLY</span>
+      <span class="badge">完成 3件 / 15件</span>
+      <span class="badge unknown">ブラウザ実表示は未確認</span>
+      <span class="badge unknown">pack-only と pilot 検証は管理側が実行</span>
+    </div>
+    <p class="sub">002、003、005、006、007、008、009、010、011、012、014、015 は未作成。リンクは置いていない。</p>
+  </header>
+
+  <section>
+    <h2>完成した候補</h2>
+    <table><tbody>
+      <tr><th>ROLE-C-001</th><td><a href="ROLE-C-001.html">巻き戻し地点</a><br>8/31・マップ固有・アクション系・rank 1（候補値）。フェーズ遷移確定の窓で前相のアンカーへ一度だけ戻り、戻ったフェーズの間は発動受付が封じられる。<code>requires_code: true</code>／<code>prototype_cost: 中</code></td></tr>
+      <tr><th>ROLE-C-004</th><td><a href="ROLE-C-004.html">試聴の記録</a><br>廃TSUTAYA・マップ固有・探索系・rank null（理由あり）。個人試聴を自分で中断し、未閲覧1件だけを個人記録に残す。<code>requires_code: true</code>／<code>prototype_cost: 中</code></td></tr>
+      <tr><th>ROLE-C-013</th><td><a href="ROLE-C-013.html">息を揃える窓</a><br>全マップ共通・全マップ共通・補助系・rank null（理由あり）。指名した相手との短期な連携受付窓を開き、開始と終了をSound Interactionの入力として記録する。<code>requires_code: true</code>／<code>prototype_cost: 中</code></td></tr>
+    </tbody></table>
+  </section>
+
+  <section>
+    <h2>未作成の予約枠</h2>
+    <p>002、003（8/31）、005、006（廃TSUTAYA）、007、008、009（SEKIGAHARA）、010、011、012（研究所）、014、015（全マップ共通）。内容は未作成であり、存在しないファイルへのリンクは置いていない。</p>
+    <div class="note">本セッションでは peer-snapshots が配布されていないため、他担当（A、B）の候補本文は読んでいない。001と004、013が参照しているのは予約IDと、必要な性質の要求だけである。</div>
+  </section>
+
+  <section>
+    <h2>この一覧の位置づけ</h2>
+    <p>試走（PILOT_ONLY）の3件である。残る12件（002、003、005、006、007、008、009、010、011、012、014、015）は、管理側から RESUME_AFTER_PILOT の続行指示があった場合のみ作成する。機械検証の通過は採用を意味しない。</p>
+    <p>生成に実測できた時刻はない。時刻は null とし、理由は <code>progress.json</code> と <code>handoff.md</code> に残した。</p>
+  </section>
+
+  <footer>overnight-design-pilot-v1 ／ ROLE=C ／ board.css は共通パックの templates/board.css のコピー。</footer>
+</main>
+</body>
+</html>

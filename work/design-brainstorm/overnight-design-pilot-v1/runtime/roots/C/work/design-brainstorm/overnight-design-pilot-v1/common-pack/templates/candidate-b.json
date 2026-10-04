@@ -1,0 +1,160 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-001",
+  "role": "B",
+  "title": "【記入】作業用見出し",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "8/31",
+  "classification": "マップ固有",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "Effectの種別",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "【記入】実際の根拠"
+    }
+  ],
+  "design_hypothesis": "【記入】根拠から今回提案する部分",
+  "experience": {
+    "goal": "【記入】狙う体験",
+    "player_choice": "【記入】具体的な選択肢",
+    "sacrifice_or_risk": "【記入】失うもの"
+  },
+  "placement_assumption": "【記入】既存場所か配置未定。新地図を確定しない",
+  "components": [
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "【記入】必要な機能"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "InformationChange",
+      "trigger": "【記入】行為や環境イベント",
+      "condition": "【記入】成立条件",
+      "result": "【記入】何が変わるか",
+      "target": "【記入】作用対象",
+      "scope": "【記入】個人/Party/Runと範囲",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "【記入】終了条件とマップ/Run終了の扱い"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかで解除する既定規則。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effect・同一対象は非加算1件。固定秒数は残り時間更新。",
+        "conflict_resolution": "別Effectとの競合は、解決規則を定めるまで保留して記録する。"
+      },
+      "server_validation": "【記入】Server確定条件",
+      "client_presentation": "【記入】局所提示と共有事実の違い",
+      "feedback": {
+        "success": "【記入】成功時",
+        "failure": "【記入】不成立時",
+        "ambiguous": "【記入】意味を断定しない手掛かり"
+      }
+    }
+  ],
+  "provides_traits": [],
+  "connection_tags": [
+    "Observation"
+  ],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": [
+    "【記入】未確定内容と決める論点"
+  ],
+  "worldview": {
+    "defamiliarized_element": "【記入】何を異化したか/不要な理由",
+    "in_world_rationale": "【記入】既存世界観の範囲で成立し得る理由",
+    "meaning_left_ambiguous": "【記入】確定しない意味",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": "unknown",
+  "requires_code_reason": "【記入】必要性を判定できない理由",
+  "new_logic": [],
+  "prototype_cost": {
+    "band": "不明",
+    "rationale": "【記入】コスト根拠",
+    "implementation_steps": [
+      "【記入】試作時の工程"
+    ],
+    "assumed_existing_parts": []
+  },
+  "role_details": {
+    "item_kind": "未確定",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Undecided",
+        "detail": "【記入】経路の条件/未定内容/対象外理由"
+      },
+      {
+        "route": "Hold",
+        "status": "Undecided",
+        "detail": "【記入】経路の条件/未定内容/対象外理由"
+      },
+      {
+        "route": "Use",
+        "status": "Undecided",
+        "detail": "【記入】経路の条件/未定内容/対象外理由"
+      },
+      {
+        "route": "Present",
+        "status": "Undecided",
+        "detail": "【記入】経路の条件/未定内容/対象外理由"
+      },
+      {
+        "route": "Place",
+        "status": "Undecided",
+        "detail": "【記入】経路の条件/未定内容/対象外理由"
+      },
+      {
+        "route": "Lose",
+        "status": "Undecided",
+        "detail": "【記入】経路の条件/未定内容/対象外理由"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Undecided",
+        "detail": "【記入】経路の条件/未定内容/対象外理由"
+      },
+      {
+        "route": "Sell",
+        "status": "Undecided",
+        "detail": "【記入】経路の条件/未定内容/対象外理由"
+      },
+      {
+        "route": "Quest",
+        "status": "Undecided",
+        "detail": "【記入】経路の条件/未定内容/対象外理由"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "Undecided",
+        "detail": "【記入】経路の条件/未定内容/対象外理由"
+      }
+    ],
+    "ownership_state": "【記入】個人所持の状態",
+    "server_run_state": "【記入】Server Run状態/影響しない理由"
+  },
+  "html_file": "ROLE-B-001.html"
+}

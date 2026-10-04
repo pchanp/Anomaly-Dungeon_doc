@@ -6,11 +6,11 @@ Kilo が担当する 5 マップの 2D 設定画。各マップごとに HTML（
 
 | マップ | 描画 | 根拠（MD） |
 | --- | --- | --- |
-| 8月31日 | [HTML](august-31/august-31-view.html)、[SVG](august-31/august-31-view.svg) | [マップ案](../../../docs/systems/map-gimmick-ideas.md)、[景観構成](../../../docs/decisions/008-august-31-landscape-composition.md) |
-| Abandoned TSUTAYA | [HTML](tsutaya/tsutaya-view.html)、[SVG](tsutaya/tsutaya-view.svg) | [マップ案](../../../docs/systems/map-gimmick-ideas.md)、[閉店直後のアーカイブ](../../../docs/decisions/009-tsutaya-closing-time-archive.md) |
-| SEKIGAHARA | [HTML](sekigahara/sekigahara-view.html)、[SVG](sekigahara/sekigahara-view.svg) | [マップ案](../../../docs/systems/map-gimmick-ideas.md) |
-| KOROHKAN | [HTML](korohkan/korohkan-view.html)、[SVG](korohkan/korohkan-view.svg) | [マップ案](../../../docs/systems/map-gimmick-ideas.md) |
-| Observation / Open Liminal Map | [HTML](open-liminal/open-liminal-view.html)、[SVG](open-liminal/open-liminal-view.svg) | [マップ案](../../../docs/systems/map-gimmick-ideas.md) |
+| 8月31日 | [HTML](august-31/august-31-view.html)、[SVG](august-31/august-31-view.svg)、[PNG](august-31/august-31-view.png) | [マップ案](../../../docs/systems/map-gimmick-ideas.md)、[景観構成](../../../docs/decisions/008-august-31-landscape-composition.md) |
+| Abandoned TSUTAYA | [HTML](tsutaya/tsutaya-view.html)、[SVG](tsutaya/tsutaya-view.svg)、[PNG](tsutaya/tsutaya-view.png) | [マップ案](../../../docs/systems/map-gimmick-ideas.md)、[閉店直後のアーカイブ](../../../docs/decisions/009-tsutaya-closing-time-archive.md) |
+| SEKIGAHARA | [HTML](sekigahara/sekigahara-view.html)、[SVG](sekigahara/sekigahara-view.svg)、[PNG](sekigahara/sekigahara-view.png) | [マップ案](../../../docs/systems/map-gimmick-ideas.md) |
+| KOROHKAN | [HTML](korohkan/korohkan-view.html)、[SVG](korohkan/korohkan-view.svg)、[PNG](korohkan/korohkan-view.png) | [マップ案](../../../docs/systems/map-gimmick-ideas.md) |
+| Observation / Open Liminal Map | [HTML](open-liminal/open-liminal-view.html)、[SVG](open-liminal/open-liminal-view.svg)、[PNG](open-liminal/open-liminal-view.png) | [マップ案](../../../docs/systems/map-gimmick-ideas.md) |
 
 共通の描画方針（前の Kilo セッションの README に準ずる）:
 
@@ -19,5 +19,7 @@ Kilo が担当する 5 マップの 2D 設定画。各マップごとに HTML（
 - 仕様を勝手に確定しない。
 - 前景/中景/遠景、光、素材の案が見えるようにする（単なる地図・文章ではない）。
 
+各図の下部には代替の配色・光方向を示す小帯（ALT-○○）を 1 つ添えている。主案と代替案は同じ図の別案であり、いずれも仕様ではない。
+
 生成手段: 純粋 Python (pypng)、svgwrite、Canvas API（HTML）。
-コミット・プッシュは行わない。
+PNG は HTML をヘッドレス Chrome で 1600x1200 で撮影したもの。コミット・プッシュは行わない。

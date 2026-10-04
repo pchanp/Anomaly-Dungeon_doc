@@ -1,0 +1,139 @@
+{
+  "schema_version": "0.1",
+  "namespace_note": "共通パックの記述語彙。正式System IDやService IDではない。",
+  "components": [
+    {
+      "component": "Effect.Damage",
+      "design_status": "Designed（分類）",
+      "implementation_status": "Unconfirmed",
+      "source": "docs/systems/effect-components.md",
+      "note": "結果の分類として設計済み。任意の候補への汎用実装が存在する保証はない。"
+    },
+    {
+      "component": "Effect.Heal",
+      "design_status": "Designed（分類）",
+      "implementation_status": "Unconfirmed",
+      "source": "docs/systems/effect-components.md",
+      "note": "結果の分類として設計済み。任意の候補への汎用実装が存在する保証はない。"
+    },
+    {
+      "component": "Effect.StateChange",
+      "design_status": "Designed（分類）",
+      "implementation_status": "Unconfirmed",
+      "source": "docs/systems/effect-components.md",
+      "note": "結果の分類として設計済み。任意の候補への汎用実装が存在する保証はない。"
+    },
+    {
+      "component": "Effect.Move",
+      "design_status": "Designed（分類）",
+      "implementation_status": "Unconfirmed",
+      "source": "docs/systems/effect-components.md",
+      "note": "結果の分類として設計済み。任意の候補への汎用実装が存在する保証はない。"
+    },
+    {
+      "component": "Effect.InformationChange",
+      "design_status": "Designed（分類）",
+      "implementation_status": "Unconfirmed",
+      "source": "docs/systems/effect-components.md",
+      "note": "結果の分類として設計済み。任意の候補への汎用実装が存在する保証はない。"
+    },
+    {
+      "component": "Effect.WorldChange",
+      "design_status": "Designed（分類）",
+      "implementation_status": "Unconfirmed",
+      "source": "docs/systems/effect-components.md",
+      "note": "結果の分類として設計済み。任意の候補への汎用実装が存在する保証はない。"
+    },
+    {
+      "component": "Effect.RuleOverride",
+      "design_status": "Designed（分類）",
+      "implementation_status": "Unconfirmed",
+      "source": "docs/systems/effect-components.md",
+      "note": "結果の分類として設計済み。任意の候補への汎用実装が存在する保証はない。"
+    },
+    {
+      "component": "Observation",
+      "design_status": "Draft",
+      "implementation_status": "Unconfirmed",
+      "source": "docs/systems/observation-and-recognition.md",
+      "note": "近接Observerと視覚Observeを区別。判定方式の設計契約。"
+    },
+    {
+      "component": "SoundInteraction",
+      "design_status": "Draft",
+      "implementation_status": "Unconfirmed",
+      "source": "docs/systems/anomaly-interaction.md",
+      "note": "音源位置・到達・遮蔽等の入力。BGMが自動的にInteractionになる規則はない。"
+    },
+    {
+      "component": "ItemLifecycle",
+      "design_status": "Draft",
+      "implementation_status": "NotImplemented",
+      "source": "docs/anomalies/memory-swapper.md",
+      "note": "正式な取得源／ItemStack／識別経路は未実装。デバッグInventory境界と分ける。"
+    },
+    {
+      "component": "InventoryBoundary",
+      "design_status": "Implemented（棚卸し）",
+      "implementation_status": "Partial",
+      "source": "docs/systems/current-implementation.md",
+      "note": "デバッグ付与、20枠/初期Secure Slot4枠と獲得喪失分類。SRC-01を確認。"
+    },
+    {
+      "component": "QuestProgress",
+      "design_status": "Draft",
+      "implementation_status": "Partial",
+      "source": "docs/systems/quests.md",
+      "note": "単一ラン目標のAttribute実装と博士1件/その他3件の設計を区別。"
+    },
+    {
+      "component": "AnomalySpawn",
+      "design_status": "Accepted（判断017）",
+      "implementation_status": "NotImplemented",
+      "source": "docs/decisions/017-run-anomaly-spawn-components.md",
+      "note": "個別出現確率・同時出現数・Run変動。共通Anomaly Systemは未実装。"
+    },
+    {
+      "component": "NPCState",
+      "design_status": "Idea/Draft",
+      "implementation_status": "Unconfirmed",
+      "source": "docs/systems/map-gimmick-ideas.md",
+      "note": "通常NPC/モブAIはマップ文脈ごとの候補。巨人Entityの状態実装を通常NPCの実装根拠にしない。"
+    },
+    {
+      "component": "SkillActivation",
+      "design_status": "Draft",
+      "implementation_status": "Partial",
+      "source": "docs/systems/current-implementation.md",
+      "note": "Magic Bolt/Roll/Stealthの3種が実装済み。設計スキル全体や4枠成長を保証しない。"
+    },
+    {
+      "component": "PlacementContext",
+      "design_status": "Implemented（配置規約）",
+      "implementation_status": "Partial",
+      "source": "docs/systems/current-implementation.md",
+      "note": "既存ルームの配置point規約。新地形・研究所構造の定義ではない。"
+    },
+    {
+      "component": "WhisperTransfer",
+      "design_status": "Draft/Accepted（判断018）",
+      "implementation_status": "Unconfirmed",
+      "source": "docs/anomalies/whisper.md",
+      "note": "Invisible Entityの追従先移送と元同僚Quest。実装済みとは記されていない。"
+    },
+    {
+      "component": "AugustPhase",
+      "design_status": "Prototype: Implemented",
+      "implementation_status": "ImplementedPrototype",
+      "source": "docs/systems/map-gimmick-ideas.md",
+      "note": "既存フェーズと8/32の帰還閉鎖・寿命。Rare Lootや強制Entityは未実装。"
+    },
+    {
+      "component": "ArchiveMedia",
+      "design_status": "Prototype: Implemented / Draft",
+      "implementation_status": "Partial",
+      "source": "docs/systems/map-gimmick-ideas.md",
+      "note": "検索UI/CRT/試聴の枠組み。媒体実内容と共有BGM選択は未実装。"
+    }
+  ]
+}

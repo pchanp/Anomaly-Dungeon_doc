@@ -1,0 +1,461 @@
+{
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_count": 45,
+  "roles": {
+    "A": 15,
+    "B": 15,
+    "C": 15
+  },
+  "slots": [
+    {
+      "candidate_id": "ROLE-A-001",
+      "role": "A",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": true,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-002",
+      "role": "A",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-003",
+      "role": "A",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-004",
+      "role": "A",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": true,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-005",
+      "role": "A",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-006",
+      "role": "A",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-007",
+      "role": "A",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-008",
+      "role": "A",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-009",
+      "role": "A",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-010",
+      "role": "A",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-011",
+      "role": "A",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-012",
+      "role": "A",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-013",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": true,
+      "note": "通常モブイベントを含める枠"
+    },
+    {
+      "candidate_id": "ROLE-A-014",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-015",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-001",
+      "role": "B",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": true,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-002",
+      "role": "B",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-003",
+      "role": "B",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-004",
+      "role": "B",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": true,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-005",
+      "role": "B",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-006",
+      "role": "B",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-007",
+      "role": "B",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-008",
+      "role": "B",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-009",
+      "role": "B",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-010",
+      "role": "B",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-011",
+      "role": "B",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-012",
+      "role": "B",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-013",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": true,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-014",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-015",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-001",
+      "role": "C",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": true,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-002",
+      "role": "C",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-003",
+      "role": "C",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-004",
+      "role": "C",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": true,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-005",
+      "role": "C",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-006",
+      "role": "C",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-007",
+      "role": "C",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-008",
+      "role": "C",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-009",
+      "role": "C",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-010",
+      "role": "C",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-011",
+      "role": "C",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-012",
+      "role": "C",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-013",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": true,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-014",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-015",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    }
+  ]
+}

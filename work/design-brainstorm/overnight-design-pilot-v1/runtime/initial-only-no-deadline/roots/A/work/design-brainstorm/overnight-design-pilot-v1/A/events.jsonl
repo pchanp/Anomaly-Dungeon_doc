@@ -1,0 +1,10 @@
+{"at": null, "event": "session_start", "candidate_ids": [], "note": "ROLE=A / PILOT_ONLY。実行モードは担当指示で指定。日時取得手段（Bash等）が今回の担当へ禁止されているため at は null。管理側の観測開始時刻 2026-10-04T05:18:48Z は管理側の記録であり、本担当の実測時刻ではない。"}
+{"at": null, "event": "reading_start", "candidate_ids": [], "note": "共通パック契約とscopeの必読MDの読み込みを開始。pack-only検証は担当指示により実行せず、管理側の担当として引き渡す。"}
+{"at": null, "event": "reading_end", "candidate_ids": [], "note": "README/scope/invariants/source-conflicts/effect-contract/components/candidate-format/ownership/pilot-and-timing/review-rules/prompts、schema、reserved-ids、sources.json、pack-integrity.json、templates、reference形式、およびsnapshotsの必読MD（world 3点、systems 主要7点、whisper、判断003/005/007/008/009/017/018/019/021）を作業ディレクトリからReadで読了。"}
+{"at": null, "event": "batch_start", "candidate_ids": ["ROLE-A-001", "ROLE-A-004", "ROLE-A-013"], "note": "試走3件のHTMLとJSONを作成。時刻は観測できないため null。"}
+{"at": null, "event": "batch_end", "candidate_ids": ["ROLE-A-001", "ROLE-A-004", "ROLE-A-013"], "note": "3件を保存。index.html、manifest.json、progress.json、board.css、handoff.mdも同時に作成。"}
+{"at": null, "event": "validation_start", "candidate_ids": [], "note": "本回の担当専用指示によりPython検証と実ブラウザ確認は担当が実行しない（管理側が行う）。そのためこのイベント以降は実行も結果取得も行わない。"}
+{"at": null, "event": "validation_end", "candidate_ids": [], "note": "未実施。validate.py --pack-only と --stage pilot の実行と結果取得は管理側の担当。本handoffの「検証関連の未確認事項」を参照。"}
+{"at": null, "event": "visual_check", "candidate_ids": ["ROLE-A-001", "ROLE-A-004", "ROLE-A-013"], "note": "unavailable。担当セッションはBash/外部ディレクトリ/Studio/MCP禁止のためブラウザを起動できない。SVGとHTMLの実表示確認は管理側が行う。"}
+{"at": null, "event": "checkpoint", "candidate_ids": ["ROLE-A-001", "ROLE-A-004", "ROLE-A-013"], "note": "progress.state を awaiting_pilot_review に設定。PILOT_ONLYのため本番12件へは進まない。"}
+{"at": null, "event": "wait_start", "candidate_ids": [], "note": "管理側の停止または続行指示まで待機。待機時間はセッション内待機として集計する。"}

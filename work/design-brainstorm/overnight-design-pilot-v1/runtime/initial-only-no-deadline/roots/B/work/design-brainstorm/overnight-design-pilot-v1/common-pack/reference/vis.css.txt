@@ -1,0 +1,64 @@
+/* Anomaly Dungeon ／ visual brainstorm (OpenCode)
+   視覚仮説の探索専用スタイル。仕様確定ではない。 */
+
+:root{
+  --bg:#07090b;
+  --panel:#0d1116;
+  --line:#1e2a33;
+  --line2:#2d3f4c;
+  --dim:#5b7484;
+  --txt:#9fb6c4;
+  --hi:#e2f0f7;
+  --hyp:#c9a227;      /* 仮説 */
+  --unconf:#8a4fbf;   /* 未確定 */
+  --dgr:#b8452f;      /* 危険 */
+  --cy:#2fbfa0;       /* 青緑 */
+  --mono: ui-monospace,"SFMono-Regular",Menlo,Consolas,"DejaVu Sans Mono",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12px;line-height:1.6}
+a{color:var(--txt)}
+a:hover{color:var(--hi)}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 20px 60px}
+
+header.top{border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:22px}
+header.top h1{margin:0;font-size:19px;color:var(--hi);letter-spacing:.04em;font-weight:400}
+header.top .sub{margin-top:6px;color:var(--dim);max-width:70ch}
+.badges{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+.badge{border:1px solid var(--line2);color:var(--dim);padding:1px 7px;font-size:10px;letter-spacing:.14em}
+.badge.hyp{border-color:var(--hyp);color:var(--hyp)}
+.badge.unconf{border-color:var(--unconf);color:var(--unconf)}
+
+.doc{margin:26px 0 8px}
+.doc h2{margin:0 0 6px;font-size:13px;color:var(--hi);letter-spacing:.1em;font-weight:400;border-left:2px solid var(--line2);padding-left:8px}
+.doc p{margin:5px 0;color:var(--txt);max-width:78ch}
+.note{border-left:2px solid var(--hyp);background:rgba(201,162,39,.06);padding:8px 12px;margin:10px 0;color:var(--txt);max-width:78ch}
+.note b{color:var(--hyp);font-weight:400}
+
+.board{border:1px solid var(--line);background:var(--panel);margin:12px 0 26px}
+.board svg{display:block;width:100%;height:auto}
+
+/* SVG 内の共通クラス */
+.lbl{font-family:var(--mono);font-size:11px;fill:var(--txt)}
+.lbl-s{font-family:var(--mono);font-size:9.5px;fill:var(--dim)}
+.lbl-h{font-family:var(--mono);font-size:12px;fill:var(--hi);letter-spacing:.06em}
+.hyp-t{font-family:var(--mono);font-size:10px;fill:var(--hyp)}
+.unc-t{font-family:var(--mono);font-size:10px;fill:var(--unconf)}
+.hz{fill:none;stroke:var(--line2);stroke-width:1;stroke-dasharray:5 4}
+.hz2{fill:none;stroke:var(--hyp);stroke-width:1;stroke-dasharray:4 3;opacity:.75}
+.dim-s{fill:none;stroke:var(--dim);stroke-width:1}
+.mid-s{fill:none;stroke:var(--line2);stroke-width:1.2}
+.glow-cy{fill:none;stroke:var(--cy);opacity:.35}
+
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin:12px 0}
+.card{border:1px solid var(--line);background:var(--panel);padding:12px 14px}
+.card h3{margin:0 0 6px;font-size:12px;color:var(--hi);font-weight:400;letter-spacing:.06em}
+.card p{margin:4px 0;color:var(--txt)}
+.card .status{font-size:10px;letter-spacing:.12em;color:var(--hyp)}
+table{width:100%;border-collapse:collapse;margin:10px 0}
+th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top;color:var(--txt)}
+th{color:var(--dim);font-weight:400;font-size:10px;letter-spacing:.1em}
+td.k{color:var(--dim);white-space:nowrap;width:12em}
+footer.top{margin-top:40px;border-top:1px solid var(--line);padding-top:12px;color:var(--dim);font-size:11px}
+
+.nav{display:flex;justify-content:space-between;gap:12px;margin:18px 0;font-size:11px}

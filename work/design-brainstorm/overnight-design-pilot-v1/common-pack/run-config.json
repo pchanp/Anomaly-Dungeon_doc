@@ -1,0 +1,51 @@
+{
+  "run_id": "overnight-design-pilot-v1",
+  "pack_version": "0.1",
+  "task": "design_candidates_only",
+  "state": "prepared_not_started",
+  "total_candidates": 45,
+  "candidates_per_role": 15,
+  "per_map_per_role": 3,
+  "pilot_ids": {
+    "A": [
+      "ROLE-A-001",
+      "ROLE-A-004",
+      "ROLE-A-013"
+    ],
+    "B": [
+      "ROLE-B-001",
+      "ROLE-B-004",
+      "ROLE-B-013"
+    ],
+    "C": [
+      "ROLE-C-001",
+      "ROLE-C-004",
+      "ROLE-C-013"
+    ]
+  },
+  "default_mode": "PILOT_ONLY",
+  "batch_size": 3,
+  "generation_enabled": false,
+  "runtime": {
+    "provider": null,
+    "model": null,
+    "launch_method": null,
+    "stop_method": null,
+    "worktree_roots": {
+      "A": null,
+      "B": null,
+      "C": null
+    },
+    "starts_at": null,
+    "deadline_at": null,
+    "budget": {
+      "max_cost": null,
+      "currency": null,
+      "max_tokens": null
+    },
+    "sleep_prevention": null,
+    "connectivity_check": null,
+    "write_access_enforcement": null
+  },
+  "note": "実行前に管理側が設定。パック作成は起動の許可ではない。"
+}

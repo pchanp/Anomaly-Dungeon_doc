@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96">
+  <!-- draft: 補助系 / ヒール（仮称）案 — 自己回復 -->
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M48 14 L48 82 M14 48 L82 48" stroke="#4fd6c0" stroke-width="9" />
+    <path d="M30 14 L30 24 M66 14 L66 24" stroke="#dfeae4" stroke-width="3" />
+  </g>
+</svg>

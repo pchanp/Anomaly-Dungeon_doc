@@ -1,0 +1,27 @@
+{
+  "v": 1,
+  "ok": true,
+  "kind": "session_create",
+  "data": {
+    "session": {
+      "id": "cmut7mrmt2kkkoi5cwr2luk9x",
+      "createdAt": 1791081418852,
+      "updatedAt": 1791081422428,
+      "active": true,
+      "activeAt": 1791081420927,
+      "archivedAt": null,
+      "pendingCount": 1,
+      "pendingBlockedCount": 0,
+      "tag": "overnight-pilot-minimal-test",
+      "title": "OpenCode minimal lifecycle test",
+      "path": "/Users/saitouyouwataru/Documents/Git/Anomaly-Dungeon_doc/work/design-brainstorm/overnight-design-pilot-v1/runtime/minimal-test/root",
+      "host": "saitouyouwatarunoMac-mini.local",
+      "share": null,
+      "encryptionMode": "e2ee",
+      "encryption": {
+        "type": "dataKey"
+      }
+    },
+    "created": true
+  }
+}

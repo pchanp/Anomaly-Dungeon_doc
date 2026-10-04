@@ -1,0 +1,30 @@
+{
+  "v": 1,
+  "ok": true,
+  "kind": "session_status",
+  "data": {
+    "session": {
+      "id": "cmut961bo3o4poi5c1o4mhecr",
+      "createdAt": 1791083997491,
+      "updatedAt": 1791084576773,
+      "active": true,
+      "activeAt": 1791084541760,
+      "archivedAt": null,
+      "pendingCount": 0,
+      "pendingBlockedCount": 0,
+      "tag": "pilot-initial-only-1230-B",
+      "title": "ROLE=B アイテム設計候補 001/004/013 作成",
+      "path": "/Users/saitouyouwataru/Documents/Git/Anomaly-Dungeon_doc/work/design-brainstorm/overnight-design-pilot-v1/runtime/initial-only-1230/roots/B",
+      "host": "saitouyouwatarunoMac-mini.local",
+      "share": null,
+      "encryptionMode": "e2ee",
+      "encryption": {
+        "type": "dataKey"
+      }
+    },
+    "agentState": {
+      "controlledByUser": false,
+      "pendingRequestsCount": 0
+    }
+  }
+}

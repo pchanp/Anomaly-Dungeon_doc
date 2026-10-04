@@ -1,0 +1,21 @@
+{
+  "run_id": "overnight-design-pilot-v1",
+  "role": "A",
+  "candidates": [
+    {
+      "candidate_id": "ROLE-A-001",
+      "json_file": "ROLE-A-001.json",
+      "html_file": "ROLE-A-001.html"
+    },
+    {
+      "candidate_id": "ROLE-A-004",
+      "json_file": "ROLE-A-004.json",
+      "html_file": "ROLE-A-004.html"
+    },
+    {
+      "candidate_id": "ROLE-A-013",
+      "json_file": "ROLE-A-013.json",
+      "html_file": "ROLE-A-013.html"
+    }
+  ]
+}

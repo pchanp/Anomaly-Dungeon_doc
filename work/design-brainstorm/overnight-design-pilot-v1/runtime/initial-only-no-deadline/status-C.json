@@ -1,0 +1,30 @@
+{
+  "v": 1,
+  "ok": true,
+  "kind": "session_status",
+  "data": {
+    "session": {
+      "id": "cmutdf5vn53agoi5cu1g41wi4",
+      "createdAt": 1791091141761,
+      "updatedAt": 1791121813728,
+      "active": true,
+      "activeAt": 1791121805512,
+      "archivedAt": null,
+      "pendingCount": 0,
+      "pendingBlockedCount": 0,
+      "tag": "pilot-initial-only-no-deadline-C",
+      "title": "ROLE=C 設計候補 001/004/013 作成",
+      "path": "/Users/saitouyouwataru/Documents/Git/Anomaly-Dungeon_doc/work/design-brainstorm/overnight-design-pilot-v1/runtime/initial-only-no-deadline/roots/C",
+      "host": "saitouyouwatarunoMac-mini.local",
+      "share": null,
+      "encryptionMode": "e2ee",
+      "encryption": {
+        "type": "dataKey"
+      }
+    },
+    "agentState": {
+      "controlledByUser": false,
+      "pendingRequestsCount": 0
+    }
+  }
+}

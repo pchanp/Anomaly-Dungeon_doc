@@ -1,0 +1,46 @@
+ROLE=A
+MODE=PILOT_ONLY
+MODEL=opencode/space-bunny-free
+終了期限=2026-10-04 12:30 JST
+管理側観測開始時刻=2026-10-04T03:19:48.044533+00:00
+管理側の今回専用上書き指示: Bash、task、MCP、外部directory、外部調査、Git、Studioを一切使わない。ネイティブRead/Write/Edit/Glob/Grepのみ。共通パックのPython検証と実表示確認は管理側が行うので自分では実行しない。日時取得もBash不要、観測不能な時刻はnull。3件(001,004,013)のHTML+JSON、index、manifest、progress、handoffを作成して回答し、runnerは管理側が停止するまで待機。本番12件へ進まない。
+# 共通指示（担当指示と一緒に渡す）
+
+RUN_ID=overnight-design-pilot-v1。初回は設計候補のみ。ROLEは担当指示にあるA/B/Cの一つ。実行モードは管理側が `PILOT_ONLY` または `RESUME_AFTER_PILOT` を指定する。指定がないならPILOT_ONLY。
+
+共通パックREADMEの読む順序で契約を確認し、scope.mdの必読MDをsnapshotsから読む。文書Statusを保ち、関連Anomaly／決定記録を確認する。sources.jsonとpack-integrity.jsonを読み、開始時にpack-only検証を実行する。不一致は修正せず停止する。
+
+自分の出力先はworktree rootから `work/design-brainstorm/overnight-design-pilot-v1/ROLE/`（ROLEはA/B/Cに置換）のみ。共通パック、正本MD、src、tools、Studio、他担当、以前のworkを書き換えない。コミット／プッシュ／accepted化／実装をしない。requires_code=trueは必要性の記録で、コード生成の許可ではない。
+
+候補はreserved-ids.jsonの自分の予約枠へ作る。各マップ3件＋共通3件。HTML＋同IDのJSONで1件。index、manifest、CSS、画像、空ファイル、雛形、複製案は件数に含めない。design_statusはIdeaかDraft、review_statusはunreviewed。
+
+templates/candidate.htmlを構成の参考にする。形式参考reference/01-miw.html.txtの内容・図案は使わない。各候補に固有の作用図を最低1つ描き、根拠、仮説、判断、未確定事項、矛盾と補正、Effect契約、requires_codeの理由、接続要求、コストを本文にも記す。JSONの必須項目をHTMLから隠さない。
+
+相手候補の内容を創作しない。予約IDだけでは完成を意味しない。refsへrequired_traitsとfallback、unresolved_refsへ未解決理由を書く。peer-snapshotsが管理側から配布されていない限り、未作成相手を読んだと書かない。自分の候補は接続先なしでもどこまで成立するかを示す。
+
+PILOT_ONLYでは自分の001、004、013の3件を作り、pilot検証・リンク・実表示確認を行う。progressをawaiting_pilot_reviewにし、時刻・完成ID・確認結果・再開手順をhandoffへ残して終了する。自分で本番へ移行しない。
+
+RESUME_AFTER_PILOTは保存済み成果とprogressから再開する。残り12件を3件ずつ保存し、6／9／12／15件で検証する。15件でfinal検証、全リンクとHTML/SVGの表示、未解決参照、コストを確認する。ブラウザ確認不能ならunavailableと具体的理由を残す。
+
+開始、読み込み、batch、検証、待機、再試行、終了の実時刻をevents.jsonlへ記録する。確認できない日時・モデル・費用はnull。時間を想像で埋めない。所要時間とゲーム内試作コストを混同しない。
+
+期限／予算／停止要求／同一エラー3回で区切りを保存し終了する。情報が不足する候補は未確定と記録し、独立して進められる候補を続ける。実数が不足しても水増ししない。
+
+最後に件数・分類・表示確認・参照・重複・世界観の留保・requires_code・所要時間・停止理由・採用判断が必要な論点をhandoffへまとめる。採用判断は行わない。
+
+# ROLE=A — ギミックイベント・NPC
+
+common.mdとセットで使用。Aの予約ID001〜015とAフォルダだけを担当する。
+
+8/31はフェーズ、帰還判断、既存景観への作用。廃TSUTAYAは媒体・現実・アーカイブ・個人試聴と共有BGMの境界。SEKIGAHARAはNPC戦闘への介入・回避・補充上限のIdea。研究所は元同僚／whisperの設定と未確定な周辺作用。地形・部屋・正式配置の新案を作らない。
+
+NPCはその場所で目的を持つ。世界の真相を説明する存在にしない。Anomaly Entity／Player Anomaly／通常NPC／モブ敵を分ける。Player Anomalyは通常NPCとInteraction不可という判断019を確認する。
+
+共通013を、ギミックイベントから通常モブ敵が生まれる候補にする。発生条件、population capの方針、非戦闘対応、退場条件、Entityとは異なるライフサイクルをrole_details.mob_contractへ記す。未定値は未定と書く。他の共通候補まで同じモブの変種にしない。
+
+研究所では元同僚の接触によるwhisper追従先移送、機材へ閉じこもる、開くと二者消失・装置が残る既存連鎖を尊重する。結末、装置の正体、博士の処分の真偽を追加確定しない。追加NPCは仮説と明示する。
+
+role_detailsはNPCの目的、具体的な選択、Player Anomalyへの扱い、mob_contractを記す。対象外の項目も対象外理由を埋める。
+
+管理側の今回専用上書き指示: Bash、task、MCP、外部directory、外部調査、Git、Studioを一切使わない。ネイティブRead/Write/Edit/Glob/Grepのみ。共通パックのPython検証と実表示確認は管理側が行うので自分では実行しない。日時取得もBash不要、観測不能な時刻はnull。3件(001,004,013)のHTML+JSON、index、manifest、progress、handoffを作成して回答し、runnerは管理側が停止するまで待機。本番12件へ進まない。
+共通パックREADMEと指定資料を読み開始してください。巨大なsources.jsonやschemaは必要ならReadのoffset/limitで分けて読む。

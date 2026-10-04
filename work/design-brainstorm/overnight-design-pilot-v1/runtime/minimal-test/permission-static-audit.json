@@ -1,0 +1,6 @@
+{
+  "resume_context_passes_permission_mode": false,
+  "resume_context_passes_permission_timestamp": false,
+  "send_prompt_calls_session_update": false,
+  "resume_start_updates_provider_permission": true
+}

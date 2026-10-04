@@ -1,0 +1,30 @@
+{
+  "v": 1,
+  "ok": true,
+  "kind": "session_status",
+  "data": {
+    "session": {
+      "id": "cmut6w1rt20dyoi5cxh3e29h0",
+      "createdAt": 1791080172280,
+      "updatedAt": 1791080244353,
+      "active": true,
+      "activeAt": 1791080233141,
+      "archivedAt": null,
+      "pendingCount": 0,
+      "pendingBlockedCount": 0,
+      "tag": "overnight-design-pilot-v1-C",
+      "title": "ROLE=C スキル系デザイン候補 15件作成",
+      "path": "/Users/saitouyouwataru/Documents/Git/Anomaly-Dungeon_doc/work/design-brainstorm/overnight-design-pilot-v1/runtime/roots/C",
+      "host": "saitouyouwatarunoMac-mini.local",
+      "share": null,
+      "encryptionMode": "e2ee",
+      "encryption": {
+        "type": "dataKey"
+      }
+    },
+    "agentState": {
+      "controlledByUser": false,
+      "pendingRequestsCount": 2
+    }
+  }
+}

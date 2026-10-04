@@ -1,0 +1,27 @@
+{
+  "v": 1,
+  "ok": true,
+  "kind": "session_create",
+  "data": {
+    "session": {
+      "id": "cmut6w1rt20dyoi5cxh3e29h0",
+      "createdAt": 1791080172280,
+      "updatedAt": 1791080174445,
+      "active": true,
+      "activeAt": 1791080174187,
+      "archivedAt": null,
+      "pendingCount": 1,
+      "pendingBlockedCount": 0,
+      "tag": "overnight-design-pilot-v1-C",
+      "title": "OpenCode pilot C",
+      "path": "/Users/saitouyouwataru/Documents/Git/Anomaly-Dungeon_doc/work/design-brainstorm/overnight-design-pilot-v1/runtime/roots/C",
+      "host": "saitouyouwatarunoMac-mini.local",
+      "share": null,
+      "encryptionMode": "e2ee",
+      "encryption": {
+        "type": "dataKey"
+      }
+    },
+    "created": true
+  }
+}

@@ -1,0 +1,811 @@
+# Skill Icon Review — 仮案レビュー用 Layout Definition
+#
+# Status: Draft（アイコンはすべて_FIRST DRAFT_。ゲーム内実装前の目視レビュー用）
+#
+# 正本: docs/systems/skill-build.md（個別スキル案。安定System IDは未決定）
+#  -, このYAMLの id はレビュー用の整理であり、ゲーム側の System ID ではない
+#  -, 仮称（ヒール、範囲ヒール）は properties.display_name に「（仮称）」[..] として明記
+#  -, slot（枠）と image（アイコン）を別 Component に重ねている。
+#       z は panel=5 < slot=20 < image=30 の順。IDは slot_01..17 / icon_01..17 で重複なし
+#  -, texture の image は normal に assets/skill-icons/<file>.svg を指定（表示用）
+version: 1
+screen:
+  id: skill_icon_review
+  name: Anomaly Dungeon Skill Icon Review
+  width: 1920
+  height: 1080
+components:
+  - id: review_title
+    type: text
+    x: 176
+    y: 64
+    z: 30
+    width: 1000
+    height: 48
+    texture: null
+    properties:
+      text: "SKILL ICON REVIEW  (DRAFT / 仮案・目視レビュー用・実装アセットではない)"
+      variant: title
+      status: draft
+  - id: review_note
+    type: text
+    x: 176
+    y: 112
+    z: 30
+    width: 1400
+    height: 40
+    texture: null
+    properties:
+      text: "枠(slot)とアイコン(image)は別Component。輪郭は枠に焼き込まない。背景は透明。"
+      variant: caption
+
+  # ---------- Row 1: 通常攻撃 + 攻撃系 ----------
+  - id: row_attack
+    type: panel
+    x: 176
+    y: 176
+    z: 5
+    width: 704
+    height: 168
+    texture: null
+    properties:
+      title: ATTACK
+      category: 攻撃系
+      color: "#f0603c"
+  - id: slot_01
+    type: slot
+    x: 200
+    y: 200
+    z: 20
+    width: 96
+    height: 96
+    texture:
+      normal: assets/slot_normal.svg
+      selected: assets/slot_selected.svg
+    properties:
+      display_name: ワンツー（通常攻撃）
+      category: 通常攻撃
+      rank: "n/a"
+      asset: skill_basic_one_two.svg
+      status: draft
+  - id: icon_01
+    type: image
+    x: 200
+    y: 200
+    z: 30
+    width: 96
+    height: 96
+    texture:
+      normal: assets/skill-icons/skill_basic_one_two.svg
+    properties:
+      display_name: ワンツー（通常攻撃）
+      category: 通常攻撃
+      rank: "n/a"
+      draft_note: 素手の二連打。通常攻撃連携の貌を示す案
+  - id: label_01
+    type: text
+    x: 200
+    y: 304
+    z: 30
+    width: 112
+    height: 32
+    texture: null
+    properties:
+      text: ワンツー
+      variant: caption
+  - id: slot_02
+    type: slot
+    x: 312
+    y: 200
+    z: 20
+    width: 96
+    height: 96
+    texture:
+      normal: assets/slot_normal.svg
+      selected: assets/slot_selected.svg
+    properties:
+      display_name: 纏絲勁（tensikei）
+      category: 攻撃系
+      rank: 1
+      asset: skill_attack_tensikei.svg
+      status: draft
+  - id: icon_02
+    type: image
+    x: 312
+    y: 200
+    z: 30
+    width: 96
+    height: 96
+    texture:
+      normal: assets/skill-icons/skill_attack_tensikei.svg
+    properties:
+      display_name: 纏絲勁（tensikei）
+      category: 攻撃系
+      rank: 1
+      draft_note: 突きの一軸と張りの糸。小威力のParryとの併記は意匠化のみ
+  - id: label_02
+    type: text
+    x: 312
+    y: 304
+    z: 30
+    width: 112
+    height: 32
+    texture: null
+    properties:
+      text: 纏絲勁
+      variant: caption
+  - id: slot_03
+    type: slot
+    x: 424
+    y: 200
+    z: 20
+    width: 96
+    height: 96
+    texture:
+      normal: assets/slot_normal.svg
+      selected: assets/slot_selected.svg
+    properties:
+      display_name: 平安初段（heian-shodan）
+      category: 攻撃系
+      rank: 1
+      asset: skill_attack_heian_shodan.svg
+      status: draft
+  - id: icon_03
+    type: image
+    x: 424
+    y: 200
+    z: 30
+    width: 96
+    height: 96
+    texture:
+      normal: assets/skill-icons/skill_attack_heian_shodan.svg
+    properties:
+      display_name: 平安初段（heian-shodan）
+      category: 攻撃系
+      rank: 1
+      draft_note: 多段の連撃。21HitやParry区間は未決定のため数を示さない
+  - id: label_03
+    type: text
+    x: 424
+    y: 304
+    z: 30
+    width: 112
+    height: 32
+    texture: null
+    properties:
+      text: 平安初段
+      variant: caption
+  - id: slot_04
+    type: slot
+    x: 536
+    y: 200
+    z: 20
+    width: 96
+    height: 96
+    texture:
+      normal: assets/slot_normal.svg
+      selected: assets/slot_selected.svg
+    properties:
+      display_name: SS（StealStep）サイドキック
+      category: 攻撃系
+      rank: 2
+      asset: skill_attack_ss_side_kick.svg
+      status: draft
+  - id: icon_04
+    type: image
+    x: 536
+    y: 200
+    z: 30
+    width: 96
+    height: 96
+    texture:
+      normal: assets/skill-icons/skill_attack_ss_side_kick.svg
+    properties:
+      display_name: SS（StealStep）サイドキック
+      category: 攻撃系
+      rank: 2
+      draft_note: 接近から横蹴り。大ノックバックは未数値化
+  - id: label_04
+    type: text
+    x: 536
+    y: 304
+    z: 30
+    width: 112
+    height: 32
+    texture: null
+    properties:
+      text: SS サイドキック
+      variant: caption
+  - id: slot_05
+    type: slot
+    x: 648
+    y: 200
+    z: 20
+    width: 96
+    height: 96
+    texture:
+      normal: assets/slot_normal.svg
+      selected: assets/slot_selected.svg
+    properties:
+      display_name: COBRA
+      category: 攻撃系
+      rank: 2
+      asset: skill_attack_cobra.svg
+      status: draft
+  - id: icon_05
+    type: image
+    x: 648
+    y: 200
+    z: 30
+    width: 96
+    height: 96
+    texture:
+      normal: assets/skill-icons/skill_attack_cobra.svg
+    properties:
+      display_name: COBRA
+      category: 攻撃系
+      rank: 2
+      draft_note: 構えの据わり。入力間隔やクールタイムは未決定
+  - id: label_05
+    type: text
+    x: 648
+    y: 304
+    z: 30
+    width: 112
+    height: 32
+    texture: null
+    properties:
+      text: COBRA
+      variant: caption
+  - id: slot_06
+    type: slot
+    x: 760
+    y: 200
+    z: 20
+    width: 96
+    height: 96
+    texture:
+      normal: assets/slot_normal.svg
+      selected: assets/slot_selected.svg
+    properties:
+      display_name: BLOODMOON
+      category: 攻撃系
+      rank: 2
+      asset: skill_attack_bloodmoon_blade.svg
+      status: draft
+  - id: icon_06
+    type: image
+    x: 760
+    y: 200
+    z: 30
+    width: 96
+    height: 96
+    texture:
+      normal: assets/skill-icons/skill_attack_bloodmoon_blade.svg
+    properties:
+      display_name: BLOODMOON
+      category: 攻撃系
+      rank: 2
+      draft_note: 硬化させた血の刃。HP1割の連続判定基準は未決定
+  - id: label_06
+    type: text
+    x: 760
+    y: 304
+    z: 30
+    width: 112
+    height: 32
+    texture: null
+    properties:
+      text: BLOODMOON
+      variant: caption
+
+  # ---------- Row 2: 探索系 / 補助系 / アクション ----------
+  - id: row_explore_support
+    type: panel
+    x: 176
+    y: 336
+    z: 5
+    width: 704
+    height: 168
+    texture: null
+    properties:
+      title: EXPLORE / SUPPORT / ACTION
+      category: 探索系・補助系・アクション系
+  - id: slot_07
+    type: slot
+    x: 200
+    y: 360
+    z: 20
+    width: 96
+    height: 96
+    texture:
+      normal: assets/slot_normal.svg
+      selected: assets/slot_selected.svg
+    properties:
+      display_name: 開錠
+      category: 探索系
+      rank: 1
+      asset: skill_explore_unlock.svg
+      status: draft
+  - id: icon_07
+    type: image
+    x: 200
+    y: 360
+    z: 30
+    width: 96
+    height: 96
+    texture:
+      normal: assets/skill-icons/skill_explore_unlock.svg
+    properties:
+      display_name: 開錠
+      category: 探索系
+      rank: 1
+      draft_note: 錠と鍵。成功率は未決定のため数値を示さない
+  - id: label_07
+    type: text
+    x: 200
+    y: 464
+    z: 30
+    width: 112
+    height: 32
+    texture: null
+    properties:
+      text: 開錠
+      variant: caption
+  - id: slot_08
+    type: slot
+    x: 312
+    y: 360
+    z: 20
+    width: 96
+    height: 96
+    texture:
+      normal: assets/slot_normal.svg
+      selected: assets/slot_selected.svg
+    properties:
+      display_name: SHADE
+      category: 探索系
+      rank: 2
+      asset: skill_explore_shade_blink.svg
+      status: draft
+  - id: icon_08
+    type: image
+    x: 312
+    y: 360
+    z: 30
+    width: 96
+    height: 96
+    texture:
+      normal: assets/skill-icons/skill_explore_shade_blink.svg
+    properties:
+      display_name: SHADE
+      category: 探索系
+      rank: 2
+      draft_note: 破線 teleport と不可視。検知規則は未決定のため汎用性を示さない
+  - id: label_08
+    type: text
+    x: 312
+    y: 464
+    z: 30
+    width: 112
+    height: 32
+    texture: null
+    properties:
+      text: SHADE
+      variant: caption
+  - id: slot_09
+    type: slot
+    x: 424
+    y: 360
+    z: 20
+    width: 96
+    height: 96
+    texture:
+      normal: assets/slot_normal.svg
+      selected: assets/slot_selected.svg
+    properties:
+      display_name: ヒール（仮称）
+      category: 補助系
+      rank: 1
+      asset: skill_support_heal_self.svg
+      status: draft
+  - id: icon_09
+    type: image
+    x: 424
+    y: 360
+    z: 30
+    width: 96
+    height: 96
+    texture:
+      normal: assets/skill-icons/skill_support_heal_self.svg
+    properties:
+      display_name: ヒール（仮称）
+      category: 補助系
+      rank: 1
+      draft_note: 仮称。回復量は未決定
+  - id: label_09
+    type: text
+    x: 424
+    y: 464
+    z: 30
+    width: 112
+    height: 32
+    texture: null
+    properties:
+      text: ヒール（仮称）
+      variant: caption
+  - id: slot_10
+    type: slot
+    x: 536
+    y: 360
+    z: 20
+    width: 96
+    height: 96
+    texture:
+      normal: assets/slot_normal.svg
+      selected: assets/slot_selected.svg
+    properties:
+      display_name: cure
+      category: 補助系
+      rank: 1
+      asset: skill_support_cure_aura.svg
+      status: draft
+  - id: icon_10
+    type: image
+    x: 536
+    y: 360
+    z: 30
+    width: 96
+    height: 96
+    texture:
+      normal: assets/skill-icons/skill_support_cure_aura.svg
+    properties:
+      display_name: cure
+      category: 補助系
+      rank: 1
+      draft_note: 状態異常の解除と残留する小範囲効果
+  - id: label_10
+    type: text
+    x: 536
+    y: 464
+    z: 30
+    width: 112
+    height: 32
+    texture: null
+    properties:
+      text: cure
+      variant: caption
+  - id: slot_11
+    type: slot
+    x: 648
+    y: 360
+    z: 20
+    width: 96
+    height: 96
+    texture:
+      normal: assets/slot_normal.svg
+      selected: assets/slot_selected.svg
+    properties:
+      display_name: 範囲ヒール（仮称）
+      category: 補助系
+      rank: 2
+      asset: skill_support_heal_area.svg
+      status: draft
+  - id: icon_11
+    type: image
+    x: 648
+    y: 360
+    z: 30
+    width: 96
+    height: 96
+    texture:
+      normal: assets/skill-icons/skill_support_heal_area.svg
+    properties:
+      display_name: 範囲ヒール（仮称）
+      category: 補助系
+      rank: 2
+      draft_note: 仮称。対象・範囲・回復量は未決定
+  - id: label_11
+    type: text
+    x: 648
+    y: 464
+    z: 30
+    width: 112
+    height: 32
+    texture: null
+    properties:
+      text: 範囲ヒール（仮称）
+      variant: caption
+  - id: slot_12
+    type: slot
+    x: 760
+    y: 360
+    z: 20
+    width: 96
+    height: 96
+    texture:
+      normal: assets/slot_normal.svg
+      selected: assets/slot_selected.svg
+    properties:
+      display_name: 二段ジャンプ
+      category: アクション系
+      rank: 1
+      asset: skill_action_double_jump.svg
+      status: draft
+  - id: icon_12
+    type: image
+    x: 760
+    y: 360
+    z: 30
+    width: 96
+    height: 96
+    texture:
+      normal: assets/skill-icons/skill_action_double_jump.svg
+    properties:
+      display_name: 二段ジャンプ
+      category: アクション系
+      rank: 1
+      draft_note: 空中で一度踏み直す。装備中のみの能力
+  - id: label_12
+    type: text
+    x: 760
+    y: 464
+    z: 30
+    width: 112
+    height: 32
+    texture: null
+    properties:
+      text: 二段ジャンプ
+      variant: caption
+
+  # ---------- Row 3: アクション系 + 奥義 ----------
+  - id: row_action_ultimate
+    type: panel
+    x: 176
+    y: 496
+    z: 5
+    width: 704
+    height: 168
+    texture: null
+    properties:
+      title: ACTION / ULTIMATE
+      category: アクション系・奥義
+  - id: slot_13
+    type: slot
+    x: 200
+    y: 520
+    z: 20
+    width: 96
+    height: 96
+    texture:
+      normal: assets/slot_normal.svg
+      selected: assets/slot_selected.svg
+    properties:
+      display_name: 移動速度上昇
+      category: アクション系
+      rank: 1
+      asset: skill_action_move_speed.svg
+      status: draft
+  - id: icon_13
+    type: image
+    x: 200
+    y: 520
+    z: 30
+    width: 96
+    height: 96
+    texture:
+      normal: assets/skill-icons/skill_action_move_speed.svg
+    properties:
+      display_name: 移動速度上昇
+      category: アクション系
+      rank: 1
+      draft_note: 前進方向への加速。上昇量は未決定
+  - id: label_13
+    type: text
+    x: 200
+    y: 624
+    z: 30
+    width: 112
+    height: 32
+    texture: null
+    properties:
+      text: 移動速度上昇
+      variant: caption
+  - id: slot_14
+    type: slot
+    x: 312
+    y: 520
+    z: 20
+    width: 96
+    height: 96
+    texture:
+      normal: assets/slot_normal.svg
+      selected: assets/slot_selected.svg
+    properties:
+      display_name: グラップリング
+      category: アクション系
+      rank: 2
+      asset: skill_action_grapple.svg
+      status: draft
+  - id: icon_14
+    type: image
+    x: 312
+    y: 520
+    z: 30
+    width: 96
+    height: 96
+    texture:
+      normal: assets/skill-icons/skill_action_grapple.svg
+    properties:
+      display_name: グラップリング
+      category: アクション系
+      rank: 2
+      draft_note: 射出と張り付き。射程・対象は未決定
+  - id: label_14
+    type: text
+    x: 312
+    y: 624
+    z: 30
+    width: 112
+    height: 32
+    texture: null
+    properties:
+      text: グラップリング
+      variant: caption
+  - id: slot_15
+    type: slot
+    x: 424
+    y: 520
+    z: 20
+    width: 96
+    height: 96
+    texture:
+      normal: assets/slot_normal.svg
+      selected: assets/slot_selected.svg
+    properties:
+      display_name: 壁登り
+      category: アクション系
+      rank: 2
+      asset: skill_action_wall_climb.svg
+      status: draft
+  - id: icon_15
+    type: image
+    x: 424
+    y: 520
+    z: 30
+    width: 96
+    height: 96
+    texture:
+      normal: assets/skill-icons/skill_action_wall_climb.svg
+    properties:
+      display_name: 壁登り
+      category: アクション系
+      rank: 2
+      draft_note: 垂直面への移動。移動条件は未決定
+  - id: label_15
+    type: text
+    x: 424
+    y: 624
+    z: 30
+    width: 112
+    height: 32
+    texture: null
+    properties:
+      text: 壁登り
+      variant: caption
+  - id: slot_16
+    type: slot
+    x: 536
+    y: 520
+    z: 20
+    width: 96
+    height: 96
+    texture:
+      normal: assets/slot_normal.svg
+      selected: assets/slot_selected.svg
+    properties:
+      display_name: バックステップ
+      category: アクション系
+      rank: 2
+      asset: skill_action_backstep.svg
+      status: draft
+  - id: icon_16
+    type: image
+    x: 536
+    y: 520
+    z: 30
+    width: 96
+    height: 96
+    texture:
+      normal: assets/skill-icons/skill_action_backstep.svg
+    properties:
+      display_name: バックステップ
+      category: アクション系
+      rank: 2
+      draft_note: 無敵時間の回避。無敵時間・再使用条件は未決定
+  - id: label_16
+    type: text
+    x: 536
+    y: 624
+    z: 30
+    width: 112
+    height: 32
+    texture: null
+    properties:
+      text: バックステップ
+      variant: caption
+  - id: slot_17
+    type: slot
+    x: 648
+    y: 520
+    z: 20
+    width: 96
+    height: 96
+    texture:
+      normal: assets/slot_normal.svg
+      selected: assets/slot_selected.svg
+    properties:
+      display_name: 絶炎衝（zetsuensho）
+      category: 奥義
+      rank: "n/a"
+      asset: skill_ultimate_zetsuensho.svg
+      status: draft
+  - id: icon_17
+    type: image
+    x: 648
+    y: 520
+    z: 30
+    width: 96
+    height: 96
+    texture:
+      normal: assets/skill-icons/skill_ultimate_zetsuensho.svg
+    properties:
+      display_name: 絶炎衝（zetsuensho）
+      category: 奥義
+      rank: "n/a"
+      draft_note: 炎の高速移動と遅れての爆発。所属ランク・取得条件は未決定
+  - id: label_17
+    type: text
+    x: 648
+    y: 624
+    z: 30
+    width: 112
+    height: 32
+    texture: null
+    properties:
+      text: 絶炎衝（奥義）
+      variant: caption
+  - id: ultimate_note
+    type: text
+    x: 760
+    y: 528
+    z: 30
+    width: 112
+    height: 88
+    texture: null
+    properties:
+      text: "奥義のみ格上：色・密度とも強め"
+      variant: caption
+      status: draft
+
+  # ---------- Spec notes ----------
+  - id: spec_notes
+    type: text
+    x: 912
+    y: 200
+    z: 30
+    width: 880
+    height: 560
+    texture: null
+    properties:
+      text: "共通規格（暫定）
+        ・viewBox 0 0 96 96 / 背景透明
+        ・枠・選択枠は焼き込まない（既存 slot SVG と重ねる）
+        ・主線 4〜9 / 副線 3 / 破線は mobility・範囲のみ
+        ・余白: 描画は 14〜82 の範囲に収める
+        ・Attack #f0603c / Explore #e8b13a / Support #4fd6c0
+        ・Action #7fb0ff / Ultimate #ff8a3c + #ffd166
+        ・地色 #dfeae4 / アクセント #6fe3b0
+        すべて FIRST DRAFT。実装アセットではない。"
+      variant: body
+      status: draft

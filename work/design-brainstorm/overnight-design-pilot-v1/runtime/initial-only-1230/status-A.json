@@ -1,0 +1,30 @@
+{
+  "v": 1,
+  "ok": true,
+  "kind": "session_status",
+  "data": {
+    "session": {
+      "id": "cmut95wel3o2loi5c79xdcibd",
+      "createdAt": 1791083991116,
+      "updatedAt": 1791084571277,
+      "active": true,
+      "activeAt": 1791084534663,
+      "archivedAt": null,
+      "pendingCount": 0,
+      "pendingBlockedCount": 0,
+      "tag": "pilot-initial-only-1230-A",
+      "title": "ギミックイベント・NPC設計候補 001/004/013",
+      "path": "/Users/saitouyouwataru/Documents/Git/Anomaly-Dungeon_doc/work/design-brainstorm/overnight-design-pilot-v1/runtime/initial-only-1230/roots/A",
+      "host": "saitouyouwatarunoMac-mini.local",
+      "share": null,
+      "encryptionMode": "e2ee",
+      "encryption": {
+        "type": "dataKey"
+      }
+    },
+    "agentState": {
+      "controlledByUser": false,
+      "pendingRequestsCount": 0
+    }
+  }
+}

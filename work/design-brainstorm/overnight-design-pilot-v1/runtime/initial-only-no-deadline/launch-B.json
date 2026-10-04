@@ -1,0 +1,27 @@
+{
+  "v": 1,
+  "ok": true,
+  "kind": "session_create",
+  "data": {
+    "session": {
+      "id": "cmutdf1xq537soi5cy63yeb9s",
+      "createdAt": 1791091136653,
+      "updatedAt": 1791091138640,
+      "active": false,
+      "activeAt": 1791091136654,
+      "archivedAt": null,
+      "pendingCount": 1,
+      "pendingBlockedCount": 0,
+      "tag": "pilot-initial-only-no-deadline-B",
+      "title": "OpenCode pilot B initial-only",
+      "path": "/Users/saitouyouwataru/Documents/Git/Anomaly-Dungeon_doc/work/design-brainstorm/overnight-design-pilot-v1/runtime/initial-only-no-deadline/roots/B",
+      "host": "saitouyouwatarunoMac-mini.local",
+      "share": null,
+      "encryptionMode": "e2ee",
+      "encryption": {
+        "type": "dataKey"
+      }
+    },
+    "created": true
+  }
+}

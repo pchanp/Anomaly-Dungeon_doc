@@ -1,0 +1,10 @@
+{
+  "model": "opencode/space-bunny-free",
+  "account": "configured default",
+  "deadline": null,
+  "mode": "PILOT_ONLY",
+  "resume": false,
+  "bash_by_agent": false,
+  "validation_by": "manager",
+  "state": "starting"
+}

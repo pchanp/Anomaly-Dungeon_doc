@@ -1,0 +1,20 @@
+{
+  "A": {
+    "id": "cmut6vspq205soi5c0lr467y4",
+    "root": "/Users/saitouyouwataru/Documents/Git/Anomaly-Dungeon_doc/work/design-brainstorm/overnight-design-pilot-v1/runtime/roots/A",
+    "output": "/Users/saitouyouwataru/Documents/Git/Anomaly-Dungeon_doc/work/design-brainstorm/overnight-design-pilot-v1/runtime/roots/A/work/design-brainstorm/overnight-design-pilot-v1/A",
+    "started_at": "2026-10-04T02:16:04.503622+00:00"
+  },
+  "B": {
+    "id": "cmut6vxuk20asoi5c829lxft3",
+    "root": "/Users/saitouyouwataru/Documents/Git/Anomaly-Dungeon_doc/work/design-brainstorm/overnight-design-pilot-v1/runtime/roots/B",
+    "output": "/Users/saitouyouwataru/Documents/Git/Anomaly-Dungeon_doc/work/design-brainstorm/overnight-design-pilot-v1/runtime/roots/B/work/design-brainstorm/overnight-design-pilot-v1/B",
+    "started_at": "2026-10-04T02:16:09.704689+00:00"
+  },
+  "C": {
+    "id": "cmut6w1rt20dyoi5cxh3e29h0",
+    "root": "/Users/saitouyouwataru/Documents/Git/Anomaly-Dungeon_doc/work/design-brainstorm/overnight-design-pilot-v1/runtime/roots/C",
+    "output": "/Users/saitouyouwataru/Documents/Git/Anomaly-Dungeon_doc/work/design-brainstorm/overnight-design-pilot-v1/runtime/roots/C/work/design-brainstorm/overnight-design-pilot-v1/C",
+    "started_at": "2026-10-04T02:16:14.987168+00:00"
+  }
+}

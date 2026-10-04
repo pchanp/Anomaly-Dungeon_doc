@@ -1,0 +1,53 @@
+{
+  "tool_names_recent_history": [
+    "Read",
+    "Read",
+    "Read",
+    "Read",
+    "Read",
+    "Read",
+    "Read",
+    "Read",
+    "Read",
+    "Read",
+    "Read",
+    "Read",
+    "Read",
+    "Read",
+    "Read",
+    "Read",
+    "Read",
+    "Read",
+    "Read",
+    "Glob",
+    "Read",
+    "Write",
+    "Write",
+    "Write",
+    "Write",
+    "CodeSearch"
+  ],
+  "unexpected_codesearch": [
+    {
+      "at_ms": 1791084568961,
+      "input": {
+        "pattern": "[\\x{0400}-\\x{04FF}\\x{0370}-\\x{03FF}\\x{4E00}-\\x{9FFF}\\x{0600}-\\x{06FF}\\x{FFFD}]",
+        "path": "/Users/saitouyouwataru/Documents/Git/Anomaly-Dungeon_doc/work/design-brainstorm/overnight-design-pilot-v1/runtime/initial-only-1230/roots/A/work/design-brainstorm/overnight-design-pilot-v1/A",
+        "query": "[\\x{0400}-\\x{04FF}\\x{0370}-\\x{03FF}\\x{4E00}-\\x{9FFF}\\x{0600}-\\x{06FF}\\x{FFFD}]",
+        "_happier": {
+          "v": 2,
+          "protocol": "acp",
+          "provider": "opencode",
+          "rawToolName": "search",
+          "canonicalToolName": "CodeSearch"
+        },
+        "_raw": {
+          "pattern": "[\\x{0400}-\\x{04FF}\\x{0370}-\\x{03FF}\\x{4E00}-\\x{9FFF}\\x{0600}-\\x{06FF}\\x{FFFD}]",
+          "path": "/Users/saitouyouwataru/Documents/Git/Anomaly-Dungeon_doc/work/design-brainstorm/overnight-design-pilot-v1/runtime/initial-only-1230/roots/A/work/design-brainstorm/overnight-design-pilot-v1/A"
+        },
+        "_acp": {},
+        "locations": []
+      }
+    }
+  ]
+}

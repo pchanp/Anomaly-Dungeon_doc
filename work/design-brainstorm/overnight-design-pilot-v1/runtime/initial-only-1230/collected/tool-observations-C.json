@@ -1,0 +1,46 @@
+{
+  "tool_names_recent_history": [
+    "Read",
+    "Read",
+    "Read",
+    "Read",
+    "Read",
+    "Read",
+    "Read",
+    "Read",
+    "Read",
+    "TodoWrite",
+    "Read",
+    "Read",
+    "Read",
+    "Read",
+    "Read",
+    "CodeSearch",
+    "Write",
+    "Write",
+    "Write"
+  ],
+  "unexpected_codesearch": [
+    {
+      "at_ms": 1791084417777,
+      "input": {
+        "pattern": "\"path\": \"docs/(systems/(skill-build|effect-components|map-gimmick-ideas|anomaly-interaction|game-rules|current-implementation|observation-and-recognition)|decisions/(003|007|009|012|018|019|021)|anomalies/whisper|world/(setting|information-design))",
+        "path": "/Users/saitouyouwataru/Documents/Git/Anomaly-Dungeon_doc/work/design-brainstorm/overnight-design-pilot-v1/runtime/initial-only-1230/roots/C/work/design-brainstorm/overnight-design-pilot-v1/common-pack/sources.json",
+        "query": "\"path\": \"docs/(systems/(skill-build|effect-components|map-gimmick-ideas|anomaly-interaction|game-rules|current-implementation|observation-and-recognition)|decisions/(003|007|009|012|018|019|021)|anomalies/whisper|world/(setting|information-design))",
+        "_happier": {
+          "v": 2,
+          "protocol": "acp",
+          "provider": "opencode",
+          "rawToolName": "search",
+          "canonicalToolName": "CodeSearch"
+        },
+        "_raw": {
+          "pattern": "\"path\": \"docs/(systems/(skill-build|effect-components|map-gimmick-ideas|anomaly-interaction|game-rules|current-implementation|observation-and-recognition)|decisions/(003|007|009|012|018|019|021)|anomalies/whisper|world/(setting|information-design))",
+          "path": "/Users/saitouyouwataru/Documents/Git/Anomaly-Dungeon_doc/work/design-brainstorm/overnight-design-pilot-v1/runtime/initial-only-1230/roots/C/work/design-brainstorm/overnight-design-pilot-v1/common-pack/sources.json"
+        },
+        "_acp": {},
+        "locations": []
+      }
+    }
+  ]
+}

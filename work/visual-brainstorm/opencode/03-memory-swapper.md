@@ -12,7 +12,7 @@
 | 文書 | Status | 本図で使った要素 |
 | --- | --- | --- |
 | [`docs/anomalies/memory-swapper.md`](../../../docs/anomalies/memory-swapper.md) | Draft / Prototype: Not Implemented | Friendliness: Innocent／Behavior: Wandering／Primary Effect: Item relocation／Combat Intent: なし。通常のプレイヤーには見えない。Inversion系のプレイヤーには見え、認識すると逃げる。外見は固定しない。ItemStack（Items＋LastRecognizedPlayer）間を移動し、対象に関連付けられたアイテムを追尾。追尾不成立・退出時は最寄りのItemStackへ戻る。盗みではない。 |
-| [`docs/anomalies/player-anomalies/visible-invisible-inversion.md`](../../../docs/anomalies/player-anomalies/visible-invisible-inversion.md) | Draft / Prototype: Not Implemented | **Player Anomaly**。可視性対応が反転する。見えた対象の意味を誤認し得る。→本図では参照関係としてのみ注記し、对象化していない。 |
+| [`docs/anomalies/player-anomalies/visible-invisible-inversion.md`](../../../docs/anomalies/player-anomalies/visible-invisible-inversion.md) | Draft / Prototype: Not Implemented | **Player Anomaly**。可視性対応が反転する。見えた対象の意味を誤認し得る。→本図では参照関係としてのみ注記し、対象化していない。 |
 | [`docs/anomalies/cognitive-anomalies.md`](../../../docs/anomalies/cognitive-anomalies.md) | Draft | Recognition は「対象が異常である」ことを把握する段階。情報の不一致をトレードオフとして扱う。 |
 
 ## (b) 描画上の仮説

@@ -1,0 +1,31 @@
+{
+  "run_id": "overnight-design-pilot-v1",
+  "role": null,
+  "state": "not_started",
+  "mode": "PILOT_ONLY",
+  "completed_ids": [],
+  "next_ids": [],
+  "started_at": null,
+  "ended_at": null,
+  "stop_reason": null,
+  "execution": {
+    "provider": null,
+    "model": null,
+    "session_id": null
+  },
+  "sessions": [],
+  "batches": [],
+  "usage": {
+    "input_tokens": null,
+    "output_tokens": null,
+    "cost": null,
+    "currency": null,
+    "measurement_source": null
+  },
+  "visual_check": {
+    "status": "not_checked",
+    "checked_ids": [],
+    "note": "実ブラウザ確認時のみcheckedにする。"
+  },
+  "measurement_notes": []
+}

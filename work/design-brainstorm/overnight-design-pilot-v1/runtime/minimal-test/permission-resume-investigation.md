@@ -1,0 +1,22 @@
+# 再開後の権限適用調査
+
+Status: Draft。読み取り調査のみ。セッションの再起動、インストール済みCLIの改変なし。
+
+## 確認した欠落
+
+1. resume-BjVHk5Me.mjs:2163付近のhandleResumeCommandは既存セッションID・vendor resume IDをhandlerへ渡すが、元セッションmetadataのpermission modeとtimestampを渡さない。runStandardAcpProvider-m6mPbv8R.mjs:954の起動seedはexplicit/account default/fallbackから決まり、既存metadataの権限をseed引数へ渡していない。後続metadata同期はあるため、実際の各時点のmode値は追加計測が必要。
+2. api-C99s_10r.mjs:102254ではstartOrLoad時にOpenCode session permissionを設定する。一方sendPromptWithMetaではsessionUpdateを呼ばず、モード変更を同provider permissionへ同期する経路も今回調べたruntimeでは見当たらない。Happier側のqueue/permissionHandler更新だけではOpenCode側で既に作ったpermissionを確実に更新できない。
+3. readOnlyFooterLines-ES56_drP.mjs:87付近のProviderEnforcedPermissionHandlerはproviderから来たWriteの確認要求をsafe-yoloだけで承認しない。yolo/bypass等の全面許可とは異なる。このため後からset-permission-modeしてもprovider側のaskに対しpendingが残る現象と整合する。
+
+## 根拠の強さ
+
+欠落1と起動時の設定処理、sendPromptに設定更新がない点はローカル0.2.12の実装で確認した。最小テストでは初回read/write成功、標準resumeの会話継続成功、resume後Writeのpendingと後からのモード指定でも未解消を確認済み。resume時に実際にどのmode/rulesが適用されたかの内部値は未計測なので、完全な因果証明や修正済みとは扱わない。
+
+## 修正候補
+
+- 標準resumeのattach生成経路を保ち、元metadataから正規化したpermission modeとtimestampをhandlerへ渡す。独自にexisting-sessionだけで起動するとattach secretがなく失敗する。
+- provider起動時に既存metadataの権限を安全に復元し、より新しい明示設定を優先する。
+- OpenCode transportで次のprompt送信前に現在のrulesをsessionUpdateへ適用する。実行中の変更は次turnへの適用と既存pendingの扱いを分け、全面auto approveで代用しない。
+- 停止→resume→native Write成功、default/read-onlyが拡張されないこと、変更直後の次turnでprovider側へ反映されることを確認する。
+
+管理スクリプトだけの修正で確実に直ったとはまだ言えない。Happier側の修正またはセッションを停止せず同じrunnerで待機する運用の検証が必要。Bashのaskと書き込み隔離は別途未解決。候補生成なし、元の終了期限を変更していない。

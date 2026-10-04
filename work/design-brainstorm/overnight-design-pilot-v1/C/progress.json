@@ -1,0 +1,72 @@
+{
+  "run_id": "overnight-design-pilot-v1",
+  "role": "C",
+  "state": "awaiting_pilot_review",
+  "mode": "PILOT_ONLY",
+  "completed_ids": [
+    "ROLE-C-001",
+    "ROLE-C-004",
+    "ROLE-C-013"
+  ],
+  "next_ids": [
+    "ROLE-C-002",
+    "ROLE-C-003",
+    "ROLE-C-005",
+    "ROLE-C-006",
+    "ROLE-C-007",
+    "ROLE-C-008",
+    "ROLE-C-009",
+    "ROLE-C-010",
+    "ROLE-C-011",
+    "ROLE-C-012",
+    "ROLE-C-014",
+    "ROLE-C-015"
+  ],
+  "started_at": null,
+  "ended_at": null,
+  "stop_reason": "PILOT_ONLYの指示により3件試走で停止。本番12件へは自発的に進まない。",
+  "execution": {
+    "provider": null,
+    "model": "opencode/space-bunny-free",
+    "session_id": null
+  },
+  "sessions": [
+    {
+      "started_at": null,
+      "ended_at": null,
+      "note": "実行エージェントで時刻を取得する手段を使う制約があったため、開始と終了の時刻はnull。理由はmeasurement_notesを参照。"
+    }
+  ],
+  "batches": [
+    {
+      "batch_index": 1,
+      "candidate_ids": [
+        "ROLE-C-001",
+        "ROLE-C-004",
+        "ROLE-C-013"
+      ],
+      "started_at": null,
+      "ended_at": null,
+      "note": "試走3件を1バッチで保存。BashとPython検証を使わない制約があるため、生成と図作成のみ。"
+    }
+  ],
+  "usage": {
+    "input_tokens": null,
+    "output_tokens": null,
+    "cost": null,
+    "currency": null,
+    "measurement_source": null
+  },
+  "visual_check": {
+    "status": "unavailable",
+    "checked_ids": [],
+    "note": "ROLE=Cの担当指示でブラウザとBashの使用が禁止されたため、実ブラウザでのHTML/SVG表示確認は実施できていない。目視確認は管理側に依頼する。"
+  },
+  "measurement_notes": [
+    "このセッションではBash、task、MCP、外部ディレクトリ、外部調査、Git、Studioを使用できないという担当固有の上書き指示があった。そのため日時取得、Python検証（pack-only、pilot）、ブラウザでの実表示確認のいずれも担当では実行していない。",
+    "started_at、ended_at、events.jsonlのatはすべてnullで、理由ノートを各行に記した。所要時間は実測していない。推測で埋めていない。",
+    "モデル名は実行時に提示された設定（opencode/space-bunny-free）のみを記録し、プロバイダとセッションIDは確認できないためnull。",
+    "トークン数と費用は管理サービスが実測値を返すまで不明のためnull。了自己申告の数値は使っていない。",
+    "prototype_cost（prototype_cost.band）はゲーム内試作の見積もりであり、この候補生成にかかった時間とは別の数値。"
+  ]
+}

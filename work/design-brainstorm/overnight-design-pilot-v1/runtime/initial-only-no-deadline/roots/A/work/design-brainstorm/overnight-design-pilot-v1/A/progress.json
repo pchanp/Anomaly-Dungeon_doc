@@ -1,0 +1,65 @@
+{
+  "run_id": "overnight-design-pilot-v1",
+  "role": "A",
+  "state": "awaiting_pilot_review",
+  "mode": "PILOT_ONLY",
+  "completed_ids": [
+    "ROLE-A-001",
+    "ROLE-A-004",
+    "ROLE-A-013"
+  ],
+  "next_ids": [
+    "ROLE-A-002",
+    "ROLE-A-003",
+    "ROLE-A-005"
+  ],
+  "started_at": null,
+  "ended_at": null,
+  "stop_reason": "PILOT_ONLY。担当専用指示により試走3件で停止し、管理側の続行指示を待つ。本番12件へは進んでいない。",
+  "execution": {
+    "provider": null,
+    "model": "opencode/space-bunny-free",
+    "session_id": null
+  },
+  "sessions": [
+    {
+      "session_index": 1,
+      "started_at": null,
+      "ended_at": null,
+      "note": "時刻取得手段が担当へ禁止されているためnull。model は実行環境の設定値として確認できたものだけを記入し、provider と session_id は確認できていない。"
+    }
+  ],
+  "batches": [
+    {
+      "batch_index": 1,
+      "candidate_ids": [
+        "ROLE-A-001",
+        "ROLE-A-004",
+        "ROLE-A-013"
+      ],
+      "started_at": null,
+      "ended_at": null,
+      "note": "3件のHTMLとJSONを作成。生成と図作成は同一batch内。実測時間を記録できる手段がないためnull。"
+    }
+  ],
+  "usage": {
+    "input_tokens": null,
+    "output_tokens": null,
+    "cost": null,
+    "currency": null,
+    "measurement_source": null
+  },
+  "visual_check": {
+    "status": "unavailable",
+    "checked_ids": [],
+    "note": "担当セッションはBash、外部ディレクトリ、Studio、MCP禁止のためブラウザを起動できない。HTMLとSVGの実表示確認は管理側が行う。機械検証も未実施。"
+  },
+  "measurement_notes": [
+    "日時: 日時取得コマンド（Bash等）が担当へ禁止されているため、events.jsonlと本ファイルの at / started_at / ended_at はすべて null にした。管理側の観測開始時刻 2026-10-04T05:18:48Z は管理側の記録であり本担当の実測ではないため、開始時刻としても使っていない。",
+    "所要時間: 実測していない。生成にかかった時間とゲーム内試作コスト（prototype_cost）は別物であり、どちらも数値を捏造していない。",
+    "モデル: 実行環境の設定として opencode/space-bunny-free を確認できたためのみ記入した。provider と session_id は確認手段がないため null。",
+    "費用・トークン: 管理サービスが実測値を提供していないため null。",
+    "機械検証: validate.py の pack-only と --stage pilot は本担当では実行していない（担当専用指示）。結果の観測できていないため未確認として記録する。",
+    "実表示: ブラウザを起動できないため visual_check.status は unavailable。HTMLとSVGの実ブラウザ表示は未確認である。"
+  ]
+}

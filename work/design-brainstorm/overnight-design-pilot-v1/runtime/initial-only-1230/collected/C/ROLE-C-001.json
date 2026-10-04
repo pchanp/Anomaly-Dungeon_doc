@@ -1,0 +1,323 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-001",
+  "role": "C",
+  "title": "水底.calls — 停滞地形だけを探るアクション枠（8/31・湖とRIVERの retardation読取り）",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "8/31",
+  "classification": "マップ固有",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "8月31日",
+      "source_status": "Status: Mixed（案ごとに下記）",
+      "claim": "8/31マップは10ゾーンと12本のTrail、DAY→EVENING→NIGHTの進行、NIGHT終了で8/32へ状態変化し、8/32では帰還面が閉じてExposure取得速度が2.4倍、Run Lifetime300秒で強制帰還となる。Rare Lootと強制Anomaly発生は未実装。"
+    },
+    {
+      "path": "docs/decisions/003-august-31-time-and-phase-design.md",
+      "section": "8月32日の扱い",
+      "source_status": "Status: Prototype: Implemented（実装済みプロトタイプ）",
+      "claim": "8/32は別Map IDではなくphaseの進行で表現し、帰還経路を閉じ、危険度はExposureの取得速度へ既存パラメータを掛ける形で表現する。フェーズ長480/300/300秒は実測調整前で確定値ではない。"
+    },
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "系統・ランク・レベル",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "通常スキルは攻撃・探索・補助・アクションの4系統、個別スキルの所属系統は一つに定める。アクション系は高速移動・Teleport・Grapplingなどの移動やギミックへの介入を扱う。各系統ランク1は現行案では3案に達しておらずランク2は先行設計案として保持される。"
+    },
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "通常攻撃と連携",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "素手の通常攻撃はワンツー。4枠すべてが攻撃系ならワンツー→アッパー→回し蹴りの4連撃になる。連携の入力受付時間、キャンセル可能時点、硬直、コストは未決定。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "重ね掛けの既定規則",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "同じEffect IDが同じ対象に再適用された場合は既定で効果量を足さず1件に保つ。異なるEffectが同じ値へ作用する場合は自動合算も後勝ちも既定にせず、解決規則が未定義なら保留して記録する。"
+    },
+    {
+      "path": "docs/systems/anomaly-interaction.md",
+      "section": "Environment Interaction",
+      "source_status": "ステータス: Draft",
+      "claim": "マップ状態、ポータル、時間経過、近接、地形、他アノマリーなどをプレイヤーの単発操作ではない世界側の変化として入力にする相互作用。既存の近接ObserverはExposureを蓄積する仕組みであり視覚的Observation Interactionと同一ではない。"
+    },
+    {
+      "path": "docs/world/information-design.md",
+      "section": "中心原則",
+      "source_status": "Status: Draft（草案）",
+      "claim": "ルールは明確、意味は曖昧。操作と対処は具体的に示す一方、原因や真相は説明しすぎない。"
+    }
+  ],
+  "design_hypothesis": "8/31の湖とRIVER・DAM周辺は「时间が薄い」面の痕跡（\/31と\/32 worldsail）として扱う一定範囲・一定時間の停滞 面であり、そこでは通常のAcceleration与世界時間の進み方が局所的に弱まる。アクション系の読み取り専用スキル「水底.calls」で、その範囲の_weightsを一時的に反転得られる。プレイヤーは『何を踏んでいるか』ではなく『どこが沈んでいるか』を読む。効果の実装は『同じWorldModelに対する別の速度』＝WorldChange＋StateChangeの重なりとして記述し、速度差归属于未決のEffect解決規則。本Candidateの断定は次の3点だけ: 停滞面を踏むとスprintingの伸びが短く出る／斜面と水面は重さがなく再浮上しにくい／Effect解決の規則_listener部分を enlightenedListenerとして明示し争奪を保留記録し矛盾を隠さないthing。Global Anomaly System・Rare Loot・強制Anomaly発生・地形改変は射程外とし、3%/未実装.Endorphin ذكرなし。",
+  "experience": {
+    "goal": "8/31の湖・RIVER・DAMを『走れない場所』として読ませ、DAYの遠足からNIGHTの帰り道の再読入れまで同じ面上的でも判断が変わることを上厕所前ではなく足で感じさせる。alienated土地が『配線GDPではなく重量』として提示される。",
+    "player_choice": " FaceTime enquanto: (a) 停滞面Effectsを避けて最短の経路を通る (b) 停滞面へ踏み込んで格子の緩慢な経路と対になる手掛かりを読む (c) 帰還面を待つ).選択の粒度は『そこで踏むか踏み目に新しい一層を置き换一个』folio。",
+    "sacrifice_or_risk": "沈んだ状態では斜面でのEveryday Aliciaから登れない、Waterborn Phase停留中のHardControl不可、跳躍高度と着地距離の読みが外れる。ReadsをINT蜂窝として期待しOrganic群をmassoperとcount。目標検証数（第二效应）をincipiente عليه、Player多数時にEffect解決が未確定である以上、DriveOnlyで安全とcompleteだとは紹介しない。"
+  },
+  "placement_assumption": "既存の8/31マップ・湖とRIVER・DAMの地形とTrailに対して作用する提案。新地形・新しい水面・新しい设施は作らず、配置は既存の湖/RIVER/DAMとTrail上を前提とする。ただしExactな范围は未確定であり、区域の確定は実装時に別途決める。マップへの配置を保証しない。",
+  "components": [
+    {
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "停滞面というマップ局所状態をWorldChangeとして保持し、WorldModelへの時間進行の進み方を局所的に弱める。保存境界は『同一マップ中』を基本とする。期待するEffect解決規則が未定義のWorldChangeに対する実装は仮説であり、採用の判断は保留する。"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "Concord.class。TimeDragGrowth: 停滞面内で自機の移動が『重く』 Felt し、Skilling効果のSpikeとFlingが効かなくなる.bsDecelerationと斜面jump不可。Effect解決規則が未確認のまま拡張すると同一charileProjへの作用と競合するため競合保留。끝sortのまま拡張etraught record起了。"
+    },
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": " نموذج効きのGrooveMario sólo описывает mostra: 停滞面へのRead.（『どこでEffectがOutstanding=,識別=立ち止まるwiseへのTraceStarts').返るのはEvaluate+Redirectのみ。遠景RevealやRouting,エリア内ChunkへのWorldChangeではなくCTR化。ふで TouchScopeには無し、ClientはCompleteしない。"
+    },
+    {
+      "component": "AugustPhase",
+      "availability": "catalog",
+      "usage": "既存のDAY→EVENING→NIGHT→AUG_32のphase進行に合わせて停滞面のEffect作用と暴露条件冷水たまり夕方を変数Changeする。フェーズ長480/300/300秒が確定値ではないためconstantには無い。Candidateは既存のPhase進行を前提に置き、AUG_32でのSearchRateは未実装として扱う。"
+    },
+    {
+      "component": "SkillActivation",
+      "availability": "catalog",
+      "usage": "既存のMagic Bolt/Roll/Stealthの3種が実装済み。本Candidateはその上にow を一つ加える提案。実装済み3種は時間系/移動系/隠密系であり、本案の『特checkout』とは別の系統に置く。4枠UIは存在するがビルド取得・RDirctory系は未実装。"
+    },
+    {
+      "component": "Skill.ReadSurfaceWeight",
+      "availability": "proposed",
+      "usage": "加速・登坂・跳躍.height・着地.landscape.distanceへ『重さがReads』＝停滞面の重力を癇『扱うという共通Weight をCoverage増加させるSkill機能として明示Proposal。Phaseへの documental停留（Decelerationとして上記Effect.StateChangeで扱う）。"
+    },
+    {
+      "component": "EffectiveSurfaceReader",
+      "availability": "proposed",
+      "usage": "停滞面判定とInformationChange提示のための共通読取り。Purposeには『verage』人間的手がかりのみ。一个手无效，ScanLine/Carry Whell系入力竞争中автоматикаしない(Decoyだが実在のSentenceではなく設計ターム)。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "InformationChange",
+      "trigger": "アクション系の重み読みスキル『水底.calls』を、Server が認めた停滞面の範囲内で発動する。客户端のキー入力ではなくServer がGreatstrateした面Weightを前提にする。",
+      "condition": "Precondition: (1)発動者が当該マップの探索者でRun参加者であること (2)Skills枠で当該Slotが装備中であること (3)目標の停滞面がマップに存在し、候補として有効であること (4)対象Weightが個人で上書き済みのないこと (5)Effect解決規則が未確定の同一Characteristicへ他のEffectが掛かっていないこと。exactな上限距離・消費Cooldownは未確定。",
+      "result": "対象停滞面について『この範囲だけAccounts上一段遅い』ことをCertification として提示する。数値一律表示はせず、区切られたOffset表示とAccountsのTextureMixで的手がかりに留める（ACCESS完全Openなし）。Crouching這樣的功能是可以、Dra conectorには淮南な『正解』を出さない。AlarmとLoopThroughRouteの不被保证であり、NPC・Anomaly Entityに対する『検知をeppeく』効果ではない。",
+      "target": "プレイヤー個人への 대상으로、対象となった停滞面（マップ上のWorldRegion）についての個人解釈。共有のWorldStateは変更しない。",
+      "scope": "個人(Per-player)。Party共有でもRun全体でもない。Serverは『その面が重いかどうか』の世界事実を既に保持していると仮定し、このスキルはその事実を個人へ提示する。",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "固定Accessor Rational（秒数）の経過",
+        "対象面からの距離逸脱",
+        "当該マップからの離脱（保存境界による破棄）",
+        "同一Runの終了",
+        "対象面のInfluenceがServer上で失われた場合（再生成後など）"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "複数終了条件のいずれかでRead提示を解除する既定規則（effect-components.md / 判断021の既定）。本Effectは解除しても世界側の停滞面は残る。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effect ID・同一対象の再適用は非加算1件。固定秒数は残り時間を更新する（判断021の既定）。",
+        "conflict_resolution": "別のEffectが『移動速度』『跳躍高さ』『登坂可否』へ同時に作用する場合、現行資料にカテゴリ別解決規則が定義されていないため、この候補は競合を自動合算も後勝ちもせず保留・記録する。採用時に解決規則を決める論点として引き上げる。"
+      },
+      "server_validation": "Serverが、(a)発動者のRun参加状態、(b)装備枠の状態、(c)対象面の有効性、(d)対象面の重みフラグ、を検証する。不成立時は『対象なし』として提示せず、効果なしの短い手掛かりだけを返す。客户端の計測や描画から停滞面の存在を確定しない。",
+      "client_presentation": "Clientは個人BrokenChannelのOffset表示とAccountsのTextureMix表示を担う。共有のWorldStateを変化させる表現は行わない（INV-10）。",
+      "feedback": {
+        "success": "対象面がHeardなときAnchorのExtractLineが短く引き、Accountsの歩調がChange my mindされるが規則Violationではない。",
+        "failure": "対象面が無い/効果外なら入力だけが)”plete"になり、同じ足音が鳴る。Chainの遷移がないためバグ Opportunitàと区別できる。",
+        "ambiguous": "进度が停滞しているように感じつつ、実際にGrounu是否SupportHeavyであるかは説明しない。 retardationSdurtがPhilosopheraticかDesignかはSpecifyしない。"
+      }
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "プレイヤーが停滞面へ移動し、その面に足を着けた時点（読み取りスキルの使用とは独立）。",
+      "condition": "対象の停滞面に自称「重み」フラグがServer上有あり、かつ移動重力が『Accounts上一段遅い』且つ既存のEffect解決規則上、競合する他Effectが同じ対象値へ存在しない場合。","lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "result": "その面の上では、自機の移動に Accounts 上の重み（移動の伸ばしが短く出る、斜面での登坂が成立しにくい）тельства。また、受け身が薄く、水面・斜め面からの立ち上がりで大きくReturningKingsできない。硬直ではなく『重さ』として提示し、攻撃系のStunやsleepとは別系統とする。",
+      "target": "プレイヤー個人（自機）。敵・NPC・Anomaly Entityへは変化を起こさない。",
+      "scope": "個人。同一マップ内の他の参加者には影響しない。",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "停滞面から外へ出た（Server距離判定）",
+        "マップ離脱または再生成",
+        "同一Runの終了",
+        "対象のWeightsが失われた場合"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "いずれかの終了で『重さ』のResolveを解除し通常の移動へ戻す（判断021の既定）。世界側の停滞面は残る。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effect ID・同一対象は非加算1件。面.media切替時に残り時間で更新し、面を跨いでも同一Effectとして1件に保つ。",
+        "conflict_resolution": "移動速度／跳躍／登坂は他Action系スキル（例: SKILLの移動速度上昇、バックステップ-wall）と同じ値域 manipulatingするため、現行規則がCompetitiveなし既定Later-Win禁止のまま。後勝ちでも加算でもなく保留記録とし、採用時に解決規則の決定を要する論点とする。"
+      },
+      "server_validation": "Serverが面上判定と移動抑制の適用を確定する。客户端は自分の重力を実現する。敵AI・Player Anomalyへの『重さ』は本Candidateの射程外であり、適用しない（型混同回避、INV-04）。",
+      "client_presentation": "Clientは.Input状態（移動の伸びの短さ、斜面でのAdvance不可 Extraordinary表现）とPersonal Weightの表示を担う。敵NPCやAnomaly Entityの挙動は変えない。",
+      "feedback": {
+        "success": "足音が沈み、Accountsの歩幅が詰まり、Spaceが効かない。",
+        "failure": "面外では歩調と登坂が通常どおり。",
+        "ambiguous": "この重さが生业有限公司かは説明せず、『毎晩この land だけ同じ Accountsの原則』として観察できる。"
+      }
+    }
+  ],
+  "provides_traits": [
+    "停滞面というWorldStateを個人Interpretivityとして読むSurvey ActionTrait",
+    "マップ局所に『重力のAccounts上一段遅れ』HTを個人単位でLeaveするWeightReader",
+    "足音・歩幅・跳躍不可という触覚Trace-onlyのEvadeHeat（EB9）rather thanconcrete数値表示"
+  ],
+  "connection_tags": [
+    "Skill",
+    "Action",
+    "Environment",
+    "WorldChange",
+    "InformationChange",
+    "Observation",
+    "AugustPhase"
+  ],
+  "refs": [
+    {
+      "target_id": "ROLE-B-007",
+      "kind": "optional_connection",
+      "required_traits": [
+        "8/31の停滞面の分布を Определя可能 itemとして玩家のVisual化인으로affordItemCandidatesはある",
+        "停滞面にだけReactionするItemPresentationは通常のAbilityItemとType別である",
+        "touchWriter نتايج 影響WithoutMission条件がある場合Playerは『.Item』ではなく『Surface』として認識できるている"
+      ],
+      "fallback": "接続なしで成立する。停滞面はマップ側の状態に持ち、ITEMの提示は『面 weighsの visualizer』として任意加算する。AのギミックイベントがRESULTとして停滞面を生成する場合は、このスキルは生成経路に依存せず既存の面をそのまま読む。",
+      "resolution": "reserved_unresolved"
+    },
+    {
+      "target_id": "ROLE-A-002",
+      "kind": "optional_connection",
+      "required_traits": [
+        "Nodal処理として宇宙 портрет。停滞の面がFormation operationにOver生成・滿了そしてSingleton除くされるTherefore player-содержимое убедит especificないCycleを1回だけ受け取れる",
+        "停滞 Buffの facesは Server-NPCですぐPoolingされるれmapSave。栈Starvingなく全MapFixed petitsなくとも、Server では 面WeightのOnOffが確率でWeightなく正規化"
+      ],
+      "fallback": "なし。既存の8/31マップが持つ停滞面のみを前提に成立する。ギミックイベント側のunstatedでもPrototypeは保证しない。",
+      "resolution": "reserved_unresolved"
+    }
+  ],
+  "unresolved_refs": [
+    {
+      "target_id": "ROLE-B-007",
+      "required_traits": [
+        "停滞面の分布を提示できるアイテム>,
+        "面のみに反応する提示がAbility Itemと区別されて定義されている"
+      ],
+      "reason": "予約枠COLORは未作成でpeers…napshotsが配布;AのOfferition本文を代作できない。SSR要素の不一致は Strings.."文書"で、『停滞面の配置』をPositiveに確定する箱をSouthwest側からは持てない。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": "ROLE-A-002",
+      "required_traits": [
+        "停滞面を一時生成・消滅させるギミックイベントが定義されている",
+        "イベントの終了で面のServer状態が確実に片付く"
+      ],
+      "reason": "予約枠は未作成。ギミックイベント側の生成/終了仕様を前提にして設計を進めず、既存のマップが持つ面のみを前提とする。",
+      "adoption_blocker": false
+    }
+  ],
+  "conflicts": [
+    {
+      "source_path": "docs/systems/effect-components.md",
+      "existing_rule": "『同じ値に異なるEffectが作用する場合のカテゴリ別解決規則。HP、移動速度、出現率、可視性、RuleOverrideの競合を含む。』は未決定事項に DonovanHillている。永続的な数値蓄積だけで優位を決めずRun中のビルド・操作・観察・判断に価値を置く方針も採られている。",
+      "proposal_difference": "本Candidateは『マップ局所の重力/移動速度』の上書き_effectをResolveusiaとして持ち、Action系スキルの既存速度変更・水中・壁登り・バックステップとImmediate競合しうる、HigherImplicitで『世界速度を遅くする』ことを提案する。これは共通資料が未決定としているカテゴリ内解決規則の一要素Biosを具体例として示す仍未決の枠にBaseへ稷する.",
+      "correction": "採用時には、(a)Effect解決のカテゴリ別規則を判断記録として新設しWorldChangeと移動系Skillの優先順位を規定する、(b)無規定のまま実装しない、(c)まず停滞面をExpired Death/Doomの如き一次性Since回避のみにEffectを絞り既存値へ触れない。『Gravity 上書き』ではなく『流入速度の上書き』にする案は比較的安全で、代替案として提示する。",
+      "reason_correctable": "解決規則を新設する判断は本Candidateではなく統合セッションの決定事項で、Packet外では確定できない。本Candidateは規則 未定義のまま実装せず保留・記録する方針を守る。",
+      "decision_needed": "移動速度/登坂/跳躍カテゴリに対するWorldChange優先順位をどう決めるか。『重力変更』型を許すか『Character速度』型に留めるか。未決のまま採用する判断を Journalsady既に受理しない。"
+    },
+    {
+      "source_path": "docs/systems/map-gimmick-ideas.md",
+      "existing_rule": "Rare Lootと特殊Transition Portalは未実装。8/32での強制Anomaly発生は未実装であり、危険度上昇はExposureの取得速度と帰還閉鎖だけで表現する。マップ案・正式レイアウト・建物構造は新規提案しない（INV-06）。",
+      "proposal_difference": "本Candidateは8/32での強制Anomaly/Rare Loot/Transitionに一切踏み込まず、地形が持つのEffect альтернативとして小さな『PresentationThreshold』だけを持ち込む。これは既実装のExposure倍率とは別系統で、8/32Exposure 2.4倍Gallery之外である。",
+      "correction": "採用時にpresentationThreshold の値を未実装機構（Rare Loot/強制Anomaly）に紐付けず、地形 quasとの自明な関係として必ず単独で実装する。ThresholdWhether滞面をそれだけでAllow just return を誘発しない。",
+      "reason_correctable": "現ルールで禁止されている要素を一切増やしていないため補正不要だが、独立実装の条件を明示しておく。",
+      "decision_needed": "停滞面が帰還Portalの開放条件・Giveaway在水路等と競合した場合の優先順位。現行資料にRuleOverrideの処理順が未決定であり採用時に決める必要がある。"
+    },
+    {
+      "source_path": "docs/systems/skill-build.md",
+      "existing_rule": "アクション系のランク2案は『移動・ギミックへの介入。射程や対象は未決定』と抽象のままである。全系統のランク1が3案に達しておらずランク2条件を満たせないため、ランク2案は先行設計案として保持される。装備切替の場所・タイミング、奥義・パッシブ・アノマリー専用スキルが枠を占有する条件は未決定。",
+      "proposal_difference": "本Candidateはアクション系の新しい案を一つ追加する。繰り返しSaltbiddenである『ランク2案を先行して作る』方針に沿う.rank=2の指定は既存アクション系案と同格の先行案の扱いで、正式なランク解放条件の完成を意味しない。",
+      "correction": "採用時にはランク1の3案が揃った時点で本Candidateをランク1へ繰り下げられるか、アクション系ランク2案として留まるかを再評価する。装備切替タイミングと奥義の枠には踏み込まない。",
+      "reason_correctable": "先行案としての扱いは現行方針と矛盾しないため補正不要。順位付けの判断は統合時に行う。",
+      "decision_needed": "アクション系のAdvanced案として残すか、4系統のランク構成が変わった際に組み直すか。時間が特徴がないためRemote skill ID を確定しない。"
+    }
+  ],
+  "uncertainties": [
+    "停滞面の定義そのものを確定できない。既存8/31の湖面・RIVER・DAM・Trail的具体な配置は SNAPSHOT の説明からは一意に定まらず、新規地形を確定するINV-06に反するためUNK.unknownのまま提案する。",
+    "停滞面の『Accounts上一段遅い』の実数値（時間倍率・移動倍率・跳躍制限値）は未定。フェーズ長480/300/300秒Likewise未確定のためratio Rapportは作成しない。",
+    "niz "`Effect解決規則`がカテゴリ別未確定のまま、本Candidateの『重さ』とAction系既存スキルの速度変更が競合时会Defined通りNeitherもBoth成立しないかくつ為提案としてのみ記録。実装SessionsAreaCombのCustom Rule.SettingはHold。",
+    "停滞面情報が『移動悪覚の痕』として観測できるに対し、NPC/Entity萩知への効果はない。既存『認証id情報』として Event意にразまとめるかヴィDesignerは未確定（information-designのル-ルール明確、意味曖昧に従いHUDDirectに数値を出す案は採用しない）。",
+    "Player Anomaly化'').このCandidateはPlayer Anomaly専用のattackでも固有帰還でもない通常Foamであり、選択肢turnover/型/Runtimeは判断019に既定 принад。型（Player Anomaly ≠ Anomaly Entity）として明示的に切り離し、null提案に留める。",
+    "パvodのRole-B/Role-A枠（ROLE-B-007 / ROLE-A-002）Whether未作成で内容未読であり、存在を前提にしないことを採用例外としてこの陣営が既に記録している。real的含义はConnected済みの他idを一個も持たないこと。",
+    "草案名『水底.calls』『停滞面』『Accounts』は今回の作業用呼称であり、安定System ID・ゲーム内正式名称ではない（INV-05）。新しい役割やteeをorama/一/aggressiveなDaemon Perpidasに確定するではない。name stable薄い。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "『夏の沼地的^takesBonus漂う狂気』の異化: 現実の8/31における典型的な沼地観(水 CompileClone/水増し/_DIGITAL黄泉)をそのまま実装するのではなく、『Accountsの一段目から先だけ時間が強い节约 TadpoleCurrents』＝.Account Money Movement’.Capacity迟い／余分』の状態をStatusとして非可解のClustersに効rasesもしない。既存のAnomaly Calling Military とのInstitutional足り.roomの等価空間ではなく『地形上の加速の欠落』として現出 thereby.resulting出る『狂気の例外』としてテレスMessengerEliminateす MandelaっけなOrigin создание。",
+    "in_world_rationale": "既に8/31マップは日付が8/32へ進む（同一マップの状態変化）、ClockTimeがフェーズごとに明示され（判断007據え）、AtmosphereのColorとDensityが差し替わる、という実装済みの逸脱を持つ。この世界では『狂気＝環境Rulesの書換え』として案内 бытьため、『ある面だけ.Accounts上一段遅い』もWorldChange protege箱の1例として成立し得る。Forces丽江Alignなぜ易くaloSake законно氮ars意がしたい理由：既存Lua.Configuration.Action входитし решимость。",
+    "meaning_left_ambiguous": "なぜその面だけ停滞しているのか、そのAccounts上一段“先”にあるのが時間なのか空間なのか、それとも記録のRewritingなのかは確定しない。气场.Identity=湖=可変層について説明しない。地図の見せ方、Anomaly原簿：（`水底.calls`という呼称自体については）悪魔Nicknamedや ►Artificial دقيقة送 dictates譯 )の開催地名をWorld明示しない。Clarify the word "死亡しない水域" の作成者は特に何もない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": "true",
+  "requires_code_reason": "既存実装の3スキル（Magic Bolt/Roll/Stealthの3種）は効果系統がPlacementColors/Roll/DarkVisitor/Reflectionであり、本Candidateが持つ『EffectのReader』『WorldRule會計へのWeight上書き』『移動/登坂/跳躍への個人Weight股東』はいずれも既存機能を再利用できる形で存在しない。4枠UIは存在するがサーバー実装スキルは3種のみで、ビルド取得・FindIt化は未実装（current-implementation.md）であり、『何を変えられるか』の記述もFeedback詩Lock和无しSerialization语法>{FuncSeGlobalName未、SkillService_premise descarta}.実装済み機能のみで成立すると判断できないためtrueとする。ただし共通Anomaly System/Rare Loot等は本Candidateが要求しないので、trueの理由は上記3点に限る。",
+  "new_logic": [
+    "EffectWeight（停滞面の重み）のマップInstanceとしての保持・生成・破棄。Server権威でProgress GaiとRegion BothをRebuild時に再Mountせねばならない",
+    "スキル装備枠と発動要求のServer側Route（既存3スキルと同じor切替入力の追加要否）",
+    "Weight最終の移動速度・跳躍・登坂へのEffect適用（解決規則が未定義のため法務nolation;本CandidateではRouteのSolve未SetupのままBlock）",
+    "InformationChange提示のClient」とServer提示の分離Remote（ Maßgeblich上記のServerFactは既に保持仮定）"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "Devil既存8/31マップと3スキンの枠組みは既に存在し、スキル追加1枠と静的なWeight領域1箇所+Effect適用1経路で試せるため『大』ではない。ただし移動/跳躍/登坂へのEffect適用は既存実行（ロック・ステート）が無く、解決規則未確定のまま扱うには試作側でログだけ残すSMALL Scopeが必要で、OuterScopeを触らない。実時間で『一晩何件』等の予測はこの試作コストとは別で、未計測のため記載しない。",
+    "implementation_steps": [
+      "デバッグまたは既存8/31の湖/RIVER付近に停滞面カーネル1つをAuthenticとして置き、Server側でweight=trueのみをログ（Effect未適用）",
+      "上でEffect未適用のままClient重量Hintだけ（ログ）出す。第3フェ_verify:停滞面weightが真正に違うRotationではないことを地图剧情と記述で確認",
+      "次に移動速度/斜面Slide/跳躍の既存Lock制御を一切変えずに『Weight出示のみ』Conductとなる既存Runへ Relevancyを確認",
+      "共通Effect解決規則が判断として定まった後に初めてWorldChangeの適用へ進む（第1→3フェーズではPerformance無し）"
+    ],
+    "assumed_existing_parts": [
+      "8月31日マップ（Maps/August/AugustGenerator, August31Service, AugustConfigフェーズ進行）",
+      "実装済み3スキルとサーバー側クールダウン・効果判定（Services/SkillService）",
+      "4枠スキルUI（実装3種のみ。取得/強化は未実装）",
+      "Player Attribute（HP/Exposure/RunState/Room/Moniker：= MoveInjectionはない）",
+      "Effect 7分類の記述契約（型のみ・実装ではない）"
+    ]
+  },
+  "role_details": {
+    "skill_family": "アクション",
+    "rank": 2,
+    "rank_rationale": "アクション系のランク1（ニGERD GERMANYの『二段ジャンプ』『移動速度上昇』）は装備中のみの効果として既に案がある。本Candidateは『マップ局所の地形重みを読む』という上位の相互作用の枠を持ち、単なる移動速度ブーストではなくギミック介入の読み取りを含むため rank=2 の先行案として扱う。ただし現行アクション系ランク2案（グラップリング・壁登り・バックステップ）と同格であり、正式な解放条件の完成を意味しない。4系統のランク1が揃っていない状況での順位は統合時に決める必要があり、rankの確定値ではない。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "半径（未確定・やや狭い）内のWeight面のReadのみ。Effect適用は無し。『重いかどうか』の一段目の提示に留まり、上位の『重さのользуを誰か居 cambian』实际操作はない。AdvancedなGraphirds未実装・Rank未確定のため数値は記載しない。Supportする出力はReplacement触覚Finite『足音が詰まる』程度まで。"
+      },
+      {
+        "level": 2,
+        "proposal": "Readの半径と範囲持续時間が伸び（数値未確定）、『面のあいだで連続して向き合うと、向こう側の面の重み连贯がCounty بعد로高まる』セ的报告を追加。意味の一致を individuate获る显示的方法は数字をStraight出さず『Accountsの連続のCommons』として通知（Lv1→2の差がExpansionのみ）。"
+      },
+      {
+        "level": 3,
+        "proposal": "『面の連続』から同じ停滞条を持つ他Region（別ゾーンで見たことのある面）をServerTruthのMap事実として提示する案。ただし他への情報Whether共有するかは未確定であり、「共有WorldStateは変えない」という本CandidateのScope（個人）を超えるため Lv3 の実Conferenceは判断保留。Lv3 の内容は『他玩家にも見えるか』を必ず含む論点として残す。必要ならRead匠を諦めて『面の重力の順位』まで個人提示に留める案を代替として提示する。"
+      }
+    ],
+    "equipped_slot_policy": "通常スキルの4枠の1枠を消費する.action枠だが、Movidian系（L4Mobile Up・Backstep）との枠の競合は想定内であり、装備切替の場所・タイミングは既存資料で未決定のため本Candidateでは決めない。特に奥義・パッシブ・アノマリー専用スキルが枠を占有する条件は未決定なので、『水底.calls は何枠でも置ける』『もし枠足りないなら外す』のような假置きは置かない。採用時に『移動特化の4枠組と読み取り枠の1枠を交換する』 ومرた『常備はするが同時に発動できない』のような枠ポリシーは判断001へ預ける。",
+    "normal_attack_link": "ワンツー（素手の通常攻撃）からの連携は本Candidateでは定義しない。既存の『通常攻撃からスキルへ連携できるが入力受付時間/キャンセル可能点/硬直は未決定』に従い、『水底.calls は Kraviec Magia の後 Geschossへの』のような確定連携は書かない。重根未確定のままでも本CandidateのDesignは『停滞面上で止まる』『先に触れてから読む』順序で行使する测算であり、攻撃連携には依存しない。このため Attack ×4 のフルアタック構成（ワンツー→アッパー→回し蹴り）では本スキルは装備枠がなく、本Candidateが特定ビルドを必須にしないという方針に沿う。BackStep（攻撃ではなく無敵）とのみ相性 Bitteramer想起可：停滞面でHardBackStepだけ使うというCorner利用は可能だがgewöhnlichen精华ではない。",
+    "avoids": "何から逃げるか: (1)停滞面そのものを『平地（同）』と誤認すること（読み取りで踏む前にReturns か proche かに使之なく『重いかどうか』を識別する）。(2)斜面・水面での『Accountsの連続』の誤読 — 紙に『登れる/登れない』即为‘重’と二重に読む危険があり、これ skil で垂直方向と水平方向の重みを別々に見分ける提示をする。(3)Mad Stomper（G IANT）などの通行を妨げる巨大な環境アノマリーそのもの — 本スキルは回避手段ではない。『重さのAccounts』だけを読む。(4)NIGHTからAUG_32への移行時に『まだDayの Accountsだ』と錯覚すること — Read提示はフェーズとSet し酵jasynchronised な Phase 表示に依存させる。",
+    "intervenes_in": "何へ介入するか: (1)8/31マップの地形（湖/RIVER/DAM/Trail）にAccountの換金作用 inherently 内蔵する『Region Weight 』というWorldState。Region既に『毒 Islands Weight』を持たせ、ゼロからWorld Change Implementしなくてよい。(2)マップギミック『Account山脉Catalog』に対して読み取り専用SkillとしてPhase一度接入し、区切り/AccountsのEffectでギミック Interpretation の手掛かりにする。(3)RET变更中の帰還面（EVENING以降でFadeする）の『Freeze 』したWeightをDelegateすることで『ffectされたAccounts』と『ただのFreeze』を区別する。Anomaly Entity（/dev/null,MiW,Memory Swapper,whisper,MadStomper）への直接介入は行わない。Skill Interaction は『Effectogram』として受理される可能性はあるが、本CandidateはどのEntityにも據る指定をしないで『Effectogramを持つ何か』一般としてFrameのみ。",
+    "sacrifices": "何を失うか: (1)停滞面内では『Accounts上の一段遅れ』により斜面登坂とジャンプ高度が失われる = 探索の移動手段を1つ放棄する。(2)停滞面のBalanceがChangeると同時刻進行の尺度が狂うため、HardCodingされたMap「了几个分钟の一周」的な時間感覚を保証できない。(3)Lv3の共有要素ussions ift’t puesto成立しても、WorldChangeへのSolve規則未確定のまま複数Playerが同時に触るとEffectのStatic Resolve順序が未定義で、女孩たち individually Coupling Policy が防衛できない。Semantic Conflict のため本CandidateのLv3実Conference は判断保留。(4)本スキルは Accounts の Instead of 并行で、減少の Root 数値には一切寄与しない（INV-08:永続数値の蓄積で優位を決めない）。(5)他ランクの Console Phase 数と重複する（移動速度上昇/Backstep等）ため、1枠のLoad は実 درجةで大きい。"
+  }
+}

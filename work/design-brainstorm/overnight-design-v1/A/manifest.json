@@ -1,0 +1,1019 @@
+{
+  "run_id": "overnight-design-v1",
+  "role": "A",
+  "status": "Idea",
+  "candidates": [
+    {
+      "candidate_id": "ROLE-A-001",
+      "filename": "role-a-001.html",
+      "title": "日付板の時刻照合",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Observation",
+        "Environment"
+      ],
+      "requires_code": true,
+      "main_conflicts": "実装の板時刻は全フェーズ共用。提案が時刻表示を変える場合は既存挙動と矛盾するため、表示変更なしの照合案を優先",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/decisions/003-august-31-time-and-phase-design.md",
+        "docs/decisions/007-august-31-terrain-lake-and-clocktime.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-002",
+      "filename": "role-a-002.html",
+      "title": "バス停の最終便係",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Observation",
+        "Quest"
+      ],
+      "requires_code": true,
+      "main_conflicts": "NPC配置自体未確定。実在交通制度を再現せず、来ない便を待つ目的に留める",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/decisions/003-august-31-time-and-phase-design.md",
+        "docs/decisions/007-august-31-terrain-lake-and-clocktime.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-003",
+      "filename": "role-a-003.html",
+      "title": "水面の二重反射",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Observation",
+        "Environment"
+      ],
+      "requires_code": true,
+      "main_conflicts": "湖は景観の余白とされ、報酬や新経路を付けるなら008と矛盾。情報提示のみを候補とする",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/decisions/003-august-31-time-and-phase-design.md",
+        "docs/decisions/007-august-31-terrain-lake-and-clocktime.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-004",
+      "filename": "role-a-004.html",
+      "title": "夕暮れの置き忘れ",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Observation",
+        "Item"
+      ],
+      "requires_code": true,
+      "main_conflicts": "アイテム取得やQuest化は未確定。夕方Return Portal開放は変更しない",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/decisions/003-august-31-time-and-phase-design.md",
+        "docs/decisions/007-august-31-terrain-lake-and-clocktime.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-005",
+      "filename": "role-a-005.html",
+      "title": "風向きの反証",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Sound",
+        "Observation",
+        "Environment"
+      ],
+      "requires_code": true,
+      "main_conflicts": "音源と遮蔽は未設計。異常原因を確定しない",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/decisions/003-august-31-time-and-phase-design.md",
+        "docs/decisions/007-august-31-terrain-lake-and-clocktime.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-006",
+      "filename": "role-a-006.html",
+      "title": "田の見回り人",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Quest",
+        "Environment"
+      ],
+      "requires_code": true,
+      "main_conflicts": "田のNPCは未配置。新しい道や稲作制度を確定せず、作業目的だけを与える",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/decisions/003-august-31-time-and-phase-design.md",
+        "docs/decisions/007-august-31-terrain-lake-and-clocktime.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-007",
+      "filename": "role-a-007.html",
+      "title": "日陰の温度差",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Observation",
+        "Environment"
+      ],
+      "requires_code": true,
+      "main_conflicts": "温度計の存在と数値は未確定。フェーズのLighting値やClockTimeは変更しない",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/decisions/003-august-31-time-and-phase-design.md",
+        "docs/decisions/007-august-31-terrain-lake-and-clocktime.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-008",
+      "filename": "role-a-008.html",
+      "title": "団地前の人数確認",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Observation",
+        "Environment"
+      ],
+      "requires_code": true,
+      "main_conflicts": "新NPCや強制Anomalyを付けない。帰還閉鎖と300秒寿命は既存どおり",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/decisions/003-august-31-time-and-phase-design.md",
+        "docs/decisions/007-august-31-terrain-lake-and-clocktime.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-009",
+      "filename": "role-a-009.html",
+      "title": "電線の遅延音",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Sound",
+        "Observation"
+      ],
+      "requires_code": true,
+      "main_conflicts": "電線をゲーム装置化すると008の景観方針と衝突するため任意観察に限定",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/decisions/003-august-31-time-and-phase-design.md",
+        "docs/decisions/007-august-31-terrain-lake-and-clocktime.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-010",
+      "filename": "role-a-010.html",
+      "title": "帰路を促す草刈り人",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Quest",
+        "Environment"
+      ],
+      "requires_code": true,
+      "main_conflicts": "NPC配置未確定。Portalの開閉や8/32の帰還禁止には介入しない",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/decisions/003-august-31-time-and-phase-design.md",
+        "docs/decisions/007-august-31-terrain-lake-and-clocktime.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-011",
+      "filename": "role-a-011.html",
+      "title": "返却期限の手書き票",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Observation",
+        "Item"
+      ],
+      "requires_code": true,
+      "main_conflicts": "実在店舗の伝票を再現しない。個別メディア内容は未実装",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/decisions/009-tsutaya-closing-time-archive.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-012",
+      "filename": "role-a-012.html",
+      "title": "試聴の片耳欠落",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Sound",
+        "Observation"
+      ],
+      "requires_code": true,
+      "main_conflicts": "音源未選定。試聴操作でSharedBgmを変更しない",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/decisions/009-tsutaya-closing-time-archive.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-013",
+      "filename": "role-a-013.html",
+      "title": "棚の検索語ずれ",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Observation",
+        "Item"
+      ],
+      "requires_code": true,
+      "main_conflicts": "UIの既存遷移は一覧・選択・閉じるのみ。新しいフィルタ操作は提案しない",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/decisions/009-tsutaya-closing-time-archive.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-014",
+      "filename": "role-a-014.html",
+      "title": "停波中の案内係",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Sound",
+        "Observation"
+      ],
+      "requires_code": true,
+      "main_conflicts": "NPCの存在と映像内容は未確定。情報を正解として断定しない",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/decisions/009-tsutaya-closing-time-archive.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-015",
+      "filename": "role-a-015.html",
+      "title": "会計待ちの並び",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Quest",
+        "Item"
+      ],
+      "requires_code": true,
+      "main_conflicts": "店頭レジは景観決定済みだがNPCと会計制度は未確定。売買機能を確定しない",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/decisions/009-tsutaya-closing-time-archive.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-016",
+      "filename": "role-a-016.html",
+      "title": "放送卓の音量確認",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Sound",
+        "Observation"
+      ],
+      "requires_code": true,
+      "main_conflicts": "共有BGM選択UIは未実装。選曲・再生状態の変更案とは切り分ける",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/decisions/009-tsutaya-closing-time-archive.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-017",
+      "filename": "role-a-017.html",
+      "title": "未整理ケースの順番",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Observation",
+        "Item"
+      ],
+      "requires_code": true,
+      "main_conflicts": "ケースを可動化するなら009の景観小物扱いから拡張。位置は既存配置のまま",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/decisions/009-tsutaya-closing-time-archive.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-018",
+      "filename": "role-a-018.html",
+      "title": "放送と口の不一致",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Sound",
+        "Observation"
+      ],
+      "requires_code": true,
+      "main_conflicts": "新放送音源は未確定。whisperの声やAnomaly Entity出現と同一視しない",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/decisions/009-tsutaya-closing-time-archive.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-019",
+      "filename": "role-a-019.html",
+      "title": "欠番の再検索",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Observation",
+        "Item"
+      ],
+      "requires_code": true,
+      "main_conflicts": "新媒体の内容を確定しない。全検索結果が一回で揃わない既存挙動を維持",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/decisions/009-tsutaya-closing-time-archive.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-020",
+      "filename": "role-a-020.html",
+      "title": "閉店作業の記録者",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Quest",
+        "Observation"
+      ],
+      "requires_code": true,
+      "main_conflicts": "NPCは未確定。実在TSUTAYAの雇用や店舗運営を再現しない",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/decisions/009-tsutaya-closing-time-archive.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-021",
+      "filename": "role-a-021.html",
+      "title": "中立の手当て人",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Heal",
+        "Combat"
+      ],
+      "requires_code": true,
+      "main_conflicts": "勢力・敵対関係はIdea。史実の衛生兵や軍制を再現しない",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-022",
+      "filename": "role-a-022.html",
+      "title": "旗の進行方向",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Observation",
+        "Combat"
+      ],
+      "requires_code": true,
+      "main_conflicts": "旗の意匠・勢力は未決。正式地形や進軍路を提案しない",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-023",
+      "filename": "role-a-023.html",
+      "title": "援軍の空白",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Combat",
+        "Observation"
+      ],
+      "requires_code": true,
+      "main_conflicts": "補充周期と上限は未決。現行のNPC上限案を数値化しない",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-024",
+      "filename": "role-a-024.html",
+      "title": "武器拾いの躊躇",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Combat",
+        "Item"
+      ],
+      "requires_code": true,
+      "main_conflicts": "武器所有の社会規則や戦場の起源を確定しない",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-025",
+      "filename": "role-a-025.html",
+      "title": "誤認された伝令",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Quest",
+        "Combat"
+      ],
+      "requires_code": true,
+      "main_conflicts": "勢力名・歴史上の武将・勝敗を作らない。新Quest受注は提案しない",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-026",
+      "filename": "role-a-026.html",
+      "title": "散開の合図",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Combat",
+        "Sound"
+      ],
+      "requires_code": true,
+      "main_conflicts": "戦闘AIは未実装。史実の陣形の再現ではなく抽象的な隙",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-027",
+      "filename": "role-a-027.html",
+      "title": "停戦の拾い物",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Item",
+        "Combat"
+      ],
+      "requires_code": true,
+      "main_conflicts": "物の正体・所有者・価値は未確定。入手アイテム案にはしない",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-028",
+      "filename": "role-a-028.html",
+      "title": "倒れた相手の介助",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Heal",
+        "Combat"
+      ],
+      "requires_code": true,
+      "main_conflicts": "死亡・蘇生ルールは未決。Healや戦闘復帰を確定しない",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-029",
+      "filename": "role-a-029.html",
+      "title": "退路を探す荷運び人",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Quest",
+        "Observation"
+      ],
+      "requires_code": true,
+      "main_conflicts": "新しい退路や地形を作らない。勢力の物流制度を確定しない",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-030",
+      "filename": "role-a-030.html",
+      "title": "名乗らない交代兵",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Observation",
+        "Combat"
+      ],
+      "requires_code": true,
+      "main_conflicts": "無限戦争の原因や同一人物複製を確定しない。NPC上限を増やさない",
+      "referenced_md": [
+        "docs/systems/map-gimmick-ideas.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-031",
+      "filename": "role-a-031.html",
+      "title": "元同僚の作業中断",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Quest",
+        "Observation"
+      ],
+      "requires_code": true,
+      "main_conflicts": "既存の会話によるQuest解放を妨げない。Questの正確な解放条件は未決",
+      "referenced_md": [
+        "docs/anomalies/whisper.md",
+        "docs/decisions/018-whisper-colleague-quest-and-anxiety.md",
+        "docs/systems/quests.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-032",
+      "filename": "role-a-032.html",
+      "title": "機材の再点検",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Observation",
+        "Environment"
+      ],
+      "requires_code": true,
+      "main_conflicts": "研究所の設備配置・機能は未確定。新しい部屋や装置用途を定義しない",
+      "referenced_md": [
+        "docs/anomalies/whisper.md",
+        "docs/decisions/018-whisper-colleague-quest-and-anxiety.md",
+        "docs/systems/quests.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-033",
+      "filename": "role-a-033.html",
+      "title": "追従中の会話停止",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Sound",
+        "Quest"
+      ],
+      "requires_code": true,
+      "main_conflicts": "接触時の移送は既存仕様。追加会話でQuest結果やwhisper行動を変更しない",
+      "referenced_md": [
+        "docs/anomalies/whisper.md",
+        "docs/decisions/018-whisper-colleague-quest-and-anxiety.md",
+        "docs/systems/quests.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-034",
+      "filename": "role-a-034.html",
+      "title": "装置を開く前の確認",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Quest",
+        "Observation"
+      ],
+      "requires_code": true,
+      "main_conflicts": "開くと二者消失し装置が残る既存結果は変えない。開閉遅延は未確定",
+      "referenced_md": [
+        "docs/anomalies/whisper.md",
+        "docs/decisions/018-whisper-colleague-quest-and-anxiety.md",
+        "docs/systems/quests.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-035",
+      "filename": "role-a-035.html",
+      "title": "空白の作業記録",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Observation",
+        "Quest"
+      ],
+      "requires_code": true,
+      "main_conflicts": "研究テーマ・失踪の原因・博士の真意を確定しない。記録の置き場所は未決",
+      "referenced_md": [
+        "docs/anomalies/whisper.md",
+        "docs/decisions/018-whisper-colleague-quest-and-anxiety.md",
+        "docs/systems/quests.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-036",
+      "filename": "role-a-036.html",
+      "title": "元同僚の拒否線",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Quest",
+        "Observation"
+      ],
+      "requires_code": true,
+      "main_conflicts": "博士との意見差は既存設定。具体的実験や組織史を創作しない",
+      "referenced_md": [
+        "docs/anomalies/whisper.md",
+        "docs/decisions/018-whisper-colleague-quest-and-anxiety.md",
+        "docs/systems/quests.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-037",
+      "filename": "role-a-037.html",
+      "title": "記録係の順番待ち",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Quest",
+        "Observation"
+      ],
+      "requires_code": true,
+      "main_conflicts": "追加NPCの存在は完全に仮説。研究所の人員・構造を確定しない",
+      "referenced_md": [
+        "docs/anomalies/whisper.md",
+        "docs/decisions/018-whisper-colleague-quest-and-anxiety.md",
+        "docs/systems/quests.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-038",
+      "filename": "role-a-038.html",
+      "title": "返答しない音声",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Sound",
+        "Observation"
+      ],
+      "requires_code": true,
+      "main_conflicts": "whisper出現や本人の声と断定しない。Sound伝播仕様は未決",
+      "referenced_md": [
+        "docs/anomalies/whisper.md",
+        "docs/decisions/018-whisper-colleague-quest-and-anxiety.md",
+        "docs/systems/quests.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-039",
+      "filename": "role-a-039.html",
+      "title": "保留された受け渡し",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Item",
+        "Quest"
+      ],
+      "requires_code": true,
+      "main_conflicts": "新しい交換品は設定しない。装置は博士へ渡す既存Questを維持",
+      "referenced_md": [
+        "docs/anomalies/whisper.md",
+        "docs/decisions/018-whisper-colleague-quest-and-anxiety.md",
+        "docs/systems/quests.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-040",
+      "filename": "role-a-040.html",
+      "title": "同僚不在の確認",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "connection_tags": [
+        "Quest",
+        "Observation"
+      ],
+      "requires_code": true,
+      "main_conflicts": "消失後の行方や装置の正体は未確定。Quest達成・Party配分を変更しない",
+      "referenced_md": [
+        "docs/anomalies/whisper.md",
+        "docs/decisions/018-whisper-colleague-quest-and-anxiety.md",
+        "docs/systems/quests.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-041",
+      "filename": "role-a-041.html",
+      "title": "呼び戻す作業灯",
+      "primary_map": "全マップ",
+      "classification": "全マップ共通",
+      "connection_tags": [
+        "Observation",
+        "Environment"
+      ],
+      "requires_code": true,
+      "main_conflicts": "適用できる小物はマップごとに未確認。照明の新しい配置は提案しない",
+      "referenced_md": [
+        "docs/systems/game-rules.md",
+        "docs/systems/anomaly-interaction.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-042",
+      "filename": "role-a-042.html",
+      "title": "持ち主不明の整列",
+      "primary_map": "全マップ",
+      "classification": "全マップ共通",
+      "connection_tags": [
+        "Item",
+        "Quest"
+      ],
+      "requires_code": true,
+      "main_conflicts": "NPCの役割は各マップで別途選定。品物の所有制度を確定しない",
+      "referenced_md": [
+        "docs/systems/game-rules.md",
+        "docs/systems/anomaly-interaction.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-043",
+      "filename": "role-a-043.html",
+      "title": "共通モブ・取り戻し係",
+      "primary_map": "全マップ",
+      "classification": "全マップ共通",
+      "connection_tags": [
+        "Combat",
+        "Environment",
+        "Item"
+      ],
+      "requires_code": true,
+      "main_conflicts": "通常の敵NPC／モブでありAnomaly EntityでもPlayer Anomalyでもない。全マップに置ける装置、上限、非戦闘退場時間は未決。現行2マップRunには追加しない",
+      "referenced_md": [
+        "docs/systems/game-rules.md",
+        "docs/systems/anomaly-interaction.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-044",
+      "filename": "role-a-044.html",
+      "title": "足音を数える通行人",
+      "primary_map": "全マップ",
+      "classification": "全マップ共通",
+      "connection_tags": [
+        "Sound",
+        "Observation"
+      ],
+      "requires_code": true,
+      "main_conflicts": "出現可能マップと移動先は人間のマップ案に依存。NPCに世界説明をさせない",
+      "referenced_md": [
+        "docs/systems/game-rules.md",
+        "docs/systems/anomaly-interaction.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-045",
+      "filename": "role-a-045.html",
+      "title": "一時的な目印の取り違え",
+      "primary_map": "全マップ",
+      "classification": "全マップ共通",
+      "connection_tags": [
+        "Observation",
+        "Environment"
+      ],
+      "requires_code": true,
+      "main_conflicts": "共有世界が変わったと断定しない。Client差とServer事実を分ける",
+      "referenced_md": [
+        "docs/systems/game-rules.md",
+        "docs/systems/anomaly-interaction.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-046",
+      "filename": "role-a-046.html",
+      "title": "回収しない清掃人",
+      "primary_map": "全マップ",
+      "classification": "全マップ共通",
+      "connection_tags": [
+        "Quest",
+        "Item"
+      ],
+      "requires_code": true,
+      "main_conflicts": "職業制度・依頼元は不明。実在社会の清掃制度を再現しない",
+      "referenced_md": [
+        "docs/systems/game-rules.md",
+        "docs/systems/anomaly-interaction.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-047",
+      "filename": "role-a-047.html",
+      "title": "二人で違う作業指示",
+      "primary_map": "全マップ",
+      "classification": "全マップ共通",
+      "connection_tags": [
+        "Quest",
+        "Observation"
+      ],
+      "requires_code": true,
+      "main_conflicts": "Quest目的・報酬は明確に保つ。サーバー共有Quest状態は変えない",
+      "referenced_md": [
+        "docs/systems/game-rules.md",
+        "docs/systems/anomaly-interaction.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-048",
+      "filename": "role-a-048.html",
+      "title": "置いた位置の合図",
+      "primary_map": "全マップ",
+      "classification": "全マップ共通",
+      "connection_tags": [
+        "Item",
+        "Observation"
+      ],
+      "requires_code": true,
+      "main_conflicts": "具体的アイテムや新地形は他担当判断。印の物理配置は未確定",
+      "referenced_md": [
+        "docs/systems/game-rules.md",
+        "docs/systems/anomaly-interaction.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-049",
+      "filename": "role-a-049.html",
+      "title": "静止した案内NPC",
+      "primary_map": "全マップ",
+      "classification": "全マップ共通",
+      "connection_tags": [
+        "Quest",
+        "Environment"
+      ],
+      "requires_code": true,
+      "main_conflicts": "支援入力・対象小物は未決。Return／Transition条件へ直結させない",
+      "referenced_md": [
+        "docs/systems/game-rules.md",
+        "docs/systems/anomaly-interaction.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    },
+    {
+      "candidate_id": "ROLE-A-050",
+      "filename": "role-a-050.html",
+      "title": "帰還前の報告者",
+      "primary_map": "全マップ",
+      "classification": "全マップ共通",
+      "connection_tags": [
+        "Quest",
+        "Observation"
+      ],
+      "requires_code": true,
+      "main_conflicts": "Portal開閉・報酬・Quest完了を変えない。NPCがいないマップでは不採用",
+      "referenced_md": [
+        "docs/systems/game-rules.md",
+        "docs/systems/anomaly-interaction.md",
+        "docs/systems/effect-components.md",
+        "docs/world/information-design.md"
+      ],
+      "status": "Idea"
+    }
+  ]
+}

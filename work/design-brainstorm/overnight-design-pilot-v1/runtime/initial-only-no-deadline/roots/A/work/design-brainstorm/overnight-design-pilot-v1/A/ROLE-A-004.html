@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ROLE-A-004 返却待ちの一本 — 廃TSUTAYAの店頭</title>
+  <link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+  <header class="top">
+    <p class="sub">overnight-design-pilot-v1 ／ ROLE-A-004 ／ 主対象: 廃TSUTAYA（マップ固有）／ 区分: NPC</p>
+    <h1>返却待ちの一本 — 廃TSUTAYAの店頭</h1>
+    <p>誰も回収に来ない廃店舗に、返却を待つ人が1人だけいる。棚を調べて得られる選択結果の中に、その1本だけが依頼の対象として印付けられる。渡すと、その項目は個人試聴の候補から外れる。</p>
+    <div class="badges"><span class="badge hyp">design_status: Draft</span><span class="badge">review_status: unreviewed</span><span class="badge unknown">所持基盤と対象棚は未定</span><span class="badge">requires_code: true</span></div>
+    <p class="sub">見出しは作業用であり、正式System IDでもゲーム内名称でもない。正式な配置、部屋、LINKSは提案していない。</p>
+    <nav class="nav"><a href="index.html">← 候補一覧</a><a href="ROLE-A-001.html">前: ROLE-A-001 水位を読む人 →</a><a href="ROLE-A-013.html">→ ROLE-A-013 開いた通路の個体</a></nav>
+  </header>
+
+  <section id="sources">
+    <h2>(a) 根拠文書と出典Status</h2>
+    <table><tbody>
+      <tr><th>MDと節</th><td>docs/systems/map-gimmick-ideas.md「### 実装済みの範囲」「### 未実装の境界」（Status: Prototype: Implemented）</td></tr>
+      <tr><th>根拠の記述</th><td>棚は5基で、調べる操作でArchive Selection UIが開き、VHS、DVD、CD、Tapeの項目から選択できる。1回の検索で全項目が返ることはない。個人試聴は試聴機3台で行われ、PreviewDurationで自動的に終わり、共有BGMとは独立している。共有BGMの選択UIは未実装で固定音源をループ再生している。個別メディアの実際の内容は未実装であり、項目は名前と選択結果のみを持つ。Archive Selection UIには一覧、選択、閉じる以外の遷移がない。</td></tr>
+      <tr><th>MDと節</th><td>docs/decisions/009-tsutaya-closing-time-archive.md「### 基準状態」「### 実装範囲」（Status: Draft）</td></tr>
+      <tr><th>根拠の記述</th><td>基準状態は閉店直後だが誰も回収に来ないアーカイブ。店頭は最も明るく、レジ、会員端末、販促面が店舗としての記憶を残す。既存のLINKS、通路幅、Prompt、Archive UI、CRT、試聴、Quest、出口条件は変更しない。既存のArchiveShelfと追加の視覚棚を混同しないことが検証項目に挙がっている。</td></tr>
+      <tr><th>MDと節</th><td>docs/systems/anomaly-interaction.md「### Item Interaction」「## クライアントとサーバーの責務」（ステータス: Draft）</td></tr>
+      <tr><th>根拠の記述</th><td>所持、使用、提示、配置、受け渡し、破棄などを入力とする相互作用として扱い、アイテムの真の用途や価値は不明であり得るためUIが正解を直接示す前提にはしない。状態の遷移とラン全体への反映はサーバーが確定し、クライアントは局所的な証拠を提示できる。</td></tr>
+      <tr><th>MDと節</th><td>docs/world/information-design.md「### 意図的に曖昧にするもの」（Status: Draft）</td></tr>
+      <tr><th>根拠の記述</th><td>NPCがアノマリーをどこまで認識、理解しているかは意図的に曖昧にする。クエストの目的は明確にするが、対象の正体や理由が不明であり得る。</td></tr>
+    </tbody></table>
+    <p>既存のどこまでが根拠で、どこからが今回の提案か: 棚5基とArchive Selection UIの遷移（一覧、選択、閉じる）、個人試聴の自動終了、共有BGMが個人試聴で変わらないこと、店頭が 判断009 の基準状態として最も明るいこと、は既存の記述である。返却を待つ1人、依頼対象を示す印、渡した項目の試聴からの除外は今回の提案である。</p>
+  </section>
+
+  <section id="hypothesis">
+    <h2>(b) 設計仮説とプレイヤーの選択</h2>
+    <p><strong>設計仮説:</strong> 誰も回収に来ない廃店舗に、返却を待つ人が1人だけいる。この人がその場所にいる理由は、借りた1本を返却しに来ることです。店のことや世界のことは説明しません。棚を調べて得られる選択結果の中に、その1本だけが依頼の対象として印付けられる。印は新しい正解表示として作らず、既存のArchive Selection UIの結果状態に持たせます。渡すと、その項目は渡したプレイヤーの個人試聴の候補から外れます。放置しても成立し、攻撃は解答として設計しません。地形、部屋、正式配置は追加しません。</p>
+    <div class="grid">
+      <div class="card"><h3>狙う体験</h3><p>同じ「調べる」操作の先に、具体的な目的が一つできる。そして手放すことを許される。印は理由の説明をしないため、渡すべきものかどうかは依頼主の要求から判断するしかない。</p></div>
+      <div class="card"><h3>判断と代償</h3><p>先に自分で試聴する／NPCへ渡す／印を考えず別の棚へ時間を使う／位置変化だけ見る。渡すと自分の確認手段を失う。放置しても印はRun中残り、NPCは帰還まで待つため手掛かりは失われない。誰が先に調べたかで先手と後手の結果が違う。</p></div>
+    </div>
+  </section>
+
+  <section id="diagram">
+    <h2>作用図 — 印は個人提示、渡しは自分の試聴経路を1つ消す</h2>
+    <div class="board">
+      <svg viewBox="0 0 1120 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="棚の選択結果に依頼対象の印が付く個人提示と、渡す、試聴する、触れないという三つの選択がそれぞれ別の結果になることを示す模式図。個人試聴の候補から外れる経路と、共有BGMが変わらないことを併記している">
+        <rect width="1120" height="470" fill="#0a1118"/>
+        <text class="label" x="24" y="28">既存の要素（変更しない）</text>
+        <text class="label" x="404" y="28">印の成立（個人提示）</text>
+        <text class="label" x="748" y="28">三つの選択と結果</text>
+
+        <rect x="24" y="52" width="300" height="86" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text class="label" x="38" y="80">棚を調べる（5基）</text>
+        <text class="small" x="38" y="104">1回の検索で全項目は返らない</text>
+        <text class="small" x="38" y="126">既存Archive Selection UIを開く</text>
+
+        <rect x="24" y="176" width="300" height="86" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text class="label" x="38" y="204">試聴機3台</text>
+        <text class="small" x="38" y="228">PreviewDurationで自動終了する</text>
+        <text class="small" x="38" y="250">共有BGMは変わらない（実装済み）</text>
+
+        <rect x="404" y="112" width="300" height="120" rx="8" fill="#142330" stroke="#d3b653"/>
+        <text class="label" x="418" y="140">選択結果に印が付く</text>
+        <text class="small" x="418" y="166">依頼対象であるとだけを示す</text>
+        <text class="small" x="418" y="188">理由や正体は説明しない</text>
+        <text class="small" x="418" y="212">印は個人単位である</text>
+
+        <path d="M324 95h74" class="active"/>
+        <path d="M392 89l9 6-9 6" class="active"/>
+        <path d="M324 219h74" class="active"/>
+        <path d="M392 213l9 6-9 6" class="active"/>
+        <path d="M534 232v40" class="hyp-line"/>
+        <path d="M534 272l-6 9h12z" fill="#d3b653"/>
+
+        <rect x="748" y="52" width="352" height="86" rx="8" fill="#142330" stroke="#70c9c3"/>
+        <text class="label" x="762" y="80">（b）NPCへ渡す</text>
+        <text class="small" x="762" y="104">依頼成立。印が消え、NPCは退場する</text>
+        <text class="small" x="762" y="126">当該個人の試聴候補から外れる</text>
+
+        <rect x="748" y="176" width="352" height="86" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text class="label" x="762" y="204">（a）自分で試聴する</text>
+        <text class="small" x="762" y="228">先に確かめられる。印は残る</text>
+        <text class="small" x="762" y="250">共有BGMは変わらない。内容は未実装</text>
+
+        <rect x="748" y="300" width="352" height="86" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text class="label" x="762" y="328">（c）触れない（d）位置だけ見る</text>
+        <text class="small" x="762" y="352">印はRun中残る。NPCは帰還まで待つ</text>
+        <text class="small" x="762" y="374">放置は退場にならない</text>
+
+        <path d="M706 100h36" class="active"/>
+        <path d="M736 94l9 6-9 6" class="active"/>
+        <path d="M706 219h36" class="active"/>
+        <path d="M736 213l9 6-9 6" class="active"/>
+        <path d="M706 343h36" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+        <path d="M736 337l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+
+        <path d="M924 262v30" stroke="#ea9380" stroke-width="2" fill="none"/>
+        <path d="M918 288l6 9 6-9z" fill="#ea9380"/>
+        <text class="small" x="24" y="410">（b）だけが自分の入手経路を1つ消す。共有BGMはどの選択でも変わらない。</text>
+
+        <text class="small" x="24" y="432">この図で分かること: 印は選択結果の状態として載る。渡すと除外と退場が起こる。試聴と放置は印を残す。</text>
+        <text class="small" x="24" y="454">この図で確定しないこと: 対象の棚、印を1件だけ持つか複数か、移動周期、印の説明の要否。</text>
+      </svg>
+    </div>
+    <p><strong>この図で分かること:</strong> 印（情報提示）、除外（入力結果の無効化）、退場（個体状態）が別の結果として分かれる。試聴候補の除外は当該個人だけの変化である。</p>
+    <p><strong>図では確定しないこと:</strong> 対象の棚の位置、印の件数、移動の周期と地点、印の説明を出せるか。図は作用と選択の模式的表現であり、室内の正式な配置図ではない。</p>
+  </section>
+
+  <section id="effects">
+    <h2>(c) Trigger・Condition・Effectの契約</h2>
+    <p>Effectは3件。印は情報提示、除外は入力結果の無効化、退場は個体状態として分ける。</p>
+    <table><tbody>
+      <tr><th>Effect 1: InformationChange</th><td>持続（sustained）／保存境界: 同一Run中／依頼対象の印</td></tr>
+      <tr><th>Trigger</th><td>対象が棚を調べ、Archive Selection UIを開いて項目を1つ選び、その項目が依頼対象である条件を満たす。</td></tr>
+      <tr><th>Condition</th><td>依頼がRun開始時点で有効であること。選択結果に対象項目が含まれること。対象が通常のプレイヤーであること。対象項目は名前と選択結果だけを持ち内容は閲覧できない。</td></tr>
+      <tr><th>結果</th><td>選択結果の表示に、依頼対象である印を付けて個人提示として返す。印は目的だけを明確にするもので、理由や正体は説明しない。</td></tr>
+      <tr><th>対象・作用範囲</th><td>対象: 選んだ個人。範囲: 個人。同じ項目でも印を得た個人ごとに独立して成立する。</td></tr>
+      <tr><th>保存境界・終了</th><td>終了条件: 依頼を成立させた／Run終了／マップ終了。いずれかが成立すれば閉じる（any）。依頼成立で印が消えるのは、処理が済んだという結果の手掛かりである。</td></tr>
+      <tr><th>重ね掛け</th><td>例外ではない。同一Effectかつ同一対象は非加算1件。同じ項目を再度選んでも印の状態は重複しない。同じ選択結果へ別の印を載せる処理は本候補の範囲外であり、競合規則は未定義のため保留。</td></tr>
+      <tr><th>Server / Client</th><td>Serverが依頼の有効性、選択結果の対象項目、対象属性、所持状態を検証し、印をクライアント側の推測で表示しない。Clientは選択結果の印のみを表す。</td></tr>
+      <tr><th>Feedback</th><td>成功: 印が付き他項目と区別できる。失敗: 印が付かない（対象以外を選んだ、または依頼が無効）。判別不能: なぜ対象なのか、渡すと何が変わるのかは説明しない。</td></tr>
+    </tbody></table>
+    <table><tbody>
+      <tr><th>Effect 2: RuleOverride</th><td>持続（sustained）／保存境界: 同一Run中／個人試聴の候補からの除外</td></tr>
+      <tr><th>Trigger</th><td>対象項目をNPCへ渡す操作が成立した。</td></tr>
+      <tr><th>Condition</th><td>Serverが対象項目の所持、距離、NPCの個体、依頼状態を検証して成立を確定した場合。所持が無い、相違する対象、NPCが退場済みの場合は成立しない。</td></tr>
+      <tr><th>結果</th><td>当該個人の個人試聴の候補から、その項目を外す。選択も再試聴もできなくなる。同じ項目が他個人の候補に残ることは妨げない。</td></tr>
+      <tr><th>対象・作用範囲</th><td>対象: 渡した個人の所持と、個人試聴の入力判定。範囲: 個人。共有BGMや他個人の試聴には影響しない。</td></tr>
+      <tr><th>保存境界・終了</th><td>終了条件: Run終了／マップ終了のみ。Runをまたいで残さない。戻す手段は本候補に含めない。</td></tr>
+      <tr><th>重ね掛け</th><td>例外（true）として、同じ項目を複数回渡しても記録は個人ごとに1件で二重に加算しない。優先順位: 個人試聴の入力判定より先に適用する。共有BGMの選択処理とは独立であり、どちらの順でも影響しない。出現計算に作用しないため博士Questの補正や発生ごとの減衰とは競合しない。</td></tr>
+      <tr><th>Server / Client</th><td>Serverが距離、所持、NPC個体、依頼状態を検証し、成立しない操作では除外しない。Clientは候補から消える表現のみ。理由の説明は出さない。</td></tr>
+      <tr><th>Feedback</th><td>成功: 渡した直後に候補から消える。失敗: 渡せなければ候補は残る（理由の区別は提示しない）。判別不能: 消えた項目は試聴できないため、失った情報の意味は本人にも分からない。</td></tr>
+    </tbody></table>
+    <table><tbody>
+      <tr><th>Effect 3: StateChange</th><td>持続（sustained）／保存境界: 同一Run中／NPCの待機、移動、退場</td></tr>
+      <tr><th>Trigger</th><td>NPCが現在位置から別位置へ移る、または依頼成立で店から去る。</td></tr>
+      <tr><th>Condition</th><td>NPCがRunに存在し、依頼が未成立である間だけ移動する。依頼成立後は退場のみ。</td></tr>
+      <tr><th>結果</th><td>個体の状態が待機、移動、退場のいずれかへ移る。移動は位置の変化としてのみ他のプレイヤーにも見え、依頼の内容は共有しない。</td></tr>
+      <tr><th>対象・作用範囲</th><td>対象: NPCの個体（Server Run共有）。範囲: Run共有の個体。位置は全Clientに表現されるが、依頼の印は個人である。</td></tr>
+      <tr><th>保存境界・終了</th><td>終了条件: 依頼を成立させた（退場）／Run終了／マップ終了。退場の条件は依頼成立のみであり、放置では退場しない。放置も成立する設計とする。</td></tr>
+      <tr><th>重ね掛け</th><td>例外ではない。同一個体の状態遷移はイベントごとに1件。同じ個体へ他の状態異常が重なる場合の順序は共通既定に従い、規則がない競合は保留。</td></tr>
+      <tr><th>Server / Client</th><td>Serverが個体の存在と依頼状態を検証し、退場済みの個体には遷移させない。Clientは移動表現のみ。依頼対象の知識は伝えない。</td></tr>
+      <tr><th>Feedback</th><td>成功: 位置が変わり、どこを待っているかが痕跡として分かる。失敗: 依頼成立後は再出現しない。判別不能: なぜその棚で待っているのかは本人にも分からない。</td></tr>
+    </tbody></table>
+  </section>
+
+  <section id="uncertainties">
+    <h2>(d) 未確定事項・矛盾・異化と留保</h2>
+    <table><tbody>
+      <tr><th>未確定事項</th><td>返却待ちの対象項目は1つだけとする案だが、印を1件だけ持たせるのか複数持たせるかは未定。対象の棚を固定するかRun開始時に選ぶかは未定で、本候補は固定しない。印を説明しない前提だが、説明を出さないと成立が読めない場合の別ルートは未検討。NPCが攻撃を受けた場合の挙動は設計していない（逃走か無反応かは判定していない）。店内を往復する周期と地点の数は未定。依頼がRun開始時点で無効な場合に印を出すべきかは未検討。正式なItemStackは未実装であり、所持の扱いは仮である（SRC-01）。</td></tr>
+      <tr><th>既存仕様との矛盾</th><td>2件をconflictsに記録している。（1）判断009の「落下ケースと欠番は少数に留める」「既存のArchiveShelfと追加の視覚棚を混同しない」に対し、本候補は欠番を視覚効果ではなく選択結果の状態として扱う。（2）map-gimmick-ideasにはBack Roomなどで再生すると共有BGMを変えられる案があるが、本候補は共有BGMを一切変更しない。</td></tr>
+      <tr><th>補正と理由</th><td>欠番の見た目も数も落下物の量も増やさず、追加するのは選択結果に保持される状態の欄だけとする。棚の視覚構造は増やさない。個人試聴が共有BGMを変えないという実装済みの境界は崩さず、共有BGMを変更する操作は本候補に含めない。いずれも判断009と実装済みの挙動を壊さないため補正可能と考える。ただし既存UIの構造変更の可否は判断を要する。</td></tr>
+      <tr><th>異化したもの</th><td>判断009が廃店舗を閉店直後のアーカイブとして残す判断を踏襲しつつ、そこに待つ人を1人だけ置くことで、静かな探索へ人の目的を一つ差し込む点が異化である。目的のない店ではなく、目的だけがある状態を提案する。</td></tr>
+      <tr><th>世界内の成立理由</th><td>舞台設定は、レジや会員端末のような古い機械と紙のレシートが混在する文明を想定する。借りたものを返しに来る、という取引の手順は、この場所が異常な空間へ変わっても成立する。誰が借りたのか、店は今も開いているのか、返却に何の意味があるのかは説明しないため、NPCは世界の説明役にならない。</td></tr>
+      <tr><th>曖昧に残す意味</th><td>なぜその人が閉店した店へ来たのか、なぜ返却が必要なのか、店とメディアの関係はどこまでなのか。印は目的だけを示し、理由は示さない。世界の起源、アノマリーの正体、博士の真意には触れない。</td></tr>
+    </tbody></table>
+  </section>
+
+  <section id="connections">
+    <h2>(e) 他担当への接続</h2>
+    <p><strong>接続タグ:</strong> NPCState / Item / Present / ArchiveMedia / Interaction / InformationSharing</p>
+    <p><strong>使用するコンポーネント:</strong> catalog: NPCState、ArchiveMedia、Effect.InformationChange、Effect.RuleOverride、Effect.StateChange。proposed: NpcRequestMarker。catalogのIDは記述語彙であり、実装を保証しない。</p>
+    <p><strong>他候補へ提供できる性質:</strong> 個人提示で依頼対象を明示できる（目的だけを明確にし、理由は説明しない）／提示の成立によって個人の入手経路を1つ失わせられる／NPC個体の位置変化がRun共有の痕跡として残る／共有の事実と個人の表示を分離して扱える。</p>
+    <table><tbody>
+      <tr><th>予約参照</th><td>ROLE-B-004（data_dependency、resolution: reserved_unresolved）。要求する性質: 棚の選択結果を個人の所持対象として区別できる／所持の成立と喪失を個人単位の状態として扱える。代替: B側の候補が成立しない場合、印の提示とNPCの待機、移動、退場は成立したまま残り、個人試聴の候補から除外するEffectは保留して試聴の可用性を下げない。</td></tr>
+      <tr><th>予約参照</th><td>ROLE-C-004（optional_connection、resolution: reserved_unresolved）。要求する性質: 戦闘をしない介入として提示を扱える（非攻撃の操作だけで依頼を成立させられる）。代替: 接続がなくても成立する。近づいて渡すと通常の近接操作だけで成立し、Cの候補が無くても結果（印、除外、退場）は同じである。</td></tr>
+      <tr><th>未解決の理由</th><td>B-004: 正式なItemStack、取得源、所有者規則は未実装（SRC-01）であり、棚の項目を個人所持できるかどうかはB側の設計に依存する（adoption_blocker: true）。C-004: Cの候補は未配布であり、Cが戦闘以外の提示操作を定義するかは不明。いずれも要求する性質の語彙だけを記し、相手の内容を創作していない。</td></tr>
+      <tr><th>ID未指定の要求</th><td>Archive Selection UIに選択結果の状態を保持する欄を追加してよいか（既存UIの構造変更の可否）。依頼対象の棚を固定するかRun開始時に選ぶか。いずれも候補IDでは特定できないため共通設計側の判断が必要（adoption_blocker: true）。</td></tr>
+    </tbody></table>
+    <div class="note">予約IDは未作成であり得ます。peer-snapshotsが配布されていないため相手の本文を読んでいません。存在しないページへのリンクは置いていません。</div>
+  </section>
+
+  <section id="cost">
+    <h2>(f) 新規ロジックと試作コスト</h2>
+    <p><code>requires_code: true</code> — 既存のTSUTAYAには通常NPCの状態機械、依頼状態、所持と結び付いた提示除外の経路が存在しない。メディア項目は名前と選択結果のみを持ち、正式なItemStackは未実装（SRC-01）である。NPC個体の移動と退場、選択結果への印の保持、除外判定という3経路はいずれも新規実装を要する。コード生成の許可ではない。</p>
+    <p><strong>新規ロジック:</strong> 通常NPC1体の店内移動と退場の状態機械／依頼対象の状態を保持する欄と個人提示へ落とす経路／所持済みの対象項目を個人試聴の候補から除外するRuleOverrideの判定／提示成立、除外、退場のServer検証（距離、所持、NPC個体、依頼状態）。</p>
+    <p><strong>試作コスト: 中。</strong> NPC1体と既存UIへの1列の追加に限定すれば中程度。ただし既存Archive Selection UIへ状態欄を足せるか、正式な所持基盤が無い状態をどう扱うか、5基の棚のうち対象をどう選ぶか、は試作前に決める必要がある。判断009は棚と照明で視界が分断される構造と、棚の追加PartおよびPointLight数がクライアント負荷へ影響することを検証項目として挙げている。配置と負荷は未検証。実時間の見積もりは出していない。</p>
+    <p><strong>想定する既存部品:</strong> 5基のArchiveShelfとArchive Selection UI（一覧、選択、閉じる）／個人試聴機3台と、試聴が自動終了するPreviewDuration／共有BGMのServer State（個人試聴では変わらない）／FRONTのレジ、会員端末、販促面（判断009の基準状態）／Server権威のPlayer Anomaly属性と判定。</p>
+  </section>
+
+  <section id="role-details">
+    <h2>(g) 担当固有（ROLE-A）の記述</h2>
+    <table><tbody>
+      <tr><th>NPCの目的</th><td>借りた1本を返却しに来る人。目的はそれだけで、店のこと、アノマリーのこと、自分がなぜそうしているかの説明はしない。依頼主ではなく客の立場で、自然にある所作だけをする。移動は位置の手掛かりとしてのみ機能させ、依頼の内容を教える役割にはしない。個体数は1体で、放置してもRunは閉じない。世界設定やアノマリーの起源を説明する役にはしない。</td></tr>
+      <tr><th>具体的な選択</th><td>個人試聴機へ持ち込んで先に確かめる／NPCへ渡して成立させる／印の意味を考えず別の棚や端末へ時間を使う／位置変化だけを見る。印は理由の説明をしないため、渡すべきものかは依頼主の要求から判断するしかない。誰が先に同じ棚を調べたかで結果が変わるため、Partyでは同じ結果にならない。</td></tr>
+      <tr><th>Player Anomalyの扱い</th><td>判断019によりPlayer Anomalyは通常NPCとInteractionできないため、印の提示も依頼成立も享受できない。依頼の成立は通常プレイヤーのみが行える。印は個人単位なので、他のプレイヤーが先に成立させた結果は他の個人の表示に留まる。Player Anomalyが成立済みの項目を引き継ぐかは未確定であり、異常化によって依頼が失われる以外の処理は発生させない。</td></tr>
+      <tr><th>mob_contract: 対象外</th><td>spawn_condition: 通常NPC1体（客）のみであり、モブ敵の発生を含まない。イベントから通常モブが生まれる契約はROLE-A-013で扱う。／population_cap: 個体数は1体固定で湧きも補充も持たない。上限と湧き枠の扱いはROLE-A-013側だけに置く。／non_combat_response: 戦闘を設計していない。攻撃は解答にならず、印も依頼成立も発生しない。逃走か無反応かは判定していない。／exit_condition: 退場は依頼成立とRun終了のみ。放置が退場にならない点が設計上の要点。／entity_distinction: 通常NPCでありAnomaly EntityでもPlayer Anomalyでもない。Interaction KindはPresent（受け渡し）と近接の観測のみ。whisperの追従先移送の連鎖とは接続しないため、移送は発生しない。</td></tr>
+    </tbody></table>
+  </section>
+
+  <footer>overnight-design-pilot-v1 ／ ROLE-A-004 ／ design_status: Draft ／ review_status: unreviewed ／ 実表示の確認は未実施（担当セッションではブラウザを使用していない）。</footer>
+</main>
+</body>
+</html>
