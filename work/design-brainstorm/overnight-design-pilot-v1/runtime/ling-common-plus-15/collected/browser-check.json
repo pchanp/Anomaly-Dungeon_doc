@@ -1,0 +1,464 @@
+{
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "results": [
+    {
+      "cid": "ROLE-A-031",
+      "ready": true,
+      "title": "ROLE-A-031 | 迎えの一声",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-A-032",
+      "ready": true,
+      "title": "ROLE-A-032 | 見合わせる群れ",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-A-033",
+      "ready": true,
+      "title": "ROLE-A-033 | 貸し灯り",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-A-034",
+      "ready": true,
+      "title": "ROLE-A-034 | 通りすがりの道連れ",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-A-035",
+      "ready": true,
+      "title": "ROLE-A-035 | 数合わせの扉",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-A-036",
+      "ready": true,
+      "title": "ROLE-A-036 | 正面だけの警戒",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-A-037",
+      "ready": true,
+      "title": "ROLE-A-037 | 置き手の印",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-A-038",
+      "ready": true,
+      "title": "ROLE-A-038 | 追い越しの規則",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-A-039",
+      "ready": true,
+      "title": "ROLE-A-039 | 静かに開く収納",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-A-040",
+      "ready": true,
+      "title": "ROLE-A-040 | 目覚めの刻み",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-A-041",
+      "ready": true,
+      "title": "ROLE-A-041 | 立ち止まる場所",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-A-042",
+      "ready": true,
+      "title": "ROLE-A-042 | 戻りだけの道",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-A-043",
+      "ready": true,
+      "title": "ROLE-A-043 | 合わせ鏡の二人",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-A-044",
+      "ready": true,
+      "title": "ROLE-A-044 | 逃げる番人",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-A-045",
+      "ready": true,
+      "title": "ROLE-A-045 | 終点の声",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-B-031",
+      "ready": true,
+      "title": "ROLE-B-031 | 繋ぎの紐 — 束ねた二品を同時にしか使えない",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-B-032",
+      "ready": true,
+      "title": "ROLE-B-032 | 返る壺 — 喪失した品は壺の場所へ戻る",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-B-033",
+      "ready": true,
+      "title": "ROLE-B-033 | 熟れの印 — 待つと品の用途が変わる",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-B-034",
+      "ready": true,
+      "title": "ROLE-B-034 | 埋めの穴 — 品を埋めて場所だけ記す",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-B-035",
+      "ready": true,
+      "title": "ROLE-B-035 | 引換の秤 — 品一個と未知の品を交換する",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-B-036",
+      "ready": true,
+      "title": "ROLE-B-036 | 守りの鞘 — 品の喪失を一度だけ防ぐ",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-B-037",
+      "ready": true,
+      "title": "ROLE-B-037 | 届ける筒 — 次に置く場所へ品を送る",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-B-038",
+      "ready": true,
+      "title": "ROLE-B-038 | 譲りの棚 — 取ると手持ちの品が棚へ移る",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-B-039",
+      "ready": true,
+      "title": "ROLE-B-039 | 重ねの杯 — 二品を合わせて一つの効きにする",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-B-040",
+      "ready": true,
+      "title": "ROLE-B-040 | 沈めの箱 — 品を箱に入れて音を立てない",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-B-041",
+      "ready": true,
+      "title": "ROLE-B-041 | 餌の皿 — 品を置いてモブを寄らせる",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-B-042",
+      "ready": true,
+      "title": "ROLE-B-042 | 供えの皿 — モブへ品を供えて一時止める",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-B-043",
+      "ready": true,
+      "title": "ROLE-B-043 | 移しの車 — 品を二点間で往復させる",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-B-044",
+      "ready": true,
+      "title": "ROLE-B-044 | 試しの杯 — 品を一杯で試して消す",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-B-045",
+      "ready": true,
+      "title": "ROLE-B-045 | 落としの糸 — 品を道標として落とす",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-C-031",
+      "ready": true,
+      "title": "ROLE-C-031 | 落としの音",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-C-032",
+      "ready": true,
+      "title": "ROLE-C-032 | 踏み鳴らし",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-C-033",
+      "ready": true,
+      "title": "ROLE-C-033 | 影渡り",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-C-034",
+      "ready": true,
+      "title": "ROLE-C-034 | 壁蹴り",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-C-035",
+      "ready": true,
+      "title": "ROLE-C-035 | 潜り抜け",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-C-036",
+      "ready": true,
+      "title": "ROLE-C-036 | 跳ね返し",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-C-037",
+      "ready": true,
+      "title": "ROLE-C-037 | 突き放し",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-C-038",
+      "ready": true,
+      "title": "ROLE-C-038 | 振り払い",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-C-039",
+      "ready": true,
+      "title": "ROLE-C-039 | 聞き分け",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-C-040",
+      "ready": true,
+      "title": "ROLE-C-040 | 着地の置き換え",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-C-041",
+      "ready": true,
+      "title": "ROLE-C-041 | 横向きの支え",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-C-042",
+      "ready": true,
+      "title": "ROLE-C-042 | 踏み留めの支点",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-C-043",
+      "ready": true,
+      "title": "ROLE-C-043 | 引き寄せの輪",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-C-044",
+      "ready": true,
+      "title": "ROLE-C-044 | 反響測り",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    },
+    {
+      "cid": "ROLE-C-045",
+      "ready": true,
+      "title": "ROLE-C-045 | 視界の差し込み",
+      "svg": 1,
+      "hasHypothesis": true,
+      "overflow": false,
+      "svgTextOutside": false,
+      "stylesLoaded": true
+    }
+  ],
+  "gallery": {
+    "count": 45,
+    "overflow": false,
+    "search": 1
+  },
+  "consoleErrors": []
+}

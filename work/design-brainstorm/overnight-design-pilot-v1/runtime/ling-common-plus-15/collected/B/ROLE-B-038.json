@@ -1,0 +1,187 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-038",
+  "role": "B",
+  "title": "譲りの棚 — 取ると手持ちの品が棚へ移る",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/systems/economy-and-progression.md",
+      "section": "ビルド／スキル強化の世界内解釈",
+      "source_status": "Status: Draft（草案）",
+      "claim": "初期20枠のうち4枠がSecure Slot。通常探索品と成長用のレアルート品を区別する。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "Effectの種別",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "Effectは結果の変化で分類し、対象・保存境界・終了条件を分ける。"
+    }
+  ],
+  "design_hypothesis": "本案は棚一つで、棚の品を取ると同時に、手持ちの品一個を棚へ移す。取る品と譲る品を同時に選ぶことで、手持ちの総数は変わらず、中身だけが入れ替わる。欲しい品を得る代償として、手持ちの品を一つ選んで譲る判断を作る。",
+  "experience": {
+    "goal": "欲しい品を得るために、手持ちのどの品を譲るかを選ばせる",
+    "player_choice": "棚から取る品と、棚へ譲る手持ちの品を同時に選ぶ",
+    "sacrifice_or_risk": "手持ちの品を一つ失い、総数は変わらない"
+  },
+  "placement_assumption": "配置未定。棚は既存の配置pointに仮置きし、正式な配置は提案しない。",
+  "components": [
+    {
+      "component": "ItemLifecycle",
+      "availability": "proposed",
+      "usage": "棚との交換と手持ちの再計算"
+    },
+    {
+      "component": "PlacementContext",
+      "availability": "catalog",
+      "usage": "棚の配置point規約への仮置き"
+    },
+    {
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "結果のWorldChangeを分類する。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "WorldChange",
+      "trigger": "棚から品を取る",
+      "condition": "棚に品があり、手持ちに品があること。譲る品は本人が選ぶ。 通常枠の通常探索品のみ。Quest品・固有品・レアルート品は対象外。",
+      "result": "棚の品を取得し、手持ちの品一個を棚へ移す。手持ちの総数は変わらない",
+      "target": "棚の品と譲った品",
+      "scope": "Run全体",
+      "lifetime": "同一Run中",
+      "resolution": "instant",
+      "end_conditions": [
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "効果RuntimeはRunで終了。品の持ち帰り・喪失は既定Inventoryルールに従う。",
+      "stacking": {
+        "exception": false,
+        "rule": "即時イベントごとに1回だけ解決し、品を複製しない。",
+        "conflict_resolution": "別Effectとの競合は、解決規則を定めるまで保留して記録する。"
+      },
+      "server_validation": "Serverが棚の品と手持ちの品を確認し、交換後の手持ちを再計算する。 Secure Slot、死亡、Run終了の既定喪失処理は上書きしない。",
+      "client_presentation": "取った品と譲った品の入れ替わりが本人に提示される。",
+      "feedback": {
+        "success": "棚の品を得て、手持ちの品を一つ譲ったことが本人に分かる",
+        "failure": "棚か手持ちに品がなければ交換できない",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    }
+  ],
+  "provides_traits": [],
+  "connection_tags": [
+    "ItemLifecycle",
+    "PlacementContext"
+  ],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": [
+    "譲れる品の種類制限は未定",
+    "棚の品の補充があるかは未定",
+    "対象は通常探索品のみ。Quest品・固有交換品・レアルート品・Secure Slot内の品は対象外とする候補。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "取ると同時に譲るという、入手が交換であることを異化した。",
+    "in_world_rationale": "既存の枠管理と配置point規約の範囲内で、入手と譲渡を同時に起こすだけ。正体や起源には触れない。",
+    "meaning_left_ambiguous": "棚の出自や、譲った品の行方は確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "本案固有の対象判定・状態遷移・提示を追加する必要がある。実装許可ではない。",
+  "new_logic": [
+    "棚との同時交換",
+    "手持ちの総数を保つ再計算"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "交換と手持ちの再計算をServerで管理するが、新地形やNPCは不要。",
+    "implementation_steps": [
+      "交換のデータ仮置き",
+      "譲る品の選択",
+      "手持ちの再計算"
+    ],
+    "assumed_existing_parts": [
+      "InventoryServiceの獲得・喪失分類",
+      "既存ルームの配置point規約"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Proposed",
+        "detail": "棚から品を取る。取ると同時に手持ちの品が棚へ移る。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "譲る品を手持ちに保持し、交換の判断材料にする。"
+      },
+      {
+        "route": "Use",
+        "status": "NotApplicable",
+        "detail": "使う操作はなく、取る行為が交換を起こす。"
+      },
+      {
+        "route": "Present",
+        "status": "NotApplicable",
+        "detail": "他人に渡す想定がなく、ソロ判断のみ。Partyを前提としない。"
+      },
+      {
+        "route": "Place",
+        "status": "Proposed",
+        "detail": "自分の品が棚へ置かれる。譲る品の選択が配置になる。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "棚の品を取ると、手持ちの品を一つ失う。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "道具自体のSecure Slot保護は既定どおり。Secure Slot内の内容物は加工・喪失変更の対象外。"
+      },
+      {
+        "route": "Sell",
+        "status": "Undecided",
+        "detail": "既存の換金方針に沿う売却候補。価格・買い取り条件は未定。Robux経路は設けない。"
+      },
+      {
+        "route": "Quest",
+        "status": "NotApplicable",
+        "detail": "研究所のQuest装置の置換をせず、Quest依存もしない。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "NotApplicable",
+        "detail": "アノマリーとの直接相互作用を持たない。交換は品の入手のみ。"
+      }
+    ],
+    "ownership_state": "棚の品と譲った品は個人所有。交換状態は個人ごとに管理し、共有しない。 対象は本人の通常探索品のみ。消費・移動をServerで原子的に確定し、複製しない。",
+    "server_run_state": "交換の完了はServerのRun事実として保持し、Run終了で破棄する。 個人所持と配置物の位置を別に保持し、Entity出現率・同時出現数は変更しない。"
+  },
+  "html_file": "ROLE-B-038.html"
+}

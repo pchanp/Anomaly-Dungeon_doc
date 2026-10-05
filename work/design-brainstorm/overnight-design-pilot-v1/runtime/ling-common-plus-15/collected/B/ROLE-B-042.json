@@ -1,0 +1,216 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-042",
+  "role": "B",
+  "title": "供えの皿 — モブへ品を供えて一時止める",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/systems/economy-and-progression.md",
+      "section": "ビルド／スキル強化の世界内解釈",
+      "source_status": "Status: Draft（草案）",
+      "claim": "初期20枠のうち4枠がSecure Slot。通常探索品と成長用のレアルート品を区別する。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "Effectの種別",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "Effectは結果の変化で分類し、対象・保存境界・終了条件を分ける。"
+    }
+  ],
+  "design_hypothesis": "本案は皿一つで、モブへ品を供えて一時だけ動きを止める。供えた品は消え、モブは一時停止する。時間を稼ぐ代償として、供えた品を失う。逃げ道を作る判断を作る。",
+  "experience": {
+    "goal": "モブへ品を供えて、一時の停止で時間を稼ぐ判断を持たせる",
+    "player_choice": "どの品を供えるか、どのモブへ供えるかを選ぶ",
+    "sacrifice_or_risk": "供えた品は消え、停止は一時だけなので必ず戻ってくる"
+  },
+  "placement_assumption": "配置未定。皿は手持ち品が存在する文脈で使える品として仮置きする。",
+  "components": [
+    {
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "モブの一時停止を文脈で変える"
+    },
+    {
+      "component": "ItemLifecycle",
+      "availability": "proposed",
+      "usage": "供えた品の消費"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "モブへ手持ちの品を供える",
+      "condition": "モブが射程内にいて、品が手持ちにあること。供えられる品の制限は未定。 通常枠の通常探索品のみ。Quest品・固有品・レアルート品は対象外。",
+      "result": "モブが一時停止し",
+      "target": "モブ",
+      "scope": "Run",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "停止時間が経過したとき",
+        "攻撃を受けたとき",
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかで停止を終える既定規則。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effect・同一対象は非加算1件。供えは一件ずつ。",
+        "conflict_resolution": "別Effectとの競合は、解決規則を定めるまで保留して記録する。"
+      },
+      "server_validation": "Serverがモブの射程内存在と品の所持を確認し、停止時間を管理する。 Secure Slot、死亡、Run終了の既定喪失処理は上書きしない。",
+      "client_presentation": "モブが停止していることが共有事実として提示される。供えた品が消えたことが本人に示される。",
+      "feedback": {
+        "success": "モブが一時停止し、品を供えたことが本人に分かる",
+        "failure": "モブが射程外か品が足りなければ供えられない",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "モブへ手持ちの品を供える",
+      "condition": "対象と動作条件を満たす",
+      "result": "対象探索品を通常枠から消費し、再使用できなくする。",
+      "target": "本人の通常探索品",
+      "scope": "個人",
+      "lifetime": "同一Run中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "いずれか成立で終了。",
+      "stacking": {
+        "exception": false,
+        "rule": "即時効果はイベントごと。持続効果は同一対象に非加算1件。",
+        "conflict_resolution": "同じ値への競合適用は保留。"
+      },
+      "server_validation": "Serverが対象・距離・衝突・発動状態を検証する。",
+      "client_presentation": "成立した動作と終了を本人へ提示する。",
+      "feedback": {
+        "success": "動作と作用対象が見える。",
+        "failure": "不成立なら動作を適用せず短い反応を返す。",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    }
+  ],
+  "provides_traits": [],
+  "connection_tags": [
+    "NPCState",
+    "ItemLifecycle"
+  ],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": [
+    "供えられる品の種類制限は未定",
+    "停止時間の長さは未定",
+    "対象は通常探索品のみ。Quest品・固有交換品・レアルート品・Secure Slot内の品は対象外とする候補。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "モブへ品を供えて動きを止めるという、時間の買い方を異化した。",
+    "in_world_rationale": "既存のNPCStateとItemLifecycleの範囲内で、モブの一時停止を一手段足すだけ。正体や起源には触れない。",
+    "meaning_left_ambiguous": "皿の出自や、なぜモブが止まるのかは確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "本案固有の対象判定・状態遷移・提示を追加する必要がある。実装許可ではない。",
+  "new_logic": [
+    "モブへの供えと品の消費",
+    "モブの一時停止と時間管理"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "供えと停止時間をServerで管理するが、新地形は不要。",
+    "implementation_steps": [
+      "供えのデータ仮置き",
+      "品の消費",
+      "停止時間の管理"
+    ],
+    "assumed_existing_parts": [
+      "InventoryServiceの獲得・喪失分類",
+      "通常NPC/モブAIの文脈"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Proposed",
+        "detail": "探索で皿を一つ得る。入手経路は未定。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "皿を手持ちに保持し、供えたい品が揃った時点で使える状態にする。"
+      },
+      {
+        "route": "Use",
+        "status": "Proposed",
+        "detail": "モブへ品を供える。使うのは皿で、供えた品は消える。"
+      },
+      {
+        "route": "Present",
+        "status": "Proposed",
+        "detail": "モブへ品を供える。同意は不要で、ソロ判断。"
+      },
+      {
+        "route": "Place",
+        "status": "NotApplicable",
+        "detail": "供えるだけで世界に配置しない。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "供えた品は消える。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "道具自体のSecure Slot保護は既定どおり。Secure Slot内の内容物は加工・喪失変更の対象外。"
+      },
+      {
+        "route": "Sell",
+        "status": "Undecided",
+        "detail": "既存の換金方針に沿う売却候補。価格・買い取り条件は未定。Robux経路は設けない。"
+      },
+      {
+        "route": "Quest",
+        "status": "NotApplicable",
+        "detail": "研究所のQuest装置の置換をせず、Quest依存もしない。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "Undecided",
+        "detail": "モブへの作用だが、アノマリーとの直接相互作用に当たるかは未定。"
+      }
+    ],
+    "ownership_state": "皿と供えた品は個人所有。供えの対象はServerのRun事実として管理する。 対象は本人の通常探索品のみ。消費・移動をServerで原子的に確定し、複製しない。",
+    "server_run_state": "供えとモブの停止はServerのRun事実として保持し、Run終了で破棄する。 個人所持と配置物の位置を別に保持し、Entity出現率・同時出現数は変更しない。"
+  },
+  "html_file": "ROLE-B-042.html"
+}

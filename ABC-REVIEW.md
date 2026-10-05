@@ -2,6 +2,17 @@
 
 Status: Draft（収集記録）。採用・実装・統合は未実施。2026-10-05 時点の作業者出力を保存。
 
+## 最新: Ling回の追加45案（031〜045）
+
+Codexが補正・不足6件を代行。A15/B15/C15、機械検証エラー0、全45件のChrome表示を確認。全件Idea・未採用。
+
+- [追加45案のHTML一覧](work/design-brainstorm/overnight-design-pilot-v1/runtime/ling-common-plus-15/collected/index.html)
+- [補正内容・採用前の論点](work/design-brainstorm/overnight-design-pilot-v1/runtime/ling-common-plus-15/collected/README.md)
+- [最終検証](work/design-brainstorm/overnight-design-pilot-v1/runtime/ling-common-plus-15/collected/validation-final.json)
+- [単一実行の運用](work/design-brainstorm/overnight-design-pilot-v1/runtime/ling-common-plus-15/SINGLE-RUN-OPERATIONS.md)
+
+以下は初回45案の記録。追加案とは別回です。
+
 ## 状況
 
 依頼数は各15件、合計45件。HTMLは A:15 / B:15 / C:15、計45件。CはCodexが補正・不足分を代行して完成。元OpenCode出力はコミット253e92fに保存。

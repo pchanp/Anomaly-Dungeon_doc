@@ -1,0 +1,2915 @@
+{
+  "run_id": "overnight-design-pilot-v1",
+  "errors": [],
+  "review_items": [
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-031",
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "待機・条件付き会話・仕事終了の状態を持つ通常NPC"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-031",
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "接触の判定と方向の個人提示の経路"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-031",
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "結果のInformationChangeを分類する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-031",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-031",
+      "note": "体力閾値は仮値（最大体力の半分）で、実装値は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-031",
+      "note": "方向提示の表現形式（画面表示か音声か）は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-031",
+      "note": "NPCがマップごとに別個体か同一個体かは未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-031",
+      "note": "通常モブの配置・上限・索敵は候補上の仮説。既存実装と見なさない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-032",
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "群れの待機・索敵・離脱の挙動を持つ通常モブ"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-032",
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "索敵と視認の判定"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-032",
+      "component": "PlacementContext",
+      "availability": "catalog",
+      "usage": "離脱個体の再配置先の既存配置point"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-032",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-032",
+      "note": "群れの個体数・間隔は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-032",
+      "note": "再配置先の区画選択規則は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-032",
+      "note": "群れが複数同時に存在してよいかは未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-032",
+      "note": "通常モブの配置・上限・索敵は候補上の仮説。既存実装と見なさない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-033",
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "貸出・退避・仕事再開の状態を持つ通常NPC"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-033",
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "貸出中の視認上昇の判定経路"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-033",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-033",
+      "note": "灯りの明るさの半径と視認の上昇幅は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-033",
+      "note": "貸出中のNPCが退く先の距離は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-033",
+      "note": "NPCがマップごとに別個体か同一個体かは未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-033",
+      "note": "通常モブの配置・上限・索敵は候補上の仮説。既存実装と見なさない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-034",
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "横断・迂回・仕事停止の状態を持つ通常NPC"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-034",
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "モブの追跡対象の変更判定"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-034",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-034",
+      "note": "NPCの用事と横断経路は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-034",
+      "note": "迂回経路の選択規則は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-034",
+      "note": "向きを変えるモブの範囲（何体まで）は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-034",
+      "note": "通常モブの配置・上限・索敵は候補上の仮説。既存実装と見なさない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-035",
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "通過を数えるモブの通行挙動"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-035",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-035",
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "結果のInformationChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-035",
+      "note": "規定数は仮値（3体）で、実装値は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-035",
+      "note": "扉の開く条件・時刻は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-035",
+      "note": "プレイヤーの通過を数えない扱いは未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-035",
+      "note": "通常モブの配置・上限・索敵は候補上の仮説。既存実装と見なさない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-036",
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "方向付き索敵と即時向き変えの挙動"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-036",
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "視線と距離の判定"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-036",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-036",
+      "note": "正面の警戒距離と背面の無反応距離は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-036",
+      "note": "索敵起点を共有しない範囲は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-036",
+      "note": "攻撃を受けた後の追跡の強さは未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-036",
+      "note": "通常モブの配置・上限・索敵は候補上の仮説。既存実装と見なさない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-037",
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "調べの接触判定とモブの向き変え"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-037",
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "向きを変えるモブの挙動"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-037",
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "結果のWorldChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-037",
+      "note": "小物の半径は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-037",
+      "note": "向きを変えるモブの範囲（何体まで）は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-037",
+      "note": "向き変える先の方向の規則は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-037",
+      "note": "通常モブの配置・上限・索敵は候補上の仮説。既存実装と見なさない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-038",
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "先行・後続の役割と交代の挙動"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-038",
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "追跡と距離の判定"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-038",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-038",
+      "note": "交代の判定距離は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-038",
+      "note": "後続の待機距離は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-038",
+      "note": "2体を超える枠でも役割分担が成立するかは未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-038",
+      "note": "通常モブの配置・上限・索敵は候補上の仮説。既存実装と見なさない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-039",
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "近くのモブの有無の判定"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-039",
+      "component": "ArchiveMedia",
+      "availability": "catalog",
+      "usage": "中身の個人提示の経路"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-039",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-039",
+      "note": "収納の中身の内容は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-039",
+      "note": "開く条件の距離（近くの範囲）は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-039",
+      "note": "開封後の収納の状態は開いたままか戻るか未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-039",
+      "note": "通常モブの配置・上限・索敵は候補上の仮説。既存実装と見なさない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-040",
+      "component": "SoundInteraction",
+      "availability": "catalog",
+      "usage": "音の到達と索敵反応の入力"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-040",
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "周期索敵の挙動"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-040",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-040",
+      "note": "索敵の周期の長さは未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-040",
+      "note": "索敵区間の持続時間は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-040",
+      "note": "周期が複数のモブで同期するかは未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-040",
+      "note": "通常モブの配置・上限・索敵は候補上の仮説。既存実装と見なさない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-041",
+      "component": "SoundInteraction",
+      "availability": "catalog",
+      "usage": "足音の到達判定"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-041",
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "視認の判定"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-041",
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "モブの退避挙動"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-041",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-041",
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "結果のWorldChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-041",
+      "note": "地点の範囲は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-041",
+      "note": "モブの去る方向は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-041",
+      "note": "視認が残る条件（距離・遮蔽）は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-041",
+      "note": "通常モブの配置・上限・索敵は候補上の仮説。既存実装と見なさない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-042",
+      "component": "PlacementContext",
+      "availability": "catalog",
+      "usage": "通路の既存配置point"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-042",
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "結果のWorldChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-042",
+      "note": "対象の通路の範囲は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-042",
+      "note": "戻り専用の表示方法は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-042",
+      "note": "通過の確定がマップ間で持つかは未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-042",
+      "note": "通常モブの配置・上限・索敵は候補上の仮説。既存実装と見なさない。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-042",
+      "note": "局所ゲートへの配置のみ。唯一の出口・Portal経路を塞ぐ位置には採用しない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-043",
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "2人の反応一致と仕事停止の状態"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-043",
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "接触の判定"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-043",
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "結果のInformationChangeを分類する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-043",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-043",
+      "note": "案内の情報の内容は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-043",
+      "note": "反応が一致する範囲（内容まで一致するか）は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-043",
+      "note": "2人が別個体として別々に攻撃できるかは未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-043",
+      "note": "通常モブの配置・上限・索敵は候補上の仮説。既存実装と見なさない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-044",
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "逃走・反撃・集合の挙動"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-044",
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "追跡と距離の判定"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-044",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-044",
+      "note": "逃げる距離は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-044",
+      "note": "反撃の条件（追い詰めの判定）は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-044",
+      "note": "集合する枠の選択規則は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-044",
+      "note": "通常モブの配置・上限・索敵は候補上の仮説。既存実装と見なさない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-045",
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "指差しの状態と停止の状態"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-045",
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "最後に立った位置の確認"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-045",
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "結果のInformationChangeを分類する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-045",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-045",
+      "note": "最終区画の範囲は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-045",
+      "note": "指差しの表現（向きの表示方法）は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-045",
+      "note": "最後に立った位置の保持期間は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-045",
+      "note": "通常モブの配置・上限・索敵は候補上の仮説。既存実装と見なさない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-031",
+      "component": "InventoryBoundary",
+      "availability": "catalog",
+      "usage": "束ねた二品を一枠として数える棚卸し区分"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-031",
+      "component": "ItemLifecycle",
+      "availability": "proposed",
+      "usage": "品の束ね状態と共同喪失の管理"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-031",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-031",
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "結果のRuleOverrideを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-031",
+      "note": "束ねられる二品の種類制限と上限は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-031",
+      "note": "共同喪失がSecure Slotの品にも適用されるかは未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-031",
+      "note": "対象は通常探索品のみ。Quest品・固有交換品・レアルート品・Secure Slot内の品は対象外とする候補。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-032",
+      "component": "ItemLifecycle",
+      "availability": "proposed",
+      "usage": "品の収容・喪失・位置復帰の管理"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-032",
+      "component": "PlacementContext",
+      "availability": "catalog",
+      "usage": "壺の配置point規約への仮置き"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-032",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-032",
+      "component": "Effect.Move",
+      "availability": "catalog",
+      "usage": "結果のMoveを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-032",
+      "note": "対応する奪取ギミックの範囲は未定。Secure Slot・Quest品などは対象外。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-033",
+      "component": "ItemLifecycle",
+      "availability": "proposed",
+      "usage": "印の付与と品の変化の管理"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-033",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-033",
+      "note": "変化の契機となる位相の切替はどれか未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-033",
+      "note": "変化後の品の種類と用途は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-033",
+      "note": "対象は通常探索品のみ。Quest品・固有交換品・レアルート品・Secure Slot内の品は対象外とする候補。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-033",
+      "note": "変化先は提示可能な少数の対応表に限定。具体的な品の組は未定。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-034",
+      "component": "ItemLifecycle",
+      "availability": "proposed",
+      "usage": "品の埋納・回収・場所記憶の管理"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-034",
+      "component": "PlacementContext",
+      "availability": "catalog",
+      "usage": "埋納位置の配置point規約への仮置き"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-034",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-034",
+      "component": "Effect.Move",
+      "availability": "catalog",
+      "usage": "結果のMoveを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-034",
+      "note": "場所の記憶が失われる契機は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-034",
+      "note": "埋納できる品の種類制限は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-034",
+      "note": "対象は通常探索品のみ。Quest品・固有交換品・レアルート品・Secure Slot内の品は対象外とする候補。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-035",
+      "component": "ItemLifecycle",
+      "availability": "proposed",
+      "usage": "品の交換と未知品の生成"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-035",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-035",
+      "note": "未知の品の種類とレア度の振り分けは未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-035",
+      "note": "交換できる品の種類制限は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-035",
+      "note": "対象は通常探索品のみ。Quest品・固有交換品・レアルート品・Secure Slot内の品は対象外とする候補。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-036",
+      "component": "InventoryBoundary",
+      "availability": "catalog",
+      "usage": "鞘が占有枠に加わる棚卸し区分"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-036",
+      "component": "ItemLifecycle",
+      "availability": "proposed",
+      "usage": "鞘の収容と喪失無効化の管理"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-036",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-036",
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "結果のRuleOverrideを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-036",
+      "note": "鞘で守れる品の種類制限は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-036",
+      "note": "Secure Slotの品に対する挙動は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-036",
+      "note": "対象は通常探索品のみ。Quest品・固有交換品・レアルート品・Secure Slot内の品は対象外とする候補。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-037",
+      "component": "ItemLifecycle",
+      "availability": "proposed",
+      "usage": "品の込め・送り・配置の管理"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-037",
+      "component": "PlacementContext",
+      "availability": "catalog",
+      "usage": "送り先の配置point規約への仮置き"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-037",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-037",
+      "component": "Effect.Move",
+      "availability": "catalog",
+      "usage": "結果のMoveを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-037",
+      "note": "送り先の場所の種類制限は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-037",
+      "note": "込める品の種類制限は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-037",
+      "note": "対象は通常探索品のみ。Quest品・固有交換品・レアルート品・Secure Slot内の品は対象外とする候補。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-038",
+      "component": "ItemLifecycle",
+      "availability": "proposed",
+      "usage": "棚との交換と手持ちの再計算"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-038",
+      "component": "PlacementContext",
+      "availability": "catalog",
+      "usage": "棚の配置point規約への仮置き"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-038",
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "結果のWorldChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-038",
+      "note": "譲れる品の種類制限は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-038",
+      "note": "棚の品の補充があるかは未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-038",
+      "note": "対象は通常探索品のみ。Quest品・固有交換品・レアルート品・Secure Slot内の品は対象外とする候補。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-039",
+      "component": "ItemLifecycle",
+      "availability": "proposed",
+      "usage": "二品の融合と杯の消費"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-039",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-039",
+      "note": "合わせられる二品の組み合わせ制限は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-039",
+      "note": "合わせた品の効きの決め方は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-039",
+      "note": "対象は通常探索品のみ。Quest品・固有交換品・レアルート品・Secure Slot内の品は対象外とする候補。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-040",
+      "component": "SoundInteraction",
+      "availability": "catalog",
+      "usage": "品の音を索敵の入力から外す"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-040",
+      "component": "ItemLifecycle",
+      "availability": "proposed",
+      "usage": "箱への収容と静音状態の管理"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-040",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-040",
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "結果のRuleOverrideを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-040",
+      "note": "静音できる品の種類制限は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-040",
+      "note": "箱の収容上限は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-040",
+      "note": "対象は通常探索品のみ。Quest品・固有交換品・レアルート品・Secure Slot内の品は対象外とする候補。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-041",
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "モブの寄る先を変える文脈"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-041",
+      "component": "ItemLifecycle",
+      "availability": "proposed",
+      "usage": "餌の品の消費と配置"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-041",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-041",
+      "component": "Effect.Move",
+      "availability": "catalog",
+      "usage": "結果のMoveを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-041",
+      "note": "餌にできる品の種類制限は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-041",
+      "note": "寄るモブの範囲と滞在時間は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-041",
+      "note": "対象は通常探索品のみ。Quest品・固有交換品・レアルート品・Secure Slot内の品は対象外とする候補。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-042",
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "モブの一時停止を文脈で変える"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-042",
+      "component": "ItemLifecycle",
+      "availability": "proposed",
+      "usage": "供えた品の消費"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-042",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-042",
+      "note": "供えられる品の種類制限は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-042",
+      "note": "停止時間の長さは未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-042",
+      "note": "対象は通常探索品のみ。Quest品・固有交換品・レアルート品・Secure Slot内の品は対象外とする候補。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-043",
+      "component": "ItemLifecycle",
+      "availability": "proposed",
+      "usage": "品の積み・運搬・到着の管理"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-043",
+      "component": "PlacementContext",
+      "availability": "catalog",
+      "usage": "車の配置point規約への仮置き"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-043",
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "結果のWorldChangeを分類する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-043",
+      "component": "Effect.Move",
+      "availability": "catalog",
+      "usage": "結果のMoveを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-043",
+      "note": "車の到着に要する時間は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-043",
+      "note": "運べる品の種類制限は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-043",
+      "note": "対象は通常探索品のみ。Quest品・固有交換品・レアルート品・Secure Slot内の品は対象外とする候補。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-044",
+      "component": "ItemLifecycle",
+      "availability": "proposed",
+      "usage": "品の試用と消費"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-044",
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "結果のInformationChangeを分類する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-044",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-044",
+      "note": "試せる品の種類制限は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-044",
+      "note": "確かめられる効果の範囲は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-044",
+      "note": "対象は通常探索品のみ。Quest品・固有交換品・レアルート品・Secure Slot内の品は対象外とする候補。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-045",
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "道標の位置を本人に観察させる"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-045",
+      "component": "ItemLifecycle",
+      "availability": "proposed",
+      "usage": "道標の品の消費と記録"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-045",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-B-045",
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "結果のInformationChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-045",
+      "note": "道標の間隔と上限は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-045",
+      "note": "道標が他者に見えるかは未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-B-045",
+      "note": "対象は通常探索品のみ。Quest品・固有交換品・レアルート品・Secure Slot内の品は対象外とする候補。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-031",
+      "component": "SkillActivation",
+      "availability": "catalog",
+      "usage": "通常攻撃の命中を発動入力に使う。既存のスキル発動経路の範囲内"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-031",
+      "component": "PlacementContext",
+      "availability": "catalog",
+      "usage": "吊り下がり物体の配置pointを既存規約の範囲内で検査する"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-031",
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "結果のWorldChangeを分類する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-031",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-031",
+      "note": "吊り下がり物体の全マップでの存在可否"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-031",
+      "note": "通行停止とモブ停止の仮値"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-031",
+      "note": "落下物がAnomaly Entityへ効くか"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-032",
+      "component": "SoundInteraction",
+      "availability": "catalog",
+      "usage": "足踏みの音源を、モブの狙いの入力に使う"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-032",
+      "component": "SkillActivation",
+      "availability": "catalog",
+      "usage": "スキル発動の入力受付と、発動中の移動禁止を扱う"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-032",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-032",
+      "note": "音の伝播方式と範囲"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-032",
+      "note": "誘導中のモブの挙動と交戦の優先順位"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-032",
+      "note": "Anomaly Entityへの効果"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-033",
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "影領域の滞在を、遮蔽と画面内の評価で近似する"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-033",
+      "component": "SkillActivation",
+      "availability": "catalog",
+      "usage": "影渡りの発動入力と、発動中の速度低下を扱う"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-033",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-033",
+      "note": "影領域の定義方法と照明変化との関係"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-033",
+      "note": "影の中の速度低下の仮値"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-033",
+      "note": "Anomaly Entityの視認ルールへの影響"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-034",
+      "component": "SkillActivation",
+      "availability": "catalog",
+      "usage": "壁接触時のスキル発動入力と、発動中の移動制御を扱う"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-034",
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "捕捉リセットの評価を、観察の中断・減衰規則の範囲内で近似する"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-034",
+      "component": "Effect.Move",
+      "availability": "catalog",
+      "usage": "結果のMoveを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-034",
+      "note": "壁接触の検出方式"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-034",
+      "note": "捕捉リセットの仮値"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-034",
+      "note": "全マップでの壁の存在"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-035",
+      "component": "SkillActivation",
+      "availability": "catalog",
+      "usage": "潜りの発動入力と、潜り中の攻撃・移動制限を扱う"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-035",
+      "component": "PlacementContext",
+      "availability": "catalog",
+      "usage": "隙間の入口と抜け先の既存配置規約を検査する"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-035",
+      "component": "Effect.Move",
+      "availability": "catalog",
+      "usage": "結果のMoveを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-035",
+      "note": "隙間の検出方式"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-035",
+      "note": "潜り中の被弾判定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-035",
+      "note": "全マップでの隙間の存在"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-035",
+      "note": "既存の低い隙間とモブの体格条件がある場合のみ有効。全マップに隙間を新設しない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-036",
+      "component": "SkillActivation",
+      "availability": "catalog",
+      "usage": "通常攻撃の入力を発動に使う"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-036",
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "結果のRuleOverrideを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-036",
+      "note": "弾ける攻撃の範囲"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-036",
+      "note": "弾き返しのタイミングの仮値"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-036",
+      "note": "帰した攻撃の飛来元への命中判定"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-037",
+      "component": "SkillActivation",
+      "availability": "catalog",
+      "usage": "通常攻撃の命中直後の入力を発動に使う"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-037",
+      "component": "Effect.Move",
+      "availability": "catalog",
+      "usage": "結果のMoveを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-037",
+      "note": "押し退け先が塞がっている場合の扱い"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-037",
+      "note": "追跡再開の仮値"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-037",
+      "note": "Anomaly Entityへの効果"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-038",
+      "component": "SkillActivation",
+      "availability": "catalog",
+      "usage": "掴まれた瞬間の入力を発動に使う"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-038",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-038",
+      "component": "Effect.Move",
+      "availability": "catalog",
+      "usage": "結果のMoveを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-038",
+      "note": "掴み状態の実装有無"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-038",
+      "note": "解除の優先順位"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-038",
+      "note": "cureとの関係"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-039",
+      "component": "SoundInteraction",
+      "availability": "catalog",
+      "usage": "足音の音源を、読み取りの入力に使う"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-039",
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "音源の方向と距離の評価を近似する"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-039",
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "結果のInformationChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-039",
+      "note": "音の伝播方式"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-039",
+      "note": "足音の種類の定義"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-039",
+      "note": "Entityの音との区別"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-040",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-040",
+      "note": "数値・Cooldown・入力受付時間は試作後に決める。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-040",
+      "note": "対応対象の存在と判定方式は未確認。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-041",
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "結果のRuleOverrideを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-041",
+      "note": "数値・Cooldown・入力受付時間は試作後に決める。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-041",
+      "note": "対応対象の存在と判定方式は未確認。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-042",
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "結果のWorldChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-042",
+      "note": "数値・Cooldown・入力受付時間は試作後に決める。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-042",
+      "note": "対応対象の存在と判定方式は未確認。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-043",
+      "component": "Effect.Move",
+      "availability": "catalog",
+      "usage": "結果のMoveを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-043",
+      "note": "数値・Cooldown・入力受付時間は試作後に決める。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-043",
+      "note": "対応対象の存在と判定方式は未確認。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-044",
+      "component": "SoundInteraction",
+      "availability": "catalog",
+      "usage": "音源を受け取る入力経路の分類"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-044",
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "結果のWorldChangeを分類する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-044",
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "結果のInformationChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-044",
+      "note": "吸音・反射対象のタグと近似評価は未定。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-044",
+      "note": "反響は空間の手掛かりであり、安全・敵数・隠し部屋の正解を表示しない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-045",
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "結果のInformationChangeを分類する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-045",
+      "note": "数値・Cooldown・入力受付時間は試作後に決める。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-045",
+      "note": "対応対象の存在と判定方式は未確認。"
+    }
+  ],
+  "candidate_summaries": [
+    {
+      "candidate_id": "ROLE-A-031",
+      "title": "迎えの一声",
+      "primary_map": "全マップ共通",
+      "category": "NPC",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "小",
+        "rationale": "NPCの待機・条件判定・方向提示のみ。地形・部屋の追加は不要",
+        "implementation_steps": [
+          "NPCの待機状態",
+          "体力閾値のServer確認",
+          "方向の個人提示",
+          "教示事実のRun保持"
+        ],
+        "assumed_existing_parts": [
+          "NPCState",
+          "Observation"
+        ]
+      },
+      "connection_tags": [
+        "NPCState",
+        "Observation"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-A-032",
+      "title": "見合わせる群れ",
+      "primary_map": "全マップ共通",
+      "category": "MobEnemy",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "群れの待機・同一性・再配置のロジックと既存湧き枠への接続が必要。地形追加は不要",
+        "implementation_steps": [
+          "群れの待機AI",
+          "同一性と解除判定",
+          "別区画への再配置",
+          "湧き枠との接続"
+        ],
+        "assumed_existing_parts": [
+          "NPCState",
+          "Observation",
+          "PlacementContext"
+        ]
+      },
+      "connection_tags": [
+        "NPCState",
+        "Observation",
+        "PlacementContext"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-A-033",
+      "title": "貸し灯り",
+      "primary_map": "全マップ共通",
+      "category": "NPC",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "小",
+        "rationale": "NPCの貸出・退避と視認の判定のみ。地形・部屋の追加は不要",
+        "implementation_steps": [
+          "NPCの貸出状態",
+          "視認上昇の判定",
+          "返却の受付",
+          "貸出事実のRun保持"
+        ],
+        "assumed_existing_parts": [
+          "NPCState",
+          "Observation"
+        ]
+      },
+      "connection_tags": [
+        "NPCState",
+        "Observation"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-A-034",
+      "title": "通りすがりの道連れ",
+      "primary_map": "全マップ共通",
+      "category": "NPC",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "NPCの横断・迂回とモブの注意変更の接続が必要。地形・部屋の追加は不要",
+        "implementation_steps": [
+          "NPCの横断状態",
+          "進路競合の判定",
+          "迂回経路の選択",
+          "モブの追跡対象変更"
+        ],
+        "assumed_existing_parts": [
+          "NPCState",
+          "Observation"
+        ]
+      },
+      "connection_tags": [
+        "NPCState",
+        "Observation"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-A-035",
+      "title": "数合わせの扉",
+      "primary_map": "全マップ共通",
+      "category": "GimmickEvent",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "小",
+        "rationale": "扉の開閉と通過カウントのみ。地形・部屋の追加は不要",
+        "implementation_steps": [
+          "開扉の検知",
+          "モブ通過のカウント",
+          "規定数での閉扉",
+          "数えの個人提示"
+        ],
+        "assumed_existing_parts": [
+          "AugustPhase",
+          "NPCState"
+        ]
+      },
+      "connection_tags": [
+        "NPCState"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-A-036",
+      "title": "正面だけの警戒",
+      "primary_map": "全マップ共通",
+      "category": "MobEnemy",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "方向付き索敵の判定と向き変えの挙動が必要。地形・部屋の追加は不要",
+        "implementation_steps": [
+          "方向付き索敵の判定",
+          "警戒の開始",
+          "攻撃時の即時向き変え",
+          "追跡の開始"
+        ],
+        "assumed_existing_parts": [
+          "NPCState",
+          "Observation"
+        ]
+      },
+      "connection_tags": [
+        "NPCState",
+        "Observation"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-A-037",
+      "title": "置き手の印",
+      "primary_map": "全マップ共通",
+      "category": "GimmickEvent",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "小",
+        "rationale": "小物の調査とモブの向き変えのみ。地形・部屋の追加は不要",
+        "implementation_steps": [
+          "小物の調査判定",
+          "半径内モブの検出",
+          "向き変えの適用",
+          "未調査事実のRun保持"
+        ],
+        "assumed_existing_parts": [
+          "Observation",
+          "NPCState"
+        ]
+      },
+      "connection_tags": [
+        "Observation",
+        "NPCState"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-A-038",
+      "title": "追い越しの規則",
+      "primary_map": "全マップ共通",
+      "category": "MobEnemy",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "役割管理と交代の判定が必要。地形・部屋の追加は不要",
+        "implementation_steps": [
+          "役割の初期化",
+          "攻撃側の制限",
+          "退場の検知",
+          "役割の交代"
+        ],
+        "assumed_existing_parts": [
+          "NPCState",
+          "Observation"
+        ]
+      },
+      "connection_tags": [
+        "NPCState",
+        "Observation"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-A-039",
+      "title": "静かに開く収納",
+      "primary_map": "全マップ共通",
+      "category": "GimmickEvent",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "小",
+        "rationale": "収納の開閉制限と中身の提示のみ。地形・部屋の追加は不要",
+        "implementation_steps": [
+          "近くのモブの検出",
+          "開封の条件判定",
+          "中身の個人提示",
+          "開封事実のRun保持"
+        ],
+        "assumed_existing_parts": [
+          "Observation",
+          "ArchiveMedia"
+        ]
+      },
+      "connection_tags": [
+        "Observation",
+        "ArchiveMedia"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-A-040",
+      "title": "目覚めの刻み",
+      "primary_map": "全マップ共通",
+      "category": "MobEnemy",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "周期の管理と音の遅延記録が必要。地形・部屋の追加は不要",
+        "implementation_steps": [
+          "索敵区間の周期",
+          "音の到達判定",
+          "遅延の記録",
+          "次の区間での反応"
+        ],
+        "assumed_existing_parts": [
+          "SoundInteraction",
+          "NPCState"
+        ]
+      },
+      "connection_tags": [
+        "SoundInteraction",
+        "NPCState"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-A-041",
+      "title": "立ち止まる場所",
+      "primary_map": "全マップ共通",
+      "category": "GimmickEvent",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "地点の判定と追跡解除・モブ退避の接続が必要。地形・部屋の追加は不要",
+        "implementation_steps": [
+          "地点の範囲判定",
+          "足音の到達制限",
+          "追跡の解除",
+          "モブの退避"
+        ],
+        "assumed_existing_parts": [
+          "SoundInteraction",
+          "Observation",
+          "NPCState"
+        ]
+      },
+      "connection_tags": [
+        "SoundInteraction",
+        "Observation",
+        "NPCState"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-A-042",
+      "title": "戻りだけの道",
+      "primary_map": "全マップ共通",
+      "category": "GimmickEvent",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "通行の確定と方向の上書きが必要。地形・部屋の追加は不要",
+        "implementation_steps": [
+          "通過の検知",
+          "通行方向の確定",
+          "再通過の禁止",
+          "確定事実のRun保持"
+        ],
+        "assumed_existing_parts": [
+          "AugustPhase",
+          "PlacementContext"
+        ]
+      },
+      "connection_tags": [
+        "PlacementContext"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-A-043",
+      "title": "合わせ鏡の二人",
+      "primary_map": "全マップ共通",
+      "category": "NPC",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "二人の反応一致と仕事停止の接続が必要。地形・部屋の追加は不要",
+        "implementation_steps": [
+          "二人の状態管理",
+          "反応の一致",
+          "攻撃の検知",
+          "仕事停止"
+        ],
+        "assumed_existing_parts": [
+          "NPCState",
+          "Observation"
+        ]
+      },
+      "connection_tags": [
+        "NPCState",
+        "Observation"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-A-044",
+      "title": "逃げる番人",
+      "primary_map": "全マップ共通",
+      "category": "MobEnemy",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "逃走・反撃・集合の挙動と既存枠への接続が必要。地形・部屋の追加は不要",
+        "implementation_steps": [
+          "逃走の判定",
+          "反撃の開始",
+          "集合先の検出",
+          "集合の保持"
+        ],
+        "assumed_existing_parts": [
+          "NPCState",
+          "Observation",
+          "PlacementContext"
+        ]
+      },
+      "connection_tags": [
+        "NPCState",
+        "Observation"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-A-045",
+      "title": "終点の声",
+      "primary_map": "全マップ共通",
+      "category": "NPC",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "小",
+        "rationale": "NPCの指差しと位置確認のみ。地形・部屋の追加は不要",
+        "implementation_steps": [
+          "NPCの指差し状態",
+          "最後の位置の確認",
+          "方向の個人提示",
+          "攻撃での停止"
+        ],
+        "assumed_existing_parts": [
+          "NPCState",
+          "Observation"
+        ]
+      },
+      "connection_tags": [
+        "NPCState",
+        "Observation"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-B-031",
+      "title": "繋ぎの紐 — 束ねた二品を同時にしか使えない",
+      "primary_map": "全マップ共通",
+      "category": "Item",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "束ね状態と共同喪失をServerで管理する必要があるが、新地形やNPCは不要。",
+        "implementation_steps": [
+          "束ね状態のデータ仮置き",
+          "占有枠の再計算",
+          "喪失時の共同喪失判定"
+        ],
+        "assumed_existing_parts": [
+          "InventoryServiceの20枠／Secure Slot 4枠の棚卸し"
+        ]
+      },
+      "connection_tags": [
+        "InventoryBoundary",
+        "ItemLifecycle"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-B-032",
+      "title": "返る壺 — 喪失した品は壺の場所へ戻る",
+      "primary_map": "全マップ共通",
+      "category": "Item",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "収容と位置復帰をServerで管理するが、新地形やNPCは不要。",
+        "implementation_steps": [
+          "壺の収容データ仮置き",
+          "喪失時の復帰判定",
+          "壺の位置への移動"
+        ],
+        "assumed_existing_parts": [
+          "InventoryServiceの獲得・喪失分類",
+          "既存ルームの配置point規約"
+        ]
+      },
+      "connection_tags": [
+        "ItemLifecycle",
+        "PlacementContext"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-B-033",
+      "title": "熟れの印 — 待つと品の用途が変わる",
+      "primary_map": "全マップ共通",
+      "category": "Item",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "個別タイマーと用途変換を追加する。",
+        "implementation_steps": [
+          "印の付与と開始時刻",
+          "対応表による用途変更",
+          "中断・喪失の検証"
+        ],
+        "assumed_existing_parts": [
+          "Inventoryの所持確認（接続範囲は未確認）"
+        ]
+      },
+      "connection_tags": [
+        "ItemLifecycle"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-B-034",
+      "title": "埋めの穴 — 品を埋めて場所だけ記す",
+      "primary_map": "全マップ共通",
+      "category": "Item",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "埋納位置と場所記憶をServerで管理するが、新地形やNPCは不要。",
+        "implementation_steps": [
+          "埋納データ仮置き",
+          "位置照合の回収判定",
+          "記憶喪失時の失効"
+        ],
+        "assumed_existing_parts": [
+          "InventoryServiceの獲得・喪失分類",
+          "既存ルームの配置point規約"
+        ]
+      },
+      "connection_tags": [
+        "ItemLifecycle",
+        "PlacementContext"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-B-035",
+      "title": "引換の秤 — 品一個と未知の品を交換する",
+      "primary_map": "全マップ共通",
+      "category": "Item",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "交換と未知品の生成をServerで管理するが、新地形やNPCは不要。",
+        "implementation_steps": [
+          "交換のデータ仮置き",
+          "未知品の生成規則",
+          "手持ちの再計算"
+        ],
+        "assumed_existing_parts": [
+          "InventoryServiceの獲得・喪失分類"
+        ]
+      },
+      "connection_tags": [
+        "ItemLifecycle"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-B-036",
+      "title": "守りの鞘 — 品の喪失を一度だけ防ぐ",
+      "primary_map": "全マップ共通",
+      "category": "Item",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "守り状態と喪失無効化をServerで管理するが、新地形やNPCは不要。",
+        "implementation_steps": [
+          "鞘の収容データ仮置き",
+          "喪失時の無効化判定",
+          "鞘の消費"
+        ],
+        "assumed_existing_parts": [
+          "InventoryServiceの獲得・喪失分類",
+          "Secure Slot 4枠の保険としての役割"
+        ]
+      },
+      "connection_tags": [
+        "InventoryBoundary",
+        "ItemLifecycle"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-B-037",
+      "title": "届ける筒 — 次に置く場所へ品を送る",
+      "primary_map": "全マップ共通",
+      "category": "Item",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "込め状態と送り先をServerで管理するが、新地形やNPCは不要。",
+        "implementation_steps": [
+          "込めデータ仮置き",
+          "場所開放との接続判定",
+          "品の配置"
+        ],
+        "assumed_existing_parts": [
+          "InventoryServiceの獲得・喪失分類",
+          "既存ルームの配置point規約"
+        ]
+      },
+      "connection_tags": [
+        "ItemLifecycle",
+        "PlacementContext"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-B-038",
+      "title": "譲りの棚 — 取ると手持ちの品が棚へ移る",
+      "primary_map": "全マップ共通",
+      "category": "Item",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "交換と手持ちの再計算をServerで管理するが、新地形やNPCは不要。",
+        "implementation_steps": [
+          "交換のデータ仮置き",
+          "譲る品の選択",
+          "手持ちの再計算"
+        ],
+        "assumed_existing_parts": [
+          "InventoryServiceの獲得・喪失分類",
+          "既存ルームの配置point規約"
+        ]
+      },
+      "connection_tags": [
+        "ItemLifecycle",
+        "PlacementContext"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-B-039",
+      "title": "重ねの杯 — 二品を合わせて一つの効きにする",
+      "primary_map": "全マップ共通",
+      "category": "Item",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "融合と手持ちの再計算をServerで管理するが、新地形やNPCは不要。",
+        "implementation_steps": [
+          "融合のデータ仮置き",
+          "合わせた品の生成規則",
+          "手持ちの再計算"
+        ],
+        "assumed_existing_parts": [
+          "InventoryServiceの獲得・喪失分類"
+        ]
+      },
+      "connection_tags": [
+        "ItemLifecycle"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-B-040",
+      "title": "沈めの箱 — 品を箱に入れて音を立てない",
+      "primary_map": "全マップ共通",
+      "category": "Item",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "収容と音の抑制をServerで管理するが、新地形やNPCは不要。",
+        "implementation_steps": [
+          "収容データ仮置き",
+          "音の発生抑制",
+          "手持ちの再計算"
+        ],
+        "assumed_existing_parts": [
+          "InventoryServiceの獲得・喪失分類",
+          "SoundInteractionの音源位置・到達"
+        ]
+      },
+      "connection_tags": [
+        "SoundInteraction",
+        "ItemLifecycle"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-B-041",
+      "title": "餌の皿 — 品を置いてモブを寄らせる",
+      "primary_map": "全マップ共通",
+      "category": "Item",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "餌の配置とモブの移動をServerで管理するが、新地形は不要。",
+        "implementation_steps": [
+          "餌のデータ仮置き",
+          "品の消費",
+          "モブの移動判定"
+        ],
+        "assumed_existing_parts": [
+          "InventoryServiceの獲得・喪失分類",
+          "通常NPC/モブAIの文脈"
+        ]
+      },
+      "connection_tags": [
+        "NPCState",
+        "ItemLifecycle"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-B-042",
+      "title": "供えの皿 — モブへ品を供えて一時止める",
+      "primary_map": "全マップ共通",
+      "category": "Item",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "供えと停止時間をServerで管理するが、新地形は不要。",
+        "implementation_steps": [
+          "供えのデータ仮置き",
+          "品の消費",
+          "停止時間の管理"
+        ],
+        "assumed_existing_parts": [
+          "InventoryServiceの獲得・喪失分類",
+          "通常NPC/モブAIの文脈"
+        ]
+      },
+      "connection_tags": [
+        "NPCState",
+        "ItemLifecycle"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-B-043",
+      "title": "移しの車 — 品を二点間で往復させる",
+      "primary_map": "全マップ共通",
+      "category": "Item",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "積みと到着をServerで管理するが、新地形やNPCは不要。",
+        "implementation_steps": [
+          "積みデータ仮置き",
+          "車の配置",
+          "到着と回収の判定"
+        ],
+        "assumed_existing_parts": [
+          "InventoryServiceの獲得・喪失分類",
+          "既存ルームの配置point規約"
+        ]
+      },
+      "connection_tags": [
+        "ItemLifecycle",
+        "PlacementContext"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-B-044",
+      "title": "試しの杯 — 品を一杯で試して消す",
+      "primary_map": "全マップ共通",
+      "category": "Item",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "試用と効果の確認をServerで管理するが、新地形やNPCは不要。",
+        "implementation_steps": [
+          "試用のデータ仮置き",
+          "効果の確認",
+          "品の消費"
+        ],
+        "assumed_existing_parts": [
+          "InventoryServiceの獲得・喪失分類"
+        ]
+      },
+      "connection_tags": [
+        "ItemLifecycle"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-B-045",
+      "title": "落としの糸 — 品を道標として落とす",
+      "primary_map": "全マップ共通",
+      "category": "Item",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "道標の位置記録をServerで管理するが、新地形やNPCは不要。",
+        "implementation_steps": [
+          "道標のデータ仮置き",
+          "品の消費",
+          "道標の列の保持"
+        ],
+        "assumed_existing_parts": [
+          "InventoryServiceの獲得・喪失分類",
+          "Observationの位置観察"
+        ]
+      },
+      "connection_tags": [
+        "Observation",
+        "ItemLifecycle"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-C-031",
+      "title": "落としの音",
+      "primary_map": "全マップ共通",
+      "category": "Skill",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "物体の落下と通行不能化は既存の物理と状態遷移で試作できるが、支え判定と停止範囲の検証が要る",
+        "implementation_steps": [
+          "吊り下がり物体のModel化と支えPartの定義",
+          "支えPartへの命中検査",
+          "落下と着地のWorldChange",
+          "通行不能領域の仮設と解除"
+        ],
+        "assumed_existing_parts": [
+          "通常攻撃の命中経路",
+          "PlacementContextのpoint規約"
+        ]
+      },
+      "connection_tags": [
+        "SkillActivation",
+        "SoundInteraction",
+        "Environment"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-C-032",
+      "title": "踏み鳴らし",
+      "primary_map": "全マップ共通",
+      "category": "Skill",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "音の入力と追跡の切り替えはSoundInteractionとモブAIの接続で試作できるが、誘導挙動の検証が要る",
+        "implementation_steps": [
+          "足踏みの音源の登録",
+          "範囲内のモブの追跡対象変更",
+          "誘導方向の入力と時間管理",
+          "発動中の移動入力の検査"
+        ],
+        "assumed_existing_parts": [
+          "SoundInteractionの音源入力",
+          "通常モブの追跡状態"
+        ]
+      },
+      "connection_tags": [
+        "SoundInteraction",
+        "SkillActivation",
+        "Observation"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-C-033",
+      "title": "影渡り",
+      "primary_map": "全マップ共通",
+      "category": "Skill",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "影領域の検出は照明と遮蔽の評価で試作できるが、視認解除とモブ追跡の接続検証が要る",
+        "implementation_steps": [
+          "影領域の定義と検出",
+          "影滞在中の視認解除",
+          "影の切れ目での即解除",
+          "発動中の速度低下"
+        ],
+        "assumed_existing_parts": [
+          "Observationの遮蔽評価",
+          "通常モブの追跡状態"
+        ]
+      },
+      "connection_tags": [
+        "Observation",
+        "SkillActivation"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-C-034",
+      "title": "壁蹴り",
+      "primary_map": "全マップ共通",
+      "category": "Skill",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "方向変更の移動は既存のMoveで試作できるが、壁接触判定と捕捉リセットの接続検証が要る",
+        "implementation_steps": [
+          "壁接触の検出",
+          "90度方向変更の移動",
+          "捕捉のリセット",
+          "発動後の速度低下"
+        ],
+        "assumed_existing_parts": [
+          "Effect.Moveの位置変更",
+          "通常モブの追跡状態"
+        ]
+      },
+      "connection_tags": [
+        "SkillActivation",
+        "Observation"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-C-035",
+      "title": "潜り抜け",
+      "primary_map": "全マップ共通",
+      "category": "Skill",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "隙間の検出と移動は配置規約とMoveで試作できるが、潜り状態の制限と追跡停止の検証が要る",
+        "implementation_steps": [
+          "低い隙間の検出",
+          "潜り状態の移動制限",
+          "抜け先の安全性検査",
+          "モブの追跡停止"
+        ],
+        "assumed_existing_parts": [
+          "Effect.Moveの位置変更",
+          "PlacementContextの配置規約"
+        ]
+      },
+      "connection_tags": [
+        "SkillActivation",
+        "Environment"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-C-036",
+      "title": "跳ね返し",
+      "primary_map": "全マップ共通",
+      "category": "Skill",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "命中の不成立はRuleOverrideの分類で試作できるが、飛来攻撃の種類判定と軌道帰還の検証が要る",
+        "implementation_steps": [
+          "飛来攻撃の種類判定",
+          "弾き返しのタイミング検査",
+          "命中の不成立と軌道帰還",
+          "弾ける範囲の定義"
+        ],
+        "assumed_existing_parts": [
+          "Effect.RuleOverrideの結果不成立",
+          "通常攻撃の入力経路"
+        ]
+      },
+      "connection_tags": [
+        "SkillActivation",
+        "Combat"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-C-037",
+      "title": "突き放し",
+      "primary_map": "全マップ共通",
+      "category": "Skill",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "小",
+        "rationale": "ノックバックの方向変更は既存のMoveで試作できるが、背面固定と安全性検査の検証が要る",
+        "implementation_steps": [
+          "命中直後の入力受付",
+          "ノックバック方向の背面固定",
+          "押し退け先の安全性検査"
+        ],
+        "assumed_existing_parts": [
+          "Effect.MoveのKnockback",
+          "通常攻撃の命中経路"
+        ]
+      },
+      "connection_tags": [
+        "SkillActivation",
+        "Combat"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-C-038",
+      "title": "振り払い",
+      "primary_map": "全マップ共通",
+      "category": "Skill",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "大",
+        "rationale": "掴み状態そのものが未実装のため、掴みの実装と解除経路の両方が必要",
+        "implementation_steps": [
+          "掴み状態の定義と実装",
+          "掴まれた瞬間の入力受付",
+          "掴みの解除と相手の退避",
+          "解除後の通常攻撃禁止"
+        ],
+        "assumed_existing_parts": [
+          "Effect.StateChangeの状態遷移",
+          "Effect.Moveの位置変更"
+        ]
+      },
+      "connection_tags": [
+        "SkillActivation",
+        "Combat"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-C-039",
+      "title": "聞き分け",
+      "primary_map": "全マップ共通",
+      "category": "Skill",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "音源の方向評価はSoundInteractionで試作できるが、種別判別と個人提示の接続検証が要る",
+        "implementation_steps": [
+          "足音の音源の登録",
+          "種別の判別",
+          "方向の個人提示",
+          "読み取り中の移動禁止"
+        ],
+        "assumed_existing_parts": [
+          "SoundInteractionの音源入力",
+          "Observationの距離評価"
+        ]
+      },
+      "connection_tags": [
+        "SoundInteraction",
+        "Observation"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-C-040",
+      "title": "着地の置き換え",
+      "primary_map": "全マップ共通",
+      "category": "Skill",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "対象を限定した動作と衝突・終了の検証が必要。",
+        "implementation_steps": [
+          "対応対象1個で作用を試す",
+          "発動・中断・マップ離脱を確認",
+          "通常攻撃と4枠装備の競合を確認"
+        ],
+        "assumed_existing_parts": [
+          "既存の移動・通常攻撃入力（接続範囲は未確認）"
+        ]
+      },
+      "connection_tags": [
+        "Move",
+        "Environment"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-C-041",
+      "title": "横向きの支え",
+      "primary_map": "全マップ共通",
+      "category": "Skill",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "対象を限定した動作と衝突・終了の検証が必要。",
+        "implementation_steps": [
+          "対応対象1個で作用を試す",
+          "発動・中断・マップ離脱を確認",
+          "通常攻撃と4枠装備の競合を確認"
+        ],
+        "assumed_existing_parts": [
+          "既存の移動・通常攻撃入力（接続範囲は未確認）"
+        ]
+      },
+      "connection_tags": [
+        "Combat",
+        "Environment"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-C-042",
+      "title": "踏み留めの支点",
+      "primary_map": "全マップ共通",
+      "category": "Skill",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "対象を限定した動作と衝突・終了の検証が必要。",
+        "implementation_steps": [
+          "対応対象1個で作用を試す",
+          "発動・中断・マップ離脱を確認",
+          "通常攻撃と4枠装備の競合を確認"
+        ],
+        "assumed_existing_parts": [
+          "既存の移動・通常攻撃入力（接続範囲は未確認）"
+        ]
+      },
+      "connection_tags": [
+        "Environment",
+        "Skill"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-C-043",
+      "title": "引き寄せの輪",
+      "primary_map": "全マップ共通",
+      "category": "Skill",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "対象を限定した動作と衝突・終了の検証が必要。",
+        "implementation_steps": [
+          "対応対象1個で作用を試す",
+          "発動・中断・マップ離脱を確認",
+          "通常攻撃と4枠装備の競合を確認"
+        ],
+        "assumed_existing_parts": [
+          "既存の移動・通常攻撃入力（接続範囲は未確認）"
+        ]
+      },
+      "connection_tags": [
+        "Environment",
+        "Item"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-C-044",
+      "title": "反響測り",
+      "primary_map": "全マップ共通",
+      "category": "Skill",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "反射面を限定して反響を近似し、共有音と個人提示を分ける。",
+        "implementation_steps": [
+          "対応対象1個で作用を試す",
+          "発動・中断・マップ離脱を確認",
+          "通常攻撃と4枠装備の競合を確認"
+        ],
+        "assumed_existing_parts": [
+          "既存の移動・通常攻撃入力（接続範囲は未確認）"
+        ]
+      },
+      "connection_tags": [
+        "Sound",
+        "Observation",
+        "Environment"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-C-045",
+      "title": "視界の差し込み",
+      "primary_map": "全マップ共通",
+      "category": "Skill",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "対象を限定した動作と衝突・終了の検証が必要。",
+        "implementation_steps": [
+          "対応対象1個で作用を試す",
+          "発動・中断・マップ離脱を確認",
+          "通常攻撃と4枠装備の競合を確認"
+        ],
+        "assumed_existing_parts": [
+          "既存の移動・通常攻撃入力（接続範囲は未確認）"
+        ]
+      },
+      "connection_tags": [
+        "Observation",
+        "Environment"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    }
+  ],
+  "counts": {
+    "A:全マップ共通": 15,
+    "B:全マップ共通": 15,
+    "C:全マップ共通": 15
+  },
+  "visual_render_verified": false,
+  "worldview_content_verified": false,
+  "mechanical_validation": "passed"
+}

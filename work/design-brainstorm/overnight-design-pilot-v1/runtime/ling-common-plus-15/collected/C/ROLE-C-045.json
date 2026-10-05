@@ -1,0 +1,152 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-045",
+  "role": "C",
+  "title": "視界の差し込み",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "系統・ランク・レベル",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "通常スキルは4系統、4装備枠、レベル1〜3。系統別の固定枠ではない。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "Effectの種別",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "Effectは結果の変化で分類し、対象・保存境界・終了条件を分ける。"
+    },
+    {
+      "path": "docs/systems/observation-and-recognition.md",
+      "section": "役割と境界",
+      "source_status": "Status: Draft（草案）",
+      "claim": "Detect・Observe・Visible・Recognitionを区別し、後続効果は個別案が定める。"
+    }
+  ],
+  "design_hypothesis": "隠れたまま物陰から短く覗く。視点だけを近い縁へ寄せ、攻撃はできない。キャラクターの体はその場に残り、音や背後の敵には無防備。",
+  "experience": {
+    "goal": "隠れたまま物陰から短く覗く",
+    "player_choice": "どちらの縁から覗くか、覗いた後に進むか引くか。",
+    "sacrifice_or_risk": "覗いている間は攻撃できず、見えたことは敵の正体や安全を保証しない。"
+  },
+  "placement_assumption": "対応する既存の物体・遮蔽物・接地面がある位置だけで試す。新地形や正式配置は定めない。",
+  "components": [
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "結果のInformationChangeを分類する。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "InformationChange",
+      "trigger": "接地して遮蔽物の縁で覗き入力",
+      "condition": "対象と動作条件を満たす",
+      "result": "本人の観察視点を遮蔽物の近い縁まで寄せる。Character・Recognition・共有事実は自動更新しない。",
+      "target": "自分",
+      "scope": "個人",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "入力解除",
+        "被弾",
+        "遮蔽物から離れる",
+        "マップ離脱",
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "いずれか成立で終了。",
+      "stacking": {
+        "exception": false,
+        "rule": "即時効果はイベントごと。持続効果は同一対象に非加算1件。",
+        "conflict_resolution": "同じ値への競合適用は保留。"
+      },
+      "server_validation": "Serverが対象・距離・衝突・発動状態を検証する。 Character距離・対象有効性をServerで検査。Camera EvidenceはClient評価を検証して受理する。",
+      "client_presentation": "成立した動作と終了を本人へ提示する。",
+      "feedback": {
+        "success": "動作と作用対象が見える。",
+        "failure": "不成立なら動作を適用せず短い反応を返す。",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    }
+  ],
+  "provides_traits": [],
+  "connection_tags": [
+    "Observation",
+    "Environment"
+  ],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": [
+    "数値・Cooldown・入力受付時間は試作後に決める。",
+    "対応対象の存在と判定方式は未確認。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "隠れたまま物陰から短く覗く",
+    "in_world_rationale": "身体操作と既存の物体・音・視点を組み合わせる技能候補。現象の起源は説明しない。",
+    "meaning_left_ambiguous": "技能の由来は未確定。対象へのゲーム上の作用だけ明確にする。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "入力窓・対応対象・作用・終了の新しい判定が必要。",
+  "new_logic": [
+    "視界の差し込みの発動・終了判定"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "対象を限定した動作と衝突・終了の検証が必要。",
+    "implementation_steps": [
+      "対応対象1個で作用を試す",
+      "発動・中断・マップ離脱を確認",
+      "通常攻撃と4枠装備の競合を確認"
+    ],
+    "assumed_existing_parts": [
+      "既存の移動・通常攻撃入力（接続範囲は未確認）"
+    ]
+  },
+  "role_details": {
+    "skill_family": "探索",
+    "rank": 1,
+    "rank_rationale": "仮ランク。既存解放条件を維持。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "近い遮蔽物の縁から短く覗く。"
+      },
+      {
+        "level": 2,
+        "proposal": "左右の覗き位置を切り替える案。"
+      },
+      {
+        "level": 3,
+        "proposal": "覗きを解除して通常移動へ接続する案。"
+      }
+    ],
+    "equipped_slot_policy": "通常スキルとして4枠のうち1枠を使う。系統固定枠はない。",
+    "normal_attack_link": "覗き中は攻撃できない。覗き解除後の通常攻撃は元のCharacter位置から行う。",
+    "avoids": "角を曲がる直前の遭遇",
+    "intervenes_in": "本人の観察視点",
+    "sacrifices": "覗いている間は攻撃できず、見えたことは敵の正体や安全を保証しない。",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-045.html"
+}

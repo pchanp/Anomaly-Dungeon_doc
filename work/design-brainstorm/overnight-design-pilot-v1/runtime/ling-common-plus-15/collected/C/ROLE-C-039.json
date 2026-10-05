@@ -1,0 +1,164 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-039",
+  "role": "C",
+  "title": "聞き分け",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "系統・ランク・レベル",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "通常スキルは4系統、4装備枠、レベル1〜3。系統別の固定枠ではない。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "Effectの種別",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "Effectは結果の変化で分類し、対象・保存境界・終了条件を分ける。"
+    },
+    {
+      "path": "docs/systems/anomaly-interaction.md",
+      "section": "Sound Interaction",
+      "source_status": "ステータス: Draft",
+      "claim": "音源の位置・種別・方向・到達範囲など、提供できる文脈を入力に使う。"
+    }
+  ],
+  "design_hypothesis": "足を止め、モブの足音の種類と方向を読み取る。読み取った情報は本人だけに示す。音源の種別と方向はSoundInteractionの入力を、個人提示はInformationChangeの候補として記録する。",
+  "experience": {
+    "goal": "音だけで、近くに何がいてどちらへ向かっているかを読む体験",
+    "player_choice": "聞き取るタイミングと、どの方向に耳を澄ますかを選ぶ。情報を得た後に、近づくか回避するかを判断する",
+    "sacrifice_or_risk": "読み取り中は動けず、攻撃もできない。音を頼りに動くと、誤読の責任は自分にある"
+  },
+  "placement_assumption": "配置は未定。音が届く既存の通路・部屋の範囲内で想定。新地形は提案しない",
+  "components": [
+    {
+      "component": "SoundInteraction",
+      "availability": "catalog",
+      "usage": "足音の音源を、読み取りの入力に使う"
+    },
+    {
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "音源の方向と距離の評価を近似する"
+    },
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "結果のInformationChangeを分類する。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "InformationChange",
+      "trigger": "聞き分けの入力",
+      "condition": "読み取り範囲（仮値20メートル）内に音を出す通常モブがいる",
+      "result": "足音の種類と方向を本人だけに提示する。モブの正体や数は出さない",
+      "target": "自分",
+      "scope": "個人",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": [
+        "適用解決",
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかが成立すれば解除する既定規則。即時効果のため適用解決を主とする。",
+      "stacking": {
+        "exception": false,
+        "rule": "即時イベントごとに解決する。同一モブへの再適用はイベントごとに適用する。",
+        "conflict_resolution": "別Effectとの競合は、解決規則を定めるまで保留して記録する。"
+      },
+      "server_validation": "Serverが読み取り範囲、音源の存在、対象が通常モブであることを検査する。EntityやPlayer Anomalyの音は出さない。 対象は対応通常モブ・環境に限定。Entity・Player Anomalyの固有ルールを汎用解除しない。",
+      "client_presentation": "足音の方向を個人提示する。音の種類は共有世界の音として聞こえるが、解釈は本人の判断。",
+      "feedback": {
+        "success": "足音の種類と方向が分かる",
+        "failure": "範囲内に音源がいないと無音だけが返る",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    }
+  ],
+  "provides_traits": [],
+  "connection_tags": [
+    "SoundInteraction",
+    "Observation"
+  ],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": [
+    "音の伝播方式",
+    "足音の種類の定義",
+    "Entityの音との区別"
+  ],
+  "worldview": {
+    "defamiliarized_element": "足音の「種類」が、モブの区別として読めること",
+    "in_world_rationale": "既存のSoundInteractionが音源の種別・位置・方向を入力にできることを、個人提示の情報化案として記録する。音の伝播方式は未定。",
+    "meaning_left_ambiguous": "足音の種類が何を意味するかは、モブの実装に委ねる",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "本案固有の対象判定・状態遷移・提示を追加する必要がある。実装許可ではない。",
+  "new_logic": [
+    "足音の種別判別",
+    "個人提示の方向表現",
+    "読み取り中の移動禁止"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "音源の方向評価はSoundInteractionで試作できるが、種別判別と個人提示の接続検証が要る",
+    "implementation_steps": [
+      "足音の音源の登録",
+      "種別の判別",
+      "方向の個人提示",
+      "読み取り中の移動禁止"
+    ],
+    "assumed_existing_parts": [
+      "SoundInteractionの音源入力",
+      "Observationの距離評価"
+    ]
+  },
+  "role_details": {
+    "skill_family": "探索",
+    "rank": 1,
+    "rank_rationale": "ランクは試作上の仮案。既定の解放条件は変更しない。 SHADEは探索ランク2であり、探索ランク1が2案あるという元の説明を訂正。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "足音の種類と方向を読み取る。読み取り中は動けない"
+      },
+      {
+        "level": 2,
+        "proposal": "読み取り範囲を仮値25メートルへ延長する案"
+      },
+      {
+        "level": 3,
+        "proposal": "読み取り中も移動できるが、精度が落ちる案"
+      }
+    ],
+    "equipped_slot_policy": "通常スキルとして4装備枠のうち1枠を使う。系統別の固定枠は設けない。",
+    "normal_attack_link": "非連携。読み取り中は通常攻撃もできない",
+    "avoids": "不意の遭遇、音の誤読",
+    "intervenes_in": "なし",
+    "sacrifices": "読み取り中の移動不可、攻撃不可",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-039.html"
+}

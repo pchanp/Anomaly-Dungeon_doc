@@ -1,0 +1,152 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-033",
+  "role": "A",
+  "title": "貸し灯り",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "NPC",
+  "source_evidence": [
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "Effectの種別",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "Effectは結果の変化で分類し、対象・保存境界・終了条件を分ける。"
+    },
+    {
+      "path": "docs/world/information-design.md",
+      "section": "中心原則",
+      "source_status": "Status: Draft（草案）",
+      "claim": "ルールは明確、意味は曖昧。NPCは目的を持って行動し、世界の真相を解説しない。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "マップ設計原則",
+      "source_status": "Status: Mixed（案ごとに下記）",
+      "claim": "マップ文脈を基盤システムに接続する。新しい地形や正式配置は本案で確定しない。"
+    }
+  ],
+  "design_hypothesis": "灯りを持つ通常NPCが、頼まれたプレイヤーに灯りをRun中に一度だけ貸す状態を仮定する。灯りを持つ間、プレイヤーの視認は上がり、NPCは暗がりへ退いて仕事を止める。返すとNPCは仕事に戻り、視認は元に戻る。貸し出しはRun中に一度だけ（仮値）。灯りの明るさの半径・視認の上昇幅は未定。地形・部屋・正式配置は追加しない。",
+  "experience": {
+    "goal": "明るさと目立ちやすさの交換として、灯りを借りるかどうか判断する体験",
+    "player_choice": "灯りを借りて視認を上げるか、暗がりを保って索敵を避けるかを選ぶ",
+    "sacrifice_or_risk": "灯りを借りると索敵に映りやすく、NPCの仕事も止まる。返却まで交換は続く"
+  },
+  "placement_assumption": "既存の配置pointに待機するNPCを想定。灯りの道具は既存小物の範囲内で、正式配置は確定しない",
+  "components": [
+    {
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "貸出・退避・仕事再開の状態を持つ通常NPC"
+    },
+    {
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "貸出中の視認上昇の判定経路"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "プレイヤーがNPCへ灯りの貸出を頼んだとき",
+      "condition": "同一Run内で未貸出かつNPCが仕事中",
+      "result": "灯りをプレイヤーへ貸し、プレイヤーの視認を上昇させる。NPCは暗がりへ退いて仕事を止める",
+      "target": "プレイヤーとNPC",
+      "scope": "個人の状態とServerのRun事実",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "灯りの返却",
+        "Run終了",
+        "NPCへの攻撃"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかで解除する既定規則。",
+      "stacking": {
+        "exception": false,
+        "rule": "持続同一Effectは非加算1件。Run中の再貸出は起こらない。固定秒数の再適用は残り時間更新（本案は固定秒数を持たない）",
+        "conflict_resolution": "別Effectとの競合は、解決規則を定めるまで保留して記録する。"
+      },
+      "server_validation": "Serverが未貸出・NPCの仕事中・同一Run内を確認する。不成立時は貸出は起こらない 通常プレイヤーのNPC接触のみ受理し、Player AnomalyのNPC Interactionは禁止。NPC案の場合に適用。",
+      "client_presentation": "灯りを持つプレイヤーは明るく見え、NPCは暗がりへ退く。貸出中の事実はServerのRun事実として残る",
+      "feedback": {
+        "success": "灯りの受け取りとNPCの退避",
+        "failure": "NPCは貸さない",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    }
+  ],
+  "provides_traits": [],
+  "connection_tags": [
+    "NPCState",
+    "Observation"
+  ],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": [
+    "灯りの明るさの半径と視認の上昇幅は未定",
+    "貸出中のNPCが退く先の距離は未定",
+    "NPCがマップごとに別個体か同一個体かは未定",
+    "通常モブの配置・上限・索敵は候補上の仮説。既存実装と見なさない。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "明かりを他人から借り、返すまで明るさを借り受けたままにする異化。異化しない理由はない",
+    "in_world_rationale": "閉店後の暗がりで仕事を持つNPCが、頼まれた者にだけ灯りを貸す設定は、既存世界観の範囲で成立し得る",
+    "meaning_left_ambiguous": "灯りの燃料と、NPCがなぜ暗がりへ退くのかは確定しない",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "本案固有の対象判定・状態遷移・提示を追加する必要がある。実装許可ではない。",
+  "new_logic": [
+    "灯りの貸出状態のRun保持",
+    "貸出中の視認上昇"
+  ],
+  "prototype_cost": {
+    "band": "小",
+    "rationale": "NPCの貸出・退避と視認の判定のみ。地形・部屋の追加は不要",
+    "implementation_steps": [
+      "NPCの貸出状態",
+      "視認上昇の判定",
+      "返却の受付",
+      "貸出事実のRun保持"
+    ],
+    "assumed_existing_parts": [
+      "NPCState",
+      "Observation"
+    ]
+  },
+  "role_details": {
+    "npc_purpose": "暗がりの器材を点検する。灯りを貸すと点検を中断し、返却を待つ。",
+    "player_anomaly_handling": "判断019に従いPlayer AnomalyとはInteractionしない。攻撃を受けると灯りを返さずに仕事を止める",
+    "mob_contract": {
+      "applicable": false,
+      "spawn_condition": "対象外理由：通常NPC案のため、モブの湧き枠を持たない",
+      "population_cap": "対象外理由：通常NPC案のため、モブの上限管理の対象外",
+      "non_combat_response": "対象外理由：通常NPC案のため、モブの索敵・戦闘挙動は持たない。攻撃を受けると仕事を止めるだけ",
+      "exit_condition": "対象外理由：通常NPC案のため、モブの退場条件は持たない。Run終了まで同じ場所に残る",
+      "entity_distinction": "対象外理由：通常NPCであり、Anomaly EntityでもPlayer Anomalyでもない"
+    }
+  },
+  "html_file": "ROLE-A-033.html"
+}

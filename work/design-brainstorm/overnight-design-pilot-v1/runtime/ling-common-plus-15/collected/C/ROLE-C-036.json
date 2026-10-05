@@ -1,0 +1,159 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-036",
+  "role": "C",
+  "title": "跳ね返し",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "系統・ランク・レベル",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "通常スキルは4系統、4装備枠、レベル1〜3。系統別の固定枠ではない。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "Effectの種別",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "Effectは結果の変化で分類し、対象・保存境界・終了条件を分ける。"
+    },
+    {
+      "path": "docs/systems/observation-and-recognition.md",
+      "section": "役割と境界",
+      "source_status": "Status: Draft（草案）",
+      "claim": "Detect・Observe・Visible・Recognitionを区別し、後続効果は個別案が定める。"
+    }
+  ],
+  "design_hypothesis": "通常攻撃の入力で飛来攻撃を弾き返し、元の方向へ帰す。弾いた攻撃は自分には当たらない。弾ける攻撃の範囲は個別に定め、纏絲勁のParryとは対象が飛来攻撃に限られる点で別置きとする。",
+  "experience": {
+    "goal": "飛んでくる攻撃を、打つ瞬間に跳ね返す体験",
+    "player_choice": "跳ね返すタイミングを選ぶ。跳ね返すか、避けるか、受けるかを一瞬で判断する",
+    "sacrifice_or_risk": "跳ね返した分、通常攻撃の命中機会を1回消費する。弾けない攻撃もある"
+  },
+  "placement_assumption": "配置は未定。飛来攻撃を持つ相手がいる既存の戦闘状況の範囲内で想定。新地形は提案しない",
+  "components": [
+    {
+      "component": "SkillActivation",
+      "availability": "catalog",
+      "usage": "通常攻撃の入力を発動に使う"
+    },
+    {
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "結果のRuleOverrideを分類する。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "RuleOverride",
+      "trigger": "通常攻撃の入力で飛来攻撃が命中直前のとき",
+      "condition": "弾き返し可能な飛来攻撃がServerの確認する射程内にある",
+      "result": "飛来攻撃の命中を不成立にし、同じ攻撃を元の方向へ帰す。帰した攻撃のダメージは通常どおり",
+      "target": "飛来攻撃とその飛来元",
+      "scope": "Run共有（Serverが確定）",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": [
+        "適用解決",
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかが成立すれば解除する既定規則。即時効果のため適用解決を主とする。",
+      "stacking": {
+        "exception": false,
+        "rule": "即時イベントごとに解決する。同一飛来攻撃への再適用はイベントごとに適用する。",
+        "conflict_resolution": "別Effectとの競合は、解決規則を定めるまで保留して記録する。"
+      },
+      "server_validation": "Serverが飛来攻撃の種類、弾き返しのタイミング、射程を検査する。弾けない攻撃は通常どおり命中する。 対象は対応通常モブ・環境に限定。Entity・Player Anomalyの固有ルールを汎用解除しない。",
+      "client_presentation": "弾き返した演出を個人に表現する。帰った攻撃の命中は共有表現する。",
+      "feedback": {
+        "success": "攻撃が跳ね返って飛来元へ帰る",
+        "failure": "弾けない攻撃は通常どおり当たる",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    }
+  ],
+  "provides_traits": [],
+  "connection_tags": [
+    "SkillActivation",
+    "Combat"
+  ],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": [
+    "弾ける攻撃の範囲",
+    "弾き返しのタイミングの仮値",
+    "帰した攻撃の飛来元への命中判定"
+  ],
+  "worldview": {
+    "defamiliarized_element": "自分の通常攻撃が、飛来物の軌道を書き換えること",
+    "in_world_rationale": "既存のCombat/Result Interactionが攻撃結果の不成立を扱えることを、飛来攻撃への適用案として記録する。弾ける攻撃の範囲は個別に定める。",
+    "meaning_left_ambiguous": "攻撃がなぜ弾けるかは説明しない",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "本案固有の対象判定・状態遷移・提示を追加する必要がある。実装許可ではない。",
+  "new_logic": [
+    "飛来攻撃の弾き返し判定",
+    "軌道の帰還",
+    "弾ける攻撃の範囲定義"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "命中の不成立はRuleOverrideの分類で試作できるが、飛来攻撃の種類判定と軌道帰還の検証が要る",
+    "implementation_steps": [
+      "飛来攻撃の種類判定",
+      "弾き返しのタイミング検査",
+      "命中の不成立と軌道帰還",
+      "弾ける範囲の定義"
+    ],
+    "assumed_existing_parts": [
+      "Effect.RuleOverrideの結果不成立",
+      "通常攻撃の入力経路"
+    ]
+  },
+  "role_details": {
+    "skill_family": "攻撃",
+    "rank": 2,
+    "rank_rationale": "ランクは試作上の仮案。既定の解放条件は変更しない。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "弾き返し可能な飛来攻撃を、元の方向へ帰す"
+      },
+      {
+        "level": 2,
+        "proposal": "狭い角度内で返す方向を選べる案。威力は増やさない。"
+      },
+      {
+        "level": 3,
+        "proposal": "弾き返しの判定が仮値0.2秒長くなる案"
+      }
+    ],
+    "equipped_slot_policy": "通常スキルとして4装備枠のうち1枠を使う。系統別の固定枠は設けない。",
+    "normal_attack_link": "通常攻撃の入力を発動に使う。通常攻撃→本スキルの連携を前提に、入力経路を流用する",
+    "avoids": "飛来攻撃の被弾",
+    "intervenes_in": "飛来攻撃の軌道と飛来元",
+    "sacrifices": "通常攻撃の命中機会1回、弾けない攻撃への対応",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-036.html"
+}

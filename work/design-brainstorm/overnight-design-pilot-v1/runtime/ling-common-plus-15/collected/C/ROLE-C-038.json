@@ -1,0 +1,201 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-038",
+  "role": "C",
+  "title": "振り払い",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "系統・ランク・レベル",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "通常スキルは4系統、4装備枠、レベル1〜3。系統別の固定枠ではない。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "Effectの種別",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "Effectは結果の変化で分類し、対象・保存境界・終了条件を分ける。"
+    },
+    {
+      "path": "docs/systems/observation-and-recognition.md",
+      "section": "役割と境界",
+      "source_status": "Status: Draft（草案）",
+      "claim": "Detect・Observe・Visible・Recognitionを区別し、後続効果は個別案が定める。"
+    }
+  ],
+  "design_hypothesis": "掴まれた瞬間に入力すると、掴みを振り切って相手を後方へ退ける。掴み状態の実装自体が未確認のため、掴みを持つ相手がいないと発動できない。掴みの解除はcureの汎用解除とは別経路とする。",
+  "experience": {
+    "goal": "掴まれた一瞬で振り切り、距離を取る体験",
+    "player_choice": "振り切るタイミングを選ぶ。振り切った後に反撃するか、離れるかを判断する",
+    "sacrifice_or_risk": "振り切った後の最初の通常攻撃は使えない。掴みが解除されず、入力が空振りになることもある"
+  },
+  "placement_assumption": "配置は未定。掴みを持つ相手がいる戦闘状況の範囲内で想定。掴みの実装は未確認",
+  "components": [
+    {
+      "component": "SkillActivation",
+      "availability": "catalog",
+      "usage": "掴まれた瞬間の入力を発動に使う"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "component": "Effect.Move",
+      "availability": "catalog",
+      "usage": "結果のMoveを分類する。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "掴まれた瞬間の入力",
+      "condition": "Serverが確認する掴み状態にいる",
+      "result": "解除可能と定義された対応通常モブの掴みだけを解除する。",
+      "target": "自分と掴んだ通常モブ",
+      "scope": "Run共有（Serverが確定）",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": [
+        "適用解決",
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかが成立すれば解除する既定規則。即時効果のため適用解決を主とする。",
+      "stacking": {
+        "exception": false,
+        "rule": "即時イベントごとに解決する。同一掴みへの再適用はイベントごとに適用する。",
+        "conflict_resolution": "別Effectとの競合は、解決規則を定めるまで保留して記録する。"
+      },
+      "server_validation": "Serverが掴み状態の事実、解除の優先順位、相手の退ける先の安全性を検査する。掴みがなければ入力は無効。 対象は対応通常モブ・環境に限定。Entity・Player Anomalyの固有ルールを汎用解除しない。",
+      "client_presentation": "振り切りの演出を共有表現する。通常攻撃不能の間は個人にだけ示す。",
+      "feedback": {
+        "success": "掴みが解けて、相手が退く",
+        "failure": "掴み状態でなければ入力は無効",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    },
+    {
+      "kind": "Move",
+      "trigger": "掴み解除成立",
+      "condition": "対象と動作条件を満たす",
+      "result": "掴んでいたモブを後方へ仮値3メートル退ける。障害物を越えない。",
+      "target": "掴んでいた対応通常モブ",
+      "scope": "Run全体",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": [
+        "動作終了",
+        "マップ離脱",
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "いずれか成立で終了。",
+      "stacking": {
+        "exception": false,
+        "rule": "即時効果はイベントごと。持続効果は同一対象に非加算1件。",
+        "conflict_resolution": "同じ値への競合適用は保留。"
+      },
+      "server_validation": "Serverが対象・距離・衝突・発動状態を検証する。",
+      "client_presentation": "成立した動作と終了を本人へ提示する。",
+      "feedback": {
+        "success": "動作と作用対象が見える。",
+        "failure": "不成立なら動作を適用せず短い反応を返す。",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    }
+  ],
+  "provides_traits": [],
+  "connection_tags": [
+    "SkillActivation",
+    "Combat"
+  ],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": [
+    "掴み状態の実装有無",
+    "解除の優先順位",
+    "cureとの関係"
+  ],
+  "worldview": {
+    "defamiliarized_element": "掴みが「解除可能な状態遷移」として扱えること",
+    "in_world_rationale": "既存のStateChangeが状態遷移を扱い、cureが解除可能な状態異常を対象とする規則の範囲内で、掴みの解除案として記録する。掴みを持つ相手の実装は未確認。",
+    "meaning_left_ambiguous": "掴みがなぜ解除できるかは説明しない",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "本案固有の対象判定・状態遷移・提示を追加する必要がある。実装許可ではない。",
+  "new_logic": [
+    "掴み状態の解除入力",
+    "解除後の通常攻撃禁止"
+  ],
+  "prototype_cost": {
+    "band": "大",
+    "rationale": "掴み状態そのものが未実装のため、掴みの実装と解除経路の両方が必要",
+    "implementation_steps": [
+      "掴み状態の定義と実装",
+      "掴まれた瞬間の入力受付",
+      "掴みの解除と相手の退避",
+      "解除後の通常攻撃禁止"
+    ],
+    "assumed_existing_parts": [
+      "Effect.StateChangeの状態遷移",
+      "Effect.Moveの位置変更"
+    ]
+  },
+  "role_details": {
+    "skill_family": "攻撃",
+    "rank": 1,
+    "rank_rationale": "ランクは試作上の仮案。既定の解放条件は変更しない。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "掴みを解除し、相手を後方へ仮値3メートル退ける"
+      },
+      {
+        "level": 2,
+        "proposal": "解除後の通常攻撃禁止を、仮値0.5秒へ短縮する案"
+      },
+      {
+        "level": 3,
+        "proposal": "振り切った相手が仮値2秒間、掴みを再開しない案"
+      }
+    ],
+    "equipped_slot_policy": "通常スキルとして4装備枠のうち1枠を使う。系統別の固定枠は設けない。",
+    "normal_attack_link": "振り切った後の最初の通常攻撃は使えない。以降の通常攻撃は通常どおり",
+    "avoids": "掴み状態の連続、掴まれたままの移動制限",
+    "intervenes_in": "掴み状態、掴んだ相手の位置",
+    "sacrifices": "振り切った後の最初の通常攻撃、入力が空振りする場合がある",
+    "real_techniques": [
+      {
+        "name": "掴みの振り払い",
+        "confirmation": "Unconfirmed",
+        "source_url": null,
+        "evidence": "実在の防身術における掴みの解き方の確認根拠を外部調査で得ていない",
+        "real_inspiration": "掴まれた瞬間に体を振って解放する行為",
+        "game_extension": "スキル化と解除後の攻撃禁止という代償"
+      }
+    ]
+  },
+  "html_file": "ROLE-C-038.html"
+}

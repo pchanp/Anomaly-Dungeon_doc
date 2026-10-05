@@ -1,0 +1,157 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-037",
+  "role": "C",
+  "title": "突き放し",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "系統・ランク・レベル",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "通常スキルは4系統、4装備枠、レベル1〜3。系統別の固定枠ではない。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "Effectの種別",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "Effectは結果の変化で分類し、対象・保存境界・終了条件を分ける。"
+    },
+    {
+      "path": "docs/systems/observation-and-recognition.md",
+      "section": "役割と境界",
+      "source_status": "Status: Draft（草案）",
+      "claim": "Detect・Observe・Visible・Recognitionを区別し、後続効果は個別案が定める。"
+    }
+  ],
+  "design_hypothesis": "通常攻撃が命中した直後、相手を自分の背面へ押し退け、間合いを作る。ノックバックの向きを背面方向へ固定する案であり、追加ダメージは出ない。押し退け先が塞がっていれば押し退けない。",
+  "experience": {
+    "goal": "打った直後の勢いで相手を押し退け、呼吸を整える体験",
+    "player_choice": "突き放す方向と、突き放した後に追うか離れるかを選ぶ",
+    "sacrifice_or_risk": "押し退けた分、追加のダメージは出ない。近距離のままだと、押し退けても意味がない"
+  },
+  "placement_assumption": "配置は未定。通常攻撃の近接範囲内での戦闘状況の範囲内で想定。新地形は提案しない",
+  "components": [
+    {
+      "component": "SkillActivation",
+      "availability": "catalog",
+      "usage": "通常攻撃の命中直後の入力を発動に使う"
+    },
+    {
+      "component": "Effect.Move",
+      "availability": "catalog",
+      "usage": "結果のMoveを分類する。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "Move",
+      "trigger": "通常攻撃の命中直後の入力",
+      "condition": "命中した相手がServerの確認する近接範囲内にいる",
+      "result": "命中した対応通常モブを横から自分の背面方向へ回り込ませ、仮値2メートル退ける。障害物や自分を貫通させない。",
+      "target": "命中した通常モブ",
+      "scope": "Run共有（Serverが確定）",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": [
+        "適用解決",
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかが成立すれば解除する既定規則。即時効果のため適用解決を主とする。",
+      "stacking": {
+        "exception": false,
+        "rule": "即時イベントごとに解決する。同一相手への再適用はイベントごとに適用する。",
+        "conflict_resolution": "別Effectとの競合は、解決規則を定めるまで保留して記録する。"
+      },
+      "server_validation": "Serverが命中の事実、相手の位置、押し退け先の安全性を検査する。塞がっていれば押し退けない。 対象は対応通常モブ・環境に限定。Entity・Player Anomalyの固有ルールを汎用解除しない。",
+      "client_presentation": "押し退けの演出を共有表現する。",
+      "feedback": {
+        "success": "相手が背面へ退く",
+        "failure": "近接範囲外の相手には発動しない",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    }
+  ],
+  "provides_traits": [],
+  "connection_tags": [
+    "SkillActivation",
+    "Combat"
+  ],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": [
+    "押し退け先が塞がっている場合の扱い",
+    "追跡再開の仮値",
+    "Anomaly Entityへの効果"
+  ],
+  "worldview": {
+    "defamiliarized_element": "攻撃の命中が、相手の位置を自分の背面へ書き換えること",
+    "in_world_rationale": "既存のMove EffectがKnockbackを扱えることを、背面方向への置き換え案として記録する。ノックバックの向きの変更は既存案の範囲内。",
+    "meaning_left_ambiguous": "なぜ背面へ押し退けるかは説明しない",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "本案固有の対象判定・状態遷移・提示を追加する必要がある。実装許可ではない。",
+  "new_logic": [
+    "ノックバック方向の背面固定",
+    "押し退け先の安全性検査"
+  ],
+  "prototype_cost": {
+    "band": "小",
+    "rationale": "ノックバックの方向変更は既存のMoveで試作できるが、背面固定と安全性検査の検証が要る",
+    "implementation_steps": [
+      "命中直後の入力受付",
+      "ノックバック方向の背面固定",
+      "押し退け先の安全性検査"
+    ],
+    "assumed_existing_parts": [
+      "Effect.MoveのKnockback",
+      "通常攻撃の命中経路"
+    ]
+  },
+  "role_details": {
+    "skill_family": "攻撃",
+    "rank": 1,
+    "rank_rationale": "ランクは試作上の仮案。既定の解放条件は変更しない。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "命中した相手を背面へ仮値2メートル押し退ける"
+      },
+      {
+        "level": 2,
+        "proposal": "押し退けた相手が仮値1秒間、追跡を再開しない案"
+      },
+      {
+        "level": 3,
+        "proposal": "押し退けた直後に、通常攻撃の入力を受け付ける案"
+      }
+    ],
+    "equipped_slot_policy": "通常スキルとして4装備枠のうち1枠を使う。系統別の固定枠は設けない。",
+    "normal_attack_link": "通常攻撃の命中を発動に使う。通常攻撃→本スキルの連携を前提に、命中判定を流用する",
+    "avoids": "接近戦の連続被弾",
+    "intervenes_in": "命中した相手の位置",
+    "sacrifices": "押し退けた分の追加ダメージが出ない",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-037.html"
+}

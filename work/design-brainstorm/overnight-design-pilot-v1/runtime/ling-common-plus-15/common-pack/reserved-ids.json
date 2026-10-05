@@ -1,0 +1,461 @@
+{
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_count": 45,
+  "roles": {
+    "A": 15,
+    "B": 15,
+    "C": 15
+  },
+  "slots": [
+    {
+      "candidate_id": "ROLE-A-031",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-A-032",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-A-033",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-A-034",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-A-035",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-A-036",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-A-037",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-A-038",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-A-039",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-A-040",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-A-041",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-A-042",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-A-043",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-A-044",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-A-045",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-B-031",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-B-032",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-B-033",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-B-034",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-B-035",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-B-036",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-B-037",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-B-038",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-B-039",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-B-040",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-B-041",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-B-042",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-B-043",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-B-044",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-B-045",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-C-031",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-C-032",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-C-033",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-C-034",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-C-035",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-C-036",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-C-037",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-C-038",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-C-039",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-C-040",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-C-041",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-C-042",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-C-043",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-C-044",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    },
+    {
+      "candidate_id": "ROLE-C-045",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "Ling新規回。既存001〜030と重複しない。"
+    }
+  ]
+}

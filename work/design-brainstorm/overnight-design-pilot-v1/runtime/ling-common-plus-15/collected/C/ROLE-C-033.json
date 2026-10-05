@@ -1,0 +1,167 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-033",
+  "role": "C",
+  "title": "影渡り",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "系統・ランク・レベル",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "通常スキルは4系統、4装備枠、レベル1〜3。系統別の固定枠ではない。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "Effectの種別",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "Effectは結果の変化で分類し、対象・保存境界・終了条件を分ける。"
+    },
+    {
+      "path": "docs/systems/observation-and-recognition.md",
+      "section": "役割と境界",
+      "source_status": "Status: Draft（草案）",
+      "claim": "Detect・Observe・Visible・Recognitionを区別し、後続効果は個別案が定める。"
+    }
+  ],
+  "design_hypothesis": "影の中をゆっくり進む間、対応通常モブの視覚検知を受けにくくする。音や接触の検知は残り、影を出ても即捕捉ではなく通常の索敵へ戻る。",
+  "experience": {
+    "goal": "影の連なりを読みながら、敵の視線を縫って進む体験",
+    "player_choice": "影の順序とタイミングを選ぶ。遠回りでも影の連なりを辿るか、危険を承知で開けた場所を渡るかを判断する",
+    "sacrifice_or_risk": "影の中では速度が落ち、影の切れ目で即座に捕捉される。一度の露出が連続した追跡を招く"
+  },
+  "placement_assumption": "配置は未定。遮蔽物と照明が既存のルームにある範囲内で想定。影の形状は照明から導く",
+  "components": [
+    {
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "影領域の滞在を、遮蔽と画面内の評価で近似する"
+    },
+    {
+      "component": "SkillActivation",
+      "availability": "catalog",
+      "usage": "影渡りの発動入力と、発動中の速度低下を扱う"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "影渡りの発動と、影の中への滞在",
+      "condition": "遮蔽物の影と判断できる領域にServerが確認して滞在している",
+      "result": "影の中で対応通常モブの視覚検知を抑える。音・接触は残し、影を出ると通常索敵へ戻す。",
+      "target": "自分",
+      "scope": "個人",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "影の外への移出",
+        "発動の再入力",
+        "攻撃の入力",
+        "被弾",
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかが成立すれば解除する既定規則。影の外への移出を主とする。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effect・同一対象は非加算1件。再発動は状態を維持するだけ。",
+        "conflict_resolution": "別Effectとの競合は、解決規則を定めるまで保留して記録する。"
+      },
+      "server_validation": "Serverが影領域の滞在と解除条件を検査する。影領域の定義はマップ配置規約の範囲内で未定。 対象は対応通常モブ・環境に限定。Entity・Player Anomalyの固有ルールを汎用解除しない。",
+      "client_presentation": "影の中の自分だけに、影の境界を示す弱い表現を出す。モブには通常どおり見える。",
+      "feedback": {
+        "success": "影の中でモブが反応を止める",
+        "failure": "影の外では即座に捕捉される",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    }
+  ],
+  "provides_traits": [],
+  "connection_tags": [
+    "Observation",
+    "SkillActivation"
+  ],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": [
+    "影領域の定義方法と照明変化との関係",
+    "影の中の速度低下の仮値",
+    "Anomaly Entityの視認ルールへの影響"
+  ],
+  "worldview": {
+    "defamiliarized_element": "影が「視認の否定」として機能すること",
+    "in_world_rationale": "既存の遮蔽Raycastが遮蔽を評価できることを、影領域の滞在判定へ接続する案。影の形状は照明と遮蔽物から導く。",
+    "meaning_left_ambiguous": "影がなぜ視認を妨げるかは説明しない",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "本案固有の対象判定・状態遷移・提示を追加する必要がある。実装許可ではない。",
+  "new_logic": [
+    "影領域の検出",
+    "影滞在中の視認解除",
+    "影の中の速度低下"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "影領域の検出は照明と遮蔽の評価で試作できるが、視認解除とモブ追跡の接続検証が要る",
+    "implementation_steps": [
+      "影領域の定義と検出",
+      "影滞在中の視認解除",
+      "影の切れ目での即解除",
+      "発動中の速度低下"
+    ],
+    "assumed_existing_parts": [
+      "Observationの遮蔽評価",
+      "通常モブの追跡状態"
+    ]
+  },
+  "role_details": {
+    "skill_family": "探索",
+    "rank": 2,
+    "rank_rationale": "ランクは試作上の仮案。既定の解放条件は変更しない。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "影の中にいる間だけ視認を外れる。影の中は速度仮値20%低下"
+      },
+      {
+        "level": 2,
+        "proposal": "影の切れ目で仮値1秒の猶予を持つ案。速度低下は仮値15%"
+      },
+      {
+        "level": 3,
+        "proposal": "影の中から通常攻撃を開始できるが、入力時に視覚検知抑制が終了する案。"
+      }
+    ],
+    "equipped_slot_policy": "通常スキルとして4装備枠のうち1枠を使う。系統別の固定枠は設けない。",
+    "normal_attack_link": "レベル3で影の中の通常攻撃構えに接続する。それ以外は非連携",
+    "avoids": "視認による捕捉、正面のモブ",
+    "intervenes_in": "なし（自分の可視状態のみ）",
+    "sacrifices": "移動速度が落ち、足音と接触検知は残る。",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-033.html"
+}

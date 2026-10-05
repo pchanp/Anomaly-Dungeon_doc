@@ -1,0 +1,46 @@
+{
+  "run_id": "overnight-design-pilot-v1",
+  "role": "B",
+  "state": "completed",
+  "completed_ids": [
+    "ROLE-B-031",
+    "ROLE-B-032",
+    "ROLE-B-033",
+    "ROLE-B-034",
+    "ROLE-B-035",
+    "ROLE-B-036",
+    "ROLE-B-037",
+    "ROLE-B-038",
+    "ROLE-B-039",
+    "ROLE-B-040",
+    "ROLE-B-041",
+    "ROLE-B-042",
+    "ROLE-B-043",
+    "ROLE-B-044",
+    "ROLE-B-045"
+  ],
+  "completed_count": 15,
+  "target_count": 15,
+  "visual_check": {
+    "status": "checked",
+    "checked_ids": [
+      "ROLE-B-031",
+      "ROLE-B-032",
+      "ROLE-B-033",
+      "ROLE-B-034",
+      "ROLE-B-035",
+      "ROLE-B-036",
+      "ROLE-B-037",
+      "ROLE-B-038",
+      "ROLE-B-039",
+      "ROLE-B-040",
+      "ROLE-B-041",
+      "ROLE-B-042",
+      "ROLE-B-043",
+      "ROLE-B-044",
+      "ROLE-B-045"
+    ],
+    "note": "Chromeで390px幅の全15件を描画。SVG文字・横溢れ・CSS・JS例外を確認。全件PNG保存。"
+  },
+  "updated_at": "2026-10-05T14:52:50.650922+00:00"
+}

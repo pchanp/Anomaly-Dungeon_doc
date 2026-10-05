@@ -1,0 +1,182 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-031",
+  "role": "A",
+  "title": "迎えの一声",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "NPC",
+  "source_evidence": [
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "Effectの種別",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "Effectは結果の変化で分類し、対象・保存境界・終了条件を分ける。"
+    },
+    {
+      "path": "docs/world/information-design.md",
+      "section": "中心原則",
+      "source_status": "Status: Draft（草案）",
+      "claim": "ルールは明確、意味は曖昧。NPCは目的を持って行動し、世界の真相を解説しない。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "マップ設計原則",
+      "source_status": "Status: Mixed（案ごとに下記）",
+      "claim": "マップ文脈を基盤システムに接続する。新しい地形や正式配置は本案で確定しない。"
+    }
+  ],
+  "design_hypothesis": "帰還方向を一度だけ案内する救護係。負傷している探索者を優先し、案内後は巡回へ戻る。Portalの開閉条件は変えない。",
+  "experience": {
+    "goal": "体力を削った後にだけ得られる帰還方向という、状態に依存する情報を読む体験",
+    "player_choice": "負傷したまま案内を受けるか、回復して自力で道を探すか。",
+    "sacrifice_or_risk": "案内は一度だけ。現在Portalを利用できるかは別に確かめる。"
+  },
+  "placement_assumption": "既存の分岐ポイント近くの配置pointを想定。正式配置と地形は確定しない",
+  "components": [
+    {
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "待機・条件付き会話・仕事終了の状態を持つ通常NPC"
+    },
+    {
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "接触の判定と方向の個人提示の経路"
+    },
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "結果のInformationChangeを分類する。"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "InformationChange",
+      "trigger": "体力が閾値以下のプレイヤーがNPCへ接触したとき",
+      "condition": "同一Run内で未教示かつNPCが仕事中。体力閾値は仮値：最大体力の半分",
+      "result": "現在位置から帰還点への方向だけを接触したプレイヤーへ個人提示する",
+      "target": "接触したプレイヤー",
+      "scope": "個人提示。提示内容は共有しない",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": [
+        "提示の完了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "即時Effectの適用解決で終了する既定規則。",
+      "stacking": {
+        "exception": false,
+        "rule": "即時イベントごとに適用。同一Run内の教示は一度だけ",
+        "conflict_resolution": "別Effectとの競合は、解決規則を定めるまで保留して記録する。"
+      },
+      "server_validation": "Serverが体力閾値・未教示・NPCの仕事中状態・同一Run内接触を確認する。不成立時はNPCは無言で提示は起こらない 通常プレイヤーのNPC接触のみ受理し、Player AnomalyのNPC Interactionは禁止。NPC案の場合に適用。",
+      "client_presentation": "方向のみを個人に提示する。距離・単位・残り時間は出さない。「教えた」事実だけがServerのRun事実として残る",
+      "feedback": {
+        "success": "現在位置から帰還点への方向の個人提示",
+        "failure": "NPCの無言。会話欄に何も出ない",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "NPCが方向を教えたとき",
+      "condition": "教示が成立した場合のみ",
+      "result": "NPCは案内の仕事を終え、以後の接触には応じない",
+      "target": "案内するNPC",
+      "scope": "ServerのRun事実",
+      "lifetime": "同一Run中",
+      "resolution": "instant",
+      "end_conditions": [
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "Run終了まで状態が続き、Run終了で解除する既定規則。",
+      "stacking": {
+        "exception": false,
+        "rule": "仕事終了は一度きり。再適用は起こらない",
+        "conflict_resolution": "別Effectとの競合は、解決規則を定めるまで保留して記録する。"
+      },
+      "server_validation": "Serverが教示の成立を確認してから仕事終了を記録する。攻撃による仕事停止は別経路として記録する 通常プレイヤーのNPC接触のみ受理し、Player AnomalyのNPC Interactionは禁止。NPC案の場合に適用。",
+      "client_presentation": "NPCがその場を離れる、または無言になる。「仕事を終えた」ことが共有事実として残る",
+      "feedback": {
+        "success": "NPCがその場を離れる、または無言になる",
+        "failure": "何も起こらない",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    }
+  ],
+  "provides_traits": [],
+  "connection_tags": [
+    "NPCState",
+    "Observation"
+  ],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": [
+    "体力閾値は仮値（最大体力の半分）で、実装値は未定",
+    "方向提示の表現形式（画面表示か音声か）は未定",
+    "NPCがマップごとに別個体か同一個体かは未定",
+    "通常モブの配置・上限・索敵は候補上の仮説。既存実装と見なさない。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "助けを得る条件が「自分が弱っていること」である異化。異化しない理由はない",
+    "in_world_rationale": "帰還を助ける仕事を持つNPCが、余裕のある者ではなく困っている者にだけ応じる設定は、既存世界観の範囲で成立し得る",
+    "meaning_left_ambiguous": "NPCが誰のために働くか、その仕事の報酬が存在するかは確定しない",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "本案固有の対象判定・状態遷移・提示を追加する必要がある。実装許可ではない。",
+  "new_logic": [
+    "体力閾値との接触条件判定",
+    "未教示事実のRun保持"
+  ],
+  "prototype_cost": {
+    "band": "小",
+    "rationale": "NPCの待機・条件判定・方向提示のみ。地形・部屋の追加は不要",
+    "implementation_steps": [
+      "NPCの待機状態",
+      "体力閾値のServer確認",
+      "方向の個人提示",
+      "教示事実のRun保持"
+    ],
+    "assumed_existing_parts": [
+      "NPCState",
+      "Observation"
+    ]
+  },
+  "role_details": {
+    "npc_purpose": "帰還点へ運ぶ救護用品の配送中。負傷者にだけ足を止めて案内する。",
+    "player_anomaly_handling": "判断019に従いPlayer AnomalyとはInteractionしない。攻撃を受けると教えずに仕事を止めるが、NPCの正体やPlayer Anomalyとの関係は問いかけない",
+    "mob_contract": {
+      "applicable": false,
+      "spawn_condition": "対象外理由：通常NPC案のため、モブの湧き枠を持たない",
+      "population_cap": "対象外理由：通常NPC案のため、モブの上限管理の対象外",
+      "non_combat_response": "対象外理由：通常NPC案のため、モブの索敵・戦闘挙動は持たない。攻撃を受けると仕事を止めるだけ",
+      "exit_condition": "対象外理由：通常NPC案のため、モブの退場条件は持たない。Run終了まで同じ場所に残る",
+      "entity_distinction": "対象外理由：通常NPCであり、Anomaly EntityでもPlayer Anomalyでもない"
+    }
+  },
+  "html_file": "ROLE-A-031.html"
+}

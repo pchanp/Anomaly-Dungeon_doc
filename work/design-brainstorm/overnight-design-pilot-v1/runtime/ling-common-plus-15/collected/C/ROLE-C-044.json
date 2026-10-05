@@ -1,0 +1,190 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-044",
+  "role": "C",
+  "title": "反響測り",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "系統・ランク・レベル",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "通常スキルは4系統、4装備枠、レベル1〜3。系統別の固定枠ではない。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "Effectの種別",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "Effectは結果の変化で分類し、対象・保存境界・終了条件を分ける。"
+    },
+    {
+      "path": "docs/systems/anomaly-interaction.md",
+      "section": "Sound Interaction",
+      "source_status": "ステータス: Draft",
+      "claim": "音源の位置・種別・方向・到達範囲など、提供できる文脈を入力に使う。"
+    }
+  ],
+  "design_hypothesis": "短く手を叩き、最初に返る反響の方向と間を聞く。角の向こうへ出ずに遮蔽物との距離を探るが、出した音は対応モブにも届く。",
+  "experience": {
+    "goal": "自分で音を出して見えない空間の手掛かりを作る。",
+    "player_choice": "音を出して調べるか、静かに角を曲がるか。",
+    "sacrifice_or_risk": "敵にも音源を知らせる。吸音材や複雑な反射で読み違える。"
+  },
+  "placement_assumption": "対応する既存の物体・遮蔽物・接地面がある位置だけで試す。新地形や正式配置は定めない。",
+  "components": [
+    {
+      "component": "SoundInteraction",
+      "availability": "catalog",
+      "usage": "音源を受け取る入力経路の分類"
+    },
+    {
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "結果のWorldChangeを分類する。"
+    },
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "結果のInformationChangeを分類する。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "WorldChange",
+      "trigger": "手拍子または対応環境への通常攻撃後のスキル入力",
+      "condition": "近くに反響判定を許可した面がある。",
+      "result": "共有の局所音源を一度発生させる。対応モブの音反応は通常どおり。",
+      "target": "局所音源1件",
+      "scope": "Run全体",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "発音終了",
+        "マップ離脱",
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "いずれか成立で終了。",
+      "stacking": {
+        "exception": false,
+        "rule": "即時効果はイベントごと。持続効果は同一対象に非加算1件。",
+        "conflict_resolution": "同じ値への競合適用は保留。"
+      },
+      "server_validation": "Serverが対象・距離・衝突・発動状態を検証する。 Character距離・対象有効性をServerで検査。Camera EvidenceはClient評価を検証して受理する。",
+      "client_presentation": "成立した動作と終了を本人へ提示する。",
+      "feedback": {
+        "success": "動作と作用対象が見える。",
+        "failure": "不成立なら動作を適用せず短い反応を返す。",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "反響評価が完了",
+      "condition": "近くに反響判定を許可した面がある。",
+      "result": "最初の反響の方向と遅れを粗く本人へ提示する。経路や敵を自動識別しない。",
+      "target": "本人",
+      "scope": "個人",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "反響提示終了",
+        "マップ離脱",
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "いずれか成立で終了。",
+      "stacking": {
+        "exception": false,
+        "rule": "即時効果はイベントごと。持続効果は同一対象に非加算1件。",
+        "conflict_resolution": "同じ値への競合適用は保留。"
+      },
+      "server_validation": "Serverが対象・距離・衝突・発動状態を検証する。 Character距離・対象有効性をServerで検査。Camera EvidenceはClient評価を検証して受理する。",
+      "client_presentation": "成立した動作と終了を本人へ提示する。",
+      "feedback": {
+        "success": "動作と作用対象が見える。",
+        "failure": "不成立なら動作を適用せず短い反応を返す。",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    }
+  ],
+  "provides_traits": [],
+  "connection_tags": [
+    "Sound",
+    "Observation",
+    "Environment"
+  ],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": [
+    "吸音・反射対象のタグと近似評価は未定。",
+    "反響は空間の手掛かりであり、安全・敵数・隠し部屋の正解を表示しない。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "自分の音が見えない空間の距離へ変わる。",
+    "in_world_rationale": "音源と環境の反応を技能として読む仮説。波形の常時解析や万能な透視は要求しない。",
+    "meaning_left_ambiguous": "技能の由来は未確定。対象へのゲーム上の作用だけ明確にする。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "入力窓・対応対象・作用・終了の新しい判定が必要。",
+  "new_logic": [
+    "対応面を限定した反響の評価と個人提示"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "反射面を限定して反響を近似し、共有音と個人提示を分ける。",
+    "implementation_steps": [
+      "対応対象1個で作用を試す",
+      "発動・中断・マップ離脱を確認",
+      "通常攻撃と4枠装備の競合を確認"
+    ],
+    "assumed_existing_parts": [
+      "既存の移動・通常攻撃入力（接続範囲は未確認）"
+    ]
+  },
+  "role_details": {
+    "skill_family": "探索",
+    "rank": 2,
+    "rank_rationale": "仮ランク。既存解放条件を維持。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "最初の反響の方向と遅れを粗く提示する。"
+      },
+      {
+        "level": 2,
+        "proposal": "左向きか右向きへ発音を絞る案。"
+      },
+      {
+        "level": 3,
+        "proposal": "歩いたまま発音できるが、自分の足音で聞き分けにくくなる案。"
+      }
+    ],
+    "equipped_slot_policy": "通常スキルとして4枠のうち1枠を使う。系統固定枠はない。",
+    "normal_attack_link": "通常攻撃で環境を叩いた直後にも発動できる。発音中の攻撃はできない。",
+    "avoids": "角を曲がる前の接触や見通しのない前進。",
+    "intervenes_in": "本人が発する局所音と、その反射の個人提示。",
+    "sacrifices": "敵にも音源を知らせる。吸音材や複雑な反射で読み違える。",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-044.html"
+}

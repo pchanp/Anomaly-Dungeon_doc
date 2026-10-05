@@ -1,0 +1,977 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "run_id": {
+      "const": "overnight-design-pilot-v1"
+    },
+    "candidate_id": {
+      "type": "string",
+      "pattern": "^ROLE-[ABC]-(03[1-9]|04[0-5])$"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "A",
+        "B",
+        "C"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "design_status": {
+      "type": "string",
+      "enum": [
+        "Idea",
+        "Draft"
+      ]
+    },
+    "review_status": {
+      "const": "unreviewed"
+    },
+    "primary_map": {
+      "type": "string",
+      "enum": [
+        "8/31",
+        "廃TSUTAYA",
+        "SEKIGAHARA",
+        "研究所",
+        "全マップ共通"
+      ]
+    },
+    "classification": {
+      "type": "string",
+      "enum": [
+        "マップ固有",
+        "全マップ共通"
+      ]
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "GimmickEvent",
+        "NPC",
+        "MobEnemy",
+        "Item",
+        "Skill"
+      ]
+    },
+    "source_evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source"
+      },
+      "minItems": 1
+    },
+    "design_hypothesis": {
+      "type": "string",
+      "minLength": 1
+    },
+    "experience": {
+      "$ref": "#/$defs/experience"
+    },
+    "placement_assumption": {
+      "type": "string",
+      "minLength": 1
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/component"
+      },
+      "minItems": 1
+    },
+    "effects": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/effect"
+      },
+      "minItems": 1
+    },
+    "provides_traits": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0
+    },
+    "connection_tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "refs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/reference"
+      },
+      "minItems": 0
+    },
+    "unresolved_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/unresolved"
+      },
+      "minItems": 0
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/conflict"
+      },
+      "minItems": 0
+    },
+    "uncertainties": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0
+    },
+    "worldview": {
+      "$ref": "#/$defs/worldview"
+    },
+    "requires_code": {
+      "type": [
+        "boolean",
+        "string"
+      ],
+      "enum": [
+        true,
+        false,
+        "unknown"
+      ]
+    },
+    "requires_code_reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "new_logic": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0
+    },
+    "prototype_cost": {
+      "$ref": "#/$defs/cost"
+    },
+    "role_details": {
+      "type": "object"
+    },
+    "html_file": {
+      "type": "string",
+      "pattern": "^ROLE-[ABC]-(03[1-9]|04[0-5])\\.html$"
+    }
+  },
+  "required": [
+    "schema_version",
+    "run_id",
+    "candidate_id",
+    "role",
+    "title",
+    "design_status",
+    "review_status",
+    "primary_map",
+    "classification",
+    "category",
+    "source_evidence",
+    "design_hypothesis",
+    "experience",
+    "placement_assumption",
+    "components",
+    "effects",
+    "provides_traits",
+    "connection_tags",
+    "refs",
+    "unresolved_refs",
+    "conflicts",
+    "uncertainties",
+    "worldview",
+    "requires_code",
+    "requires_code_reason",
+    "new_logic",
+    "prototype_cost",
+    "role_details",
+    "html_file"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Anomaly Dungeon 設計候補 v0.1",
+  "description": "設計メタデータの記録形式。ゲームへ読み込む実行データではない。",
+  "$defs": {
+    "source": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "section": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claim": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "path",
+        "section",
+        "source_status",
+        "claim"
+      ],
+      "additionalProperties": false
+    },
+    "component": {
+      "type": "object",
+      "properties": {
+        "component": {
+          "type": "string",
+          "minLength": 1
+        },
+        "availability": {
+          "type": "string",
+          "enum": [
+            "catalog",
+            "proposed"
+          ]
+        },
+        "usage": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "component",
+        "availability",
+        "usage"
+      ],
+      "additionalProperties": false
+    },
+    "stacking": {
+      "type": "object",
+      "properties": {
+        "exception": {
+          "type": "boolean"
+        },
+        "rule": {
+          "type": "string",
+          "minLength": 1
+        },
+        "conflict_resolution": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "exception",
+        "rule",
+        "conflict_resolution"
+      ],
+      "additionalProperties": false
+    },
+    "feedback": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "string",
+          "minLength": 1
+        },
+        "failure": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ambiguous": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "success",
+        "failure",
+        "ambiguous"
+      ],
+      "additionalProperties": false
+    },
+    "effect": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "Damage",
+            "Heal",
+            "StateChange",
+            "Move",
+            "InformationChange",
+            "WorldChange",
+            "RuleOverride"
+          ]
+        },
+        "trigger": {
+          "type": "string",
+          "minLength": 1
+        },
+        "condition": {
+          "type": "string",
+          "minLength": 1
+        },
+        "result": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lifetime": {
+          "type": "string",
+          "enum": [
+            "永続",
+            "同一Run中",
+            "同一マップ中",
+            "一時"
+          ]
+        },
+        "resolution": {
+          "type": "string",
+          "enum": [
+            "instant",
+            "sustained"
+          ]
+        },
+        "end_conditions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "end_mode": {
+          "type": "string",
+          "enum": [
+            "any",
+            "explicit_exception"
+          ]
+        },
+        "end_rule_reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stacking": {
+          "$ref": "#/$defs/stacking"
+        },
+        "server_validation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "client_presentation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "feedback": {
+          "$ref": "#/$defs/feedback"
+        }
+      },
+      "required": [
+        "kind",
+        "trigger",
+        "condition",
+        "result",
+        "target",
+        "scope",
+        "lifetime",
+        "resolution",
+        "end_conditions",
+        "end_mode",
+        "end_rule_reason",
+        "stacking",
+        "server_validation",
+        "client_presentation",
+        "feedback"
+      ],
+      "additionalProperties": false
+    },
+    "reference": {
+      "type": "object",
+      "properties": {
+        "target_id": {
+          "type": "string",
+          "pattern": "^ROLE-[ABC]-(03[1-9]|04[0-5])$"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "data_dependency",
+            "interaction_loop",
+            "optional_connection"
+          ]
+        },
+        "required_traits": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "fallback": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resolution": {
+          "type": "string",
+          "enum": [
+            "reserved_unresolved",
+            "draft_available",
+            "incompatible"
+          ]
+        }
+      },
+      "required": [
+        "target_id",
+        "kind",
+        "required_traits",
+        "fallback",
+        "resolution"
+      ],
+      "additionalProperties": false
+    },
+    "unresolved": {
+      "type": "object",
+      "properties": {
+        "target_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^ROLE-[ABC]-(03[1-9]|04[0-5])$"
+        },
+        "required_traits": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adoption_blocker": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "target_id",
+        "required_traits",
+        "reason",
+        "adoption_blocker"
+      ],
+      "additionalProperties": false
+    },
+    "conflict": {
+      "type": "object",
+      "properties": {
+        "source_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "existing_rule": {
+          "type": "string",
+          "minLength": 1
+        },
+        "proposal_difference": {
+          "type": "string",
+          "minLength": 1
+        },
+        "correction": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reason_correctable": {
+          "type": "string",
+          "minLength": 1
+        },
+        "decision_needed": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "source_path",
+        "existing_rule",
+        "proposal_difference",
+        "correction",
+        "reason_correctable",
+        "decision_needed"
+      ],
+      "additionalProperties": false
+    },
+    "experience": {
+      "type": "object",
+      "properties": {
+        "goal": {
+          "type": "string",
+          "minLength": 1
+        },
+        "player_choice": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sacrifice_or_risk": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "goal",
+        "player_choice",
+        "sacrifice_or_risk"
+      ],
+      "additionalProperties": false
+    },
+    "worldview": {
+      "type": "object",
+      "properties": {
+        "defamiliarized_element": {
+          "type": "string",
+          "minLength": 1
+        },
+        "in_world_rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "meaning_left_ambiguous": {
+          "type": "string",
+          "minLength": 1
+        },
+        "invariants_checked": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "INV-01",
+              "INV-02",
+              "INV-03",
+              "INV-04",
+              "INV-05",
+              "INV-06",
+              "INV-07",
+              "INV-08",
+              "INV-09",
+              "INV-10",
+              "INV-11"
+            ]
+          },
+          "minItems": 11,
+          "maxItems": 11,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "defamiliarized_element",
+        "in_world_rationale",
+        "meaning_left_ambiguous",
+        "invariants_checked"
+      ],
+      "additionalProperties": false
+    },
+    "cost": {
+      "type": "object",
+      "properties": {
+        "band": {
+          "type": "string",
+          "enum": [
+            "小",
+            "中",
+            "大",
+            "不明"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "implementation_steps": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "assumed_existing_parts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "band",
+        "rationale",
+        "implementation_steps",
+        "assumed_existing_parts"
+      ],
+      "additionalProperties": false
+    },
+    "mob": {
+      "type": "object",
+      "properties": {
+        "applicable": {
+          "type": "boolean"
+        },
+        "spawn_condition": {
+          "type": "string",
+          "minLength": 1
+        },
+        "population_cap": {
+          "type": "string",
+          "minLength": 1
+        },
+        "non_combat_response": {
+          "type": "string",
+          "minLength": 1
+        },
+        "exit_condition": {
+          "type": "string",
+          "minLength": 1
+        },
+        "entity_distinction": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "applicable",
+        "spawn_condition",
+        "population_cap",
+        "non_combat_response",
+        "exit_condition",
+        "entity_distinction"
+      ],
+      "additionalProperties": false
+    },
+    "a": {
+      "type": "object",
+      "properties": {
+        "npc_purpose": {
+          "type": "string",
+          "minLength": 1
+        },
+        "player_anomaly_handling": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mob_contract": {
+          "$ref": "#/$defs/mob"
+        }
+      },
+      "required": [
+        "npc_purpose",
+        "player_anomaly_handling",
+        "mob_contract"
+      ],
+      "additionalProperties": false
+    },
+    "route": {
+      "type": "object",
+      "properties": {
+        "route": {
+          "type": "string",
+          "enum": [
+            "Acquire",
+            "Hold",
+            "Use",
+            "Present",
+            "Place",
+            "Lose",
+            "SecureSlot",
+            "Sell",
+            "Quest",
+            "AnomalyInteraction"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "Proposed",
+            "Undecided",
+            "NotApplicable"
+          ]
+        },
+        "detail": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "route",
+        "status",
+        "detail"
+      ],
+      "additionalProperties": false
+    },
+    "b": {
+      "type": "object",
+      "properties": {
+        "item_kind": {
+          "type": "string",
+          "enum": [
+            "通常探索品",
+            "汎用スキルレアルート品",
+            "スロットレアルート品",
+            "アノマリー固有交換品",
+            "未確定"
+          ]
+        },
+        "routes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/route"
+          },
+          "minItems": 10,
+          "maxItems": 10
+        },
+        "ownership_state": {
+          "type": "string",
+          "minLength": 1
+        },
+        "server_run_state": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "item_kind",
+        "routes",
+        "ownership_state",
+        "server_run_state"
+      ],
+      "additionalProperties": false
+    },
+    "level": {
+      "type": "object",
+      "properties": {
+        "level": {
+          "type": "integer",
+          "enum": [
+            1,
+            2,
+            3
+          ]
+        },
+        "proposal": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "level",
+        "proposal"
+      ],
+      "additionalProperties": false
+    },
+    "technique": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "confirmation": {
+          "type": "string",
+          "enum": [
+            "Confirmed",
+            "Unconfirmed"
+          ]
+        },
+        "source_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "real_inspiration": {
+          "type": "string",
+          "minLength": 1
+        },
+        "game_extension": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "name",
+        "confirmation",
+        "source_url",
+        "evidence",
+        "real_inspiration",
+        "game_extension"
+      ],
+      "additionalProperties": false
+    },
+    "c": {
+      "type": "object",
+      "properties": {
+        "skill_family": {
+          "type": "string",
+          "enum": [
+            "攻撃",
+            "探索",
+            "補助",
+            "アクション"
+          ]
+        },
+        "rank": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "rank_rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "levels": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/level"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "equipped_slot_policy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "normal_attack_link": {
+          "type": "string",
+          "minLength": 1
+        },
+        "avoids": {
+          "type": "string",
+          "minLength": 1
+        },
+        "intervenes_in": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sacrifices": {
+          "type": "string",
+          "minLength": 1
+        },
+        "real_techniques": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/technique"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "skill_family",
+        "rank",
+        "rank_rationale",
+        "levels",
+        "equipped_slot_policy",
+        "normal_attack_link",
+        "avoids",
+        "intervenes_in",
+        "sacrifices",
+        "real_techniques"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "role": {
+            "const": "A"
+          }
+        },
+        "required": [
+          "role"
+        ]
+      },
+      "then": {
+        "properties": {
+          "role_details": {
+            "$ref": "#/$defs/a"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "role": {
+            "const": "B"
+          }
+        },
+        "required": [
+          "role"
+        ]
+      },
+      "then": {
+        "properties": {
+          "role_details": {
+            "$ref": "#/$defs/b"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "role": {
+            "const": "C"
+          }
+        },
+        "required": [
+          "role"
+        ]
+      },
+      "then": {
+        "properties": {
+          "role_details": {
+            "$ref": "#/$defs/c"
+          }
+        }
+      }
+    }
+  ]
+}

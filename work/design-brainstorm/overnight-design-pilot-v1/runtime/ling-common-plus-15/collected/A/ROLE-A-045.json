@@ -1,0 +1,182 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-045",
+  "role": "A",
+  "title": "終点の声",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "NPC",
+  "source_evidence": [
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "Effectの種別",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "Effectは結果の変化で分類し、対象・保存境界・終了条件を分ける。"
+    },
+    {
+      "path": "docs/world/information-design.md",
+      "section": "中心原則",
+      "source_status": "Status: Draft（草案）",
+      "claim": "ルールは明確、意味は曖昧。NPCは目的を持って行動し、世界の真相を解説しない。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "マップ設計原則",
+      "source_status": "Status: Mixed（案ごとに下記）",
+      "claim": "マップ文脈を基盤システムに接続する。新しい地形や正式配置は本案で確定しない。"
+    }
+  ],
+  "design_hypothesis": "Runの最後の区画で、1人だけ通常NPCがプレイヤーが直前に通った区画の方向を指差す状態を仮定する。指差す先は、プレイヤーが最後に立った位置によって変わる。攻撃されると指差しをやめ、その場に立つだけになる。NPCの目的は自分の足跡の確認だけである。区画の範囲と指差しの表現は未定。地形・部屋・正式配置は追加しない。",
+  "experience": {
+    "goal": "自分が最後に通った区画をNPCに指差してもらう、足跡の確認",
+    "player_choice": "最後に通った区画の向きを確かめるか、攻撃して指差しを止めるかを選ぶ",
+    "sacrifice_or_risk": "指差しは最後に立った位置に依存するため、戻るたびに向きが変わる。攻撃すると情報は得られない"
+  },
+  "placement_assumption": "既存の最終区画の配置pointを想定。正式配置は確定しない",
+  "components": [
+    {
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "指差しの状態と停止の状態"
+    },
+    {
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "最後に立った位置の確認"
+    },
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "結果のInformationChangeを分類する。"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "InformationChange",
+      "trigger": "プレイヤーがNPCへ接触したとき",
+      "condition": "NPCが指差し中で、プレイヤーが最後に立った位置をServerが確認できる場合のみ",
+      "result": "プレイヤーが直前に通った区画の方向を個人提示する",
+      "target": "接触したプレイヤー",
+      "scope": "個人提示",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": [
+        "提示の完了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "即時Effectの適用解決で終了する既定規則。",
+      "stacking": {
+        "exception": false,
+        "rule": "即時イベントごとに適用。接触ごとに最後の位置で向きが変わる",
+        "conflict_resolution": "別Effectとの競合は、解決規則を定めるまで保留して記録する。"
+      },
+      "server_validation": "ServerがNPCの指差し中状態と最後に立った位置を確認する。位置が確認できなければ提示は起こらない 通常プレイヤーのNPC接触のみ受理し、Player AnomalyのNPC Interactionは禁止。NPC案の場合に適用。",
+      "client_presentation": "区画の方向だけを個人に提示する。最後に立った位置の座標は出さない",
+      "feedback": {
+        "success": "直前に通った区画の方向の個人提示",
+        "failure": "NPCは無言",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "NPCが攻撃を受けたとき",
+      "condition": "攻撃が成立した場合のみ",
+      "result": "NPCは指差しをやめ、その場に立つだけになる",
+      "target": "指差すNPC",
+      "scope": "ServerのRun事実",
+      "lifetime": "同一Run中",
+      "resolution": "instant",
+      "end_conditions": [
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "Run終了まで状態が続き、Run終了で解除する既定規則。",
+      "stacking": {
+        "exception": false,
+        "rule": "指差しの停止は一度きり。再適用は起こらない",
+        "conflict_resolution": "別Effectとの競合は、解決規則を定めるまで保留して記録する。"
+      },
+      "server_validation": "Serverが攻撃の成立を確認する。攻撃が不成立なら指差しは続く 通常プレイヤーのNPC接触のみ受理し、Player AnomalyのNPC Interactionは禁止。NPC案の場合に適用。",
+      "client_presentation": "NPCが立ち止まる様子を共有して見せる。指差しの停止はRun事実として残る",
+      "feedback": {
+        "success": "NPCが指差しをやめる",
+        "failure": "何も起こらない",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    }
+  ],
+  "provides_traits": [],
+  "connection_tags": [
+    "NPCState",
+    "Observation"
+  ],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": [
+    "最終区画の範囲は未定",
+    "指差しの表現（向きの表示方法）は未定",
+    "最後に立った位置の保持期間は未定",
+    "通常モブの配置・上限・索敵は候補上の仮説。既存実装と見なさない。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "NPCが「自分の足跡」を指差す異化。異化しない理由はない",
+    "in_world_rationale": "最後に通った道を指す番人は、足跡を守るだけの存在として既存世界観の範囲で成立し得る",
+    "meaning_left_ambiguous": "NPCが足跡を指す理由と、その仕事の報酬は確定しない",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "本案固有の対象判定・状態遷移・提示を追加する必要がある。実装許可ではない。",
+  "new_logic": [
+    "最後に立った位置の保持",
+    "区画の方向の個人提示"
+  ],
+  "prototype_cost": {
+    "band": "小",
+    "rationale": "NPCの指差しと位置確認のみ。地形・部屋の追加は不要",
+    "implementation_steps": [
+      "NPCの指差し状態",
+      "最後の位置の確認",
+      "方向の個人提示",
+      "攻撃での停止"
+    ],
+    "assumed_existing_parts": [
+      "NPCState",
+      "Observation"
+    ]
+  },
+  "role_details": {
+    "npc_purpose": "荷物の通行記録を取る係。最後に見た探索者の来た方向を指すが、Portalの位置や安全性は保証しない。",
+    "player_anomaly_handling": "判断019に従いPlayer AnomalyとはInteractionしない。攻撃を受けると指差しをやめてその場に立つだけ",
+    "mob_contract": {
+      "applicable": false,
+      "spawn_condition": "対象外理由：通常NPC案のため、モブの湧き枠を持たない",
+      "population_cap": "対象外理由：通常NPC案のため、モブの上限管理の対象外",
+      "non_combat_response": "対象外理由：通常NPC案のため、モブの索敵・戦闘挙動は持たない。攻撃を受けると指差しを止めるだけ",
+      "exit_condition": "対象外理由：通常NPC案のため、モブの退場条件は持たない。Run終了まで同じ場所に残る",
+      "entity_distinction": "対象外理由：通常NPCであり、Anomaly EntityでもPlayer Anomalyでもない"
+    }
+  },
+  "html_file": "ROLE-A-045.html"
+}
