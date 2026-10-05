@@ -1,0 +1,17 @@
+{
+  "note": "Read-only audit using in-memory correction; pack unchanged",
+  "errors": [
+    "manifest and candidate file set differ",
+    "ROLE-C-016: $/effects/0/lifetime: enum mismatch",
+    "ROLE-C-017: $/effects/0/lifetime: enum mismatch",
+    "ROLE-C-018: $/effects/0/lifetime: enum mismatch",
+    "ROLE-C-018: $/effects/1/lifetime: enum mismatch",
+    "ROLE-C-019: $/effects/0/lifetime: enum mismatch",
+    "ROLE-C-020: $/effects/0/lifetime: enum mismatch",
+    "ROLE-C-020: $/effects/1/lifetime: enum mismatch",
+    "ROLE-C-021: $/effects/0/lifetime: enum mismatch",
+    "ROLE-C-021: $/effects/1/lifetime: enum mismatch",
+    "ROLE-C-022: $/effects/0/lifetime: enum mismatch"
+  ],
+  "previous_files_changed": []
+}

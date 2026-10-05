@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-A-024 開いた刹那だけ — 時間が読めない一方通行</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+<p class="sub">overnight-design-pilot-v1 ／ ROLE-A-024 ／ 全マップ共通 ／ GimmickEvent</p>
+<h1>開いた刹那だけ — 時間が読めない一方通行</h1>
+<p>行き止まりの扉が一度だけ開き、閉じると戻れない。</p>
+<div class="badges"><span class="badge hyp">Idea</span><span class="badge">unreviewed</span><span class="badge unknown">開く長さは未定・残秒は出さない</span></div>
+<nav class="nav"><a href="index.html">← 一覧</a><a href="ROLE-A-024.json">同IDのJSON</a></nav>
+</header>
+
+<section id="hypothesis">
+<h2>何の案か</h2>
+<p>開いているかどうかしか分からない、時間のない一方通行。</p>
+<ul>
+<li>行き止まりの扉がRun内の一定の時間だけ開く。開閉は1回だけ。</li>
+<li>開いている間にだけ通り抜けられ、閉じるとRun終了まで開き直さない。</li>
+<li>残りの時間は表示されない。開いているかどうかは扉そのものを読む。</li>
+</ul>
+<p><strong>選択と代償:</strong> 開いている今すぐ抜ける／閉じるのを外から待つ／閉じた後に引き返す。閉じた扉は戻って開かない。開いた時刻を後から確認する手段はない。</p>
+<p class="sub">接続タグ: WorldChange / StateChange / Environment / Timing ／ requires_code: true ／ conflicts 0件・未解決1件（JSONに記載）</p>
+</section>
+
+<section id="diagram">
+<h2>仕組みの図</h2>
+<div class="board">
+<svg viewBox="0 0 1000 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="行き止まりの扉がRun内に一度だけ開き、閉じた後は開き直さず、残りの時間が表示されないことを示す図">
+<rect width="1000" height="360" fill="#0a1118"/>
+<text class="label" x="24" y="28">扉の2状態</text>
+<text class="label" x="500" y="28">開いている時間をどう読むか</text>
+
+<rect x="24" y="52" width="220" height="76" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="label" x="38" y="82">開いている</text>
+<text class="small" x="38" y="108">通り抜けられる</text>
+
+<rect x="24" y="146" width="220" height="76" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="38" y="176">閉じた</text>
+<text class="small" x="38" y="202">Run終了まで開かない</text>
+<path d="M134 128v14" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M128 140l6 8 6-8z" fill="#8ba2b3"/>
+
+<rect x="300" y="52" width="240" height="76" rx="8" fill="#142330" stroke="#d3b653"/>
+<text class="label" x="314" y="82">残秒を出さない</text>
+<text class="small" x="314" y="108">開閉だけを表示する</text>
+<path d="M244 90h52" stroke="#d3b653" stroke-width="2" fill="none"/>
+<path d="M288 84l9 6-9 6" stroke="#d3b653" stroke-width="2" fill="none"/>
+
+<rect x="300" y="146" width="240" height="76" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="314" y="176">扉そのものを読む</text>
+<text class="small" x="314" y="202">時間ではなく世界で見る</text>
+<path d="M244 184h52" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M288 178l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+
+<rect x="620" y="52" width="356" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="634" y="82">（a）開いている今すぐ抜ける</text>
+<text class="small" x="634" y="106">早い。戻れない</text>
+<rect x="620" y="142" width="356" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="634" y="172">（b）外から待つ</text>
+<text class="small" x="634" y="198">時間を賭ける。いつ開くかは不明</text>
+<rect x="620" y="232" width="356" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="634" y="262">（c）閉じた後に引く</text>
+<text class="small" x="634" y="288">一度きりの損失を受け入れる</text>
+<path d="M540 88h74" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M606 82l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M540 178h74" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M606 172l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M540 268h74" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M606 262l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+
+<text class="small" x="24" y="290">別系統：Return Portal、Transition Portal。開閉扉は別の機能として扱い、混同しない。</text>
+<text class="small" x="24" y="338">この図で分かること：開閉は1回。残りの時間が出ないため、開いているかは扉を読む以外で分からない。</text>
+</svg>
+</div>
+<p>図注：表示で足りる情報を出さないことで、扉を読む行動そのものを必要にする。待つことも賭けになる。</p>
+</section>
+
+<footer>overnight-design-pilot-v1 ／ ROLE-A-024 ／ 実表示は未確認（担当セッションでブラウザを使用していない）。</footer>
+</main>
+</body>
+</html>

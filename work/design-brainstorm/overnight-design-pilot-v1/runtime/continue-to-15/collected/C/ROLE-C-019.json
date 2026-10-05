@@ -1,0 +1,114 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-019",
+  "role": "C",
+  "title": "継ぎ目の一撃",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "通常攻撃と連携",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "通常スキルによる移動・ギミック介入と連携を設計する。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "Effectの分類",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "EffectはMove、StateChange、WorldChange、Damage、Buff、Debuff、InformationChange、ResourceChange、CustomEffect に分かれる。"
+    }
+  ],
+  "design_hypothesis": "遮蔽物の継ぎ目だけを通して、通常攻撃が相手へ届く。継ぎ目がなければ当たらない。ダメージと硬直は通常どおり。遮蔽物は壊さない。",
+  "experience": {
+    "goal": "壁の向こうから、短い間合いの相手へ通常攻撃を通す。",
+    "player_choice": "継ぎ目を探して攻撃を通すか、回り込んで正面から立つか。",
+    "sacrifice_or_risk": "継ぎ目は毎回同じ場所にある。敵も次第にそこを使う。"
+  },
+  "placement_assumption": "既存マップで使用する文脈。配置・建物構造・地形・Questの結末を新設しない。",
+  "components": [
+    {
+      "component": "Effect.Damage",
+      "availability": "catalog",
+      "usage": "通常攻撃を継ぎ目越しに通す。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "Damage",
+      "trigger": "装備中に本人が通常攻撃を入力し、Serverが弾道上に遮蔽物の継ぎ目を検出したとき。",
+      "condition": "弾道上に継ぎ目があり、射程内であること。継ぎ目がなければ命中しない。",
+      "result": "通常攻撃を継ぎ目越しに当てはめる。ダメージと硬直は通常どおり。遮蔽物は壊さない。",
+      "target": "弾道上の相手のみ",
+      "scope": "個人。遮蔽物、NPCの思考、地形は変えない。",
+      "lifetime": "瞬間",
+      "resolution": "instant",
+      "end_conditions": [
+        "命中判定は即時に解決する",
+        "継ぎ目がなければ空振りになる",
+        "マップ離脱",
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "命中判定は即時解決であり、状態を保存しない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effectと同一対象は非加算1件。",
+        "conflict_resolution": "貫通や射程変更との適用順は採用前の確認事項。"
+      },
+      "server_validation": "継ぎ目の有無と射程をServerで検査する。",
+      "client_presentation": "継ぎ目を通る軌跡を本人だけに出す。",
+      "feedback": {
+        "success": "命中を本人に表示する。",
+        "failure": "継ぎ目がなければ空振り表示を出す。",
+        "ambiguous": "継ぎ目の意味は説明しない。"
+      }
+    }
+  ],
+  "provides_traits": [
+    "遮蔽物の継ぎ目へ通常攻撃を通せる",
+    "継ぎ目がなければ命中しない",
+    "遮蔽物は壊れない"
+  ],
+  "connection_tags": ["Skill", "Combat", "Environment"],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": ["継ぎ目の判定方法は未決定。", "通常スキルのみ。Player Anomalyの専用能力に一般化しない。"],
+  "worldview": {
+    "defamiliarized_element": "継ぎ目だけが、遮蔽物の裏を抜ける。",
+    "in_world_rationale": "既存の命中判定と遮蔽物の管理を通常と異なる条件で操作する候補。",
+    "meaning_left_ambiguous": "なぜ継ぎ目だけ通るのか。博士の意図とEntityの正体は確定しない。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "継ぎ目の検出と命中の貫通処理は実装記録がなく、新規ロジックが必要。",
+  "new_logic": ["遮蔽物の継ぎ目検出", "継ぎ目越しの命中判定"],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "命中判定と遮蔽物の管理へ介入する。",
+    "implementation_steps": ["継ぎ目越しに当たることを確認", "継ぎ目がなければ空振りになることを確認"],
+    "assumed_existing_parts": ["既存の命中判定", "遮蔽物の管理"]
+  },
+  "role_details": {
+    "skill_family": "アクション",
+    "rank": null,
+    "rank_rationale": "系統内の候補が揃った時点で比較する。",
+    "levels": [
+      {"level": 1, "proposal": "遮蔽物の継ぎ目へ通常攻撃を通す。"},
+      {"level": 2, "proposal": "継ぎ目を2カ所まで選べる。"},
+      {"level": 3, "proposal": "継ぎ目の位置を相手にも示さない。"}
+    ],
+    "equipped_slot_policy": "通常スキルの4装備枠のうち1枠。取得ランク条件は既存規則に従い、装備切替時点は未決定。",
+    "normal_attack_link": "通常攻撃の入力時に自動で判定される。別操作は不要。",
+    "avoids": "回り込むための露出を避ける。",
+    "intervenes_in": "自分の命中判定のみ。",
+    "sacrifices": "継ぎ目は毎回同じ場所にある。敵も次第にそこを使う。",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-019.html"
+}

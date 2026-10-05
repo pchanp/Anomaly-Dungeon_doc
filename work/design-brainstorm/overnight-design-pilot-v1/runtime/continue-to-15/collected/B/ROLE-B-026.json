@@ -1,0 +1,247 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-026",
+  "role": "B",
+  "title": "視界印（視界内だけは常に見える。代わりに居場所は渡る）",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/systems/observation-and-recognition.md",
+      "section": "Cameraを共有世界のServer事実として保存しない。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "見えたという個人の観察は共有事実ではない。常時表示も個人提示として書く。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| `InformationChange` | Detect・Recognition、可視性差、情報の信頼性 | Serverの共有事実とClientごとの提示・認識を分ける |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "可視性差はInformationChange。Server事実と個人提示を分ける。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| `StateChange` | Stun、構え、鎮静、追従先などの状態遷移 | Player Anomalyへの変化を汎用状態異常と同一視しない |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "被发现YDYしやすくなる個人状態もStateChangeとして書く。"
+    },
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "戦闘イベントには、敵NPCの出現、追跡、包囲、増援、防衛、巨大アノマリーとの遭遇、NPC同士の戦闘への介入などが含まれ得る。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "包囲は戦闘イベントの一部。相手の位置が見えることは距離の判断を変える。"
+    }
+  ],
+  "design_hypothesis": "見えない相手に対して、探索者は推測でしか動けない。本候補は『視界内の対象を6秒間だけ常に見せる』印を与える。ただし同じ6秒間、自分の所在も相手側の追跡材料になる。見せる時間を買う代わりに、見つかりやすい時間を同じ長さで買う。",
+  "experience": {
+    "goal": "見えない相手の手前へ、6秒だけ踏み込む。",
+    "player_choice": "印を使って詰めるか、引いたまま回するか。進む秒数と見つかる秒数を選ぶ。",
+    "sacrifice_or_risk": "使うと同じ秒数だけ、自分の居場所も相手に渡る。印は重ねられない。"
+  },
+  "placement_assumption": "新しい地形・部屋・敵は提案しない。既存の視界判定と追跡処理の中で使う。表示距離の値は候補側で確定しない。",
+  "components": [
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "視界内の対象を個人に常時表示する提示。"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "対象個人の所在が相手側の追跡更新の材料になる個人状態。"
+    },
+    {
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "観察のEvidenceと進行は共通契約に任せる。"
+    },
+    {
+      "component": "ItemLifecycle",
+      "availability": "catalog",
+      "usage": "正式な取得源とItemStackが未実装であることを前提とする。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "InformationChange",
+      "trigger": "対象個人が印を使う",
+      "condition": "実行中であること、印を個人所持にもつこと",
+      "result": "対象個人の個人画面に、視界内の対象のいる方角印が6秒間だけ常時出る。個数と距離は出さない。共有世界の状態は変えない",
+      "target": "対象個人の個人画面",
+      "scope": "個人。共有の戦況表示は書き換えない",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "6秒の経過で解除",
+        "Run終了または切断で解除。再接続時の復元は未決"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。解除手段は時間だけ。",
+      "stacking": {
+        "exception": false,
+        "rule": "同じ個人への再適用は1件として残り時間を更新する",
+        "conflict_resolution": "他の可視性提示が同時に成立する場合は解決規則が未定義のため保留する"
+      },
+      "server_validation": "Serverは提示の許可だけを返し、対象の個数や座標は返さない",
+      "client_presentation": "視界内の方角印が個人画面に出る",
+      "feedback": {
+        "success": "方角印が出る",
+        "failure": "印が出ない。注意表示のみ",
+        "ambiguous": "何が見えたかは説明しない。距離も数字で出さない"
+      }
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "同じ使用で和个人の表示が確定するとき",
+      "condition": "上の個人提示が成立していること",
+      "result": "対象個人の所在は6秒間だけ相手側の追跡更新の材料になる。相手側の内部仕様は変えず、渡るのは所在だけ。",
+      "target": "対象個人の所在",
+      "scope": "個人。相手の内部仕様は変更せず、材料になる情報だけを渡す",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "6秒の経過で通常へ戻る",
+        "Run終了または切断で即座に破棄する"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。解除条件は時間だけ。",
+      "stacking": {
+        "exception": false,
+        "rule": "同じ個人への再適用は1件として残り時間を更新する",
+        "conflict_resolution": "他のEffectが所在の公開を変える場合は解決規則が未定義のため保留する"
+      },
+      "server_validation": "Serverが対象個人の所在だけを追跡更新の入力として渡す",
+      "client_presentation": "相手は通常どおり動き、本人にはその旨を表示しない",
+      "feedback": {
+        "success": "相手の動きが早くなる",
+        "failure": "動きは変わらない。注意表示のみ",
+        "ambiguous": "相手が動いた原因は本人にも出さない"
+      }
+    }
+  ],
+  "provides_traits": [
+    "可視性差をInformationChangeとして書く例",
+    "情報を得るために自分の所在を渡す取引の例"
+  ],
+  "connection_tags": [
+    "Item",
+    "Observation",
+    "Combat"
+  ],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": [
+        "所在を相手側に渡す際の追跡更新への書き方と、優先順位"
+      ],
+      "reason": "observation-and-recognition.mdは個人提示と共有世界の分離までしか定義しない。所在を相手側の入力として渡す規則は未定義のため、候補は規則を渡さず保留する。",
+      "adoption_blocker": true
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "表示距離・個数・6秒は未確定。既存資料に該当する値が無い。",
+    "所在を渡す対象が通常NPCかAnomaly Entityかで扱いが変わる。候補はどちらでも使える形にし、相手の挙動は作らない。",
+    "照合範囲：観察を共有事実にしない原則、InformationChangeの境界、StateChangeの境界、包囲を含む戦闘イベント。矛盾は見つからず conflicts は空配列"
+  ],
+  "worldview": {
+    "defamiliarized_element": "知覚の非対称を一時的な取引にした。見える時間を買う代わりに、同じ長さだけ見つかりやすくなる。",
+    "in_world_rationale": "探索者は見えない相手に対して推測でしか行動できない。印があるなら、それは推測を避ける道具ではなく、自分の居場所を渡ってまで進む道具として使われる。",
+    "meaning_left_ambiguous": "印を作った者は誰で、この取引が成立した理由は確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "正式なInventoryとItemStackは未実装で、個人提示の期限と所在の公開はいずれも未実装（current-implementation.md）。提示と公開の経路が要るため true とする。",
+  "new_logic": [
+    "視界内の個人提示を期限付きで出す個人状態と、同じ期間だけ所在を相手側の入力として渡す個人状態"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "個人提示の期限は既存の個人属性に足せる。ただし所在を相手側の追跡入力として渡す経路が未実装で、優先順位を決める必要があるため中とした。",
+    "implementation_steps": [
+      "デバッグ付与で印を持たせる",
+      "視界内に方角印を6秒出す個人状態を足す",
+      "同じ6秒間だけ巨人の追跡が早くなることを確認する",
+      "6秒後に両方が元へ戻ることを確認する"
+    ],
+    "assumed_existing_parts": [
+      "デバッグ床の巨人の追跡動作",
+      "クライアントの個人画面",
+      "InventoryServiceの枠境界"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Undecided",
+        "detail": "配る主体は未確定。正式な取得源が未実装であり創作しない。試作のみデバッグ付与。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "1枠を消費する。使うかどうかで意味が変わる。"
+      },
+      {
+        "route": "Use",
+        "status": "Proposed",
+        "detail": "6秒だけ視界内の方角印を出し、自分の所在も相手に渡す。中核の操作。"
+      },
+      {
+        "route": "Present",
+        "status": "NotApplicable",
+        "detail": "渡さない。渡すと自分の所在の公開範囲を他人へ決められる。"
+      },
+      {
+        "route": "Place",
+        "status": "NotApplicable",
+        "detail": "置かない。置くと設置型の別設計になる。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "確保枠の外なら死亡時に失う。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "確保枠に入れて前線退回に備えられる。"
+      },
+      {
+        "route": "Sell",
+        "status": "Undecided",
+        "detail": "換金の可否は判断010・判断011・経済と成長で未決。"
+      },
+      {
+        "route": "Quest",
+        "status": "Undecided",
+        "detail": "依頼主は未確定。既存の博士の依頼が定める固有品の交換とは別物品として扱う。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "Proposed",
+        "detail": "自分の所在を渡すことは他相互作用の入力になり得る。相手の内部仕様は作らない。"
+      }
+    ],
+    "ownership_state": "印はplayer単位の個人所持。個人提示も所在の公開も個人単位として扱い、共有のMap状態は書き換えない。切断時の復元は未決。",
+    "server_run_state": "個人提示と所在の公開のみを扱う。出現率と同時出現数は変更しないためWorldChangeのEffectは発生しない。"
+  },
+  "html_file": "ROLE-B-026.html"
+}

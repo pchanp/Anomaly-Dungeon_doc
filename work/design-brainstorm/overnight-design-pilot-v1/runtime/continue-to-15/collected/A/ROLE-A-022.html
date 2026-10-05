@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-A-022 低温の通行帯 — 追うほど速く逃げられる</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+<p class="sub">overnight-design-pilot-v1 ／ ROLE-A-022 ／ 全マップ共通 ／ GimmickEvent</p>
+<h1>低温の通行帯 — 追うほど速く逃げられる</h1>
+<p>常設の冷たい帯の中で、敵の移動だけが遅くなる。</p>
+<div class="badges"><span class="badge hyp">Idea</span><span class="badge">unreviewed</span><span class="badge unknown">幅と長さは未定</span></div>
+<nav class="nav"><a href="index.html">← 一覧</a><a href="ROLE-A-022.json">同IDのJSON</a></nav>
+</header>
+
+<section id="hypothesis">
+<h2>何の案か</h2>
+<p>温度の差が、そのまま間合いの変化になる。</p>
+<ul>
+<li>一方通行の低温の帯が1本ある。常設で消せず、位置と幅は未定。</li>
+<li>帯の中の通常モブだけ移動が遅く、プレイヤーの速度は変わらない。</li>
+<li>帯の中で追跡を続ければ距離が開き、外では間合いが詰まる。遅化は攻撃を弱めない。</li>
+</ul>
+<p><strong>選択と代償:</strong> 帯の中で引き離す／帯の外で加速して切る／逆に帯の外へ誘い込む。帯は常設で消せない。幅が狭く、並走できる個体の数によっては、帯を通り抜けられない。</p>
+<p class="sub">接続タグ: StateChange / Environment / Combat / Movement ／ requires_code: true ／ conflicts 0件・未解決1件（JSONに記載）</p>
+</section>
+
+<section id="diagram">
+<h2>仕組みの図</h2>
+<div class="board">
+<svg viewBox="0 0 1000 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="常設の低温の帯の中で通常モブの移動だけ遅くなり、帯の外では間合いが詰まることを示す図">
+<rect width="1000" height="360" fill="#0a1118"/>
+<text class="label" x="24" y="28">常設の帯</text>
+<text class="label" x="560" y="28">内外での差</text>
+
+<rect x="24" y="52" width="260" height="200" rx="8" fill="#111f2b" stroke="#70c9c3" stroke-width="2"/>
+<text class="label" x="40" y="82">低温の帯</text>
+<text class="small" x="40" y="108">中のモブだけ遅い</text>
+<text class="small" x="40" y="134">プレイヤーは変えない</text>
+<text class="small" x="40" y="170">StateChange 一時</text>
+<text class="small" x="40" y="196">攻撃の威力は不変</text>
+<text class="small" x="40" y="228">常設。消す手段は無い</text>
+
+<rect x="320" y="52" width="240" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="334" y="82">帯の中で追跡を続く</text>
+<text class="small" x="334" y="108">距離が開く</text>
+<path d="M284 88h32" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M310 82l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+
+<rect x="320" y="142" width="240" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="334" y="172">帯の外で加速する</text>
+<text class="small" x="334" y="198">間合いが詰まる</text>
+<path d="M284 178h32" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M310 172l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+
+<rect x="620" y="52" width="356" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="634" y="82">（a）帯の中で引き離す</text>
+<text class="small" x="634" y="106">接触を保ったまま離れる</text>
+<rect x="620" y="142" width="356" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="634" y="172">（b）外で加速して切る</text>
+<text class="small" x="634" y="198">待ち伏せの形を作る</text>
+<rect x="620" y="232" width="356" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="634" y="262">（c）外へ誘い込む</text>
+<text class="small" x="634" y="288">遅い場所で受け止める</text>
+<path d="M560 88h54" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M606 82l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M560 178h54" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M606 172l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M560 268h54" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M606 262l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+
+<text class="small" x="24" y="338">この図で分かること：遅化するのは敵の移動だけ。帯は常設なので、どちらを選びやすいかは地形で決まる。</text>
+</svg>
+</div>
+<p>図注：低温が敵を弱くするのではなく、足取りを重くする。逃走と対峙のどちらが有利かは、地形と個体数で変わる。</p>
+</section>
+
+<footer>overnight-design-pilot-v1 ／ ROLE-A-022 ／ 実表示は未確認（担当セッションでブラウザを使用していない）。</footer>
+</main>
+</body>
+</html>

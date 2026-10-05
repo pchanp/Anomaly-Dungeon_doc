@@ -1,0 +1,105 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-020",
+  "role": "A",
+  "title": "巡回者 — 周期の崩れが合図になる",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "NPC",
+  "source_evidence": [
+    {"path": "docs/systems/game-rules.md", "section": "## ServerとClientの責務", "source_status": "Status: Draft（草案）", "claim": "ゲーム進行上の事実はServerが決定し、Clientは主に表現を担う。NPC StateはServer側が決める。"},
+    {"path": "docs/decisions/019-player-anomaly-runtime-pvp-and-return.md", "section": "## 決定", "source_status": "Status: Accepted（採用済み）", "claim": "Player Anomalyは通常NPCおよび通常のReturn PortalとInteractionできない。"},
+    {"path": "docs/systems/effect-components.md", "section": "## 解除の既定規則", "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）", "claim": "効果は自身に定義された終了条件と保存境界によって解除する。解除手段が明記されていない効果を、別のスキルが汎用的に消せるとは扱わない。"}
+  ],
+  "design_hypothesis": "通常NPCが1人、一定周期で同じ経路を往復する状態を仮定します。このNPCが周期を外すのは、近くの通常モブがいなくなるか、攻撃を受けたときだけです。周期を外した状態はRun終了まで続き、途中から戻ってはきません。ただし戻れなくならないほど強い制約にはせず、周期の長さは未定です。",
+  "experience": {
+    "goal": "周期が崩れる瞬間に、何かが起きたことを知る。",
+    "player_choice": "周期が崩れるのを待つ／自分で近くのモブを退ける／攻撃せず観察だけ続ける。",
+    "sacrifice_or_risk": "崩れたNPCはRun終了まで戻らない。待つあいだ他の個体との遭遇は避けられない。"
+  },
+  "placement_assumption": "全マップ共通のNPCとして置き、巡回経路と配置は各マップの判断に委ねます。経路の具体は提案しません。周期の長さは未定で、地形による補正は行わない前提です。",
+  "components": [
+    {"component": "NPCState", "availability": "catalog", "usage": "通常NPCの周期的な移動と状態をServerが保持する。"},
+    {"component": "Effect.StateChange", "availability": "catalog", "usage": "周期の継続か中断かを個体ごとに更新する。"},
+    {"component": "Effect.InformationChange", "availability": "catalog", "usage": "周期が崩れたかどうかだけを個人へ返す。理由は出さない。"}
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "通常NPCが周期を外れる。",
+      "condition": "近くの通常モブがいなくなるか、対象が攻撃を受けたこと。",
+      "result": "そのNPCは周期へ戻らない。移動は続くが、規則的な往復は停止する。",
+      "target": "対象の通常NPC",
+      "scope": "Run共有の個体",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": ["対象が戦闘不能になる", "Run終了"],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかで状態を終わらせる。",
+      "stacking": {"exception": false, "rule": "1個体につき非加算1件。繰り返し発生しても戻らない。", "conflict_resolution": "他のStateChangeと競合する場合は未確定のため保留。"},
+      "server_validation": "Serverが周期と中断を確定する。",
+      "client_presentation": "NPCの動きのみ。理由は表示しない。",
+      "feedback": {"success": "往復の規則性が崩れる。", "failure": "条件を満たさない限り崩れない。", "ambiguous": "なぜ崩れたかは説明しない。"}
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "通常NPCが周期を外した。",
+      "condition": "対象が通常のプレイヤーであること。",
+      "result": "崩れた事実だけを個人提示として返す。理由は出さない。",
+      "target": "対象個人",
+      "scope": "個人",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": ["提示の表示"],
+      "end_mode": "any",
+      "end_rule_reason": "即時。事実の表示のみ。",
+      "stacking": {"exception": false, "rule": "1回につき1件。前の表示を置き換える。", "conflict_resolution": "他の提示と重なる場合は未確定のため保留。"},
+      "server_validation": "Serverが事実だけを送る。",
+      "client_presentation": "短い1行のみ。",
+      "feedback": {"success": "崩れたと分かる。", "failure": "通常の周期中は出ない。", "ambiguous": "原因は表示しない。"}
+    }
+  ],
+  "provides_traits": ["NPCの周期の崩れを合図として読める", "1体だけの変化であり、他の個体は動かない"],
+  "connection_tags": ["NPCState", "StateChange", "Observation"],
+  "refs": [],
+  "unresolved_refs": [
+    {"target_id": null, "required_traits": ["巡回経路をマップと切り離して定義する方針"], "reason": "ID未指定の要求。正式な経路は各マップ側の判断に委ねた。", "adoption_blocker": false}
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "周期の長さと、崩れるまでの時間は未定。数値を決めていない。",
+    "周期が戻らないことがどの程度の重みになるかは未定。",
+    "複数の巡回者を置いたときの相互作用は未定。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "NPCの不規則さを正式な情報として提示し、理由を示さない点。",
+    "in_world_rationale": "古い設備が残る文明では、周期的に動くものは壊れた合図として読まれた。中止を隠す習慣が日常でも成立する。誰が周期を決めていたかは説明しない。",
+    "meaning_left_ambiguous": "周期がなぜ崩れるのか。崩れを隠すのか、隠せないのか。整ったままの歩き方は安心を示すのか、危険を示すのか。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "通常NPCの状態機械と周期が未実装で、モブの枠とも既存処理とも分離した設計になるため。コード生成の許可ではない。",
+  "new_logic": ["周期的な往復と中断の判定", "中断した個体への提示"],
+  "prototype_cost": {
+    "band": "小",
+    "rationale": "往復と中断を1体だけなら小さい。ただし何個体へ置かで難度が上がるため、まず1体で確認する方針が妥当。実時間の見積もりは出していない。",
+    "implementation_steps": ["往復する1体を置く", "中断条件を2通り入れる", "中断後に戻らないことを確認する", "他個体への影響を確認する"],
+    "assumed_existing_parts": ["通常のNPC配置", "通常のHPとDamageの受け口", "Server権威のRun状態"]
+  },
+  "role_details": {
+    "npc_purpose": "通常NPCであり、自分の仕事だけを行う。周期は本人の意思ではなく、置き場に与えられたものである。",
+    "player_anomaly_handling": "判断019によりPlayer Anomalyは通常NPCとInteractionできない。周期も中断も変わらない。提示は通常のプレイヤーのみに成立する。",
+    "mob_contract": {
+      "applicable": false,
+      "spawn_condition": "対象は発生しない。既存の通常NPCを1体だけ置く案であり、どのイベントとも結びつけない。",
+      "population_cap": "配置は各マップ側の判断に委ねる。上限は未定。",
+      "non_combat_response": "攻撃せず見ているだけでも周期の読みは得られる。",
+      "exit_condition": "戦闘不能、またはRun終了時に退場する。中断が起きていても戻らない。",
+      "entity_distinction": "Anomaly Entityでも戦闘モブでもない。通常NPCの状態だけを扱う。"
+    }
+  },
+  "html_file": "ROLE-A-020.html"
+}

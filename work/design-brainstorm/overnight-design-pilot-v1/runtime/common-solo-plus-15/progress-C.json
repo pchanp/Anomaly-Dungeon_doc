@@ -1,0 +1,9 @@
+{
+  "new_count": 7,
+  "target": 15,
+  "legacy_errors": [],
+  "new_errors": [
+    "manifest and candidate file set differ"
+  ],
+  "at": "2026-10-05T10:29:31.193602+00:00"
+}

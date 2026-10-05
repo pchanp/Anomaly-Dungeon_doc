@@ -16,6 +16,21 @@
     {"candidate_id": "ROLE-A-012", "json_file": "ROLE-A-012.json", "html_file": "ROLE-A-012.html"},
     {"candidate_id": "ROLE-A-013", "json_file": "ROLE-A-013.json", "html_file": "ROLE-A-013.html"},
     {"candidate_id": "ROLE-A-014", "json_file": "ROLE-A-014.json", "html_file": "ROLE-A-014.html"},
-    {"candidate_id": "ROLE-A-015", "json_file": "ROLE-A-015.json", "html_file": "ROLE-A-015.html"}
+    {"candidate_id": "ROLE-A-015", "json_file": "ROLE-A-015.json", "html_file": "ROLE-A-015.html"},
+    {"candidate_id": "ROLE-A-016", "json_file": "ROLE-A-016.json", "html_file": "ROLE-A-016.html"},
+    {"candidate_id": "ROLE-A-017", "json_file": "ROLE-A-017.json", "html_file": "ROLE-A-017.html"},
+    {"candidate_id": "ROLE-A-018", "json_file": "ROLE-A-018.json", "html_file": "ROLE-A-018.html"},
+    {"candidate_id": "ROLE-A-019", "json_file": "ROLE-A-019.json", "html_file": "ROLE-A-019.html"},
+    {"candidate_id": "ROLE-A-020", "json_file": "ROLE-A-020.json", "html_file": "ROLE-A-020.html"},
+    {"candidate_id": "ROLE-A-021", "json_file": "ROLE-A-021.json", "html_file": "ROLE-A-021.html"},
+    {"candidate_id": "ROLE-A-022", "json_file": "ROLE-A-022.json", "html_file": "ROLE-A-022.html"},
+    {"candidate_id": "ROLE-A-023", "json_file": "ROLE-A-023.json", "html_file": "ROLE-A-023.html"},
+    {"candidate_id": "ROLE-A-024", "json_file": "ROLE-A-024.json", "html_file": "ROLE-A-024.html"},
+    {"candidate_id": "ROLE-A-025", "json_file": "ROLE-A-025.json", "html_file": "ROLE-A-025.html"},
+    {"candidate_id": "ROLE-A-026", "json_file": "ROLE-A-026.json", "html_file": "ROLE-A-026.html"},
+    {"candidate_id": "ROLE-A-027", "json_file": "ROLE-A-027.json", "html_file": "ROLE-A-027.html"},
+    {"candidate_id": "ROLE-A-028", "json_file": "ROLE-A-028.json", "html_file": "ROLE-A-028.html"},
+    {"candidate_id": "ROLE-A-029", "json_file": "ROLE-A-029.json", "html_file": "ROLE-A-029.html"},
+    {"candidate_id": "ROLE-A-030", "json_file": "ROLE-A-030.json", "html_file": "ROLE-A-030.html"}
   ]
 }

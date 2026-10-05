@@ -2,20 +2,155 @@
   "run_id": "overnight-design-pilot-v1",
   "role": "B",
   "candidates": [
-    {"candidate_id": "ROLE-B-001", "json_file": "ROLE-B-001.json", "html_file": "ROLE-B-001.html"},
-    {"candidate_id": "ROLE-B-002", "json_file": "ROLE-B-002.json", "html_file": "ROLE-B-002.html"},
-    {"candidate_id": "ROLE-B-003", "json_file": "ROLE-B-003.json", "html_file": "ROLE-B-003.html"},
-    {"candidate_id": "ROLE-B-004", "json_file": "ROLE-B-004.json", "html_file": "ROLE-B-004.html"},
-    {"candidate_id": "ROLE-B-005", "json_file": "ROLE-B-005.json", "html_file": "ROLE-B-005.html"},
-    {"candidate_id": "ROLE-B-006", "json_file": "ROLE-B-006.json", "html_file": "ROLE-B-006.html"},
-    {"candidate_id": "ROLE-B-007", "json_file": "ROLE-B-007.json", "html_file": "ROLE-B-007.html"},
-    {"candidate_id": "ROLE-B-008", "json_file": "ROLE-B-008.json", "html_file": "ROLE-B-008.html"},
-    {"candidate_id": "ROLE-B-009", "json_file": "ROLE-B-009.json", "html_file": "ROLE-B-009.html"},
-    {"candidate_id": "ROLE-B-010", "json_file": "ROLE-B-010.json", "html_file": "ROLE-B-010.html"},
-    {"candidate_id": "ROLE-B-011", "json_file": "ROLE-B-011.json", "html_file": "ROLE-B-011.html"},
-    {"candidate_id": "ROLE-B-012", "json_file": "ROLE-B-012.json", "html_file": "ROLE-B-012.html"},
-    {"candidate_id": "ROLE-B-013", "json_file": "ROLE-B-013.json", "html_file": "ROLE-B-013.html"},
-    {"candidate_id": "ROLE-B-014", "json_file": "ROLE-B-014.json", "html_file": "ROLE-B-014.html"},
-    {"candidate_id": "ROLE-B-015", "json_file": "ROLE-B-015.json", "html_file": "ROLE-B-015.html"}
+    {
+      "candidate_id": "ROLE-B-001",
+      "json_file": "ROLE-B-001.json",
+      "html_file": "ROLE-B-001.html"
+    },
+    {
+      "candidate_id": "ROLE-B-002",
+      "json_file": "ROLE-B-002.json",
+      "html_file": "ROLE-B-002.html"
+    },
+    {
+      "candidate_id": "ROLE-B-003",
+      "json_file": "ROLE-B-003.json",
+      "html_file": "ROLE-B-003.html"
+    },
+    {
+      "candidate_id": "ROLE-B-004",
+      "json_file": "ROLE-B-004.json",
+      "html_file": "ROLE-B-004.html"
+    },
+    {
+      "candidate_id": "ROLE-B-005",
+      "json_file": "ROLE-B-005.json",
+      "html_file": "ROLE-B-005.html"
+    },
+    {
+      "candidate_id": "ROLE-B-006",
+      "json_file": "ROLE-B-006.json",
+      "html_file": "ROLE-B-006.html"
+    },
+    {
+      "candidate_id": "ROLE-B-007",
+      "json_file": "ROLE-B-007.json",
+      "html_file": "ROLE-B-007.html"
+    },
+    {
+      "candidate_id": "ROLE-B-008",
+      "json_file": "ROLE-B-008.json",
+      "html_file": "ROLE-B-008.html"
+    },
+    {
+      "candidate_id": "ROLE-B-009",
+      "json_file": "ROLE-B-009.json",
+      "html_file": "ROLE-B-009.html"
+    },
+    {
+      "candidate_id": "ROLE-B-010",
+      "json_file": "ROLE-B-010.json",
+      "html_file": "ROLE-B-010.html"
+    },
+    {
+      "candidate_id": "ROLE-B-011",
+      "json_file": "ROLE-B-011.json",
+      "html_file": "ROLE-B-011.html"
+    },
+    {
+      "candidate_id": "ROLE-B-012",
+      "json_file": "ROLE-B-012.json",
+      "html_file": "ROLE-B-012.html"
+    },
+    {
+      "candidate_id": "ROLE-B-013",
+      "json_file": "ROLE-B-013.json",
+      "html_file": "ROLE-B-013.html"
+    },
+    {
+      "candidate_id": "ROLE-B-014",
+      "json_file": "ROLE-B-014.json",
+      "html_file": "ROLE-B-014.html"
+    },
+    {
+      "candidate_id": "ROLE-B-015",
+      "json_file": "ROLE-B-015.json",
+      "html_file": "ROLE-B-015.html"
+    },
+    {
+      "candidate_id": "ROLE-B-016",
+      "json_file": "ROLE-B-016.json",
+      "html_file": "ROLE-B-016.html"
+    },
+    {
+      "candidate_id": "ROLE-B-017",
+      "json_file": "ROLE-B-017.json",
+      "html_file": "ROLE-B-017.html"
+    },
+    {
+      "candidate_id": "ROLE-B-018",
+      "json_file": "ROLE-B-018.json",
+      "html_file": "ROLE-B-018.html"
+    },
+    {
+      "candidate_id": "ROLE-B-019",
+      "json_file": "ROLE-B-019.json",
+      "html_file": "ROLE-B-019.html"
+    },
+    {
+      "candidate_id": "ROLE-B-020",
+      "json_file": "ROLE-B-020.json",
+      "html_file": "ROLE-B-020.html"
+    },
+    {
+      "candidate_id": "ROLE-B-021",
+      "json_file": "ROLE-B-021.json",
+      "html_file": "ROLE-B-021.html"
+    },
+    {
+      "candidate_id": "ROLE-B-022",
+      "json_file": "ROLE-B-022.json",
+      "html_file": "ROLE-B-022.html"
+    },
+    {
+      "candidate_id": "ROLE-B-023",
+      "json_file": "ROLE-B-023.json",
+      "html_file": "ROLE-B-023.html"
+    },
+    {
+      "candidate_id": "ROLE-B-024",
+      "json_file": "ROLE-B-024.json",
+      "html_file": "ROLE-B-024.html"
+    },
+    {
+      "candidate_id": "ROLE-B-025",
+      "json_file": "ROLE-B-025.json",
+      "html_file": "ROLE-B-025.html"
+    },
+    {
+      "candidate_id": "ROLE-B-026",
+      "json_file": "ROLE-B-026.json",
+      "html_file": "ROLE-B-026.html"
+    },
+    {
+      "candidate_id": "ROLE-B-027",
+      "json_file": "ROLE-B-027.json",
+      "html_file": "ROLE-B-027.html"
+    },
+    {
+      "candidate_id": "ROLE-B-028",
+      "json_file": "ROLE-B-028.json",
+      "html_file": "ROLE-B-028.html"
+    },
+    {
+      "candidate_id": "ROLE-B-029",
+      "json_file": "ROLE-B-029.json",
+      "html_file": "ROLE-B-029.html"
+    },
+    {
+      "candidate_id": "ROLE-B-030",
+      "json_file": "ROLE-B-030.json",
+      "html_file": "ROLE-B-030.html"
+    }
   ]
 }

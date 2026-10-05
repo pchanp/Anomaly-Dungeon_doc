@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-B-023 未書きの写り（未探索の1区画を1回だけ開く）</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<p class="sub">overnight-design-pilot-v1 ／ ROLE=B ／ 全マップ共通 ／ Idea</p>
+<h1>ROLE-B-023 未書きの写り（未探索の1区画を1回だけ開く） — 作業用見出し</h1>
+</header>
+<section id="hypothesis">
+<h2>何の案？</h2>
+<p>未探索の1区画を即座に開く写り。ただし中身は渡らない。</p>
+<h2>仕組み</h2>
+<ul>
+<li>使うと未探索の区画が1つだけ探索済みになり、そこへ移動できる。</li>
+<li>区画の中身は通常の探索手順で扱われる。写りが直接取出さない。</li>
+<li>1回だけ。Run終了時に開いた区画を戻すかは未決。</li>
+</ul>
+<h2>選択と代償</h2>
+<p>もう1区画だけ開けるか、その時間を戦闘へ回すか。開けた先は見ない。</p>
+</section>
+<section id="diagram">
+<h2>作用図</h2>
+<div class="board">
+<svg viewBox="0 0 980 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="未探索の区画が一つだけ探索済みへ遷移して移動可能になり、中身は通常の探索のまま残り、Run終了時に開いた区画を戻すかは未決で、開いた事実だけが本人の印になる図">
+<rect width="980" height="360" fill="#0a1118"/>
+<text x="30" y="26" class="small">区画の単位と未探索の判定基準は正本側で未確定。候補は指定しない。</text>
+<rect x="30" y="60" width="250" height="120" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text x="46" y="90" class="label">開けない</text>
+<text x="46" y="116" class="small">時間は自分の歩幅で削る</text>
+<text x="46" y="138" class="small">到達できない区画が残る</text>
+<text x="46" y="160" class="small">見通しは自分次第</text>
+<rect x="370" y="60" width="250" height="120" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="386" y="90" class="label">1区画だけ開く</text>
+<text x="386" y="116" class="small">未探索→探索済み</text>
+<text x="386" y="138" class="small">移動できる</text>
+<text x="386" y="160" class="small">中身は通常手順</text>
+<rect x="700" y="60" width="250" height="120" rx="8" fill="#142330" stroke="#ea9380"/>
+<text x="716" y="90" class="label">開いたあと</text>
+<text x="716" y="116" class="small">時間は戻らない</text>
+<text x="716" y="138" class="small">中身の評価が残る</text>
+<text x="716" y="160" class="small">戻す方法は未決</text>
+<path d="M282 120 H355" class="active"/><path d="M355 120 l10 6 -10 6" class="active"/>
+<path d="M622 120 H685" class="active"/><path d="M685 120 l10 6 -10 6" class="active"/>
+<rect x="30" y="230" width="920" height="60" rx="8" fill="#142330" stroke="#c4a0ec"/>
+<text x="46" y="260" class="label">開けただけで得られるものはない：認識とJak酌は通常の探索に残る</text>
+<text x="46" y="286" class="small"></text>
+<text x="46" y="308" class="small"></text>
+<text x="46" y="330" class="small"></text>
+</svg>
+</div>
+<p>左が開けない、中央が開く、右が開いた後。中身は最後まで通常手順のまま。</p>
+</section>
+<footer>
+<p><a href="index.html">← B候補一覧</a> ／ 詳細データ <a href="ROLE-B-023.json">ROLE-B-023.json</a> ／ connection_tags: Item, Environment, Observation ／ requires_code: true ／ 試作コスト: 中</p>
+</footer>
+</main>
+</body>
+</html>

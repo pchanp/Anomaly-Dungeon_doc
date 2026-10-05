@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-B-029 抜き取り（未取得の品1個を静かに持ち帰る）</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<p class="sub">overnight-design-pilot-v1 ／ ROLE=B ／ 全マップ共通 ／ Idea</p>
+<h1>ROLE-B-029 抜き取り（未取得の品1個を静かに持ち帰る） — 作業用見出し</h1>
+</header>
+<section id="hypothesis">
+<h2>何の案？</h2>
+<p>近くの未取得の品1個を、直接自分の所持へ移す抜き。</p>
+<h2>仕組み</h2>
+<ul>
+<li>使うと射程内の未取得の品1個が自分の所持へ移る。</li>
+<li>地図上の所有記録は『持ち主不明』として残る。痕跡は消えない。</li>
+<li>枠制約は既存通り。拾えない場合は成立しない。</li>
+</ul>
+<h2>選択と代償</h2>
+<p>歩いて評価してから取るか、近くで抜き取るか。空白を1件残す。</p>
+</section>
+<section id="diagram">
+<h2>作用図</h2>
+<div class="board">
+<svg viewBox="0 0 980 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="射程内の未取得の品1個が個人所持へ移り、地図上の所有記録だけが持ち主不明として残り、枠が埋まればそれ以上抜けない代償を持つ図">
+<rect width="980" height="360" fill="#0a1118"/>
+<text x="30" y="26" class="small">射程と未取得の判定基準は未確定。候補は値の決定を渡さない。</text>
+<rect x="30" y="60" width="250" height="120" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text x="46" y="90" class="label">歩いて取る</text>
+<text x="46" y="116" class="small">評価してから拾う</text>
+<text x="46" y="138" class="small">時間を使う</text>
+<text x="46" y="160" class="small">所有記録は自分の名</text>
+<rect x="370" y="60" width="250" height="120" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="386" y="90" class="label">抜き取る</text>
+<text x="386" y="116" class="small">未取得1個を転移</text>
+<text x="386" y="138" class="small">所持枠が増える</text>
+<text x="386" y="160" class="small">評価は飛ばされる</text>
+<rect x="700" y="60" width="250" height="120" rx="8" fill="#142330" stroke="#ea9380"/>
+<text x="716" y="90" class="label">地図に残るもの</text>
+<text x="716" y="116" class="small">所有記録は持ち主不明</text>
+<text x="716" y="138" class="small">空白が1件できる</text>
+<text x="716" y="160" class="small">枠が埋まると不可</text>
+<path d="M282 120 H355" class="active"/><path d="M355 120 l10 6 -10 6" class="active"/>
+<path d="M622 120 H685" class="active"/><path d="M685 120 l10 6 -10 6" class="active"/>
+<rect x="30" y="230" width="920" height="60" rx="8" fill="#142330" stroke="#c4a0ec"/>
+<text x="46" y="260" class="label">変わらないもの：配置・地形・対象のHP・他者の所持</text>
+<text x="46" y="286" class="small"></text>
+<text x="46" y="308" class="small"></text>
+<text x="46" y="330" class="small"></text>
+</svg>
+</div>
+<p>左が定位置取り、中央が抜き取り、右が地図に残る空白。最下段が不変の要素。</p>
+</section>
+<footer>
+<p><a href="index.html">← B候補一覧</a> ／ 詳細データ <a href="ROLE-B-029.json">ROLE-B-029.json</a> ／ connection_tags: Item, Environment ／ requires_code: true ／ 試作コスト: 中</p>
+</footer>
+</main>
+</body>
+</html>

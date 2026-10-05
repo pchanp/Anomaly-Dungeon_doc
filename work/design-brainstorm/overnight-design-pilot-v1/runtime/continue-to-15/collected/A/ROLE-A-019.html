@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-A-019 開けたままの扉 — 一度きりの通り抜け</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+<p class="sub">overnight-design-pilot-v1 ／ ROLE-A-019 ／ 全マップ共通 ／ GimmickEvent</p>
+<h1>開けたままの扉 — 一度きりの通り抜け</h1>
+<p>扉が一度だけ開いて、Runの終わりまで残る。</p>
+<div class="badges"><span class="badge hyp">Idea</span><span class="badge">unreviewed</span><span class="badge unknown">開く条件は未定</span></div>
+<nav class="nav"><a href="index.html">← 一覧</a><a href="ROLE-A-019.json">同IDのJSON</a></nav>
+</header>
+
+<section id="hypothesis">
+<h2>何の案か</h2>
+<p>開くかどうかが一度きりの判断になる通り抜け。</p>
+<ul>
+<li>区画の扉が一度だけ開き、Runの終わりまで開いたまま残る。</li>
+<li>開いた区画は通り抜けられるが中は危険度が高い。閉じたままでは通れない。</li>
+<li>戻す手段はない。開いた時刻より先に、中を観察するかどうかが決まる。</li>
+</ul>
+<p><strong>選択と代償:</strong> 開いた区画を抜ける／閉じた区画を壊して強行する／外から中を観察して判断する。開いた区画は戻ってこれない。中がどれだけ危険かは入る前に分からない。</p>
+<p class="sub">接続タグ: WorldChange / StateChange / Environment / Combat ／ requires_code: true ／ conflicts 0件・未解決2件（JSONに記載）</p>
+</section>
+
+<section id="diagram">
+<h2>仕組みの図</h2>
+<div class="board">
+<svg viewBox="0 0 1000 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="区画の扉が一度だけ開いてRun終了まで残り、開いた区画は通り抜けられるが戻れないことを示す図">
+<rect width="1000" height="360" fill="#0a1118"/>
+<text class="label" x="24" y="28">扉の状態</text>
+<text class="label" x="470" y="28">開いた先での選択</text>
+
+<rect x="24" y="52" width="220" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="38" y="82">閉じたまま</text>
+<text class="small" x="38" y="106">通り抜けられない</text>
+
+<rect x="24" y="142" width="220" height="76" rx="8" fill="#142330" stroke="#d3b653"/>
+<text class="label" x="38" y="172">一度だけ開く</text>
+<text class="small" x="38" y="198">Runの終わりまで残る</text>
+<path d="M134 124v14" stroke="#d3b653" stroke-width="2" fill="none"/>
+<path d="M128 136l6 8 6-8z" fill="#d3b653"/>
+
+<rect x="24" y="236" width="220" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="small" x="38" y="266">閉じたままへ戻す手段</text>
+<text class="small" x="38" y="290">存在しない</text>
+
+<rect x="300" y="52" width="240" height="76" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="label" x="314" y="82">開いた区画を通り抜ける</text>
+<text class="small" x="314" y="108">交戦は任意。回避も可能</text>
+<path d="M244 180h52" stroke="#70c9c3" stroke-width="2" fill="none"/>
+<path d="M288 174l9 6-9 6" stroke="#70c9c3" stroke-width="2" fill="none"/>
+
+<rect x="600" y="52" width="376" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="614" y="82">（a）開いて抜ける</text>
+<text class="small" x="614" y="106">早い。戻れない</text>
+<rect x="600" y="142" width="376" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="614" y="172">（b）閉じた区画を壊す</text>
+<text class="small" x="614" y="198">時間をかける。音が出る</text>
+<rect x="600" y="232" width="376" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="614" y="262">（c）外から中を観察</text>
+<text class="small" x="614" y="288">情報を得て安全を取る</text>
+<path d="M540 90h54" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M586 84l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M540 180h54" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M586 174l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M540 270h54" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M586 264l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+
+<text class="small" x="24" y="338">この図で分かること：開くことで通り道が生まれるが、戻る道は消える。開ける前に中を見られるかどうかが分かれ目になる。</text>
+</svg>
+</div>
+<p>図注：開けることが許可だったのか事故だったのかは説明しない。戻れない分だけ、中を観測してから決めても遅くならない。</p>
+</section>
+
+<footer>overnight-design-pilot-v1 ／ ROLE-A-019 ／ 実表示は未確認（担当セッションでブラウザを使用していない）。</footer>
+</main>
+</body>
+</html>

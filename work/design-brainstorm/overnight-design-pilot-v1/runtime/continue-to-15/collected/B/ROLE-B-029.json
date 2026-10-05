@@ -1,0 +1,246 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-029",
+  "role": "B",
+  "title": "抜き取り（未取得の品1個を静かに持ち帰る）",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| `StateChange` | Stun、構え、鎮静、追従先などの状態遷移 | Player Anomalyへの変化を汎用状態異常と同一視しない |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "品物の所在が変わる結果はStateChange。個人への転移として書く。"
+    },
+    {
+      "path": "docs/systems/observation-and-recognition.md",
+      "section": "Cameraを共有世界のServer事実として保存しない。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "見られたという個人の観察と、Serverが持つ所在を分ける。持ち主不明の記録は残る。"
+    },
+    {
+      "path": "docs/systems/current-implementation.md",
+      "section": "デバッグ用のアイテム付与端末。デバッグアイテムのみを付与し、Secure Slotの保持と喪失、リザルト分類を検証できる。正式な取得源は未実装である。",
+      "source_status": "Status: Implemented（実装棚卸し）",
+      "claim": "正式な取得源はデバッグ端末に限る。試作もデバッグ付与で行う。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| 同一Run中 | 当該Runの終了で破棄する。マップ遷移では原則保持する |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "抜き取りの結果は同一Run中の境界に置く。"
+    }
+  ],
+  "design_hypothesis": "探索の報酬は通常、地図 parah を辿って拾う。本候補は『射程内の未取得の品1個を、自分の所持へ静かに移す』抜きを与える。ただし探索済みの印は『持ち主不明』として残り、拾った痕跡は消えない。時間を_secs縮める代わりに、地図に空白が残る。",
+  "experience": {
+    "goal": "見つける前に、近くにあるものだけを持ち帰る。",
+    "player_choice": "歩いて評価してから拾うか、近くで抜き取るか。空白を1件残す。",
+    "sacrifice_or_risk": "地図上の所有記録は持ち主不明のまま残る。枠が埋まればもう1個も抜けない。"
+  },
+  "placement_assumption": "新しい地形・部屋・配置点は提案しない。射程内に品があるかどうかだけを入力にする。配置の済み／未取得の判定基準は候補側で確定しない。",
+  "components": [
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "未取得の品1個の所在を個人所持へ移す。"
+    },
+    {
+      "component": "InventoryBoundary",
+      "availability": "catalog",
+      "usage": "枠制約と確保枠の扱いは既存のものを参照する。"
+    },
+    {
+      "component": "ItemLifecycle",
+      "availability": "catalog",
+      "usage": "正式な取得源とItemStackが未実装であることを前提とする。"
+    },
+    {
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "見たという個人の観察は共有事実として確定しない。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "対象個人が抜きを取り、射程内の未取得の品1個を選ぶ",
+      "condition": "実行中であること、抜きを個人所持にもつこと、選び方が未取得である事、枠制約を満たすこと",
+      "result": "選ばれた品1個が対象個人の所持へ移り、地図上の所有記録は『持ち主不明』として残る。枠制約は既存通りに適用し、未取得の品がない場合は成立しない。対象のHPや状態は変化しない",
+      "target": "選ばれた未取得の品1個の所在",
+      "scope": "個人への転移。共有のMap上の位置は残るが所有者は個人単位",
+      "lifetime": "同一Run中",
+      "resolution": "instant",
+      "end_conditions": [
+        "転移の解決で確定する",
+        "Run終了時の持ち帰可否は既存の分類に従う。候補は独立に決めない"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。転移は解決のみ。転移後の所持は通常処理に従う。",
+      "stacking": {
+        "exception": false,
+        "rule": "同じ品へ重ねても所有の転移は1回だけ",
+        "conflict_resolution": "他のEffectが同じ品の所在を変える場合は解決規則が未定義のため保留する"
+      },
+      "server_validation": "Serverが未取得である事と枠制約と所有を検証してから転移させる",
+      "client_presentation": "所持枠が1つ増え、地図上の印が持ち主不明表示になる",
+      "feedback": {
+        "success": "品が持ち帰れる形になる",
+        "failure": "何も変わらない。注意表示のみ",
+        "ambiguous": "持ち主不明になったことは他者にも共有されない"
+      }
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "転移の解決直後に個人画面が再描画する",
+      "condition": "実行中であること、対象個人が該当の操作を行える状態であること",
+      "result": "『地図上で所有の記録が1件掠奪された』印だけを個人に示す。品の名前や位置は出さない",
+      "target": "対象個人",
+      "scope": "個人。共有の記録表示は書き換えない",
+      "lifetime": "同一Run中",
+      "resolution": "instant",
+      "end_conditions": [
+        "提示の解決で確定する",
+        "切断時は個人提示を破棄する"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。一時提示はその場だけで終わる。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一個人への同一提示は非加算1件",
+        "conflict_resolution": "Discoveryの記録との重複は未決のため候補では扱わない"
+      },
+      "server_validation": "Serverは転移の事実だけ返す。品の内容は返さない",
+      "client_presentation": "HUDに印が1つ出るだけ",
+      "feedback": {
+        "success": "印が一瞬出る",
+        "failure": "印が出ない",
+        "ambiguous": "印は品の名前を示さない"
+      }
+    }
+  ],
+  "provides_traits": [
+    "未取得の所在を個人へ移す結果を作る例",
+    "取得ではなく所在の転移として書く例"
+  ],
+  "connection_tags": [
+    "Item",
+    "Environment"
+  ],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": [
+        "未取得の判定基準と、地図上の所有記録を誰がどう作るか"
+      ],
+      "reason": "current-implementation.mdは正式な取得源とItemStackが未実装と記す。地図上の所有記録の正本は存在しないため、候補は記録の生成側を渡さず保留する。",
+      "adoption_blocker": true
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "射程と未取得の判定基準は未確定。候補は値の決定を渡さない。",
+    "転移した品をRun終了時に持ち帰えるかは既存の分類に従う。候補は独立に決めない。",
+    "照合範囲：StateChangeの境界、観察を共有事実にしない原則、取得源が未実装であること、同一Run中の保存境界。矛盾は見つからず conflicts は空配列"
+  ],
+  "worldview": {
+    "defamiliarized_element": "取得を移動として扱い、記録を消さない形にした。空白が残ることが、普通に拾う操作と区別される。",
+    "in_world_rationale": "探索者は到達できる場所ごとに評価して物を選ぶ。抜きがあるなら、それは未知のものを当てにいく道具ではなく、既知の場所にある品を手早く持ち去る道具として使われる。",
+    "meaning_left_ambiguous": "抜きを作った者は誰で、持ち主不明の記録を誰かがどう使うのかは確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "正式なInventoryとItemStackは未実装で、所在の転移と所有記録の層も未実装（current-implementation.md）。 true とする。",
+  "new_logic": [
+    "未取得の品1個の所在を個人所持へ移す操作口と、持ち主不明として残る所有記録"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "枠制約とRun終了時の分類は既にサーバー権威で動く。ただし未取得の判定と所有記録の層が未実装で、記録を残す表現が必要になるため中とした。",
+    "implementation_steps": [
+      "デバッグ付与で抜きを持たせる",
+      "デバッグ床に未取得の品を1個置き、抜き取る操作を足す",
+      "所持枠が1つ増え、地図上の所有記録が持ち主不明になることを確認する",
+      "枠が埋まっている状態では転移しないことを確認する"
+    ],
+    "assumed_existing_parts": [
+      "InventoryServiceの枠制約とRun終了時の分類",
+      "デバッグ床の固定配置",
+      "クライアントの個人HUD"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Undecided",
+        "detail": "配る主体は未確定。正式な取得源が未実装であり創作しない。試作のみデバッグ付与。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "1枠を消費する。枠が埋まっていると转移できない。"
+      },
+      {
+        "route": "Use",
+        "status": "Proposed",
+        "detail": "射程内の未取得の品1個を選んで自分の所持へ移す。中核の操作。"
+      },
+      {
+        "route": "Present",
+        "status": "NotApplicable",
+        "detail": "渡さない。渡すと窃取の意味がなくなり、GiveAwayになる。"
+      },
+      {
+        "route": "Place",
+        "status": "NotApplicable",
+        "detail": "置かない。置く操作は別の経路として設計し分ける。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "確保枠の外なら死亡時に失う。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "確保枠に入れて盗んだ品を死んでも守る選択はできる。"
+      },
+      {
+        "route": "Sell",
+        "status": "Undecided",
+        "detail": "換金の可否は判断010・判断011・経済と成長で未決。"
+      },
+      {
+        "route": "Quest",
+        "status": "Undecided",
+        "detail": "依頼主は未確定。既存の博士の依頼が定める固有品の交換とは別物品として扱う。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "Proposed",
+        "detail": "所在の転移は他の相互作用の入力になり得る。相手の仕様は作らない。"
+      }
+    ],
+    "ownership_state": "抜きはplayer単位の個人所持。転移後の品は通常の個人所持として扱われ、所有記録は『持ち主不明』として共有のMap側に残る。切断時の復元は未決。",
+    "server_run_state": "Serverが所有記録をMap状態として残すが、出現率と同時出現数は変更しないためWorldChangeのEffectは発生しない。"
+  },
+  "html_file": "ROLE-B-029.html"
+}

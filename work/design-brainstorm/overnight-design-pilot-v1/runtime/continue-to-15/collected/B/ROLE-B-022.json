@@ -1,0 +1,247 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-022",
+  "role": "B",
+  "title": "見張り灯（置くとその周囲だけ追跡が戻るのを遅らせる）",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "戦闘イベントには、敵NPCの出現、追跡、包囲、増援、防衛、巨大アノマリーとの遭遇、NPC同士の戦闘への介入などが含まれ得る。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "追跡は戦闘イベントの一部。追跡の更新を遅らせる手段があれば探索が戻る余地が生まれる。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| `WorldChange` | 出現率・同時出現数、経路・Portal・Map状態などの世界変化 | 個人表示だけでRun共有状態を確定しない |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "周囲の追跡更新を止めるのは対象側の世界変化として扱い、ServerがRun状態として確定する。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "短いInteractionの候補として、目標位置に止める、一瞬だけ出る物体を認識する、ノイズから対象を見つける、音の方向を当てる、形状を識別する、違いを発見するなどを扱う。",
+      "source_status": "Status: Mixed（案ごとに下記）",
+      "claim": "置いたものが一時的に安心な場所を作る案として、相互作用の短い操作に置く。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| 一時 | 指定された終了条件が成立した時点で解除する |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "灯の効果は時間切れで閉じる。"
+    }
+  ],
+  "design_hypothesis": "追っ手が来ると、探索より戦闘に時間が持っていかれる。本候補は『置いた点を中心に、20秒間だけ対象側の追跡更新を遅らせる』灯を与える。敵は消えず現れ続ける。急がなくてよい時間を作る代わりに、置いた灯は回収できない。",
+  "experience": {
+    "goal": "追っ手を完全には消さないが、少し遅らせて探索の時間を買う。",
+    "player_choice": "踏み込むか、置いて待つか。灯の範囲内に入るか、外から牽制するか。",
+    "sacrifice_or_risk": "追跡は遅くなるだけ。敵は減らない。置いた灯は回収できない。"
+  },
+  "placement_assumption": "新しい地形・部屋・灯具は提案しない。既存の探索区域内へ一時的な設置をする。設置できるかは各マップ既存の床の判定に任せる。",
+  "components": [
+    {
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "置いた点を中心に、対象側の追跡更新を一定時間だけ弱める。"
+    },
+    {
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "対象側の追跡・警戒の状態更新を共有事実として扱う。"
+    },
+    {
+      "component": "PlacementContext",
+      "availability": "catalog",
+      "usage": "置いた位置が成立条件になる利用文脈。"
+    },
+    {
+      "component": "ItemLifecycle",
+      "availability": "catalog",
+      "usage": "正式な取得源とItemStackが未実装であることを前提とする。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "WorldChange",
+      "trigger": "個人が指定地点に灯を置く",
+      "condition": "実行中であること、灯を個人所持にもつこと、設置地点が有効なこと",
+      "result": "置いた点を中心に一定範囲内の、対象側の追跡更新が20秒間だけ弱まる。対象は現れ続け、経路を変える。弱まる強さの種類は候補側で確定しない",
+      "target": "指定範囲にいる対象側の追跡更新",
+      "scope": "共有のRun状態。ただし対象の生死と出現率には影響しない",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "20秒の経過で通常へ戻る",
+        "Run終了または切断で即座に破棄する"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。時間経過とRun終了の両方で閉じる。",
+      "stacking": {
+        "exception": false,
+        "rule": "同じ individual's個人への再適用は1件として残り時間を更新する",
+        "conflict_resolution": "他のEffectが追跡更新を変える場合は解決規則が未定義のため保留する"
+      },
+      "server_validation": "Serverが置いた位置と時刻をRun状態に確定し、範囲判定はServerで行う",
+      "client_presentation": "自分からは何も表示されない。対象の追跡の減り具合は外から分からない",
+      "feedback": {
+        "success": "置いた範囲の追っ手が遅れて追ってくる",
+        "failure": "何も変わらない。注意表示のみ",
+        "ambiguous": "追跡が弱まったことは本人にも表示しない"
+      }
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "灯を置く操作が成立し、個人がその範囲内で探索するとき",
+      "condition": "実行中であること、対象個人が該当の操作を行える状態であること",
+      "result": "『追跡が戻るのを待つ場所を取れる』印を個人にだけ出す。敵の数や位置は出さない",
+      "target": "対象個人",
+      "scope": "個人。共有の戦況表示は書き換えない",
+      "lifetime": "同一Run中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "Run終了またはHUD非表示で解除",
+        "切断で個人提示は破棄する"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。表示は設置中だけ有効とする。",
+      "stacking": {
+        "exception": false,
+        "rule": "同じ個人への同一提示は非加算1件",
+        "conflict_resolution": "他のHUD提示との優先順位は未決定"
+      },
+      "server_validation": "Serverは灯の存在だけを返し、範囲内の敵の情報は返さない",
+      "client_presentation": "HUDに小さな印が1つ出るだけ",
+      "feedback": {
+        "success": "印が出る",
+        "failure": "印が出ない",
+        "ambiguous": "印の範囲は数字で出さない"
+      }
+    }
+  ],
+  "provides_traits": [
+    "追跡を遅らせて探索時間を買う結果を作る例",
+    "WorldChangeを一時設置として書く例"
+  ],
+  "connection_tags": [
+    "Item",
+    "Environment",
+    "Combat"
+  ],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": [
+        "追跡更新の弱まりをServer側でどう評価し、範囲と時間の既定値をどこで持つのか"
+      ],
+      "reason": "game-rules.mdは追跡や出現の扱いを列挙するのみで、弱化の強さや範囲の既定値を持たない。候補は範囲と時間を未確定として扱い、値の決定を渡さない。",
+      "adoption_blocker": true
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "20秒と範囲の大きさは未確定。既存資料に該当値が無い。",
+    "追跡更新の層が未実装であり、弱まる強さの種類も候補側で確定しない。",
+    "照合範囲：追跡を含む戦闘イベント、WorldChangeの境界、一時効果の終了条件、短いInteractionの候補。矛盾は見つからず conflicts は空配列"
+  ],
+  "worldview": {
+    "defamiliarized_element": "追跡を消すのではなく遅らせる道具にした。敵はそのままいて、時間だけが味方に寄る。",
+    "in_world_rationale": "探索者は常に追われる側に置かれるが、敵の存在を消すことはできない。灯があるなら、それは敵を減らすためではなく、来る速さだけを調整する道具として使われる。",
+    "meaning_left_ambiguous": "灯を作った者は誰で、遅らせること自体が誰かへの宣言だったのかは確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "正式なInventoryとItemStackは未実装で、追跡更新の層も未実装（current-implementation.md）。 true とする。",
+  "new_logic": [
+    "指定範囲の追跡更新を一時的に遅らせるRun状態と、その設置・回収なしという寿命"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "設置と時間管理は既存の部品で足せる。ただし追跡更新を弱める層が未実装で、範囲判定をServerで行う必要があるため小ではない。",
+    "implementation_steps": [
+      "デバッグ付与で灯を持たせる",
+      "指定地点に20秒だけ追跡更新を遅らせるRun状態を足す",
+      "デバッグ床の巨人が遅れて追うことを確認する",
+      "20秒後に通常へ戻ることを確認する"
+    ],
+    "assumed_existing_parts": [
+      "デバッグ床の巨人の追跡動作",
+      "クライアントの個人HUD",
+      "InventoryServiceの枠境界"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Undecided",
+        "detail": "配る主体は未確定。正式な取得源が未実装であり創作しない。試作のみデバッグ付与。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "1枠を消費する。置いていないと効果がない。"
+      },
+      {
+        "route": "Use",
+        "status": "Proposed",
+        "detail": "使わず、置く操作で追跡を遅らせる。"
+      },
+      {
+        "route": "Present",
+        "status": "NotApplicable",
+        "detail": "渡さない。渡すと置き場の決定権まで他人へ移る。"
+      },
+      {
+        "route": "Place",
+        "status": "Proposed",
+        "detail": "中核。探索したい地点に置いて、一时不被打る通りを作る。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "確保枠の外なら死亡時に失う。失っても置いた灯は残る。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "確保枠に入れて次の設置に備えられる。"
+      },
+      {
+        "route": "Sell",
+        "status": "Undecided",
+        "detail": "換金の可否は判断010・判断011・経済と成長で未決。"
+      },
+      {
+        "route": "Quest",
+        "status": "Undecided",
+        "detail": "依頼主は未確定。既存の博士の依頼が定める固有品の交換とは別物品として扱う。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "Proposed",
+        "detail": "追跡更新の低下は他の相互作用の入力になり得る。相手の内部仕様は作らない。"
+      }
+    ],
+    "ownership_state": "灯はplayer単位の個人所持。設置された灯は共有のRun状態に存在するが、所有と残り時間は個人管理とする。切断時の復元は未決。",
+    "server_run_state": "ServerがRun状態として灯の存在と時刻を確定し、Run終了で破棄する。出現率と同時出現数は変更しないためWorldChangeは追跡更新のみに限定する。"
+  },
+  "html_file": "ROLE-B-022.html"
+}

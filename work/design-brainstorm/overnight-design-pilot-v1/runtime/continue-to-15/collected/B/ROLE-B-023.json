@@ -1,0 +1,247 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-023",
+  "role": "B",
+  "title": "未書きの写り（未探索の1区画を1回だけ開く）",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "探索はアイテム収集だけでなく、構造の把握、危険予測、戦闘回避、イベントやギミックの理解を含む。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "探索の目的はcollectだけじゃない。区画の把握そのものが内容。"
+    },
+    {
+      "path": "docs/systems/quests.md",
+      "section": "**Discovery**は、FILE、NPC、環境、アノマリー、関連アイテムなどを発見・認識したという記録であり、能動的な依頼ではない。Quest枠を消費せず、Questの達成・失敗・報酬とは別に扱う。Discoveryの保存期間、UI、Quest解放との正確な関係は未決定である。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "認識の記録は依頼枠とは別。開けた区的記録がDiscoveryにbie哪些归属するかは未決として扱う。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| `WorldChange` | 出現率・同時出現数、経路・Portal・Map状態などの世界変化 | 個人表示だけでRun共有状態を確定しない |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "区画の開啓はMap状態の変化としてServerが確定する。"
+    },
+    {
+      "path": "docs/world/information-design.md",
+      "section": "## 「説明」ではなく「痕跡」",
+      "source_status": "Status: Draft（草案）",
+      "claim": "開けたことを本人に説明しすぎない。記録の扱いだけを書く。"
+    }
+  ],
+  "design_hypothesis": "探索の時間は有限だ。本候補は『未探索の区画を1つだけ即座に開ける』写りを与える。ただし開けるだけで、中身の評価は通常の探索に委ねられる。時間を節約する代わりに、覗き見で中身を拾うことになる。",
+  "experience": {
+    "goal": "探索に回せない時間を、1区画ぶんの早起きに回す。",
+    "player_choice": "もう1区画だけ開けるか、その時間を戦闘へ回すか。開ける先は見ずに選ぶ。",
+    "sacrifice_or_risk": "開けるだけで中身は得られない。開いた区画は探索済みに変わり、戻す方法は候補では作らない。"
+  },
+  "placement_assumption": "新しい区画・部屋・地形は提案しない。既存のマップの区画区切りだけを使い、どの区画が存在するかは候補では指定しない。",
+  "components": [
+    {
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "未探索の区画を探索済み状態へ遷移させる。"
+    },
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "開いた事実を本人にだけ印で示す。区画の内容は出さない。"
+    },
+    {
+      "component": "PlacementContext",
+      "availability": "catalog",
+      "usage": "どの区画を開けるかの選択を操作口にする。"
+    },
+    {
+      "component": "ItemLifecycle",
+      "availability": "catalog",
+      "usage": "正式な取得源とItemStackが未実装であることを前提とする。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "WorldChange",
+      "trigger": "対象個人が写りを使い、未探索の区画を1つ選ぶ",
+      "condition": "実行中であること、写りを個人所持にもつこと、選び方が開ける条件を満たすこと",
+      "result": "選ばれた区画が探索済みの状態になり、そこへ移動できる。区画の中身は通常の探索手順で扱われ、写りは区画内のものを直接取出さない。未探索の区画が0のときは成立しない",
+      "target": "選ばれた区画の探索状態",
+      "scope": "共有のMap内。ただし選択と消費は個人単位",
+      "lifetime": "同一Run中",
+      "resolution": "instant",
+      "end_conditions": [
+        "開くの解決で確定する",
+        "Run終了時に未探索へ戻すかどうかは未決。候補では戻さないとだけ決める"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。開啟は解決で終わり、Map状態として残る。",
+      "stacking": {
+        "exception": false,
+        "rule": "同じ個人への再適用は1回につき1回。二枚目があれば別の未探索区画を開ける",
+        "conflict_resolution": "他のEffectが探索状態を変化させる場合は解決規則が未定義のため保留する"
+      },
+      "server_validation": "Serverが未探索である事と写りの所有を検証してから探索済みへ遷移させる",
+      "client_presentation": "指定の区画へ移動できる状態になる",
+      "feedback": {
+        "success": "区画が探索済みになり移動できる",
+        "failure": "開かない。未探索が残っていない場合など",
+        "ambiguous": "開いた区画の中身はHUDに出さない"
+      }
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "開くの解決直後に個人画面が再描画する",
+      "condition": "実行中であること、対象個人が該当の操作を行える状態であること",
+      "result": "『開いた区画が1つある』印だけを個人に示す。区画名も内容も出さない",
+      "target": "対象個人",
+      "scope": "個人。共有のMap表示は書き換えない",
+      "lifetime": "同一Run中",
+      "resolution": "instant",
+      "end_conditions": [
+        "提示の解決で確定する",
+        "Run終了または切断で個人提示を破棄する"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。提示は開啟の事実だけを伝える。",
+      "stacking": {
+        "exception": false,
+        "rule": "同じ個人への同一提示は非加算1件",
+        "conflict_resolution": "Discoveryの記録との重複は未決のため、候補では表示しない"
+      },
+      "server_validation": "Serverは開啟の事実だけを返す。中身は返さない",
+      "client_presentation": "HUDに印が1つ出るだけ",
+      "feedback": {
+        "success": "印が一瞬出る",
+        "failure": "印が出ない",
+        "ambiguous": "どの区画を開けたかは印で示さない"
+      }
+    }
+  ],
+  "provides_traits": [
+    "未探索の状態を結果として変える効果の例",
+    "開けるだけで中身を渡さない、時間と情報の分離"
+  ],
+  "connection_tags": [
+    "Item",
+    "Environment",
+    "Observation"
+  ],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": [
+        "開いた区画の認識記録とDiscoveryとの関係、および保存期間"
+      ],
+      "reason": "quests.mdはDiscoveryの保存期間とUIを未決とする。候補は探索状態だけを書き、Discoveryとの同一視は行わない。",
+      "adoption_blocker": true
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "区画の単位と未探索の判定基準は未確定。候補は既存の探索単位の上がけだけを前提にする。",
+    "Run終了時に開いた区画が未探索へ戻るかは未決であり、候補は戻さないとだけ決める。",
+    "照合範囲：探索の目的、Discoveryの分離と未決、WorldChangeの境界、説明ではなく痕跡の原則。矛盾は見つからず conflicts は空配列"
+  ],
+  "worldview": {
+    "defamiliarized_element": "開くことを報酬から切り離した。開けた瞬間に何も手に入らず、認識と獲得は通常の探索に残る。",
+    "in_world_rationale": "探索者は到達できない場所について、時間と推測しか持っていない。写りがあるなら、それは中身を当てにいく道具ではなく、閉ざされた一室を開く道具として使われる。",
+    "meaning_left_ambiguous": "写りを作った者は誰で、開けた区画に誰かが行っていたのかは確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "正式なInventoryとItemStackは未実装で、区画の探索状態を表す層も未実装（current-implementation.md）。遷移と選択の経路が要るため true とする。",
+  "new_logic": [
+    "未探索区画を探索済みへ遷移させる操作口と、その選び方の個人単位"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "探索状態の変化は既存の探索進行の末端に追加できる。ただし区画の単位が正本側で定義されておらず判定基準を作る必要があるため中とした。",
+    "implementation_steps": [
+      "デバッグ付与で写りを持たせる",
+      "未探索区画を選ぶUIと探索済みへの遷移を足す",
+      "1回だけ開けることを確認する",
+      "区画内に移動でき、中身は通常の探索で扱われることを確認する"
+    ],
+    "assumed_existing_parts": [
+      "デバッグフロアのマップ切替と区画構成",
+      "クライアントの個人HUD",
+      "InventoryServiceの枠境界"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Undecided",
+        "detail": "配る主体は未確定。正式な取得源が未実装であり創作しない。試作のみデバッグ付与。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "1枠を消費する。開ける区画を選ぶまで消費しない。"
+      },
+      {
+        "route": "Use",
+        "status": "Proposed",
+        "detail": "未探索の区画を1つ選んで開ける。中核の操作。"
+      },
+      {
+        "route": "Present",
+        "status": "NotApplicable",
+        "detail": "渡さない。渡すと区画を選ぶ権利が他人へ移る。"
+      },
+      {
+        "route": "Place",
+        "status": "NotApplicable",
+        "detail": "置かない。置く操作を持つと『開ける場所』と『開く』の二重の意味になる。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "確保枠の外なら死亡時に失う。未使用なら何も起こらない。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "確保枠に入れて未探索区画を残す選択はできる。"
+      },
+      {
+        "route": "Sell",
+        "status": "Undecided",
+        "detail": "換金の可否は判断010・判断011・経済と成長で未決。"
+      },
+      {
+        "route": "Quest",
+        "status": "Undecided",
+        "detail": "依頼主は未確定。既存の博士の依頼が定める固有品の交換とは別物品として扱う。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "Undecided",
+        "detail": "どの異常が開いた区画を探索材料にするかは未決。相手の挙動は作らない。"
+      }
+    ],
+    "ownership_state": "写りはplayer単位の個人所持。開いた区画の探索状態はServerが保持する共有のMap状態として扱う。切断と再接続時の復元は未決。",
+    "server_run_state": "Serverが探索状態をRun共有のMap状態として確定する。出現率と同時出現数は変更しないためWorldChangeは探索状態のみに限定する。"
+  },
+  "html_file": "ROLE-B-023.html"
+}

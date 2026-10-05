@@ -1,0 +1,29 @@
+{
+  "new_count": 15,
+  "target": 15,
+  "legacy_errors": [
+    "ROLE-A-002: HTML/JSON identifier or title/status mismatch: 先 Lone の一枚 — 8/31の日付板2枚",
+    "ROLE-A-002: HTML/JSON identifier or title/status mismatch: Idea"
+  ],
+  "new_errors": [
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest and candidate file set differ",
+    "final requires all 30 reserved IDs",
+    "progress completed IDs differ"
+  ],
+  "at": "2026-10-05T11:22:09.880910+00:00"
+}

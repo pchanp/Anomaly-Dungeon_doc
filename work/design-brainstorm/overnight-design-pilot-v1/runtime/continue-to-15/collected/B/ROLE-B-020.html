@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-B-020 折り畳み段（足元に15秒だけ段差を作る）</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<p class="sub">overnight-design-pilot-v1 ／ ROLE=B ／ 全マップ共通 ／ Idea</p>
+<h1>ROLE-B-020 折り畳み段（足元に15秒だけ段差を作る） — 作業用見出し</h1>
+</header>
+<section id="hypothesis">
+<h2>何の案？</h2>
+<p>地形は変えず、乗れる形だけを一時的に足す段差。</p>
+<h2>仕組み</h2>
+<ul>
+<li>使うと指定地点に15秒だけ乗れる足場が1つ生じる。</li>
+<li>既存の地形と通路はそのまま残る。地形.heightは変わらない。</li>
+<li>足場は時間切れかRun終了で消える。個人だけが乗れる。</li>
+</ul>
+<h2>選択と代償</h2>
+<p>今すぐ折り返すか、15秒だけ足場を作って登るか。登った先を見ずに登る。</p>
+</section>
+<section id="diagram">
+<h2>作用図</h2>
+<div class="board">
+<svg viewBox="0 0 980 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="地形は変わらず個人だけが乗れる足場が指定地点に15秒生じ、時間切れとRun終了で消える、代償として地形自体は登れないまま残る図">
+<rect width="980" height="360" fill="#0a1118"/>
+<text x="30" y="26" class="small">足場は個人だけが搭乗する。地形の種類・高さ・面積は候補側で確定しない。</text>
+<rect x="30" y="60" width="260" height="120" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text x="46" y="90" class="label">既存の地形</text>
+<text x="46" y="116" class="small">登れない段差がある</text>
+<text x="46" y="138" class="small">地形はそのまま</text>
+<text x="46" y="160" class="small">書き換えない</text>
+<rect x="390" y="60" width="260" height="120" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="406" y="90" class="label">15秒の足場</text>
+<text x="406" y="116" class="small">指定地点だけ乗れる</text>
+<text x="406" y="138" class="small">個人だけが搭乗</text>
+<text x="406" y="160" class="small">他人は見えない</text>
+<rect x="700" y="60" width="250" height="120" rx="8" fill="#142330" stroke="#ea9380"/>
+<text x="716" y="90" class="label">時間切れ</text>
+<text x="716" y="116" class="small">足場が消える</text>
+<text x="716" y="138" class="small">地形は変わらない</text>
+<text x="716" y="160" class="small">登れなくなる</text>
+<path d="M292 120 H375" class="active"/><path d="M375 120 l10 6 -10 6" class="active"/>
+<path d="M652 120 H685" class="active"/><path d="M685 120 l10 6 -10 6" class="active"/>
+<rect x="30" y="230" width="920" height="60" rx="8" fill="#142330" stroke="#c4a0ec"/>
+<text x="46" y="260" class="label">個人だけが乗れる：地形を広げず、操作だけを足す</text>
+<text x="46" y="286" class="small"></text>
+<text x="46" y="308" class="small"></text>
+<text x="46" y="330" class="small"></text>
+</svg>
+</div>
+<p>左が元の地形、中央が足場、右が消えた後。地形はずっと変わらない。</p>
+</section>
+<footer>
+<p><a href="index.html">← B候補一覧</a> ／ 詳細データ <a href="ROLE-B-020.json">ROLE-B-020.json</a> ／ connection_tags: Item, Environment ／ requires_code: true ／ 試作コスト: 中</p>
+</footer>
+</main>
+</body>
+</html>

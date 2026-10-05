@@ -1,0 +1,218 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-021",
+  "role": "B",
+  "title": "受け流し札（次の一撃だけ空振りさせる）",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/anomalies/dev-null.md",
+      "section": "固定配置、プレイヤー個別の距離判定、Tool無効化、Skill／Attack／Itemの結果無効化用Attributeとフィードバックを実装済み。",
+      "source_status": "Prototype: Partially Implemented（Studio確認: 2026-09-26）",
+      "claim": "結果の無効化は既に個人単位の属性として実装済みの範囲がある。候補はその属性を1回分だけ使う側に置く。"
+    },
+    {
+      "path": "docs/anomalies/dev-null.md",
+      "section": "「何でも消す能力」にはしない。ゲームの基本的な**入力 -> 処理 -> 結果**という因果関係を壊すことを中心に置く。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "無効化する範囲は限定的であるべき。候補は一撃と一対象だけに絞る。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| `RuleOverride` | 入力結果の無効化、通常攻撃の置換、通常帰還の禁止など | 「その他」の無制限な受け皿にしない。適用対象と優先順位を個別に明記する |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "適用対象は対象一体の通常ダメージだけ、優先順位を個別に書く。"
+    },
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "戦闘イベントには、敵NPCの出現、追跡、包囲、増援、防衛、巨大アノマリーとの遭遇、NPC同士の戦闘への介入などが含まれ得る。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "戦闘は受け身になる局面も入る。受け流す手段はその局面の選択になる。"
+    }
+  ],
+  "design_hypothesis": "戦闘では避けるだけでなく、一撃だけ受けるという判断も残る。本候補は『対象1体から届く次の通常ダメージだけ、結果を1回不成立にする』札を与える。対象は減らず、異常な変化も起きない。使えるのは1回だけで、どの一撃に使うかは交戦中に決める。",
+  "experience": {
+    "goal": "攻撃を1回だけ受けずに済む。",
+    "player_choice": "この一撃を受けるか、札を使って受け流すか、対象を別の手で処理するか。",
+    "sacrifice_or_risk": "使ったら1回分の受け皿は消える。以外の手で受ける選択は残る。"
+  },
+  "placement_assumption": "新しい地形・部屋・敵は提案しない。対象を選ぶ操作だけを持ち、戦闘イベントの形は既存のものに任せる。",
+  "components": [
+    {
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "対象1体への通常ダメージ結果だけを1回不成立にする。"
+    },
+    {
+      "component": "Effect.Damage",
+      "availability": "catalog",
+      "usage": "通常攻撃の最終判定は個別ルールに従うという前提。"
+    },
+    {
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "対象1体の戦闘状態を個人側で評価する。"
+    },
+    {
+      "component": "ItemLifecycle",
+      "availability": "catalog",
+      "usage": "正式な取得源とItemStackが未実装であることを前提とする。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "RuleOverride",
+      "trigger": "対象個人が札を使い、対象1体を選ぶ",
+      "condition": "実行中であること、札を個人所持にもつこと、対象が射程内にいること",
+      "result": "選ばれた対象1体から届く通常ダメージの結果が1回だけ不成立になる。以後の攻撃、対象のHP、対象の状態は通常どおり進む。適用対象は通常ダメージだけ",
+      "target": "選ばれた対象1体から対象個人へ届く通常ダメージの結果",
+      "scope": "個人。対象とする他の入力と共有の戦況判定は書き換えない",
+      "lifetime": "同一Run中",
+      "resolution": "instant",
+      "end_conditions": [
+        "1回の攻撃結果について不成立が解決される",
+        "対象的个人の攻撃以外には波及しない"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。1回分の即時解決のみ。",
+      "stacking": {
+        "exception": false,
+        "rule": "同じ対象への再適用は1件として消費しない。再使用は別の札が必要",
+        "conflict_resolution": "他のRuleOverrideや結果傍受系の効果と重なる場合は解決規則が未定義のため保留する"
+      },
+      "server_validation": "Serverが対象の存在と札の所有を検証し、直後.portalの攻撃結果だけを不成立にする",
+      "client_presentation": "通常攻撃の命中だけが空振り表示になる。対象の反応は変えない",
+      "feedback": {
+        "success": "1回分の通常ダメージが空振りになる",
+        "failure": "何も変わらない。注意表示のみ",
+        "ambiguous": "空振りの理由は本人にもHUDにも出さない"
+      }
+    }
+  ],
+  "provides_traits": [
+    "攻撃の結果だけを1回不成立にする効果の書き方",
+    "対象を限定して無制限な無効化を避ける例"
+  ],
+  "connection_tags": [
+    "Item",
+    "Combat"
+  ],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": [
+        "結果の無効化を持つ効果と、既存の/dev/nullの結果傍受系との優先順位"
+      ],
+      "reason": "dev-null.mdは個人単位の結果無効化用Attributeが実装済みと記すが、複数の無効化が重なったときの優先順位は定義していない。候補は対象と回数を限定し、優先順位は保留する。",
+      "adoption_blocker": true
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "1回という回数は候補側の設計であり、正本の仕様値ではない。",
+    "対象を選ぶUIと射程は未実装であり、候補は決めない。",
+    "照合範囲：結果無効化の既存実装位置、無制限な無効化を避ける原則、RuleOverrideの境界、戦闘イベントの種類。矛盾は見つからず conflicts は空配列"
+  ],
+  "worldview": {
+    "defamiliarized_element": "『受け流す』をPvPの全員無敵ではなく、一撃の selectable な差替として作った。守りの判断は行動として扱った。",
+    "in_world_rationale": "探索者は常に可能被攻撃される前提ではない。受け流し札があるなら、それは防御力を上げるのではなく、受け取る一撃を一つだけ選び取る道具として使われる。",
+    "meaning_left_ambiguous": "札を作った者は誰で、受け流した一撃の後に何が起きたかは確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "正式なInventoryとItemStackは未実装で、対象を選んで結果を不成立にする経路も未実装（current-implementation.md / dev-null.md）。選択と結果の打消し経路が要るため true とする。",
+  "new_logic": [
+    "対象1体を選んで通常ダメージの結果だけを1回不成立にする操作口"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "結果無効化の個人属性は既に一部実装済みのため、対象を限定して1回だけ使う形に絞れば小さくできる。ただし対象選択のUIが要るため中とした。",
+    "implementation_steps": [
+      "デバッグ付与で札を持たせる",
+      "デバッグ床の巨人に対して対象選択と1回分の結果不成立を足す",
+      "1回目だけ空振りになり、2回目は通ることを確認する",
+      "対象のHPが変わらないことを確認する"
+    ],
+    "assumed_existing_parts": [
+      "デバッグ床の巨人（実装済みの個人単位の結果無効化属性）",
+      "クライアントの対象選択UIの土台",
+      "InventoryServiceの枠境界"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Undecided",
+        "detail": "配る主体は未確定。正式な取得源が未実装であり創作しない。試作のみデバッグ付与。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "1枠を消費する。使わないなら効果はない。"
+      },
+      {
+        "route": "Use",
+        "status": "Proposed",
+        "detail": "対象を選んで、その1体からの次の一撃だけ空振りさせる。中核の操作。"
+      },
+      {
+        "route": "Present",
+        "status": "NotApplicable",
+        "detail": "渡さない。渡すと受け流す権利まで他人へ移る。"
+      },
+      {
+        "route": "Place",
+        "status": "NotApplicable",
+        "detail": "置かない。置く操作は設置型の受理へ另行になる。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "確保枠の外なら死亡時に失う。未使用なら何も起こらない。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "確保枠に入れて一撃への備えを守れる。"
+      },
+      {
+        "route": "Sell",
+        "status": "Undecided",
+        "detail": "換金の可否は判断010・判断011・経済と成長で未決。"
+      },
+      {
+        "route": "Quest",
+        "status": "Undecided",
+        "detail": "依頼主は未確定。既存の博士の依頼が定める固有品の交換とは別物品として扱う。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "Proposed",
+        "detail": "結果の不成立は既存の傍受系の分類に属する。どの異常がこれを取るかは未決で、相手の挙動は作らない。"
+      }
+    ],
+    "ownership_state": "札はplayer単位の個人所持。不成立は対象の个人結果に対する個人側の更新として扱う。切断と再接続時の復元は未決。",
+    "server_run_state": "個人側の攻撃結果のみを扱う。Run共有のマップ状態は書き換えず、出現率と同時出現数も変更しないためWorldChangeのEffectは発生しない。"
+  },
+  "html_file": "ROLE-B-021.html"
+}

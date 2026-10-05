@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-B-027 崩土の袋（投げた地点を20秒だけ塞ぐ）</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<p class="sub">overnight-design-pilot-v1 ／ ROLE=B ／ 全マップ共通 ／ Idea</p>
+<h1>ROLE-B-027 崩土の袋（投げた地点を20秒だけ塞ぐ） — 作業用見出し</h1>
+</header>
+<section id="hypothesis">
+<h2>何の案？</h2>
+<p>投げた地点を20秒だけ通行不能にする袋。自分も通れなくなる。</p>
+<h2>仕組み</h2>
+<ul>
+<li>射程内に投げる指定地点だけ、20秒間通行が失われる。</li>
+<li>地形は書き換えない。対象も自分も同じ地点を通れない。</li>
+<li>時間切れかRun終了で元に戻る。回収できない。</li>
+</ul>
+<h2>選択と代償</h2>
+<p>自分を守る距離へ投げるか、遠くへ投げるか。通したい側を塞ぐか。</p>
+</section>
+<section id="diagram">
+<h2>作用図</h2>
+<div class="board">
+<svg viewBox="0 0 980 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="投げた地点の通行が20分間だけ失われ、地形は変わらず自分も対象も同地点を通れなくなり、時間切れで通行が戻る代償を持つ図">
+<rect width="980" height="360" fill="#0a1118"/>
+<text x="30" y="26" class="small">塞がれる範囲と塊の大きさは未確定。候補は値の決定を渡さない。</text>
+<rect x="30" y="60" width="250" height="120" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text x="46" y="90" class="label">遠くに投げる</text>
+<text x="46" y="116" class="small">間に合いを作る</text>
+<text x="46" y="138" class="small">自分は通れる</text>
+<text x="46" y="160" class="small">相手も遠の</text>
+<rect x="370" y="60" width="250" height="120" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="386" y="90" class="label">投げる</text>
+<text x="386" y="116" class="small">指定地点だけ塞がる</text>
+<text x="386" y="138" class="small">地形は不変</text>
+<text x="386" y="160" class="small">自分も通れない</text>
+<rect x="700" y="60" width="250" height="120" rx="8" fill="#142330" stroke="#ea9380"/>
+<text x="716" y="90" class="label">20秒後</text>
+<text x="716" y="116" class="small">通行が戻る</text>
+<text x="716" y="138" class="small">塞いだ状態は消える</text>
+<text x="716" y="160" class="small">回収はできない</text>
+<path d="M282 120 H355" class="active"/><path d="M355 120 l10 6 -10 6" class="active"/>
+<path d="M622 120 H685" class="active"/><path d="M685 120 l10 6 -10 6" class="active"/>
+<rect x="30" y="230" width="920" height="60" rx="8" fill="#142330" stroke="#c4a0ec"/>
+<text x="46" y="260" class="label">代償：通したい道にも通れなくなる。投げる距離そのものが判断になる。</text>
+<text x="46" y="286" class="small"></text>
+<text x="46" y="308" class="small"></text>
+<text x="46" y="330" class="small"></text>
+</svg>
+</div>
+<p>左が遠投、中央が投擲、右が時間後。最下段が代償。</p>
+</section>
+<footer>
+<p><a href="index.html">← B候補一覧</a> ／ 詳細データ <a href="ROLE-B-027.json">ROLE-B-027.json</a> ／ connection_tags: Item, Environment, Combat ／ requires_code: true ／ 試作コスト: 中</p>
+</footer>
+</main>
+</body>
+</html>

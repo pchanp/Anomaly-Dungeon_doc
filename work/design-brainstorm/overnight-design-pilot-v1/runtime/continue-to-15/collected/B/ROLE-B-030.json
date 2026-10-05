@@ -1,0 +1,219 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-030",
+  "role": "B",
+  "title": "巻き戻し（自分の直前の操作1回だけ取り消す）",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| `RuleOverride` | 入力結果の無効化、通常攻撃の置換、通常帰還の禁止など | 「その他」の無制限な受け皿にしない。適用対象と優先順位を個別に明記する |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "無効化する対象は自分の直近1操作に限る。優先順位を個別に書く。"
+    },
+    {
+      "path": "docs/anomalies/dev-null.md",
+      "section": "「何でも消す能力」にはしない。ゲームの基本的な**入力 -> 処理 -> 結果**という因果関係を壊すことを中心に置く。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "全入力を消すのではなく、自分の1操作だけを取り消す設計にする。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| 同一Run中 | 当該Runの終了で破棄する。マップ遷移では原則保持する |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "巻き戻しの履歴は同一Run中の境界に置く。"
+    },
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "戦闘は、常時大量配置された敵だけを目的にするのではなく、探索中のイベントやアノマリー反応から発生する案とする。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "戦闘は探索の，成立する。操作を取り直す手段は探索と戦闘の双方で効く。"
+    }
+  ],
+  "design_hypothesis": "探索でも戦闘でも、後悔はいつも遅れる。本候補は『自分が出した直近1操作の結果だけを不成立にする』巻き戻しを与える。世界中を1度巻き戻すのではなく、自分の操作だけだ。巻き戻すと、その操作の選択がもう1回来る。",
+  "experience": {
+    "goal": "踏み込んだ1歩と、投げた1回を反転させる。",
+    "player_choice": "そのまま進むか、その1手だけ戻すか。戻すのは自分だけ。",
+    "sacrifice_or_risk": "他者の行動は戻らない。巻き戻しは1回だけ。戻った場面でも集団の位置は進む。"
+  },
+  "placement_assumption": "新しい地形・部屋・敵は提案しない。既存の戦闘イベントと探索の中で、やり直したい場面を選ぶ操作として使う。操作履歴の保持範囲は候補側で確定しない。",
+  "components": [
+    {
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "対象個人が出した直近1操作の結果だけを不成立にする。"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "巻き戻す対象を選択できる個人操作。"
+    },
+    {
+      "component": "InventoryBoundary",
+      "availability": "catalog",
+      "usage": "巻き戻しで戻した結果は枠の操作も元に戻す。"
+    },
+    {
+      "component": "ItemLifecycle",
+      "availability": "catalog",
+      "usage": "正式な取得源とItemStackが未実装であることを前提とする。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "RuleOverride",
+      "trigger": "対象個人が巻き戻しを使い、直近の1操作を選ぶ",
+      "condition": "実行中であること、巻き戻しを個人所持にもつこと、履歴が存在すること",
+      "result": "選ばれた操作の結果だけが1回不成立になる。移動や攻撃の結果を巻き戻せる。世界の共有状態は戻らず、Serverが確定済みの他者の認識も書き換えない。適用対象は自分が選んだ1操作だけ",
+      "target": "対象個人が選んだ直近1操作の結果",
+      "scope": "個人。他者の認識と共有のMap状態は書き換えない",
+      "lifetime": "同一Run中",
+      "resolution": "instant",
+      "end_conditions": [
+        "1操作についての不成立が解決される",
+        "他者の行動の結果は巻き戻らない。Runをまたいで残る"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。1操作についての即時解決のみ。",
+      "stacking": {
+        "exception": false,
+        "rule": "同じ操作へ重ねても1件。別の操作を選び直せる",
+        "conflict_resolution": "他のRuleOverrideや結果傍受系の効果と重なる場合は解決規則が未定義のため保留する"
+      },
+      "server_validation": "Serverが対象個人の操作履歴から対象を選び、結果だけを不成立にする",
+      "client_presentation": "巻き戻した場面が1つだけ戻ったように見える。世界の描写は戻らない",
+      "feedback": {
+        "success": "選んだ操作の結果が消える",
+        "failure": "何も変わらない。注意表示のみ",
+        "ambiguous": "巻き戻した理由を本人にもHUDにも出さない"
+      }
+    }
+  ],
+  "provides_traits": [
+    "自分の操作の結果だけを1回不成立にする効果の例",
+    "他人と共有しない履歴の扱い方"
+  ],
+  "connection_tags": [
+    "Item",
+    "Combat",
+    "Rule"
+  ],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": [
+        "個人操作履歴の保持範囲と、結果の不成立の優先順位"
+      ],
+      "reason": "dev-null.mdは結果無効化の個人単位の属性を実装済みとするが、個人操作履歴の保持範囲と複数回の巻き戻しの優先順位は定義していない。候補は1操作に限って書き、履歴の保持は保留する。",
+      "adoption_blocker": true
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "対象とする操作の種類は未確定。移動・攻撃・使用のどれを扱うかは候補側の想定にとどめる。",
+    "履歴をどこまで保持するかは未実装であり、候補は決めない。",
+    "照合範囲：RuleOverrideの境界、無制限な無効化を避ける原則、同一Run中の保存境界、戦闘が探索から生じるという前提。矛盾は見つからず conflicts は空配列"
+  ],
+  "worldview": {
+    "defamiliarized_element": "巻き戻す範囲を自分の行動に限定した。世界を戻すのではなく、一度きりのやり直しの効果にした。",
+    "in_world_rationale": "探索者は常に自分の判断に后悔する。巻き戻しがあるなら、それは世界を書き換える道具ではなく、その場での一度きりのやり直しになる道具として使われる。",
+    "meaning_left_ambiguous": "巻き戻しは誰の結果か、道具を作った者は誰で、このやり直しが許されていたのかは確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "正式なInventoryとItemStackは未実装で、個人操作履歴と結果の不成立の経路も未実装（current-implementation.md / dev-null.md）。 true とする。",
+  "new_logic": [
+    "個人操作履歴から対象を選ぶ操作口と、選んだ1操作の結果だけを不成立にするRuleOverride"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "結果無効化は個人属性の一部が既に実装済みのため、1操作に限定すれば小さくできる。ただし操作履歴の保持が未実装のため中とした。",
+    "implementation_steps": [
+      "デバッグ付与で巻き戻しを持たせる",
+      "デバッグ床で移動を1回行ってから巻き戻せることを確認する",
+      "他者の移動は巻き戻らないことを確認する",
+      "同じ操作へ重ねても1回だけ巻き戻ることを確認する"
+    ],
+    "assumed_existing_parts": [
+      "デバッグ床の巨人（衝突と移動）",
+      "個人単位の結果無効化用Attribute（実装済み）",
+      "InventoryServiceの枠境界"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Undecided",
+        "detail": "配る主体は未確定。正式な取得源が未実装であり創作しない。試作のみデバッグ付与。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "1枠を消費する。1回だけでも意味は大きい。"
+      },
+      {
+        "route": "Use",
+        "status": "Proposed",
+        "detail": "直近の操作1つを選んで結果だけを取り消す。中核の操作。"
+      },
+      {
+        "route": "Present",
+        "status": "NotApplicable",
+        "detail": "渡さない。渡すと他人の操作まで巻き戻すことになる。"
+      },
+      {
+        "route": "Place",
+        "status": "NotApplicable",
+        "detail": "置かない。置く操作は設置型の別設計になる。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "確保枠の外なら死亡時に失う。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "確保枠に入れて1回分を死んでも守る選択はできる。"
+      },
+      {
+        "route": "Sell",
+        "status": "Undecided",
+        "detail": "換金の可否は判断010・判断011・経済と成長で未決。"
+      },
+      {
+        "route": "Quest",
+        "status": "Undecided",
+        "detail": "依頼主は未確定。既存の博士の依頼が定める固有品の交換とは別物品として扱う。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "Proposed",
+        "detail": "結果の不成立は既存の傍受系の分類に属する。どの異常が取るかは未決で、相手の挙動は作らない。"
+      }
+    ],
+    "ownership_state": "巻き戻しはplayer単位の個人所持。操作履歴も不成立判定も個人側として扱う。切断と再接続時の履歴復元は未決。",
+    "server_run_state": "個人操作の結果のみを扱う。Run共有のマップ状態は書き換えず、出現率と同時出現数も変更しないためWorldChangeのEffectは発生しない。"
+  },
+  "html_file": "ROLE-B-030.html"
+}

@@ -1,0 +1,26 @@
+{
+  "new_count": 15,
+  "target": 15,
+  "legacy_errors": [],
+  "new_errors": [
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest and candidate file set differ",
+    "final requires all 30 reserved IDs",
+    "progress completed IDs differ"
+  ],
+  "at": "2026-10-05T11:09:41.244767+00:00"
+}

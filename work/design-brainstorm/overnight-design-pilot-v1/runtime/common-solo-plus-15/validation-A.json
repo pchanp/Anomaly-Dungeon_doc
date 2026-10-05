@@ -1,0 +1,1917 @@
+{
+  "run_id": "overnight-design-pilot-v1",
+  "errors": [
+    "ROLE-A-002: HTML/JSON identifier or title/status mismatch: 先 Lone の一枚 — 8/31の日付板2枚",
+    "ROLE-A-002: HTML/JSON identifier or title/status mismatch: Idea",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest and candidate file set differ",
+    "final requires all 30 reserved IDs",
+    "progress completed IDs differ"
+  ],
+  "review_items": [
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-001",
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "通常NPC個体の巡回中、一巡完了、巡回停止の状態をServerが保持し、Clientは位置と挙動だけを表現する。Anomaly Entityである巨人の状態実装を通常NPCの実装根拠にしない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-001",
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "測定値の提示に使う。Serverの共有事実を個人表示へ落とすために、Server権威の値とClientの表示を分離する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-001",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "一巡の進行と、攻撃を受けたときの巡回停止を個体の状態遷移として扱う。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-001",
+      "component": "NpcPatrolSchedule",
+      "availability": "proposed",
+      "usage": "測点へ移動し、測定を一度行い、記録を個人提示へ渡して次へ進む周期処理。周期と測点の数は設定値で、実装も決まっていない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-001",
+      "component": "PersonalHintDelivery",
+      "availability": "proposed",
+      "usage": "個人HUDへ1行だけ測定値を載せる提示経路。既存HUDへ追加するか専用UIとするかは未実装かつ未確定である。"
+    },
+    {
+      "type": "spec_conflict",
+      "candidate_id": "ROLE-A-001",
+      "source_path": "docs/systems/map-gimmick-ideas.md",
+      "existing_rule": "8/31の未実装の境界に「8/32での強制Anomaly発生は未実装である。危険度上昇はExposureの取得速度と帰還閉鎖だけで表現する」と記されている。",
+      "proposal_difference": "本候補は既存の見込みに、水位記録という第三の先行手掛かりを足す。",
+      "correction": "危険度の表現はExposureの取得速度と帰還閉鎖のまま維持し、本候補は危険度そのものではなく段階変化が近いことを示す方向の手掛かりに限定する。8/32で追加の倍率や強制発生、報酬を発生させない。",
+      "reason_correctable": "既存仕様の実装範囲を変えず、読み取り用の先行情報を足すだけなので現行記述と矛盾しない。問題になるのは8/32の危険度表現を三本目にするかという設計判断であり、採用判断として送れる。",
+      "decision_needed": "先行手掛かりを8/31の危険度表現としてドキュメント化するのか、局所的な観察記録として残すだけにするのか。"
+    },
+    {
+      "type": "spec_conflict",
+      "candidate_id": "ROLE-A-001",
+      "source_path": "docs/decisions/003-august-31-time-and-phase-design.md",
+      "existing_rule": "未決事項に「フェーズ長480/300/300秒という値は実測調整前であり、確定値ではない」と記されている。",
+      "proposal_difference": "測定値の提示は既存のServer側フェーズ進行と同じ主体から出るため、残り時間の手掛かりとして読まれる可能性がある。",
+      "correction": "残秒、基準時刻、測定間隔の秒数を一切表示しない。提示するのは値が1段進んだことと、その前後関係だけとする。既存フェーズ長から残秒を導出する実装は採用しない。",
+      "reason_correctable": "未確定な値を確定値として見せる副作用は、表示項目を限定するだけで避けられる。",
+      "decision_needed": "段階の手掛かりを進行中である以上の情報として提示してよいか。提示の粒度は判断が必要である。"
+    },
+    {
+      "type": "spec_conflict",
+      "candidate_id": "ROLE-A-001",
+      "source_path": "docs/systems/current-implementation.md",
+      "existing_rule": "8/31のServer側時間進行とフェーズ別差し替えは実装済みだが、通常NPCの状態機械は確認されていない。NPCStateはUnconfirmedであり、HPなどのプレイヤー属性は実装済みだが敵AIは未実装である。",
+      "proposal_difference": "本候補は通常NPC個体のServer状態機械を必須とする。",
+      "correction": "8/31マップ側へ状態機械を追加するか、共通NPC基盤を新設するかは実装判断とし、本候補ではマップ側にも共通側にも寄せない。所有権は判断003がマップ固有に定めた段階進行の側に置く。",
+      "reason_correctable": "既存マップ生成とフェーズ進行の所有権を壊さず、個別実装として成立し得る。",
+      "decision_needed": "通常NPCの状態機械をマップ固有に置くか、共通NPCの枠として置くか。他のマップのNPC案との共通化の是非を含む。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-001",
+      "note": "測定周期、測点の順序、提示範囲の閾値、値の単位はすべて未定であり、数値を決めていない。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-001",
+      "note": "何を測るのか（堤防の水位か、日付板との関係か、別の量か）は未確定である。候補は場所の仕事として測られている何かという抽象に留める。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-001",
+      "note": "記録が8/32への予告として読めるかどうかは未確定である。候補は予告としての位置づけを明示しない。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-001",
+      "note": "測定に時間を使う代償が帰還判断へどう影響するかは未検証である。実プレイでの時間圧は未確認である。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-001",
+      "note": "点検役が攻撃を受けた後に巡回を再開できるかどうかは採用しない。再開を認めるなら別個体の新規生成という別設計になる。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-001",
+      "note": "8/32へ移行した時に点検役が退場するか残るかは未確定である。現行の定義はマップまたはRunの終わりまでであり、8/32の挙動は別に決める必要がある。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-001",
+      "note": "実装の有無はStudio未確認である。今回の担当セッションではStudioを操作していない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-002",
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "板の値を個人提示として返す。Serverの値をClient表示へ落とす。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-002",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "先行した板の表示更新を、既存の日付変更に続く別イベントとして扱う。"
+    },
+    {
+      "type": "spec_conflict",
+      "candidate_id": "ROLE-A-002",
+      "source_path": "docs/systems/map-gimmick-ideas.md",
+      "existing_rule": "日付板は日付変更に合わせて表示が更新される、と記されている。フェーズごとの時刻は未確定である。",
+      "proposal_difference": "本候補は日付変更に加えて、帰還面の開放などで片方の板だけ先に更新する状態を足す。",
+      "correction": "既存の日付更新は維持し、遅れの秒数と基準は表示しない。先行は表示の順序だけに留める。",
+      "reason_correctable": "既存の更新処理を増やしても、日付変更という主要規則は壊さない。",
+      "decision_needed": "先行する板をどちらに固定するか、Run開始時に選ぶか。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-002",
+      "note": "先行する板の固定方法と遅れの長さは未定。数値を決めていない。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-002",
+      "note": "差を読んだとき何が起こるかは未定（何も起こらない案）。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-002",
+      "note": "実装の有無はStudio未確認。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-003",
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "通常NPC1体の案内、再巡回、停止の状態をServerが持つ。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-003",
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "案内の個人提示に使う。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-003",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "再巡回による案内の更新と、攻撃による停止を扱う。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-003",
+      "component": "NpcRouteMemory",
+      "availability": "proposed",
+      "usage": "最後に巡回した時点の通路状態を覚える個体ごとの記録。周期と更新条件は未定。"
+    },
+    {
+      "type": "spec_conflict",
+      "candidate_id": "ROLE-A-003",
+      "source_path": "docs/systems/current-implementation.md",
+      "existing_rule": "8/31マップには通常NPCの状態機械が未実装であり、既存のPromptは端末と出口面が中心である。",
+      "proposal_difference": "本候補はTrailの分岐に案内用の接触点を1つ足す。",
+      "correction": "既存のTrailと分岐は変更せず、配置だけを追加する。既存Promptの条件は変更しない。",
+      "reason_correctable": "配置の追加は既存の構造を壊さない。",
+      "decision_needed": "案内用の接触点をPromptで示すか、近接の挙動だけで成立させるか。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-003",
+      "note": "案内の内容と更新周期は未定。数値を決めていない。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-003",
+      "note": "案内が実際に誤っている確率は未定。保証しない。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-003",
+      "note": "分岐の選択は未確定。実装の有無はStudio未確認。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-004",
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "通常NPC1体の待機、移動、退場の状態をServerが保持し、Clientは位置と挙動だけを表現する。Anomaly Entityとして扱わない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-004",
+      "component": "ArchiveMedia",
+      "availability": "catalog",
+      "usage": "棚の選択結果に、依頼対象である状態を保持させるために使う。媒体の実内容は未実装のままで、名前と選択結果のみという現状を崩さない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-004",
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "依頼対象であることの印を個人提示として返すために使う。世界の意味は説明せず、目的の明確さだけを提示する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-004",
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "渡した項目を当該プレイヤーの個人試聴の候補から外すために使う。対象と優先順位を明示し、無制限の受け皿にしない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-004",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "NPCの待機、移動、退場の状態遷移として使う。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-004",
+      "component": "NpcRequestMarker",
+      "availability": "proposed",
+      "usage": "既存の選択結果に、依頼対象である印を保持する欄と、それを個人提示へ落とす経路。Archive Selection UIの実装が未確認のため、既存UIへの追加か別の提示かは未確定である。"
+    },
+    {
+      "type": "spec_conflict",
+      "candidate_id": "ROLE-A-004",
+      "source_path": "docs/decisions/009-tsutaya-closing-time-archive.md",
+      "existing_rule": "基準状態に、落下ケースと欠番は少数に留める、店全体を瓦礫にしない、とあり、検証が必要な事項に既存のArchiveShelfと追加の視覚棚を混同しないことが挙げられている。",
+      "proposal_difference": "本候補は欠番を視覚効果としてではなく、Archive Selection UIの結果状態として意味のある印として扱う。",
+      "correction": "欠番の見た目も数も、落下物の量も増やさない。追加するのは既存の選択結果に保持される状態の欄だけとし、棚の視覚構造は増やさない。",
+      "reason_correctable": "009が避けているのは視覚的な欠番表現の過剰と既存のArchiveShelfとの混同であり、選択結果に状態を持たせることは別の話である。ただしUIの実装が未確認のため、構造変更の可否は判断を要する。",
+      "decision_needed": "既存のArchive Selection UIに選択結果の状態欄を追加してよいか。できない場合、同じ機能をどの提示経路で代替するか。"
+    },
+    {
+      "type": "spec_conflict",
+      "candidate_id": "ROLE-A-004",
+      "source_path": "docs/systems/map-gimmick-ideas.md",
+      "existing_rule": "アーカイブと相互作用の節に、Back Roomなどで再生すると店舗のShared BGMを変えられる案がある。一方、実装済みの範囲では個人試聴は共有BGMを変えないと記され、共有BGMの選択UIは未実装である。",
+      "proposal_difference": "本候補は共有BGMを一切変更しない。NPCへの渡しは媒体の消費のみであり、店内音楽の選択には関与しない。",
+      "correction": "個人試聴が共有BGMを変えないという実装済みの境界を崩さない。共有BGMを変更する操作は本候補に含めず、未実装の選択UIの扱いも据え置く。",
+      "reason_correctable": "現行の実装済みの挙動と矛盾しない。共有BGMを変更する案は依然として未実装かつ未確定のままである。",
+      "decision_needed": "共有BGMを変更する経路を将来別に扱う場合、その操作と本候補の消費が同じ項目に競合しないか。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-004",
+      "note": "返却待ちの対象項目は1つだけとする案だが、印を1件だけ持たせるのか複数持たせるかは未定である。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-004",
+      "note": "対象の棚を固定するかRun開始時に選ぶかは未定である。本候補は固定しない。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-004",
+      "note": "印を説明しない前提だが、説明を出さないと成立が読めない場合は、別の成立ルートが必要かは未検討である。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-004",
+      "note": "NPCが攻撃を受けた場合の挙動は設計していない。攻撃は解答にならない。逃走か無反応かは判定していない。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-004",
+      "note": "NPCが店内を往復する周期と、その地点の数は未定である。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-004",
+      "note": "依頼がRun開始時点で無効な場合に印を出すべきかは未検討である。本候補は依頼が有効な場合のみとする。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-004",
+      "note": "正式なItemStackは未実装であり、所持の扱いは仮である（SRC-01）。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-005",
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "通常NPC1体の読む、回る、止まるの状態をServerが持つ。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-005",
+      "component": "ArchiveMedia",
+      "availability": "catalog",
+      "usage": "棚の選択結果の鳴り状態を、放送の対象として参照する。実内容（映像、音声）は未実装のまま扱う。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-005",
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "放送による棚のNotifyを個人提示として返す。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-005",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "NPCの巡回と、攻撃による放送停止を扱う。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-005",
+      "component": "InStoreBroadcastLoop",
+      "availability": "proposed",
+      "usage": "店内放送を周期で再生する経路。共有BGMの選択処理とは独立に保つ。"
+    },
+    {
+      "type": "spec_conflict",
+      "candidate_id": "ROLE-A-005",
+      "source_path": "docs/systems/map-gimmick-ideas.md",
+      "existing_rule": "共有BGMはマップモデル直下のSoundとしてServer Stateで管理し、個人試聴が変えることはない。選択UIは未実装である。",
+      "proposal_difference": "本候補は店内放送の経路をNPCの個体に持たせ、共有BGMの選択処理とは独立させる。",
+      "correction": "共有BGMの状態も選択UIも変更しない。放送は別系統として扱う。",
+      "reason_correctable": "個人試聴と共有BGMの境界を崩さないため補正可能である。",
+      "decision_needed": "店内放送を別Soundとしてよいか、既存の店内音の枠を使ってもよいか。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-005",
+      "note": "放送の周期と内容、対象区画の決め方は未定。数値を決めていない。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-005",
+      "note": "放送が鳴る棚の数は1つか複数かは未定。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-005",
+      "note": "Attackを受けた場合の挙動は未確定（逃走か無反応か）。実装の有無はStudio未確認。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-006",
+      "component": "ArchiveMedia",
+      "availability": "catalog",
+      "usage": "棚の検索結果を鳴りの引きとして参照する。実内容は未実装のまま扱う。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-006",
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "他室の棚の鳴り状態をRun共有で更新する。個人表示だけで確定しない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-006",
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "自分の検索と鳴りを結びつける個人提示に使う。"
+    },
+    {
+      "type": "spec_conflict",
+      "candidate_id": "ROLE-A-006",
+      "source_path": "docs/systems/effect-components.md",
+      "existing_rule": "同じ世界状態へ競合する解決規則が未定義なら、その適用を保留し記録するとされている。",
+      "proposal_difference": "本候補は複数の検索が同時に起きた場合に鳴り先を選ぶ必要がある。",
+      "correction": "選択規則が定まるまでは、世界変化として確定させず保留する。数値も順番も決めない。",
+      "reason_correctable": "保留という扱い自体は既定規則と矛盾しない。",
+      "decision_needed": "複数の同時検索があったとき、どの棚を鳴らすかの規則を決めるか。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-006",
+      "note": "鳴りの持続時間、伝播の方式、1回の検索で鳴る基数は未定。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-006",
+      "note": "別室への伝播が常態化するかどうかも未定。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-006",
+      "note": "実装の有無はStudio未確認。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-007",
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "戦闘NPCの状態とプレイヤー非反応をServerが保持する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-007",
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "Active NPC枠と後方補充をRun共有で扱う。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-007",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "介入個体の一時的な対象化を扱う。"
+    },
+    {
+      "type": "spec_conflict",
+      "candidate_id": "ROLE-A-007",
+      "source_path": "docs/systems/map-gimmick-ideas.md",
+      "existing_rule": "SEKIGAHARAはIdeaで、勢力・戦況ロジックは未決と記されている。",
+      "proposal_difference": "本候補は戦闘NPCがプレイヤーを認識しないという無反応条件を明示する。",
+      "correction": "勢力・地形・戦況は決めず、無反応を個体AIの要求として扱う。",
+      "reason_correctable": "既存のIdeaの枠内で条件だけを追加する。",
+      "decision_needed": "戦闘NPCがプレイヤーを無視してよいか。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-007",
+      "note": "勢力数、上限、補充周期、個体の強さは未定。数値を決めていない。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-007",
+      "note": "Player Anomalyとの戦闘時のHP下限は判断019に記載がなく未決。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-007",
+      "note": "SEKIGAHARAは未実装であり、実装の有無は未確認。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-008",
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "戦闘モブ個体の戦闘不能と補充の再出現をServerが保持する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-008",
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "枠の残数と補充をRun共有で管理する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-008",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "個体から補充個体への差し替えを扱う。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-008",
+      "component": "MobSpawnBudget",
+      "availability": "proposed",
+      "usage": "SEKIGAHARAのIdeaの枠を実装側で表現するもの。粒度と数値は未定。"
+    },
+    {
+      "type": "spec_conflict",
+      "candidate_id": "ROLE-A-008",
+      "source_path": "docs/decisions/017-run-anomaly-spawn-components.md",
+      "existing_rule": "アノマリーが解決・消滅した後に枠を再利用できるかは今回決めないと記されている。",
+      "proposal_difference": "本候補は戦闘NPCの枠では、戦闘不能の直後から補充で枠を再び使う。",
+      "correction": "判断017の未決はアノマリー側の問題として残し、本候補はNPC枠として独立させる。",
+      "reason_correctable": "別の枠として扱えば既存の意味を壊さない。",
+      "decision_needed": "補充型の枠をAnomaly枠から分離して実装してよいか。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-008",
+      "note": "補充の遅れ、上限、個体の強さは未定。数値を決めていない。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-008",
+      "note": "補充された個体が同じ記憶を持つかは未定。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-008",
+      "note": "SEKIGAHARAは未実装であり、実装の有無は未確認。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-009",
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "運搬NPCの往復と停止の状態をServerが保持する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-009",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "運搬と攻撃による停止を扱う。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-009",
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "運搬の状況を個人提示として返す（何を運んでいるかは出さない）。"
+    },
+    {
+      "type": "spec_conflict",
+      "candidate_id": "ROLE-A-009",
+      "source_path": "docs/systems/map-gimmick-ideas.md",
+      "existing_rule": "SEKIGAHARAのNPCは後方から補充され、勢力と戦況ロジックは未決と記されている。",
+      "proposal_difference": "本候補は戦闘個体ではない運搬NPCを1人足す。",
+      "correction": "補充の枠には含めない。戦闘個体とは別の通常NPCとして置く。",
+      "reason_correctable": "既存のIdeaの枠を壊さずに追加できる。",
+      "decision_needed": "戦闘個体と非戦闘NPCを同じ個体系に含めるか分けるか。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-009",
+      "note": "運搬周期と1回の本数は未定。数値を決めていない。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-009",
+      "note": "助けた場合の報酬は未確定（新しい報酬は創作しない）。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-009",
+      "note": "SEKIGAHARAは未実装であり、実装の有無は未確認。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-010",
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "巡回NPCの状態をServerが保持する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-010",
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "作業中の機材名を個人提示として返す。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-010",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "巡回と作業停止の状態遷移として扱う。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-010",
+      "component": "WhisperTransfer",
+      "availability": "catalog",
+      "usage": "既存の連鎖を壊さないため、このNPCは追従先にならない。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-010",
+      "note": "巡回周期、順番、提示の文面は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-010",
+      "note": "追加NPCを既存資料へ追記するかは判断が必要"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-010",
+      "note": "研究所マップは未実装であり、実装の有無は未確認"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-011",
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "音のする側を個人提示として返す。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-011",
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "遮る操作で提示の入力を無効化する。対象と優先順位を明示する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-011",
+      "component": "SoundInteraction",
+      "availability": "catalog",
+      "usage": "音源の位置と到達を入力として使う。"
+    },
+    {
+      "type": "spec_conflict",
+      "candidate_id": "ROLE-A-011",
+      "source_path": "docs/anomalies/whisper.md",
+      "existing_rule": "装置の正体、人物の行方、博士が実際に処分するかは不明のままとされる。",
+      "proposal_difference": "本候補は装置の稼動音を提示の入力にする。",
+      "correction": "音は人の状態を示さない。所在も正体も判断できる形にはしない。",
+      "reason_correctable": "未確定のまま残す既存方針を守ったまま、提示の入力を足せる。",
+      "decision_needed": "音を人の有無の手掛かりとして使わないという制約を明文化するか。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-011",
+      "note": "音の周期、到達範囲、提示の更新間隔は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-011",
+      "note": "装置が再始動する条件は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-011",
+      "note": "研究所マップは未実装であり、実装の有無は未確認"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-012",
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "廊下の記録の並びをRun共有で更新する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-012",
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "置かれた順序だけを個人提示として返す。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-012",
+      "component": "PaperTraceState",
+      "availability": "proposed",
+      "usage": "紙の置き順をRun共有で保持する。間隔と上限は未定。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-012",
+      "note": "置き周期、置き場所、上限、片づける条件は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-012",
+      "note": "他の人の行動でも並びが変わるため誤読が起きうる（未検証）"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-012",
+      "note": "研究所マップは未実装であり、実装の有無は未確認"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-013",
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "通常モブ個体の移動中と終了の状態をServerが持つ。Anomaly Entityである巨人の状態実装やAnomalySpawnの枠を借りない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-013",
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "開いたイベントから湧き枠の記録と個体出現を起こす世界変化として使う。枠はRun共有で、個人表示だけで確定しない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-013",
+      "component": "Effect.Damage",
+      "availability": "catalog",
+      "usage": "個体との接触時にHPへDamageを与える。数値、部位、HP下限は未定であり、判断019のプレイヤー間HP下限の規定を通常モブへそのまま適用しない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-013",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "個体が終端へ到達して終了し、湧き枠が1つ解放される処理を扱う。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-013",
+      "component": "GimmickEventOpenState",
+      "availability": "proposed",
+      "usage": "既存のギミックイベントが開いていることをServerが保持する共通の状態。どのマップのどのイベントをどう定義するかは未実装かつ未確定である。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-013",
+      "component": "MobSpawnBudget",
+      "availability": "proposed",
+      "usage": "通常モブの生存数に上限を設けるRun共有の枠と、枠内の補充判定。枠の粒度（マップ単位かRun単位か）と上限の数値は未定である。"
+    },
+    {
+      "type": "spec_conflict",
+      "candidate_id": "ROLE-A-013",
+      "source_path": "docs/systems/quests.md",
+      "existing_rule": "同一マップ内でアノマリーが1体発生するごとに、すべてのアノマリー候補の個別出現確率は0.90倍になる、と記されている。一方、通常モブの扱いは記載されていない。",
+      "proposal_difference": "本候補は通常モブの個体の出現を、このアノマリー発生回数に算入しない。",
+      "correction": "通常モブの発生はアノマリー出現の計算に算入しない旨を明記する。両者は別の計算として分け、アノマリー側の減衰は通常モブの湧きに作用させない。",
+      "reason_correctable": "両者を混ぜると、探索中に湧きを避けただけでアノマリー遭遇率が下がることになり、既存規則の意図とずれる。算入しないという規則は既存の記述を壊さない。",
+      "decision_needed": "通常モブの発生をアノマリー発生回数に算入するか。本候補は算入しない案であり、採否は判断が必要である。"
+    },
+    {
+      "type": "spec_conflict",
+      "candidate_id": "ROLE-A-013",
+      "source_path": "docs/decisions/017-run-anomaly-spawn-components.md",
+      "existing_rule": "同時出現数コンポーネントは各アノマリーが持ち、標準値は1で、同じ枠が同種の個体数を表すことになっている。この枠をAnomaly以外の個体へ広げる共通化は決められていない。",
+      "proposal_difference": "本候補は通常モブにも湧き枠を設けるが、Anomalyの同時出現数コンポーネントとは別の枠としてRun共有に持つ。",
+      "correction": "同じ枠へ統合しない。Anomalyの枠は判断017の意味をそのまま保ち、通常モブの枠を別に持つ。両者の枠が同時に存在しても、個体数の扱いは互いに影響させない。",
+      "reason_correctable": "判断017はアノマリーに関する決定であり、Anomaly以外の個体へ枠を適用していない。別の枠として既存の意味を壊さずに追加できる。",
+      "decision_needed": "通常モブ用の湧き枠をRun状態として別に持ってよいか。共通化するなら、判断017の枠との関係を別途記述する必要がある。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-013",
+      "note": "湧き上限の数値、枠の粒度（マップ単位かRun単位か）、補充の周期はすべて未定であり、数値を決めていない。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-013",
+      "note": "どのギミックイベントが湧きの条件になるかは未確定である。8/31のフェーズ、TSUTAYAの放送、研究所の装置、SEKIGAHARAの戦闘イベントが例になるが、どれを採用するかは各マップ側の判断である。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-013",
+      "note": "SEKIGAHARAはIdeaであり勢力と戦況が未確定のため、本候補を同マップへ適用する場合の表現は別問題になる。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-013",
+      "note": "進行方向と終端の定義は未確定である。既存の通行の末端を想定するが、新しい地形や経路は提案しない。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-013",
+      "note": "Player Anomalyとの間で個体とのHP下限をどう扱うかは判断019に記載がない（未決）。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-013",
+      "note": "個体数が多い場合の性能影響は未検証である。枠の数値を決める前に負荷の見通しが必要である。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-013",
+      "note": "湧き方向が既存の移動経路と重なる場合、探索の通行へどこまで影響するかは未検証である。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-013",
+      "note": "実装の有無はStudio未確認である。今回の担当セッションではStudioを操作していない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-014",
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "通常NPCの向きを一時的に変える状態遷移として使う。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-014",
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "帰還が起きた事実を個人提示として返す。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-014",
+      "component": "GimmickEventOpenState",
+      "availability": "proposed",
+      "usage": "既存のマップイベントを参照する共通の状態として扱う。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-014",
+      "note": "向きが戻るまでの時間は未定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-014",
+      "note": "NPCが0体のマップでは成立しない（SEKIGAHARAはIdea段階）"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-014",
+      "note": "接続時の挙動は未検討（Transitionは範囲外）"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-015",
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "Run全体の段階状態をRun共有で更新する。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-015",
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "段階だけを個人提示として返す。残秒は出さない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-A-015",
+      "component": "RunPhaseCounter",
+      "availability": "proposed",
+      "usage": "終了へ向かう段階をServerで数える。定義と長さは未定。"
+    },
+    {
+      "type": "spec_conflict",
+      "candidate_id": "ROLE-A-015",
+      "source_path": "docs/decisions/003-august-31-time-and-phase-design.md",
+      "existing_rule": "8/31のフェーズ長は実測調整前の値であり確定値ではない。終了条件の候補は未確定と記されている。",
+      "proposal_difference": "本候補はRun全体の段階を数えて提示する。",
+      "correction": "既存のフェーズ長やRunの寿命から残秒を導出しない。段階の定義は既存の終了条件と切り離す。",
+      "reason_correctable": "既存の値を使わなければ未確定値を確定値として見せる副作用は起きない。",
+      "decision_needed": "段階の提示を終盤の手掛かりとして認めてよいか。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-015",
+      "note": "段階の数と長さは未定。数値を決めていない。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-015",
+      "note": "終了条件と重なる場合の扱いは未確定"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-A-015",
+      "note": "各マップで常時成立するかの判断は未検証"
+    },
+    {
+      "type": "visual_check_pending_or_unavailable",
+      "role": "A",
+      "note": "担当セッションはBash・外部ディレクトリ・Studio・MCP禁止のためブラウザを起動できない。HTMLとSVGの実表示確認とPython検証は管理側の担当。",
+      "missing_ids": [
+        "ROLE-A-001",
+        "ROLE-A-002",
+        "ROLE-A-003",
+        "ROLE-A-004",
+        "ROLE-A-005",
+        "ROLE-A-006",
+        "ROLE-A-007",
+        "ROLE-A-008",
+        "ROLE-A-009",
+        "ROLE-A-010",
+        "ROLE-A-011",
+        "ROLE-A-012",
+        "ROLE-A-013",
+        "ROLE-A-014",
+        "ROLE-A-015"
+      ]
+    },
+    {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-A-001",
+      "target_id": "ROLE-C-001",
+      "required_traits": [
+        "回避判断の材料として提示できる（遠距離または非接触でも読める、または接近を避けながら読める）"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-A-001",
+      "target_id": "ROLE-B-001",
+      "required_traits": [
+        "取得と所持を個人単位の状態として保持できる（記録の受け取りを成果物として扱いたい場合）"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-001",
+      "target_id": "ROLE-C-001",
+      "required_traits": [
+        "回避判断の材料として提示できる（遠距離または非接触でも読める、または接近を避けながら読める）"
+      ],
+      "reason": "相手担当Cの候補が管理側から配布されておらず、Cの001が何を定義するか不明である。参照は要求する性質の語彙のみであり、相手の内容を創作していない。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-001",
+      "target_id": "ROLE-B-001",
+      "required_traits": [
+        "取得と所持を個人単位の状態として保持できる（記録の受け取りを成果物として扱いたい場合）"
+      ],
+      "reason": "正式なItemStackと取得源は未実装（SRC-01）である。測定値をアイテムとして所持できるかは判断できないため、記録は非アイテムの個人提示として設計し、アイテム化は任意接続とした。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-001",
+      "target_id": null,
+      "required_traits": [
+        "個人提示を既存HUDへ載せるか専用UIにするかを決める実装方針",
+        "測定条件（近接か、視認か、時間条件か）を確定する方針"
+      ],
+      "reason": "ID未指定の接続要求である。HUDと提示UIの実装方針は候補IDでは特定できず、共通設計側の判断が必要である。",
+      "adoption_blocker": true
+    },
+    {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-A-002",
+      "target_id": "ROLE-C-002",
+      "required_traits": [
+        "2箇所の比較を探索判断に使える"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-002",
+      "target_id": "ROLE-C-002",
+      "required_traits": [
+        "2箇所の比較を探索判断に使える"
+      ],
+      "reason": "Cの候補は配布されておらず、Cの002が何を定義するか不明。相手のLandscapeは創作していない。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-002",
+      "target_id": null,
+      "required_traits": [
+        "先行する板を固定するかRun開始時に選ぶかを決める方針"
+      ],
+      "reason": "ID未指定の要求。判断003の未決（日付板のフェーズ別時刻）と関係するため、共通設計側の判断が必要。",
+      "adoption_blocker": true
+    },
+    {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-A-003",
+      "target_id": "ROLE-C-003",
+      "required_traits": [
+        "他者の提示を信用判断に使える"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-003",
+      "target_id": "ROLE-C-003",
+      "required_traits": [
+        "他者の提示を信用判断に使える"
+      ],
+      "reason": "Cの候補は配布されておらず、Cの003の内容が不明。語彙のみを記録する。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-003",
+      "target_id": null,
+      "required_traits": [
+        "どのTrail分岐を案内場所として選ぶかを決める方針"
+      ],
+      "reason": "ID未指定の要求。既存のTrail構成に依存するため、共通設計側の判断が必要。",
+      "adoption_blocker": true
+    },
+    {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-A-004",
+      "target_id": "ROLE-B-004",
+      "required_traits": [
+        "棚の選択結果を個人の所持対象として区別できる",
+        "所持の成立と喪失を個人単位の状態として扱える"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-A-004",
+      "target_id": "ROLE-C-004",
+      "required_traits": [
+        "戦闘をしない介入として提示を扱える（非攻撃の操作だけで依頼を成立させられる）"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-004",
+      "target_id": "ROLE-B-004",
+      "required_traits": [
+        "棚の選択結果を個人の所持対象として区別できる",
+        "所持の成立と喪失を個人単位の状態として扱える"
+      ],
+      "reason": "正式なItemStack、取得源、所有者規則は未実装（SRC-01）であり、棚の項目を個人所持できるかどうかはB側の設計に依存する。Bの候補は管理側から配布されておらず、参照は要求する性質の語彙のみである。",
+      "adoption_blocker": true
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-004",
+      "target_id": "ROLE-C-004",
+      "required_traits": [
+        "戦闘をしない介入として提示を扱える（非攻撃の操作だけで依頼を成立させられる）"
+      ],
+      "reason": "相手担当Cの候補が未配布である。Cが戦闘以外の提示操作を定義するかは不明であり、相手の内容を創作していない。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-004",
+      "target_id": null,
+      "required_traits": [
+        "Archive Selection UIに選択結果の状態を保持する欄を追加してよいか（既存UIの構造変更の可否）",
+        "依頼対象の棚を固定するか、Run開始時に選ぶかを決める方針"
+      ],
+      "reason": "ID未指定の接続要求である。既存Archive Selection UIは遷移が一覧、選択、閉じるだけと記録されており、結果状態を保持する欄の追加は既存UIの構造変更にあたるため、共通設計側の判断が必要である。",
+      "adoption_blocker": true
+    },
+    {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-A-005",
+      "target_id": "ROLE-C-005",
+      "required_traits": [
+        "音や放送を位置の手掛かりとして使える"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-A-005",
+      "target_id": "ROLE-B-005",
+      "required_traits": [
+        "棚の結果を個人所持として扱える場合"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-005",
+      "target_id": "ROLE-C-005",
+      "required_traits": [
+        "音や放送を位置の手掛かりとして使える"
+      ],
+      "reason": "Cの候補は配布されておらず、Cの005の内容が不明。語彙のみを記録する。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-005",
+      "target_id": "ROLE-B-005",
+      "required_traits": [
+        "棚の結果を個人所持として扱える場合"
+      ],
+      "reason": "正式なItemStackと取得源は未実装（SRC-01）。棚の結果と所持を結びつけるかは判断できない。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-005",
+      "target_id": null,
+      "required_traits": [
+        "店内放送を既存経路で鳴らすか新しいSoundとするかを決める方針"
+      ],
+      "reason": "ID未指定の要求。共有BGMの選択UIが未実装である以上、既存の店内音の扱いは共通設計側の判断が必要。",
+      "adoption_blocker": true
+    },
+    {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-A-006",
+      "target_id": "ROLE-C-006",
+      "required_traits": [
+        "音で居場所を察知されるリスクとして扱える"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-A-006",
+      "target_id": "ROLE-B-006",
+      "required_traits": [
+        "棚の結果を個人所持として扱える場合"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-006",
+      "target_id": "ROLE-C-006",
+      "required_traits": [
+        "音で居場所を察知されるリスクとして扱える"
+      ],
+      "reason": "Cの候補は配布されておらず、内容が不明。語彙のみを記録する。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-006",
+      "target_id": "ROLE-B-006",
+      "required_traits": [
+        "棚の結果を個人所持として扱える場合"
+      ],
+      "reason": "正式なItemStackは未実装（SRC-01）。所持との結びつけは判断できない。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-006",
+      "target_id": null,
+      "required_traits": [
+        "鳴りをどの既存の音や表現に乗せるかを決める方針"
+      ],
+      "reason": "ID未指定の要求。既存の放送室の暗さやCRTのノイズとの重なりは共通設計側の判断が必要。",
+      "adoption_blocker": true
+    },
+    {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-A-007",
+      "target_id": "ROLE-C-007",
+      "required_traits": [
+        "戦場の外側を通り過ぎる判断ができる"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-007",
+      "target_id": "ROLE-C-007",
+      "required_traits": [
+        "戦場の外側を通り過ぎる判断ができる"
+      ],
+      "reason": "Cの候補が配布されておらず内容が不明。語彙のみ記録する。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-007",
+      "target_id": null,
+      "required_traits": [
+        "勢力数と戦闘ロジックを決める方針"
+      ],
+      "reason": "ID未指定の要求。勢力と戦況は未確定のため共通設計側の判断が必要。",
+      "adoption_blocker": true
+    },
+    {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-A-008",
+      "target_id": "ROLE-C-008",
+      "required_traits": [
+        "補充型の敵を数で解決できない前提で動ける"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-008",
+      "target_id": "ROLE-C-008",
+      "required_traits": [
+        "補充型の敵を数で解決できない前提で動ける"
+      ],
+      "reason": "Cの候補が配布されておらず内容が不明。語彙のみ記録する。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-008",
+      "target_id": null,
+      "required_traits": [
+        "補充型の枠をAnomalyの枠から分離して実装する方針"
+      ],
+      "reason": "ID未指定の要求。判断017の枠との関係を共通設計側で決める必要がある。",
+      "adoption_blocker": true
+    },
+    {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-A-009",
+      "target_id": "ROLE-C-009",
+      "required_traits": [
+        "戦闘の外側の仕事を拒絶せず扱える"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-009",
+      "target_id": "ROLE-C-009",
+      "required_traits": [
+        "戦闘の外側の仕事を拒絶せず扱える"
+      ],
+      "reason": "Cの候補が配布されておらず内容が不明。語彙のみ記録する。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-009",
+      "target_id": null,
+      "required_traits": [
+        "運搬路をどこに設定するかを決める方針"
+      ],
+      "reason": "ID未指定の要求。SEKIGAHARAはIdeaで地形が未確定のため、共通設計側の判断が必要。",
+      "adoption_blocker": true
+    },
+    {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-A-010",
+      "target_id": "ROLE-C-010",
+      "required_traits": [
+        "他者の作業を判断材料にできる"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-010",
+      "target_id": "ROLE-C-010",
+      "required_traits": [
+        "他者の作業を判断材料にできる"
+      ],
+      "reason": "Cの候補が配布されておらず内容が不明。語彙のみ記録する。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-010",
+      "target_id": null,
+      "required_traits": [
+        "巡回経路と機材の位置を決める方針"
+      ],
+      "reason": "ID未指定の要求。研究所の建物構造が未確定のため共通設計側の判断が必要。",
+      "adoption_blocker": true
+    },
+    {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-A-011",
+      "target_id": "ROLE-C-011",
+      "required_traits": [
+        "音の入力を探索判断に使える"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-011",
+      "target_id": "ROLE-C-011",
+      "required_traits": [
+        "音の入力を探索判断に使える"
+      ],
+      "reason": "Cの候補が配布されておらず内容が不明。語彙のみ記録する。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-011",
+      "target_id": null,
+      "required_traits": [
+        "音の到達と提示の閾値を決める方針"
+      ],
+      "reason": "ID未指定の要求。音響の最小仕様は未決定とされ、共通設計側の判断が必要。",
+      "adoption_blocker": true
+    },
+    {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-A-012",
+      "target_id": "ROLE-C-012",
+      "required_traits": [
+        "順序や痕跡を探索判断に使える"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-012",
+      "target_id": "ROLE-C-012",
+      "required_traits": [
+        "順序や痕跡を探索判断に使える"
+      ],
+      "reason": "Cの候補が配布されておらず内容が不明。語彙のみ記録する。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-012",
+      "target_id": null,
+      "required_traits": [
+        "置き場所と上限を決める方針"
+      ],
+      "reason": "ID未指定の要求。研究所の建物構造が未確定のため共通設計側の判断が必要。",
+      "adoption_blocker": true
+    },
+    {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-A-013",
+      "target_id": "ROLE-C-013",
+      "required_traits": [
+        "個体との距離と方向を回避判断の材料として使える"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-A-013",
+      "target_id": "ROLE-B-013",
+      "required_traits": [
+        "湧きの可否や個体数を、使用可能な個人状態として扱いたい場合"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-013",
+      "target_id": "ROLE-C-013",
+      "required_traits": [
+        "個体との距離と方向を回避判断の材料として使える"
+      ],
+      "reason": "相手担当Cの候補が管理側から配布されておらず、Cの013が何を定義するか不明である。参照は要求する性質の語彙のみであり、相手の内容を創作していない。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-013",
+      "target_id": "ROLE-B-013",
+      "required_traits": [
+        "湧きの可否や個体数を、使用可能な個人状態として扱いたい場合"
+      ],
+      "reason": "正式なItemStackと取得源は未実装（SRC-01）である。湧き条件に個人状態を組み込めるかどうかも判断できないため、本候補では組み込まない設計とした。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-013",
+      "target_id": null,
+      "required_traits": [
+        "イベント『開いた』をどの共通仕様として表現するか（マップ固有か、共通の状態として持つか）",
+        "湧き枠をマップ単位とするかRun単位とするかの決定"
+      ],
+      "reason": "ID未指定の接続要求である。全マップ共通の候補であるため、既存ギミックの状態表現と枠の粒度は共通設計側の判断が必要であり、候補IDでは特定できない。",
+      "adoption_blocker": true
+    },
+    {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-A-014",
+      "target_id": "ROLE-C-014",
+      "required_traits": [
+        "終結の瞬間を観察できる"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-014",
+      "target_id": "ROLE-C-014",
+      "required_traits": [
+        "終結の瞬間を観察できる"
+      ],
+      "reason": "Cの候補が配布されておらず内容が不明。語彙のみ記録する。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-014",
+      "target_id": null,
+      "required_traits": [
+        "向きが元へ戻るまでの時間を決める方針"
+      ],
+      "reason": "ID未指定の要求。演出の長さは共通設計側の判断が必要。",
+      "adoption_blocker": true
+    },
+    {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-A-015",
+      "target_id": "ROLE-C-015",
+      "required_traits": [
+        "進行の提示を判断の材料にできる"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-015",
+      "target_id": "ROLE-C-015",
+      "required_traits": [
+        "進行の提示を判断の材料にできる"
+      ],
+      "reason": "Cの候補が配布されておらず内容が不明。語彙のみ記録する。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-A-015",
+      "target_id": null,
+      "required_traits": [
+        "段階の定義と長さを決める方針"
+      ],
+      "reason": "ID未指定の要求。終了条件の既存設計と重なるため共通設計側の判断が必要。",
+      "adoption_blocker": true
+    }
+  ],
+  "candidate_summaries": [
+    {
+      "candidate_id": "ROLE-A-001",
+      "title": "水位を読む人 — DAMの記録役",
+      "primary_map": "8/31",
+      "category": "GimmickEvent",
+      "design_status": "Draft",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "1体だけのNPCに限定すれば、Server側の巡回状態機械と個人HUDの1行表示で試せるため中程度とする。ただし通行、カメラ、Promptとの干渉、他マップのNPC案との共通化の要否、提示UIの設計は試作前に決める必要がある。8/31は地表タイルが1マップあたり約13,000 BasePartという記録があり（判断007）、その中での配置と動作確認は未確認である。実時間の見積もりは出していない。",
+        "implementation_steps": [
+          "Server：定点の測定値とNPC個体の巡回状態をRun共有の状態として持つ最小実装",
+          "Server：距離、対象、巡回状態を検証し、個人提示を送る",
+          "Client：個人HUDへ1行だけ表示する。説明文は出さない",
+          "検証：通常プレイヤーとPlayer Anomaly、攻撃の有無、NPC不在時、各フェーズ（DAY、EVENING、NIGHT、AUG_32）で挙動を確認する",
+          "未実施：測定周期、単位、画面設計は試作前に別途決める"
+        ],
+        "assumed_existing_parts": [
+          "8/31のServer側フェーズ進行（August31Service）とフェーズ別状態",
+          "8/32の帰還閉鎖、Exposureの取得速度2.4倍、Run Lifetime 300秒（実装済み）",
+          "既存のServer権威のPlayer Anomaly属性と判定",
+          "既存のマップ生成とPromptの骨格"
+        ]
+      },
+      "connection_tags": [
+        "Observation",
+        "NPCState",
+        "Environment",
+        "AugustPhase",
+        "Combat",
+        "InformationSharing"
+      ],
+      "conflict_count": 3,
+      "unresolved_count": 3
+    },
+    {
+      "candidate_id": "ROLE-A-002",
+      "title": "先 Lone の一枚 — 8/31の日付板2枚",
+      "primary_map": "8/31",
+      "category": "GimmickEvent",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "小",
+        "rationale": "既存の板2枚の表示と個人提示1行で試せる。ただし既存のフェーズ差分との干渉は未確認。実時間の見積もりは出していない。",
+        "implementation_steps": [
+          "板2枚に識別を与え、先行する板をRun開始時に選択する",
+          "板を読む操作で値を個人提示する",
+          "フェーズ差分の時刻で先行側の表示を切り替える",
+          "2枚を別々に読んだ場合の差を検証する"
+        ],
+        "assumed_existing_parts": [
+          "既存の板2枚の生成",
+          "8/31のServer側フェーズ進行",
+          "帰還面の開放と閉鎖"
+        ]
+      },
+      "connection_tags": [
+        "Observation",
+        "Environment",
+        "AugustPhase",
+        "InformationSharing"
+      ],
+      "conflict_count": 1,
+      "unresolved_count": 2
+    },
+    {
+      "candidate_id": "ROLE-A-003",
+      "title": "案内役の一言 — 8/31の帰還選択",
+      "primary_map": "8/31",
+      "category": "NPC",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "小",
+        "rationale": "NPC1体と分岐1か所で試せる。ただしTrailとの干渉と案内の表示位置は未確認。実時間の見積もりは出していない。",
+        "implementation_steps": [
+          "分岐1か所にNPC1体を配置する",
+          "案内内容の更新周期と記憶を持たせる",
+          "個人提示と攻撃時の停止を実装する",
+          "EVENING前後の挙動を検証する"
+        ],
+        "assumed_existing_parts": [
+          "既存の12本のTrailとゾーン",
+          "EVENING以降の帰還面開放",
+          "Server権威のPlayer Anomaly属性"
+        ]
+      },
+      "connection_tags": [
+        "NPCState",
+        "Environment",
+        "AugustPhase",
+        "InformationSharing",
+        "Combat"
+      ],
+      "conflict_count": 1,
+      "unresolved_count": 2
+    },
+    {
+      "candidate_id": "ROLE-A-004",
+      "title": "返却待ちの一本 — 廃TSUTAYAの店頭",
+      "primary_map": "廃TSUTAYA",
+      "category": "NPC",
+      "design_status": "Draft",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "NPC1体と既存UIへの1列の追加に限定すれば中程度である。ただし、既存Archive Selection UIへ状態欄を足せるか、正式な所持基盤が無い状態をどう扱うか、5基の棚のうち対象をどう選ぶか、は試作前に決める必要がある。判断009は棚と照明で視界が分断される構造と、棚の追加PartおよびPointLight数がクライアント負荷へ影響することを検証項目として挙げている。配置と負荷は未検証である。実時間の見積もりは出していない。",
+        "implementation_steps": [
+          "Server：依頼状態をRun共有として持ち、NPC1体の位置と退場を管理する最小実装",
+          "Server：棚の選択結果に印を持たせ、個人提示として送る",
+          "Server：所持済みの対象項目を個人試聴の候補から除外する",
+          "Client：Archive Selection UIに印を1つ表示する。説明文は出さない",
+          "検証：通常プレイヤーとPlayer Anomaly、渡した場合と放置した場合、NPC不在時の挙動を確認する",
+          "未実施：対象の棚の選択規則、移動周期、画面設計は試作前に別途決める"
+        ],
+        "assumed_existing_parts": [
+          "5基のArchiveShelfとArchive Selection UI（一覧、選択、閉じる）",
+          "個人試聴機3台と、試聴が自動終了するPreviewDuration",
+          "共有BGMのServer State（個人試聴では変わらない）",
+          "FRONTのレジ、会員端末、販促面（判断009の基準状態）",
+          "Server権威のPlayer Anomaly属性と判定"
+        ]
+      },
+      "connection_tags": [
+        "NPCState",
+        "Item",
+        "Present",
+        "ArchiveMedia",
+        "Interaction",
+        "InformationSharing"
+      ],
+      "conflict_count": 2,
+      "unresolved_count": 3
+    },
+    {
+      "candidate_id": "ROLE-A-005",
+      "title": "留守番の放送 — 廃TSUTAYAの放送室",
+      "primary_map": "廃TSUTAYA",
+      "category": "NPC",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "小",
+        "rationale": "NPC1体と放送1経路に限定すれば小さい。ただし既存のBroadcastRoomの暗さと音量、既存音との重なりは未確認。実時間の見積もりは出していない。",
+        "implementation_steps": [
+          "NPC1体を既存の放送室に配置する",
+          "放送を周期で再生し、区画名を個人提示する",
+          "巡回で対象を切替える",
+          "攻撃で停止することを検証する"
+        ],
+        "assumed_existing_parts": [
+          "既存の7ルームと放送卓",
+          "個人試聴とPreviewDuration",
+          "共有BGMのServer State"
+        ]
+      },
+      "connection_tags": [
+        "NPCState",
+        "ArchiveMedia",
+        "Sound",
+        "InformationSharing"
+      ],
+      "conflict_count": 1,
+      "unresolved_count": 3
+    },
+    {
+      "candidate_id": "ROLE-A-006",
+      "title": "棚の鳴り — 廃TSUTAYAの検索の副作用",
+      "primary_map": "廃TSUTAYA",
+      "category": "GimmickEvent",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "小",
+        "rationale": "既存の棚に1音の鳴りと1層の共有状態を足すだけなので小さい。ただし7ルームの距離と音の届き方、既存音との重なりは未確認。実時間の見積もりは出していない。",
+        "implementation_steps": [
+          "棚ごとに鳴り状態を持たせる",
+          "検索成立時に他室1基を鳴らす",
+          "自分の検索との結びつけを個人提示する",
+          "同時検索と上書きの挙動を検証する"
+        ],
+        "assumed_existing_parts": [
+          "既存の5基のArchiveShelf",
+          "Archive Selection UIの検索成立",
+          "マップ内の共有状態"
+        ]
+      },
+      "connection_tags": [
+        "ArchiveMedia",
+        "WorldChange",
+        "Sound",
+        "InformationSharing",
+        "Traversal"
+      ],
+      "conflict_count": 1,
+      "unresolved_count": 3
+    },
+    {
+      "candidate_id": "ROLE-A-007",
+      "title": "戦いは続く — SEKIGAHARAの戦闘NPC",
+      "primary_map": "SEKIGAHARA",
+      "category": "GimmickEvent",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "大",
+        "rationale": "戦闘AI、補充、上限、介入反応のすべてが新規で、最小限でも複数個体での試しが必要。実時間の見積もりは出していない。",
+        "implementation_steps": [
+          "少数の個体で戦闘AIを試す",
+          "上限と補充を入れる",
+          "非反応と介入反応を分ける",
+          "Player Anomaly時の挙動を記録する"
+        ],
+        "assumed_existing_parts": [
+          "通常のHPとDamageの受け口",
+          "Server権威のRun状態"
+        ]
+      },
+      "connection_tags": [
+        "NPCState",
+        "WorldChange",
+        "Combat",
+        "Environment"
+      ],
+      "conflict_count": 1,
+      "unresolved_count": 2
+    },
+    {
+      "candidate_id": "ROLE-A-008",
+      "title": "補充で戻る — SEKIGAHARAの枠",
+      "primary_map": "SEKIGAHARA",
+      "category": "MobEnemy",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "補充と枠の判定だけなら中程度。個体AIと他個体への影響は別問題で、上限を決める前に調整が要る。実時間の見積もりは出していない。",
+        "implementation_steps": [
+          "少数の個体と枠を用意する",
+          "戦闘不能と補充を実装する",
+          "枠上限で補充が止まることを確認する",
+          "他個体への影響を確認する"
+        ],
+        "assumed_existing_parts": [
+          "通常のHPとDamageの受け口",
+          "Server権威のRun状態"
+        ]
+      },
+      "connection_tags": [
+        "NPCState",
+        "WorldChange",
+        "Combat",
+        "Environment"
+      ],
+      "conflict_count": 1,
+      "unresolved_count": 2
+    },
+    {
+      "candidate_id": "ROLE-A-009",
+      "title": "運ぶ人 — SEKIGAHARAの戦場の外れ",
+      "primary_map": "SEKIGAHARA",
+      "category": "NPC",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "NPC1体と往復動作で試せる。ただし戦闘個体との衝突判定、運搬路、性能影響は未確認。実時間の見積もりは出していない。",
+        "implementation_steps": [
+          "NPC1体を外れに配置する",
+          "往復と停止を実装する",
+          "個人提示の1行を追加する",
+          "戦闘個体との干渉を確認する"
+        ],
+        "assumed_existing_parts": [
+          "通常のHPとDamageの受け口",
+          "Server権威のRun状態"
+        ]
+      },
+      "connection_tags": [
+        "NPCState",
+        "Combat",
+        "InformationSharing",
+        "Environment"
+      ],
+      "conflict_count": 1,
+      "unresolved_count": 2
+    },
+    {
+      "candidate_id": "ROLE-A-010",
+      "title": "補佐の者の巡回 — 研究所の廊下",
+      "primary_map": "研究所",
+      "category": "NPC",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "NPC1体と提示1行で試せるが、研究所マップ自体が未実装で、機材と部屋が先に要る。実時間の見積もりは出していない。",
+        "implementation_steps": [
+          "仮の機材と巡回経路を用意する",
+          "作業状態の個人提示を実装する",
+          "攻撃で停止することを検証する",
+          "既存の連鎖と衝突しないことを確認する"
+        ],
+        "assumed_existing_parts": [
+          "既存のwhisperの連鎖",
+          "通常のHPとDamageの受け口",
+          "Server権威のRun状態"
+        ]
+      },
+      "connection_tags": [
+        "NPCState",
+        "WhisperTransfer",
+        "InformationSharing",
+        "Environment"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 2
+    },
+    {
+      "candidate_id": "ROLE-A-011",
+      "title": "装置の音 — 研究所の稼動音",
+      "primary_map": "研究所",
+      "category": "GimmickEvent",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "音1種と提示1行で試せる。音響の最小仕様が未決定のため、到達と遮蔽の検証が要る。実時間の見積もりは出していない。",
+        "implementation_steps": [
+          "装置を1つ置き稼動音を出す",
+          "到達範囲から提示を返す",
+          "遮る操作で提示を止める",
+          "地図全体での聞きやすさを確認する"
+        ],
+        "assumed_existing_parts": [
+          "既存のwhisperの連鎖と装置の概念",
+          "通常のHPとDamageの受け口"
+        ]
+      },
+      "connection_tags": [
+        "Sound",
+        "InformationChange",
+        "WhisperTransfer",
+        "Environment"
+      ],
+      "conflict_count": 1,
+      "unresolved_count": 2
+    },
+    {
+      "candidate_id": "ROLE-A-012",
+      "title": "置かれた記録 — 研究所の痕跡",
+      "primary_map": "研究所",
+      "category": "GimmickEvent",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "小",
+        "rationale": "並びの保持と1行の提示で試せる。ただし010の巡回NPCとの重複を避けた設計が要る。実時間の見積もりは出していない。",
+        "implementation_steps": [
+          "記録を置く処理を用意する",
+          "並びをRun共有で保持する",
+          "順序だけを個人提示する",
+          "他の人の行動による変化を確認する"
+        ],
+        "assumed_existing_parts": [
+          "既存のwhisperの連鎖の概念",
+          "通常のHPとDamageの受け口"
+        ]
+      },
+      "connection_tags": [
+        "WorldChange",
+        "InformationChange",
+        "Environment"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 2
+    },
+    {
+      "candidate_id": "ROLE-A-013",
+      "title": "開いた通路の個体 — イベント由来の通常モブ",
+      "primary_map": "全マップ共通",
+      "category": "MobEnemy",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "1種類の個体、進行方向1通り、枠1つという最小構成に限定すれば中程度である。ただし、湧き先の通行の選定、既存のPromptや地形との干渉、個体数の負荷、そして複数イベントが同時に開いたときの枠の競合規則は試作前に決める必要がある。SEKIGAHARAは未実装であり、既存2マップのどちらかに実装する場合でも共通設計の判断を要する。実時間の見積もりは出していない。",
+        "implementation_steps": [
+          "Server：ギミックイベント『開いた』を保持する最小の状態を作る",
+          "Server：湧き枠と上限、補充判定をRun共有として実装する",
+          "Server：個体1通りを生成し、進行と終端到達、枠の解放を実装する",
+          "Server：接触Damageと判定検証を実装する（Player Anomalyを含む）",
+          "Client：個体の出現、移動、終了の表現のみを追加する",
+          "検証：イベント開閉、枠の満杯、上限内補充、回避、戦闘、退場経路（終端、撃破、イベント閉、Run終了）を確認する",
+          "未実施：数値（上限、周期、Damage）、湧き先の通行、終端の定義は試作前に別途決める"
+        ],
+        "assumed_existing_parts": [
+          "既存のServer権威のRun状態とマップのライフサイクル",
+          "既存の通行（Trail、廊下）とマップ生成の骨格",
+          "既存のServer権威のPlayer Anomaly属性と判定（判断019）",
+          "既存のHPとDamageの受け口（HP属性は実装済み）"
+        ]
+      },
+      "connection_tags": [
+        "NPCState",
+        "WorldChange",
+        "Environment",
+        "Combat",
+        "Traversal"
+      ],
+      "conflict_count": 2,
+      "unresolved_count": 3
+    },
+    {
+      "candidate_id": "ROLE-A-014",
+      "title": "見送り — 帰還者の跡",
+      "primary_map": "全マップ共通",
+      "category": "NPC",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "小",
+        "rationale": "既存のNPC1体で演出と提示を試せる。既存NPCが存在するマップを選ぶ必要がある。実時間の見積もりは出していない。",
+        "implementation_steps": [
+          "Run終結イベントをフックする",
+          "既存NPCの向きを一時的に変える",
+          "その場にいた個人へ1行を出す",
+          "終結種別を出さないことを確認する"
+        ],
+        "assumed_existing_parts": [
+          "Runの終了集約処理",
+          "既存のReturnの実装"
+        ]
+      },
+      "connection_tags": [
+        "NPCState",
+        "InformationChange",
+        "Return"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 2
+    },
+    {
+      "candidate_id": "ROLE-A-015",
+      "title": "最後の数え — 終了直前の静けさ",
+      "primary_map": "全マップ共通",
+      "category": "GimmickEvent",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "小",
+        "rationale": "段階1つの管理と提示1行で試せる。既存のRun進行との重複を避ける調整が要る。実時間の見積もりは出していない。",
+        "implementation_steps": [
+          "段階のServer管理を入れる",
+          "提示を個人へ送る",
+          "残秒を出さないことを確認する",
+          "各マップで成立するかを確認する"
+        ],
+        "assumed_existing_parts": [
+          "Runの状態機械",
+          "既存の終了集約処理"
+        ]
+      },
+      "connection_tags": [
+        "WorldChange",
+        "InformationChange",
+        "Environment"
+      ],
+      "conflict_count": 1,
+      "unresolved_count": 2
+    }
+  ],
+  "counts": {
+    "A:8/31": 3,
+    "A:廃TSUTAYA": 3,
+    "A:SEKIGAHARA": 3,
+    "A:研究所": 3,
+    "A:全マップ共通": 3
+  },
+  "visual_render_verified": false,
+  "worldview_content_verified": false,
+  "mechanical_validation": "failed"
+}

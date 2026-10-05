@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-B-024 誘い板（踏んだ対象をそこへ引き寄せる）</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<p class="sub">overnight-design-pilot-v1 ／ ROLE=B ／ 全マップ共通 ／ Idea</p>
+<h1>ROLE-B-024 誘い板（踏んだ対象をそこへ引き寄せる） — 作業用見出し</h1>
+</header>
+<section id="hypothesis">
+<h2>何の案？</h2>
+<p>触れた対象1体の追跡だけを、指定した置き点へ一度変える板。</p>
+<h2>仕組み</h2>
+<ul>
+<li>置き点を踏んだ対象1体の追跡対象が、その点だけ変更になる。</li>
+<li>設定時間が 지나ると元の追跡対象へ戻る。</li>
+<li>置き点は回収できない。対象も通常どおり動く。</li>
+</ul>
+<h2>選択と代償</h2>
+<p>遠くに置いて遠ざけるか、自分から寄せるか。誘導は対象ごとに一つ。</p>
+</section>
+<section id="diagram">
+<h2>作用図</h2>
+<div class="board">
+<svg viewBox="0 0 980 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="置き点に触れた対象1体の追跡対象が期限付きで置き点へ差し替わり、時間は元へ戻으며、置き点は回収不能で他者の追跡は変わらない図">
+<rect width="980" height="360" fill="#0a1118"/>
+<text x="30" y="26" class="small">誘導が持続する時間と最大同時数は未確定。候補は値の決定を渡さない。</text>
+<rect x="30" y="60" width="250" height="120" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text x="46" y="90" class="label">置かない</text>
+<text x="46" y="116" class="small">近い自分は自分に来る</text>
+<text x="46" y="138" class="small">複数体が同時に来る</text>
+<text x="46" y="160" class="small">包囲される</text>
+<rect x="370" y="60" width="250" height="120" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="386" y="90" class="label">遠くに置く</text>
+<text x="386" y="116" class="small">触れた1体だけ寄る</text>
+<text x="386" y="138" class="small">追跡対象が期限変更</text>
+<text x="386" y="160" class="small">他は通常どおり</text>
+<rect x="700" y="60" width="250" height="120" rx="8" fill="#142330" stroke="#ea9380"/>
+<text x="716" y="90" class="label">時間切れ</text>
+<text x="716" y="116" class="small">追跡対象は元へ戻る</text>
+<text x="716" y="138" class="small">置き点は残る</text>
+<text x="716" y="160" class="small">もう一度は置けない</text>
+<path d="M282 120 H355" class="active"/><path d="M355 120 l10 6 -10 6" class="active"/>
+<path d="M622 120 H685" class="active"/><path d="M685 120 l10 6 -10 6" class="active"/>
+<rect x="30" y="230" width="920" height="60" rx="8" fill="#142330" stroke="#c4a0ec"/>
+<text x="46" y="260" class="label">変わらないもの：出現率・対象の生死・他の対象の追跡</text>
+<text x="46" y="286" class="small"></text>
+<text x="46" y="308" class="small"></text>
+<text x="46" y="330" class="small"></text>
+</svg>
+</div>
+<p>左が放置、中央が誘導、右が時間後。接触した1体だけが動く。</p>
+</section>
+<footer>
+<p><a href="index.html">← B候補一覧</a> ／ 詳細データ <a href="ROLE-B-024.json">ROLE-B-024.json</a> ／ connection_tags: Item, Environment, Combat ／ requires_code: true ／ 試作コスト: 中</p>
+</footer>
+</main>
+</body>
+</html>

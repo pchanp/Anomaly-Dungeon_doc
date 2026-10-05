@@ -1,0 +1,51 @@
+{
+  "run_id": "overnight-design-pilot-v1",
+  "pack_version": "0.2",
+  "task": "design_candidates_only",
+  "state": "prepared_not_started",
+  "total_candidates": 45,
+  "candidates_per_role": 15,
+  "per_map_per_role": 3,
+  "pilot_ids": {
+    "A": [
+      "ROLE-A-001",
+      "ROLE-A-004",
+      "ROLE-A-013"
+    ],
+    "B": [
+      "ROLE-B-001",
+      "ROLE-B-004",
+      "ROLE-B-013"
+    ],
+    "C": [
+      "ROLE-C-001",
+      "ROLE-C-004",
+      "ROLE-C-013"
+    ]
+  },
+  "default_mode": "CONTINUE_TO_15",
+  "batch_size": 3,
+  "generation_enabled": false,
+  "runtime": {
+    "provider": null,
+    "model": "opencode/space-bunny-free",
+    "launch_method": null,
+    "stop_method": null,
+    "worktree_roots": {
+      "A": null,
+      "B": null,
+      "C": null
+    },
+    "starts_at": null,
+    "deadline_at": null,
+    "budget": {
+      "max_cost": null,
+      "currency": null,
+      "max_tokens": null
+    },
+    "sleep_prevention": null,
+    "connectivity_check": null,
+    "write_access_enforcement": null
+  },
+  "note": "共通の雛形。実行許可・設定は管理側runtimeに保存。2026-10-05:15件/role、簡潔HTML。"
+}

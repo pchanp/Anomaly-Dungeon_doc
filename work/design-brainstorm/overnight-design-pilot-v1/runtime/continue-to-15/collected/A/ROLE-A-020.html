@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-A-020 巡回者 — 周期の崩れが合図になる</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+<p class="sub">overnight-design-pilot-v1 ／ ROLE-A-020 ／ 全マップ共通 ／ NPC</p>
+<h1>巡回者 — 周期の崩れが合図になる</h1>
+<p>一定周期で往復するNPCが、中断した瞬間にだけ規則性を失う。</p>
+<div class="badges"><span class="badge hyp">Idea</span><span class="badge">unreviewed</span><span class="badge unknown">周期の長さは未定</span></div>
+<nav class="nav"><a href="index.html">← 一覧</a><a href="ROLE-A-020.json">同IDのJSON</a></nav>
+</header>
+
+<section id="hypothesis">
+<h2>何の案か</h2>
+<p>NPCのふらつきが、周囲で起きたことを示す合図になる。</p>
+<ul>
+<li>通常NPCが一定周期で同じ経路を往復する。周期の長さは未定。</li>
+<li>近くのモブがいなくなるか攻撃を受けると周期を外し、そこから先戻らない。</li>
+<li>外れた理由は表示しない。崩れた事実だけが個人提示として返る。</li>
+</ul>
+<p><strong>選択と代償:</strong> 崩れるのを待つ／近くのモブを自分で退ける／攻撃せず観察だけ続ける。崩れたNPCはRun終了まで戻らないので、待つあいだの遭遇は避けられない。</p>
+<p class="sub">接続タグ: NPCState / StateChange / Observation ／ requires_code: true ／ conflicts 0件・未解決1件（JSONに記載）</p>
+</section>
+
+<section id="diagram">
+<h2>仕組みの図</h2>
+<div class="board">
+<svg viewBox="0 0 1000 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="一定周期で往復する通常NPCが、中断条件を満たした時点で周期を外れ戻らなくなることを示す図">
+<rect width="1000" height="360" fill="#0a1118"/>
+<text class="label" x="24" y="28">周期の2状態</text>
+<text class="label" x="470" y="28">崩れる条件</text>
+
+<path d="M60 110h170" stroke="#70c9c3" stroke-width="2" fill="none"/>
+<circle cx="60" cy="110" r="9" fill="#70c9c3"/>
+<circle cx="230" cy="110" r="9" fill="#70c9c3"/>
+<path d="M60 122v24M230 122v24" stroke="#70c9c3" stroke-width="2"/>
+<text class="label" x="60" y="90">往復している</text>
+<text class="small" x="60" y="170">周期の長さは未定</text>
+
+<path d="M60 250q40 -40 80 0t80 0" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<text class="label" x="60" y="230">周期を外した</text>
+<text class="small" x="60" y="290">戻らない。移動は続く</text>
+<path d="M134 122v18" stroke="#d3b653" stroke-width="2" fill="none"/>
+<path d="M128 138l6 8 6-8z" fill="#d3b653"/>
+
+<rect x="300" y="52" width="240" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="314" y="82">近くのモブが居なくなる</text>
+<text class="small" x="314" y="106">数ではなく有無で決まる</text>
+<path d="M276 88h20" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M290 82l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+
+<rect x="300" y="142" width="240" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="314" y="172">攻撃を受ける</text>
+<text class="small" x="314" y="198">周期は戻らない</text>
+<path d="M276 178h20" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M290 172l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+
+<rect x="600" y="52" width="376" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="614" y="82">（a）崩れるのを待つ</text>
+<text class="small" x="614" y="106">情報は得る。遭遇は避けられない</text>
+<rect x="600" y="142" width="376" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="614" y="172">（b）自分で退けて崩らす</text>
+<text class="small" x="614" y="198">影響は限定。時間を使う</text>
+<rect x="600" y="232" width="376" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="614" y="262">（c）観察だけ続ける</text>
+<text class="small" x="614" y="288">何もしない。情報は何も得ない</text>
+<path d="M540 88h54" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M586 82l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M540 178h54" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M586 172l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M540 268h54" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M586 262l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+
+<text class="small" x="24" y="338">この図で分かること：周期は2種類だけ。崩れた理由ではなく、崩れたという事実だけが返る。</text>
+</svg>
+</div>
+<p>図注：崩れた後も動きは続く。戻らなくする重さを軽くするか重くするかは、未確定のまま。</p>
+</section>
+
+<footer>overnight-design-pilot-v1 ／ ROLE-A-020 ／ 実表示は未確認（担当セッションでブラウザを使用していない）。</footer>
+</main>
+</body>
+</html>

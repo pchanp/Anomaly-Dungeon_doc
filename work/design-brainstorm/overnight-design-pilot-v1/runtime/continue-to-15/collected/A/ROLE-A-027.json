@@ -1,0 +1,105 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-027",
+  "role": "A",
+  "title": "群の寄せ — 近くにいる個体が短時間だけ集まる",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "MobEnemy",
+  "source_evidence": [
+    {"path": "docs/systems/game-rules.md", "section": "## 戦闘とアノマリー", "source_status": "Status: Draft（草案）", "claim": "戦闘イベントには、敵NPCの出現、追跡、包囲、増援などが含まれ得る。"},
+    {"path": "docs/systems/anomaly-interaction.md", "section": "## 対象としないこと", "source_status": "ステータス: Draft", "claim": "すべてのアノマリーに共通する戦闘・撃破ルールの決定は対象としない。"},
+    {"path": "docs/systems/effect-components.md", "section": "## Effectの種別", "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）", "claim": "種別は相互作用の入口や対象の種類ではなく、結果として何が変わるかを表す。"}
+  ],
+  "design_hypothesis": "複数の通常の戦闘モブが、近くの同じ地点へ短時間だけ集まる状態を仮定します。集まった状態は時間切れか戦闘終了で必ず解け、集まっていた個体それぞれの体力は落ちません。つまり一度に複数と戦う状況になり、コストは間合いと位置取りに付きます。集まる距離、滞在時間、個体数の上限は未定です。何がそこで集まっているのかは説明しません。",
+  "experience": {
+    "goal": "数で押すか、間合いを選ぶかを迫られる。",
+    "player_choice": "短い間にまとめて対処する／崩れる前に引く／待ち伏せの場所を作る。",
+    "sacrifice_or_risk": "集まっても個体は倒せるが、一度に複数を受ける。滞在時間が不定なので、どこで崩すかの判断は遅い。"
+  },
+  "placement_assumption": "全マップ共通の枠として扱い、地形や配置には依存しません。既存のイベントに紐づけるかは決めません。新たな区画は提案しません。個体数の上限は発生側の枠に従います。",
+  "components": [
+    {"component": "NPCState", "availability": "catalog", "usage": "個体の通常AIと集合状態をServerが保持する。"},
+    {"component": "Effect.StateChange", "availability": "catalog", "usage": "個体間の状態を書き換える。ただし個体の体力は変えない。"},
+    {"component": "Effect.WorldChange", "availability": "catalog", "usage": "集合の終了条件をRun共有で確定させる。"}
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "近くの複数の通常モブが、同じ地点へ指示を受ける。",
+      "condition": "対象マップが本候補を許可していること。距離は未定。",
+      "result": "指定した地点へ短時間だけ集まる。個体の体力は下がらない。",
+      "target": "対象の個体群",
+      "scope": "Run全体",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": ["時間が尽きる", "戦闘が終了する", "個体が戦闘不能になる", "Run終了"],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかで個体間の状態を戻す。",
+      "stacking": {"exception": false, "rule": "1回の指示につき1件。同じ個体への重複は足さない。", "conflict_resolution": "別の指示が同時に来た場合は未確定のため保留し記録する。"},
+      "server_validation": "Serverが集合の範囲と終了条件を確定する。",
+      "client_presentation": "個体の動きのみ。集合中かどうかは示さない。",
+      "feedback": {"success": "複数が一か所へ集まる。", "failure": "時間が切れると散る。", "ambiguous": "誰が指示したかは説明しない。"}
+    },
+    {
+      "kind": "WorldChange",
+      "trigger": "集合の時間が尽きた、または戦闘が終了した。",
+      "condition": "対象が集合中の個体であること。",
+      "result": "個体は通常のAIへ戻る。集合の記録は破棄される。",
+      "target": "集合の共有記録",
+      "scope": "Run全体",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": ["記録の破棄"],
+      "end_mode": "any",
+      "end_rule_reason": "即時。集合ごとに1回。",
+      "stacking": {"exception": false, "rule": "1集合につき1件。破棄済みの集合には再度適用しない。", "conflict_resolution": "他の集合記録と競合する場合は未確定のため保留。"},
+      "server_validation": "Serverが集合記録を破棄する。",
+      "client_presentation": "表示なし。",
+      "feedback": {"success": "個体が通常の動きに戻る。", "failure": "解散の後に同じ指示は残らない。", "ambiguous": "集合がどこで終わったかは説明しない。"}
+    }
+  ],
+  "provides_traits": ["複数の個体を短時間だけ一か所へ集められる", "体力は下がらないので一度に複数を受けることになる"],
+  "connection_tags": ["NPCState", "StateChange", "WorldChange", "Combat"],
+  "refs": [],
+  "unresolved_refs": [
+    {"target_id": null, "required_traits": ["集合の距離と滞在時間を実装する方針"], "reason": "ID未指定の要求。指示の出所がNPCの反応か既存のイベントかで実装経路が変わるため、共通設計側の判断が必要。", "adoption_blocker": true}
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "集まる距離、滞在時間、個体数の上限は未定。数値を決めていない。",
+    "指示の出所がどこにあるかは未確定。",
+    "複数の指示が同時に来たときの扱いは未定。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "個体間の状態を書き換えるが、個体自体は弱めない、という分けた設計に置いた点。",
+    "in_world_rationale": "古い設備が残る文明では、個体間の合図で行動を変えることが運用上の日常だった。指示の声が出なくても成立する。谁が指示を出したかは説明しない。",
+    "meaning_left_ambiguous": "なぜ同じ場所へ集まるのか。何のために集まっているのか。指示は誰が送っているのか。集まった先に何があるのか。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "個体間の状態変更と集合の終了条件が未実装で、通常の敵AIとは別の経路が必要になるため。コード生成の許可ではない。",
+  "new_logic": ["個体間の集合状態の更新", "集合の終了条件の確定"],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "集合1回と時間の解除なら中程度。ただし指示の出所を決める必要があり、まず一か所の試験的なイベントから作るのが現実的。実時間の見積もりは出していない。",
+    "implementation_steps": ["個体2体を同じ場所へ向かわせる", "時間が切れると散ることを確認する", "体力が下がっていないことを確認する", "重複して加算されないことを確認する"],
+    "assumed_existing_parts": ["通常のHPとDamageの受け口", "Server権威のRun状態", "通常の敵AI"]
+  },
+  "role_details": {
+    "npc_purpose": "通常の戦闘NPCであり、目的を持たない。集合は個体の意志ではなく外部の指示による。",
+    "player_anomaly_handling": "判断019によりPlayer Anomalyは通常NPCとInteractionできない。集合の規則は変わらない。HP下限は判断019に規定がなく未決。",
+    "mob_contract": {
+      "applicable": true,
+      "spawn_condition": "既存のイベント由来モブ、または枠を1つだけ置く案。どちらとするかは未定。",
+      "population_cap": "枠の上限は発生側の規則に従う。集合は個体数を増やさない。",
+      "non_combat_response": "待ち伏せで時間を稼がせるか、間を置いてから対処するかが成立する。交戦しなくても通過できる。",
+      "exit_condition": "時間が尽きるか戦闘が終了した時点で個体群は通常のAIへ戻る。個々の戦闘不能は通常の退場規則に従う。Run終了で集合記録ごと破棄する。",
+      "entity_distinction": "通常NPCの戦闘個体でありAnomaly Entityではない。アノマリー相互作用は受理しない。判断017の枠とは別のNPC枠として扱う。"
+    }
+  },
+  "html_file": "ROLE-A-027.html"
+}

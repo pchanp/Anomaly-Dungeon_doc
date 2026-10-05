@@ -1,0 +1,219 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-027",
+  "role": "B",
+  "title": "崩土の袋（投げた地点を20秒だけ塞ぐ）",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| `WorldChange` | 出現率・同時出現数、経路・Portal・Map状態などの世界変化 | 個人表示だけでRun共有状態を確定しない |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "通路の可否は共有のMap状態として確定する。"
+    },
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "戦闘イベントには、敵NPCの出現、追跡、包囲、増援、防衛、巨大アノマリーとの遭遇、NPC同士の戦闘への介入などが含まれ得る。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "増援や防衛は戦闘イベントの一部。通路を塞ぐ手段が成立する余地がある。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "短いInteractionの候補として、目標位置に止める、一瞬だけ出る物体を認識する、ノイズから対象を見つける、音の方向を当てる、形状を識別する、違いを発見するなどを扱う。",
+      "source_status": "Status: Mixed（案ごとに下記）",
+      "claim": "投げて塞ぐ操作は短い相互作用として扱う。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| 一時 | 指定された終了条件が成立した時点で解除する |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "塞いだ状態は時間切れで閉じる。"
+    }
+  ],
+  "design_hypothesis": "追っ手との距離は峡い場所でも保てない。本候補は『投げた地点を20秒間だけ通れなくする』袋を与える。地形は書き換えず、そこだけ塞がる。自分も通れなくなるため、投げる距離そのものが判断になる。",
+  "experience": {
+    "goal": "通り道を一時的に閉じて、追っ手との間合いを保つ。",
+    "player_choice": "_DIVERTする_|近_に投げて自分を守るか、遠くへ投げて诱导するか。通したい側に投げるか。",
+    "sacrifice_or_risk": "自分も通れない。20秒で元に戻り、通過portunityは消える。"
+  },
+  "placement_assumption": "新しい地形・部屋・通路は提案しない。既存の通路のうち塞がない範囲を選ぶ操作だけを持つ。どの経路が塞げるかは候補では指定しない。",
+  "components": [
+    {
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "指定地点の通行を一定時間だけ失わせる。"
+    },
+    {
+      "component": "PlacementContext",
+      "availability": "catalog",
+      "usage": "投げる地点が成立条件になる利用文脈。"
+    },
+    {
+      "component": "InventoryBoundary",
+      "availability": "catalog",
+      "usage": "枠は増減させない。"
+    },
+    {
+      "component": "ItemLifecycle",
+      "availability": "catalog",
+      "usage": "正式な取得源とItemStackが未実装であることを前提とする。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "WorldChange",
+      "trigger": "対象個人が袋を使い、射程内の地点に投げる",
+      "condition": "実行中であること、袋を個人所持にもつこと、投げる地点が射程内であること",
+      "result": "投げた地点に20秒間だけ通行できない塊が生じる。対象も自分も同じ地点を通れない。地形は書き換えず、既存の通路が塞がれた状態になる。塊の大きさ・形は候補側で確定しない",
+      "target": "投げた地点の通行可否",
+      "scope": "共有のMap内。個人だけの表示では確定しない",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "20秒の経過で通常へ戻る",
+        "Run終了または切断で即座に破棄する"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。時間経過とRun終了の両方で閉じる。",
+      "stacking": {
+        "exception": false,
+        "rule": "同じ個人への再適用は1件として残り時間を更新する",
+        "conflict_resolution": "他のEffectが通行判定を変える場合は解決規則が未定義のため保留する"
+      },
+      "server_validation": "Serverが射程と地点の有効性を検証してから通行を不可にする",
+      "client_presentation": "投げた地点に塊の描写が出る。地形そのものは変化しない",
+      "feedback": {
+        "success": "投げた地点が通行不能になる",
+        "failure": "何も変わらない。注意表示のみ",
+        "ambiguous": "どの経路が塞がったかは本人にもHUDにも出さない"
+      }
+    }
+  ],
+  "provides_traits": [
+    "通路の可否を一時的に変えるWorldChangeの例",
+    "自分の通り道も塞ぐことで投げる距離が判断になる例"
+  ],
+  "connection_tags": [
+    "Item",
+    "Environment",
+    "Combat"
+  ],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": [
+        "通行不可の判定が対象ごとにどう扱われ、他の移動結果と競合したときの解決規則"
+      ],
+      "reason": "effect-components.mdはWorldChangeを世界変化として扱うが、通行判定の競合規則を渡さない。候補は塞がれた対象の範囲を未確定とし、解決規則は保留する。",
+      "adoption_blocker": true
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "20秒と塊の大きさは未確定。既存資料に該当する値が無い。",
+    "塞がれた場合、地形そのものが残るのか部品だけが残るのかは未実装であり候補は決めない。",
+    "照合範囲：WorldChangeの境界、増援や防衛を含む戦闘イベント、短いInteractionの候補、一時効果の終了条件。矛盾は見つからず conflicts は空配列"
+  ],
+  "worldview": {
+    "defamiliarized_element": "地形を壊すのではなく、通過だけを一定時間失わせる道具にした。塞ぐ判断を自分にも向けている。",
+    "in_world_rationale": "探索者は狭い通路でも追っ手との距離を作るために通過を捨てることがある。袋があるなら、それは破壊の道具ではなく、時間を惜しんで通り道を閉じる道具として使われる。",
+    "meaning_left_ambiguous": "袋を作った者は誰で、何のために道を閉じさせたのかは確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "正式なInventoryとItemStackは未実装で、通行判定を変更する経路も未実装（current-implementation.md）。投擲と変更の経路が要るため true とする。",
+  "new_logic": [
+    "指定地点の通行を期限付きで失わせるRun状態"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "投擲と通行判定の変更は既存のRun状態に足せる。ただし対象ごとの判定と競合時の扱いが未実装のため中とした。",
+    "implementation_steps": [
+      "デバッグ付与で袋を持たせる",
+      "指定地点を20秒だけ通行不能にする操作を足す",
+      "自分と巨人の双方が通れなくなることを確認する",
+      "20秒後に通行が戻ることを確認する"
+    ],
+    "assumed_existing_parts": [
+      "デバッグ床の巨人（衝突と移動）",
+      "クライアントの個人画面",
+      "InventoryServiceの枠境界"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Undecided",
+        "detail": "配る主体は未確定。正式な取得源が未実装であり創作しない。試作のみデバッグ付与。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "1枠を消費する。射程と数だけ選択の余地になる。"
+      },
+      {
+        "route": "Use",
+        "status": "Proposed",
+        "detail": "使わない。投げる操作だけを持つ。"
+      },
+      {
+        "route": "Present",
+        "status": "NotApplicable",
+        "detail": "渡さない。渡すと投げる対象を他人へ決められる。"
+      },
+      {
+        "route": "Place",
+        "status": "Proposed",
+        "detail": "中核。投げる。ただし自分の通り道にも使える。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "確保枠の外なら死亡時に失う。失っても残った塊は残る。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "確保枠に入れて次の投擲に備えられる。"
+      },
+      {
+        "route": "Sell",
+        "status": "Undecided",
+        "detail": "換金の可否は判断010・判断011・経済と成長で未決。"
+      },
+      {
+        "route": "Quest",
+        "status": "Undecided",
+        "detail": "依頼主は未確定。既存の博士の依頼が定める固有品の交換とは別物品として扱う。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "Undecided",
+        "detail": "塞がれた通路が他の相互作用の入力になるかは未決。候補は相手の挙動を作らない。"
+      }
+    ],
+    "ownership_state": "袋はplayer単位の個人所持。生成された塊は共有のMap状態に存在する。切断と再接続時の復元は未決。",
+    "server_run_state": "ServerがRun状態として塊の存在と時刻を確定し、Run終了で破棄する。出現率と同時出現数は変更しないためWorldChangeは通行可否のみに限定する。"
+  },
+  "html_file": "ROLE-B-027.html"
+}

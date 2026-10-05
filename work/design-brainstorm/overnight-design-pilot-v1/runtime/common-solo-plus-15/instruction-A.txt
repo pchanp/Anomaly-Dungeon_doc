@@ -1,0 +1,7 @@
+ROLE=A / MODE=APPEND_COMMON_SOLO_15 / RUN_ID=overnight-design-pilot-v1。
+ユーザー追加依頼：前回結果へ追記して全マップ共通15案。新IDはROLE-A-016〜ROLE-A-030。合計30件にする。モデルopencode/space-bunny-free、YOLO、時間制限なし。既存runnerのまま実行。
+最新版パックのprompts/common.md、candidate-format.md、invariants.mdを読む：/Users/saitouyouwataru/Documents/Git/Anomaly-Dungeon_doc/work/design-brainstorm/overnight-design-pilot-v1/runtime/initial-only-no-deadline/roots/A/work/design-brainstorm/overnight-design-pilot-v1/common-pack-v0.3
+今回の書き込み先は絶対パス /Users/saitouyouwataru/Documents/Git/Anomaly-Dungeon_doc/work/design-brainstorm/overnight-design-pilot-v1/runtime/continue-to-15/collected/A のみ。旧root内の担当出力へ書かない。この新保存先への書き込みをユーザーが明示的に許可。root AGENTSも更新済み。001〜015を読み取り、別案として016〜030を追記。前回HTML/JSONは書き換えない。manifest/index/progress/events/handoffだけ30件に更新可。
+担当はギミックイベント・NPC・モブ。ソロでもイベントへの介入や敵への複数対処が面白い案。イベント発生モブを追加群にも含め、戦闘以外の対応・発生/退場・Entityとの違いを記す。
+ソロPvEアクション探索の面白さを最優先。既存コンポーネントへの接続ありきにしない。効果を空欄にせず、遊びの動詞・結果・判断を先に。Party必須案は禁止。機械契約はJSONに短く、HTMLは案と仕組みを簡潔に。refsは空でもよい。固有SVGは作用/選択を表す。
+Read/Write/Editのネイティブ操作で進める。Bash/task/MCP/外部調査/Git/Studio/他担当/公開サイトは禁止。管理側が検証。追加15件完成とhandoff更新まで実行し、終了したら確認待ち。

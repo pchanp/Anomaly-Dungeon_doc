@@ -1,0 +1,105 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-025",
+  "role": "A",
+  "title": "見張り — 索敵を共有しない一匹",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "MobEnemy",
+  "source_evidence": [
+    {"path": "docs/systems/game-rules.md", "section": "## 戦闘とアノマリー", "source_status": "Status: Draft（草案）", "claim": "戦闘イベントには、敵NPCの出現、追跡、包囲、増援などが含まれ得る。"},
+    {"path": "docs/systems/observation-and-recognition.md", "section": "## 遮蔽Raycast", "source_status": "Status: Draft（草案）", "claim": "遮蔽は観察の根拠の一つであり、視野Raycastだけでは見たとは証明しない。"},
+    {"path": "docs/decisions/019-player-anomaly-runtime-pvp-and-return.md", "section": "## 未決定事項", "source_status": "Status: Accepted（採用済み）", "claim": "Player Anomalyの待機状態の通知、固有Portal帰還およびRuntime満了におけるQuest、資産、基本報酬の扱いは未決定である。"}
+  ],
+  "design_hypothesis": "通常の戦闘モブのうち、立ち位置を変えず同じ方向を見張る個体が一匹いる状態を仮定します。この個体だけは索敵の起点を共有せず、視線が切れても警戒を戻しません。周りに他の個体がいないときでも警戒は続きます。プレイヤーが近づけば迂回を迫られ、攻撃すれば倒せますが、倒したあとに同じ場所へ別の個体 Wordpress は出ません。範囲と視線の向きは未定です。",
+  "experience": {
+    "goal": "見張りのいる場所だけ、正面から通れないことを知る。",
+    "player_choice": "視線の外を回って抜ける／攻撃して隙間を作る／別の個体と戦わせて視線をずらす。",
+    "sacrifice_or_risk": "見張りを倒してもその場所の後の警戒は生まれない。ただし視線の外は狭く、待ち伏せになる可能性がある。"
+  },
+  "placement_assumption": "全マップ共通の枠として扱い、配置や地形には依存しません。看張りの立ち位置と視線の向きは各マップの判断に委ねます。既存の視界・遮蔽の判定を前提とし、個体専用の判定は提案しません。",
+  "components": [
+    {"component": "NPCState", "availability": "catalog", "usage": "通常の戦闘個体として索敵と戦闘を処理する。"},
+    {"component": "Observation", "availability": "catalog", "usage": "既存の視界と遮蔽の判定を前提に使う。"},
+    {"component": "Effect.StateChange", "availability": "catalog", "usage": "視線が切れても警戒を保つ状態を更新する。"}
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "見張りの通常モブの視線に、対象が入る。",
+      "condition": "対象マップが本候補を許可していること。視線の向きは未定。",
+      "result": "その個体は視線が切れても警戒を保つ。索敵の起点は共有しない。",
+      "target": "見張りの個体",
+      "scope": "Run共有の個体",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": ["対象が戦闘不能になる", "Run終了"],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかで警戒状態を終わらせる。",
+      "stacking": {"exception": false, "rule": "1個体につき非加算1件。繰り返し入っても重複しない。", "conflict_resolution": "他の索敵規則と競合する場合は未確定のため保留。"},
+      "server_validation": "Serverが視線と警戒を確定する。",
+      "client_presentation": "個体の方向のみ。視線の範囲は表示しない。",
+      "feedback": {"success": "視線を切っても警戒が続く。", "failure": "攻撃すれば倒せる。", "ambiguous": "なぜ他の個体を探さないかは説明しない。"}
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "個人が見張りの視線の外へ出た。",
+      "condition": "対象が通常のプレイヤーであること。",
+      "result": "視線の内か外かだけを個人提示として返す。理由や他の個体の情報は返さない。",
+      "target": "対象個人",
+      "scope": "個人",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": ["提示の表示"],
+      "end_mode": "any",
+      "end_rule_reason": "即時。内外の表示のみ。",
+      "stacking": {"exception": false, "rule": "1回の内外判定につき1件。前の表示を置き換える。", "conflict_resolution": "他の内外表示と重なる場合は未確定のため保留。"},
+      "server_validation": "Serverが視線判定だけを送る。",
+      "client_presentation": "短い1行のみ。",
+      "feedback": {"success": "視線の外だと分かる。", "failure": "視線内でなければ出ない。", "ambiguous": "見張りの位置は明示しない。"}
+    }
+  ],
+  "provides_traits": ["索敵を共有しない固定の見張りが存在する", "視線の外を通る判断が必要になる"],
+  "connection_tags": ["NPCState", "Observation", "StateChange", "Combat"],
+  "refs": [],
+  "unresolved_refs": [
+    {"target_id": null, "required_traits": ["視線を切っても警戒を保つ個体と通常の個体を分ける方針"], "reason": "ID未指定の要求。通常の索敵との切り分けは共通設計側の判断が必要。", "adoption_blocker": true}
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "視線の向きと範囲、警戒の持続時間は未定。数値を決めていない。",
+    "見張りを倒した後に別の個体が出るかは未定。",
+    "Player Anomaly時の視線の扱いは判断019に規定がなく未決。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "見張りが他の個体と情報を共有しないことを性質として置いた点。",
+    "in_world_rationale": "古い設備が残る文明では、決まった場所に立つ見張りは、寻常な管理の一部だった。情報を共有しない見張りは、その土地の事情として成立する。誰が任命したかは説明しない。",
+    "meaning_left_ambiguous": "なぜ他の個体と共有しないのか。見張りの仕事は見ることだけなのか。誰のために立っているのか。視線が切れても警戒が続くのは、注意力の問題か、それとも別の理由か。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "通常NPCの索敵AIと視界・遮蔽の判定が未実装で、見張りだけの挙動分けが必要になるため。コード生成の許可ではない。",
+  "new_logic": ["索敵を共有しない個体の判定", "視線切断後も保たれる警戒"],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "見張り1体と視線判定なら中程度。ただし既存の視界・遮蔽の実装に依存し、挙動を分ける必要があるため調整が要る。実時間の見積もりは出していない。",
+    "implementation_steps": ["1体を固定位置に置く", "視線内の判定を通常の個体と共有する", "視線を切っても警戒が残ることを確認する", "倒した後に補充されないことを確認する"],
+    "assumed_existing_parts": ["既存の視界と遮蔽の判定", "通常のHPとDamageの受け口", "Server権威のRun状態"]
+  },
+  "role_details": {
+    "npc_purpose": "通常の戦闘NPCであり、決まった場所に立って見張る一匹。索敵を共有しないのは個体の性質として扱い、目的は持たない。",
+    "player_anomaly_handling": "判断019によりPlayer Anomalyは通常NPCとInteractionできない。見張りの視線と警戒の規則は変わらない。Player Anomaly時の扱いは判断019に規定がなく未決。",
+    "mob_contract": {
+      "applicable": true,
+      "spawn_condition": "既存のイベント由来モブ、または枠を1つだけ置く案。どちらとするかは未定。",
+      "population_cap": "枠の上限は発生側の規則に従う。本候補は個体を増やさない。",
+      "non_combat_response": "視線の外を回れば、交戦なしで通り抜けられる。攻撃せずにやり過ごす判断が成立する。",
+      "exit_condition": "戦闘不能になった個体は退場し、Run終了まで補充されない。Run終了で破棄する。",
+      "entity_distinction": "通常NPCの戦闘個体でありAnomaly Entityではない。アノマリー相互作用は受理しない。判断017の枠とは別のNPC枠として扱う。"
+    }
+  },
+  "html_file": "ROLE-A-025.html"
+}

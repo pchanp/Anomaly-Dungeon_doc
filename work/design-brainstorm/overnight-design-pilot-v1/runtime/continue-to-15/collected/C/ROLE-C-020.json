@@ -1,0 +1,149 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-020",
+  "role": "C",
+  "title": "引き返しの一歩",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "探索系",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "探索系はアイテムスタックの解放、検知、スニークを扱う。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "Effectの分類",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "EffectはMove、StateChange、WorldChange、Damage、Buff、Debuff、InformationChange、ResourceChange、CustomEffect に分かれる。"
+    }
+  ],
+  "design_hypothesis": "追われている間、後方へ一歩だけ退き、その直後の相手の攻撃を1回だけ空振りにする。後退は一瞬。相手は自分の距離だけが変わったことに気づかない。",
+  "experience": {
+    "goal": "追われている側から、攻撃の空振りを作って離れる。",
+    "player_choice": "ここで後退して1回だけ受け流すか、正面から反撃を続けるか。",
+    "sacrifice_or_risk": "後退中は攻撃できない。相手は距離を詰められる。"
+  },
+  "placement_assumption": "既存マップで使用する文脈。配置・建物構造・地形・Questの結末を新設しない。",
+  "components": [
+    {
+      "component": "Effect.Move",
+      "availability": "catalog",
+      "usage": "後方へ一瞬で退く。"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "後退中だけ相手の攻撃を1回空振りにする。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "Move",
+      "trigger": "装備中に本人が後退入力をしたとき。",
+      "condition": "背後にServer確認済みの足場があり、射程内であること。",
+      "result": "後方へ一瞬で退く。地形は壊さない。足場がなければ退かない。",
+      "target": "発動した本人",
+      "scope": "個人。相手、地形は変えない。",
+      "lifetime": "瞬間",
+      "resolution": "instant",
+      "end_conditions": [
+        "移動は即時に解決する",
+        "背後に足場がなければ退かない",
+        "マップ離脱",
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "移動は即時解決であり、状態を保存しない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effectと同一対象は非加算1件。",
+        "conflict_resolution": "他の後退や吹き飛ばしとの適用順は採用前の確認事項。"
+      },
+      "server_validation": "着地地点と射程をServerで検査する。",
+      "client_presentation": "短い後退の残像を本人だけに出す。",
+      "feedback": {
+        "success": "後退の成立を本人に表示する。",
+        "failure": "足場がなければ移動しない。",
+        "ambiguous": "後退の理由は説明しない。"
+      }
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "上のMoveが解決し、その直後だけ。",
+      "condition": "後退と同時に、追手からの攻撃が1回だけ飛んでくるとき。",
+      "result": "その1回の攻撃を空振りにする。ダメージ、TP、硬直は入らない。",
+      "target": "追手からの攻撃1回のみ",
+      "scope": "個人。相手の状態は変えない。",
+      "lifetime": "後退直後の短い時間",
+      "resolution": "sustained",
+      "end_conditions": [
+        "1回使ったら解除される",
+        "時間切れでも解除される",
+        "マップ離脱",
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "空振りは1回だけ。時間も短い。",
+      "stacking": {
+        "exception": false,
+        "rule": "1回の後退につき1回。重ねない。",
+        "conflict_resolution": "他の回避効果との適用順は採用前の確認事項。"
+      },
+      "server_validation": "後退状態と対象の一致をServerで検査する。",
+      "client_presentation": "空振りした見栄えを本人だけに出す。",
+      "feedback": {
+        "success": "空振りしたことを本人に示す。",
+        "failure": "対象が違えば解除される。",
+        "ambiguous": "空振りの理由は説明しない。"
+      }
+    }
+  ],
+  "provides_traits": [
+    "後方へ一瞬で退ける",
+    "その1回だけ追手の攻撃を空振りにする",
+    "後退中は攻撃できない"
+  ],
+  "connection_tags": ["Skill", "Avoidance", "Movement"],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": ["後退距離と受付時間は未決定。", "空振りにする対象の条件は未決定。", "通常スキルのみ。Player Anomalyの専用能力に一般化しない。"],
+  "worldview": {
+    "defamiliarized_element": "後ろへ退いたときだけ、追手の一撃が空振りになる。",
+    "in_world_rationale": "既存の移動と被弾判定を通常と異なる条件で組み合わせる候補。",
+    "meaning_left_ambiguous": "なぜ後ろへ退くと外れるのか。博士の意図とEntityの正体は確定しない。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "後退移動と、追手1回分の限定的な空振り制御は実装記録がなく、新規ロジックが必要。",
+  "new_logic": ["後方への瞬間移動と着地検査", "追手1回だけの限定的な回避判定"],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "既存の移動と被弾判定へ介入する。対象の一致判定を含む。",
+    "implementation_steps": ["後退できることを確認", "追手の1回だけ空振りになることを確認", "2回目からは通常どおり被弾することを確認"],
+    "assumed_existing_parts": ["既存のCharacter移動とCollisionGroup", "既存の被弾判定"]
+  },
+  "role_details": {
+    "skill_family": "アクション",
+    "rank": null,
+    "rank_rationale": "系統内の候補が揃った時点で比較する。",
+    "levels": [
+      {"level": 1, "proposal": "後方へ退き、その1回だけ追手の攻撃を空振りにする。"},
+      {"level": 2, "proposal": "後退距離を伸ばせる。"},
+      {"level": 3, "proposal": "空振りにした直後に通常攻撃を1回だけ重ねられる。"}
+    ],
+    "equipped_slot_policy": "通常スキルの4装備枠のうち1枠。取得ランク条件は既存規則に従い、装備切替時点は未決定。",
+    "normal_attack_link": "通常攻撃の直前ではなく、後退の直後に1回だけ重ねられる。受付窓は未決定。",
+    "avoids": "追手の1回の攻撃を空振りにする。",
+    "intervenes_in": "自分の位置と、追手1回の被弾判定のみ。",
+    "sacrifices": "後退中は攻撃できない。相手は距離を詰めてくる。",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-020.html"
+}

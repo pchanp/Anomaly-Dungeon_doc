@@ -1,0 +1,105 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-017",
+  "role": "A",
+  "title": "仲間の合図 — 1匹の察知が枠全体に伝播する",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "MobEnemy",
+  "source_evidence": [
+    {"path": "docs/systems/game-rules.md", "section": "## 戦闘とアノマリー", "source_status": "Status: Draft（草案）", "claim": "戦闘イベントには、敵NPCの出現、追跡、包囲、増援などが含まれ得る。"},
+    {"path": "docs/systems/effect-components.md", "section": "## 重ね掛けの既定規則", "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）", "claim": "同じEffect IDが同じ対象に再適用された場合は既定では効果量を足さず1件として扱う。解決規則が未定義なら、その競合適用は保留し記録する。"},
+    {"path": "docs/decisions/017-run-anomaly-spawn-components.md", "section": "## 未決事項", "source_status": "Status: Accepted（採用）", "claim": "同時出現数コンポーネントの具体的なデータ形式と、アノマリーが解決・消滅した後の枠の扱いは未決である。"}
+  ],
+  "design_hypothesis": "同じ枠で行動する複数の通常モブのうち、1匹だけが先にプレイヤーを察知します。その個体が告げると、同じ枠の他の個体も同じ方向を向きます。伝播は0.6秒後届くので、先に察知した側の位置を先に処理する順番がそのまま裁定になります。全個体が一斉に向くわけではありません。個体間の距離、上限、伝播の遅れは未定で、地形による遮断も未実装です。",
+  "experience": {
+    "goal": "1匹の察知を先に潰すことで、伝播を受ける側を遅らせる。",
+    "player_choice": "先頭の1匹だけを遠くから処理する／群れが見えない通路を通り抜ける／伝播之后的並を待在から崩す。",
+    "sacrifice_or_risk": "1匹を倒しても伝播そのものは止まらない。上限が高いほど伝播の効果が大きい。"
+  },
+  "placement_assumption": "全マップ共通の枠として扱い、配置や地形には依存しません。同じ枠に属する個体の定義だけが必要です。既存のイベント由来の個体群を使うか、新しい群れを定義するかは本候補では決めません。",
+  "components": [
+    {"component": "NPCState", "availability": "catalog", "usage": "個体の通常AIと枠帰属をServerが保持する。"},
+    {"component": "Effect.StateChange", "availability": "catalog", "usage": "察知済みの個体から、同じ枠の他の個体へ方向を伝える。"},
+    {"component": "SwarmAlertShare", "availability": "proposed", "usage": "同じ枠の個体へ伝播する状態。伝播の遅れと上限は未定。"}
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "枠内の1個体がプレイヤーを察知する。",
+      "condition": "同じ枠の他の個体がまだ察知していないこと。伝播の遅れは未定。",
+      "result": "同じ枠の全個体が、遅れの後でプレイヤー方向を向く。個体のHPは変わらない。",
+      "target": "同じ枠に属する全個体",
+      "scope": "Run全体",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": ["枠の全個体が戦闘不能になる", "対象が視界から外れて追跡が切れる", "Run終了"],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかで伝播状態を終わらせる。",
+      "stacking": {"exception": false, "rule": "伝播は1枠につき非加算1件。二度目以降の伝播は残り時間を更新する。", "conflict_resolution": "別の枠からの伝播が同時に来た場合は未確定のため保留し記録する。"},
+      "server_validation": "Serverが枠と距離から伝播先を決定する。クライアントの視界では伝播しない。",
+      "client_presentation": "個体の方向が変わることのみ。伝播元の個体や範囲は表示しない。",
+      "feedback": {"success": "複数の個体が同時に向いてくる。", "failure": "枠の個体がいなければ伝播しない。", "ambiguous": "誰から伝わったかは説明しない。"}
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "枠の伝播が起きた。",
+      "condition": "対象が通常のプレイヤーであること。",
+      "result": "枠内の個体数だけを個人提示として返す。座標も順序も出さない。",
+      "target": "対象個人",
+      "scope": "個人",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": ["提示の表示"],
+      "end_mode": "any",
+      "end_rule_reason": "即時。提示のみ。",
+      "stacking": {"exception": false, "rule": "1回の伝播につき1件。前の表示を置き換える。", "conflict_resolution": "他の個体数の表示と重なる場合は未確定のため保留。"},
+      "server_validation": "Serverが個体数を数えて送る。",
+      "client_presentation": "短い1行のみ。",
+      "feedback": {"success": "数だけが返される。", "failure": "枠が空なら出ない。", "ambiguous": "どの個体かは表示しない。"}
+    }
+  ],
+  "provides_traits": ["1匹の察知が枠全体に伝播する", "上限が高いほど伝播一次的になる"],
+  "connection_tags": ["NPCState", "StateChange", "Combat", "Swarm"],
+  "refs": [],
+  "unresolved_refs": [
+    {"target_id": null, "required_traits": ["同じ枠に属する個体の定義と伝播の上限を決める方針"], "reason": "ID未指定の要求。判断017の枠と本候補の枠帰属を混同しないよう、共通設計側で整理が必要。", "adoption_blocker": true}
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "伝播の遅れと個体間の距離条件は未定。数値を決めていない。",
+    "枠帰属を持つ新しい群れか、既存のイベント群へ加える群れかは未定。",
+    "遮蔽物による伝播の遮断は未実装。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "仲間に伝わり合うことを、個体の知覚ではなく群れの性質として置いた点。",
+    "in_world_rationale": "古い設備が残る文明では、単独で動くより近くで合図を待つ方が多くの場所で妥当だった。合図の手段はその土地の設備祝愿でも多样であり、誰の指示かは説明しない。",
+    "meaning_left_ambiguous": "なぜ1匹の判断が全体に効くのか。合図は恐怖からか、訓練からか。この群れはどこへ向かうことを意図しているのか。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "通常の敵AIと枠伝播の経路が未実装のため。コード生成の許可ではない。",
+  "new_logic": ["枠帰属の定義", "伝播の遅れと上限の判定"],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "伝播1本なら中程度。ただし上限と個体間の距離を変えると挙動が変わるため、調整の前に数値を決める必要がある。実時間の見積もりは出していない。",
+    "implementation_steps": ["2匹の枠を用意する", "1匹だけ察知する状態を作る", "伝播の遅れを置く", "上限を変えたときの挙動差を確認する"],
+    "assumed_existing_parts": ["通常のHPとDamageの受け口", "Server権威のRun状態"]
+  },
+  "role_details": {
+    "npc_purpose": "通常の戦闘NPCであり、目的を持たない群れの一部。伝播は個体の性質ではなく枠の性質として扱う。",
+    "player_anomaly_handling": "判断019によりPlayer Anomalyは通常NPCとInteractionできない。枠の伝播規則は変わらない。HP下限は判断019に規定がなく未決。",
+    "mob_contract": {
+      "applicable": true,
+      "spawn_condition": "既存のイベント由来モブ、または本候補専用の枠。どちらとするかは未定で、発生条件そのものを確定しない。",
+      "population_cap": "枠に上限を持ち、上限に達している間は個体が増えない。数値と伝播の上限は未定。Anomalyの同時出現数とは別の枠。",
+      "non_combat_response": "1匹を先に処理すれば残りは伝播されない。戦わずに枠の外を回り込めば、交戦なしでも通過できる。",
+      "exit_condition": "戦闘不能になった個体はその個体として退場する。ただし伝播済みの状態は残りの個体に残る。マップ終了またはRun終了で枠ごと破棄する。",
+      "entity_distinction": "通常NPCの戦闘個体でありAnomaly Entityではない。アノマリー相互作用は受理しない。判断017の枠とは別のNPC枠として扱う。"
+    }
+  },
+  "html_file": "ROLE-A-017.html"
+}

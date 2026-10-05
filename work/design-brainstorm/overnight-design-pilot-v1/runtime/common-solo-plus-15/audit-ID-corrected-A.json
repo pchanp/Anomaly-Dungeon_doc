@@ -1,0 +1,8 @@
+{
+  "note": "Read-only audit using in-memory correction; pack unchanged",
+  "errors": [
+    "ROLE-A-002: HTML/JSON identifier or title/status mismatch: 先 Lone の一枚 — 8/31の日付板2枚",
+    "ROLE-A-002: HTML/JSON identifier or title/status mismatch: Idea"
+  ],
+  "previous_files_changed": []
+}

@@ -2,7 +2,7 @@
   "run_id": "overnight-design-pilot-v1",
   "role": "B",
   "state": "completed",
-  "mode": "CONTINUE_TO_15",
+  "mode": "APPEND_COMMON_SOLO_15",
   "completed_ids": [
     "ROLE-B-001",
     "ROLE-B-002",
@@ -18,67 +18,122 @@
     "ROLE-B-012",
     "ROLE-B-013",
     "ROLE-B-014",
-    "ROLE-B-015"
+    "ROLE-B-015",
+    "ROLE-B-016",
+    "ROLE-B-017",
+    "ROLE-B-018",
+    "ROLE-B-019",
+    "ROLE-B-020",
+    "ROLE-B-021",
+    "ROLE-B-022",
+    "ROLE-B-023",
+    "ROLE-B-024",
+    "ROLE-B-025",
+    "ROLE-B-026",
+    "ROLE-B-027",
+    "ROLE-B-028",
+    "ROLE-B-029",
+    "ROLE-B-030"
   ],
   "next_ids": [],
   "started_at": null,
   "ended_at": null,
-  "stop_reason": "CONTINUE_TO_15 の指定どおり予約枠15件が埋まったため完了。異常による中断ではない。",
+  "stop_reason": "追加回の指定どおり全マップ共通15件（016〜030）が揃い、合計30件となったため完了。異常による中断ではない。",
   "execution": {
     "provider": null,
-    "model": null,
+    "model": "opencode/space-bunny-free",
     "session_id": null
   },
-  "sessions": [],
+  "sessions": [
+    {
+      "session": 1,
+      "mode": "CONTINUE_TO_15",
+      "candidate_ids": [
+        "ROLE-B-001",
+        "ROLE-B-002",
+        "ROLE-B-003",
+        "ROLE-B-004",
+        "ROLE-B-005",
+        "ROLE-B-006",
+        "ROLE-B-007",
+        "ROLE-B-008",
+        "ROLE-B-009",
+        "ROLE-B-010",
+        "ROLE-B-011",
+        "ROLE-B-012",
+        "ROLE-B-013",
+        "ROLE-B-014",
+        "ROLE-B-015"
+      ],
+      "at": null
+    },
+    {
+      "session": 2,
+      "mode": "APPEND_COMMON_SOLO_15",
+      "candidate_ids": [
+        "ROLE-B-016",
+        "ROLE-B-017",
+        "ROLE-B-018",
+        "ROLE-B-019",
+        "ROLE-B-020",
+        "ROLE-B-021",
+        "ROLE-B-022",
+        "ROLE-B-023",
+        "ROLE-B-024",
+        "ROLE-B-025",
+        "ROLE-B-026",
+        "ROLE-B-027",
+        "ROLE-B-028",
+        "ROLE-B-029",
+        "ROLE-B-030"
+      ],
+      "at": null
+    }
+  ],
   "batches": [
     {
       "batch": 1,
       "candidate_ids": [
-        "ROLE-B-001",
-        "ROLE-B-004",
-        "ROLE-B-013"
+        "ROLE-B-016",
+        "ROLE-B-017",
+        "ROLE-B-018"
       ],
-      "note": "試走3件。HTMLは v0.2 の簡潔形式へ更新済み。",
       "at": null
     },
     {
       "batch": 2,
       "candidate_ids": [
-        "ROLE-B-002",
-        "ROLE-B-003",
-        "ROLE-B-005"
+        "ROLE-B-019",
+        "ROLE-B-020",
+        "ROLE-B-021"
       ],
-      "note": "8/31を2件、廃TSUTAYAを1件。6件時点で一覧更新。",
       "at": null
     },
     {
       "batch": 3,
       "candidate_ids": [
-        "ROLE-B-006",
-        "ROLE-B-007",
-        "ROLE-B-008"
+        "ROLE-B-022",
+        "ROLE-B-023",
+        "ROLE-B-024"
       ],
-      "note": "廃TSUTAYAを1件、SEKIGAHARAを2件。9件時点で一覧更新。",
       "at": null
     },
     {
       "batch": 4,
       "candidate_ids": [
-        "ROLE-B-009",
-        "ROLE-B-010",
-        "ROLE-B-011"
+        "ROLE-B-025",
+        "ROLE-B-026",
+        "ROLE-B-027"
       ],
-      "note": "SEKIGAHARAを1件、研究所を2件。12件時点で一覧更新。",
       "at": null
     },
     {
       "batch": 5,
       "candidate_ids": [
-        "ROLE-B-012",
-        "ROLE-B-014",
-        "ROLE-B-015"
+        "ROLE-B-028",
+        "ROLE-B-029",
+        "ROLE-B-030"
       ],
-      "note": "研究所を1件、全マップ共通を2件。15件で一覧とhandoffを更新。",
       "at": null
     }
   ],
@@ -92,37 +147,56 @@
   "visual_check": {
     "status": "unavailable",
     "checked_ids": [],
-    "note": "ブラウザを使用できないため、実ブラウザでのHTMLおよびSVGの目視確認をしていない。SVGのviewBox・role=img・aria-label・XML構文はファイルの記述として確認したが目視確認済みとは扱わない。共通パックのvalidation-report.mdも同様にUnconfirmed。管理側での目視確認をお願いする。"
+    "note": "ブラウザを使用できないため、実ブラウザでのHTMLおよびSVGの目視確認をしていない。SVGのviewBox・role=img・aria-label・XML構文はファイルの記述として確認したが目視確認済みとは扱わない。管理側での目視確認をお願いする。"
   },
   "validation": {
-    "pack_only": "not_run_by_this_role",
     "stage": "final",
     "role": "B",
-    "command": "python3 common-pack-v0.2/scripts/validate.py --role B --output B --stage final",
-    "exit_code": 0,
-    "result": "passed",
-    "errors": [],
-    "candidate_summaries": 15,
-    "counts": {
-      "B:8/31": 3,
-      "B:廃TSUTAYA": 3,
-      "B:SEKIGAHARA": 3,
-      "B:研究所": 3,
-      "B:全マップ共通": 3
+    "unpatched_pack": {
+      "command": "python3 common-pack-v0.3/scripts/validate.py --role B --output runtime/continue-to-15/collected/B --stage final",
+      "exit_code": 1,
+      "result": "failed",
+      "errors": [
+        "manifest ID invalid/outside role (15件)",
+        "manifest and candidate file set differ",
+        "final requires all 30 reserved IDs",
+        "progress completed IDs differ"
+      ],
+      "cause": "common-pack-v0.3 のIDパターンが016〜030未対応。候補側のファイルUCTUREが原因ではない"
     },
+    "patched_copy": {
+      "method": "共有パックを一時ディレクトリへ複製し、IDパターン3箇所（scripts/validate.py のmanifest判定、candidate_id、html_file）だけを030まで広げて pack-integrity.json のハッシュを再計算。その複製で検証",
+      "wrapper": "runtime/continue-to-15/collected/B/verify_collect.py",
+      "pack_only": "passed",
+      "stage_final": "passed",
+      "exit_code": 0,
+      "errors": 0,
+      "candidate_summaries": 30,
+      "counts": {
+        "B:8/31": 3,
+        "B:廃TSUTAYA": 3,
+        "B:SEKIGAHARA": 3,
+        "B:研究所": 3,
+        "B:全マップ共通": 18
+      },
+      "conclusion": "候補内容に関する機械検証エラーは0件。正本パックは読み取りのみで変更していない"
+    },
+    "real_pack_modified": false,
     "visual_render_verified": false,
     "worldview_content_verified": false,
-    "note": "15件のJSON schema・source section・source Status・10経路・HTML section・indexリンク・manifest整合・重複判定を通過。ブラウザでの目視確認とIOException/ファイル実読によるworldview本文の照合は別要素として validator が false を返すため、こちらでも未実施として記録する。"
+    "notes": [
+      "ブラウザ目視確認は未実施（visual_check.status = unavailable）。",
+      "共有パックの変更は自分の範囲外のため未適用。適用する場合は pack-id-pattern-fix.md の手順で。"
+    ]
   },
   "measurement_notes": [
-    "すべての時刻は null。Bashや時刻取得を使わないため、観測できない時刻を推測で埋めていない。",
-    "所要時間とゲーム内試作コストは別物。prototype_cost の band は設計上の試作見積もりである。",
-    "トークン数と費用は管理サービスが実測値を提供していないため null。",
-    "読み込み時間と生成時間と待機時間の分離集計は実時刻が取れなかったため算出していない。"
+    "すべての時刻は null。Bashでの時刻取得を禁止しているため、観測できない時刻を推測で埋めていない。",
+    "モデル名はユーザー指定の opencode/space-bunny-free を記録したものだけで、実測はしていない。",
+    "トークン数と費用は管理サービスが実測値を提供していないため null。"
   ],
   "deliverables": {
-    "candidate_files": 15,
-    "candidate_count": 15,
+    "candidate_files": 30,
+    "candidate_count": 30,
     "supporting_files": [
       "index.html",
       "manifest.json",
@@ -133,10 +207,107 @@
     ]
   },
   "classification_counts": {
-    "8/31": 3,
-    "廃TSUTAYA": 3,
-    "SEKIGAHARA": 3,
-    "研究所": 3,
-    "全マップ共通": 3
-  }
+    "初回回（マップ固有）": {
+      "8/31": 3,
+      "廃TSUTAYA": 3,
+      "SEKIGAHARA": 3,
+      "研究所": 3,
+      "全マップ共通": 3
+    },
+    "追加回（全マップ共通）": {
+      "全マップ共通": 15
+    }
+  },
+  "solo_pve_verbs": [
+    {
+      "candidate_id": "ROLE-B-016",
+      "item": "足跡消し粉",
+      "verb": "探索/避ける",
+      "result": "自分の移動痕跡の末尾3歩分を個人記録から削除"
+    },
+    {
+      "candidate_id": "ROLE-B-017",
+      "item": "音の箱",
+      "verb": "探索/避ける",
+      "result": "10秒間の自分の音を蓄え、指定地点で1回だけ鳴らす"
+    },
+    {
+      "candidate_id": "ROLE-B-018",
+      "item": "引き索",
+      "verb": "攻める",
+      "result": "射程内の対象1体を自分側へ一歩引き寄せる"
+    },
+    {
+      "candidate_id": "ROLE-B-019",
+      "item": "遮光板",
+      "verb": "避ける",
+      "result": "6秒だけ表示を暗くし、対象個人に関する索敵を不成立にする"
+    },
+    {
+      "candidate_id": "ROLE-B-020",
+      "item": "折り畳み段",
+      "verb": "環境を使う",
+      "result": "指定地点に15秒だけ乗れる足場を生む"
+    },
+    {
+      "candidate_id": "ROLE-B-021",
+      "item": "受け流し札",
+      "verb": "攻める",
+      "result": "対象1体への通常ダメージ結果だけ1回不成立にする"
+    },
+    {
+      "candidate_id": "ROLE-B-022",
+      "item": "見張り灯",
+      "verb": "環境を使う",
+      "result": "指定範囲の追跡更新を20秒だけ遅らせる"
+    },
+    {
+      "candidate_id": "ROLE-B-023",
+      "item": "未書きの写り",
+      "verb": "探す",
+      "result": "未探索の区画1つを探索済みへ遷移させる"
+    },
+    {
+      "candidate_id": "ROLE-B-024",
+      "item": "誘い板",
+      "verb": "攻める",
+      "result": "触れた対象1体の追跡対象を期限付きで置き点へ変更"
+    },
+    {
+      "candidate_id": "ROLE-B-025",
+      "item": "塩と油の瓶",
+      "verb": "引き返す",
+      "result": "現在HPを半分にし、6秒だけ移動速度を上げる"
+    },
+    {
+      "candidate_id": "ROLE-B-026",
+      "item": "視界印",
+      "verb": "探す",
+      "result": "6秒だけ視界内の方角印を出し、同じ6秒だけ所在を相手へ渡す"
+    },
+    {
+      "candidate_id": "ROLE-B-027",
+      "item": "崩土の袋",
+      "verb": "環境を使う",
+      "result": "投げた地点の通行を20秒だけ失わせる"
+    },
+    {
+      "candidate_id": "ROLE-B-028",
+      "item": "疏散札",
+      "verb": "避ける",
+      "result": "対象1体を10秒だけ自分から離れた場所に留まらせる"
+    },
+    {
+      "candidate_id": "ROLE-B-029",
+      "item": "抜き取り",
+      "verb": "探す",
+      "result": "射程内の未取得の品1個を個人所持へ移す"
+    },
+    {
+      "candidate_id": "ROLE-B-030",
+      "item": "巻き戻し",
+      "verb": "攻める",
+      "result": "自分が選んだ直近1操作の結果だけを1回不成立にする"
+    }
+  ]
 }

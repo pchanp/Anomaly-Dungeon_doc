@@ -1,0 +1,24 @@
+{
+  "reason": "three corrections used",
+  "errors": [
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest ID invalid/outside role",
+    "manifest and candidate file set differ",
+    "final requires all 30 reserved IDs",
+    "progress completed IDs differ"
+  ],
+  "new_count": 15
+}

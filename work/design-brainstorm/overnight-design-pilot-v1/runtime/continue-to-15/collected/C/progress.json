@@ -1,8 +1,8 @@
 {
   "run_id": "overnight-design-pilot-v1",
   "role": "C",
-  "state": "completed",
-  "mode": "CONTINUE_TO_15",
+  "state": "in_progress",
+  "mode": "APPEND_COMMON_SOLO_15",
   "completed_ids": [
     "ROLE-C-001",
     "ROLE-C-002",
@@ -20,7 +20,7 @@
     "ROLE-C-014",
     "ROLE-C-015"
   ],
-  "next_ids": [],
+  "next_ids": ["ROLE-C-019", "ROLE-C-020", "ROLE-C-021", "ROLE-C-022", "ROLE-C-023", "ROLE-C-024", "ROLE-C-025", "ROLE-C-026", "ROLE-C-027", "ROLE-C-028", "ROLE-C-029", "ROLE-C-030"],
   "started_at": null,
   "ended_at": "2026-10-05T03:08:39.887549+00:00",
   "stop_reason": null,
@@ -79,6 +79,17 @@
       "started_at": null,
       "ended_at": null,
       "note": "009と010の2件のみを保存し、11件時点で止めた。3件単位の区切りで進められなかったため。"
+    },
+    {
+      "batch_index": 5,
+      "candidate_ids": [
+        "ROLE-C-016",
+        "ROLE-C-017",
+        "ROLE-C-018"
+      ],
+      "started_at": null,
+      "ended_at": null,
+      "note": "追加回 v0.3。全マップ共通の3件を追加。ソロPvEの移動と戦闘回避を優先。"
     }
   ],
   "usage": {

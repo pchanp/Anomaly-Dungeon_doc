@@ -2,8 +2,8 @@
   "run_id": "overnight-design-pilot-v1",
   "role": "A",
   "state": "completed",
-  "mode": "CONTINUE_TO_15",
-  "completed_ids": ["ROLE-A-001", "ROLE-A-002", "ROLE-A-003", "ROLE-A-004", "ROLE-A-005", "ROLE-A-006", "ROLE-A-007", "ROLE-A-008", "ROLE-A-009", "ROLE-A-010", "ROLE-A-011", "ROLE-A-012", "ROLE-A-013", "ROLE-A-014", "ROLE-A-015"],
+  "mode": "APPEND_COMMON_SOLO_15",
+  "completed_ids": ["ROLE-A-001", "ROLE-A-002", "ROLE-A-003", "ROLE-A-004", "ROLE-A-005", "ROLE-A-006", "ROLE-A-007", "ROLE-A-008", "ROLE-A-009", "ROLE-A-010", "ROLE-A-011", "ROLE-A-012", "ROLE-A-013", "ROLE-A-014", "ROLE-A-015", "ROLE-A-016", "ROLE-A-017", "ROLE-A-018", "ROLE-A-019", "ROLE-A-020", "ROLE-A-021", "ROLE-A-022", "ROLE-A-023", "ROLE-A-024", "ROLE-A-025", "ROLE-A-026", "ROLE-A-027", "ROLE-A-028", "ROLE-A-029", "ROLE-A-030"],
   "next_ids": [],
   "started_at": null,
   "ended_at": null,
@@ -11,7 +11,8 @@
   "execution": {"provider": null, "model": "opencode/space-bunny-free", "session_id": null},
   "sessions": [
     {"session_index": 1, "started_at": null, "ended_at": null, "note": "PILOT_ONLYで試走3件を作成。時刻取得手段が担当へ禁止されているためnull。"},
-    {"session_index": 2, "started_at": null, "ended_at": null, "note": "同じrunnerで継続。CONTINUE_TO_15の指示を受け、既存3件のHTMLをcandidate-format v0.2の簡潔な形式へ書き直し、残り12件を3件ずつ作成。時刻はnull。"}
+    {"session_index": 2, "started_at": null, "ended_at": null, "note": "同じrunnerで継続。CONTINUE_TO_15の指示を受け、既存3件のHTMLをcandidate-format v0.2の簡潔な形式へ書き直し、残り12件を3件ずつ作成。時刻はnull。"},
+    {"session_index": 3, "started_at": null, "ended_at": null, "note": "同じrunnerで継続。APPEND_COMMON_SOLO_15の指示を受け、common-pack-v0.3を読み、001〜015を読み取り専用として新規の016〜030を全マップ共通・ソロPvE重視で作成。出力先は runtime/continue-to-15/collected/A のみ。時刻はnull。"}
   ],
   "batches": [
     {"batch_index": 1, "candidate_ids": ["ROLE-A-001", "ROLE-A-004", "ROLE-A-013"], "started_at": null, "ended_at": null, "note": "試走3件。"},
@@ -19,7 +20,12 @@
     {"batch_index": 3, "candidate_ids": ["ROLE-A-005", "ROLE-A-006"], "started_at": null, "ended_at": null, "note": "廃TSUTAYA枠の残り2件。6件時点でmanifest/index/progressを更新。"},
     {"batch_index": 4, "candidate_ids": ["ROLE-A-007", "ROLE-A-008", "ROLE-A-009"], "started_at": null, "ended_at": null, "note": "SEKIGAHARA枠の3件。"},
     {"batch_index": 5, "candidate_ids": ["ROLE-A-010", "ROLE-A-011", "ROLE-A-012"], "started_at": null, "ended_at": null, "note": "研究所枠の3件。"},
-    {"batch_index": 6, "candidate_ids": ["ROLE-A-014", "ROLE-A-015"], "started_at": null, "ended_at": null, "note": "全マップ共通枠の残り2件。15件で一覧とmanifestを更新し、確認待ちへ。"}
+    {"batch_index": 6, "candidate_ids": ["ROLE-A-014", "ROLE-A-015"], "started_at": null, "ended_at": null, "note": "全マップ共通枠の残り2件。15件で一覧とmanifestを更新。"},
+    {"batch_index": 7, "candidate_ids": ["ROLE-A-016", "ROLE-A-017", "ROLE-A-018"], "started_at": null, "ended_at": null, "note": "追加回1群目。音で索敵を外す、枠内の合図伝播、光の内外で反応が変わる。"},
+    {"batch_index": 8, "candidate_ids": ["ROLE-A-019", "ROLE-A-020", "ROLE-A-021"], "started_at": null, "ended_at": null, "note": "追加回2群目。一度きりの扉、NPC周期の崩れ、刻印の擦れ。"},
+    {"batch_index": 9, "candidate_ids": ["ROLE-A-022", "ROLE-A-023", "ROLE-A-024"], "started_at": null, "ended_at": null, "note": "追加回3群目。低温の通行帯、倒した記録が残る、時間読めない一方通行。"},
+    {"batch_index": 10, "candidate_ids": ["ROLE-A-025", "ROLE-A-026", "ROLE-A-027"], "started_at": null, "ended_at": null, "note": "追加回4群目。見張り、NPC反応の残留、群の寄せ。"},
+    {"batch_index": 11, "candidate_ids": ["ROLE-A-028", "ROLE-A-029", "ROLE-A-030"], "started_at": null, "ended_at": null, "note": "追加回5群目。消せない灯り、曲がった道標、残る音。30件で一覧とmanifestを更新。"}
   ],
   "usage": {"input_tokens": null, "output_tokens": null, "cost": null, "currency": null, "measurement_source": null},
   "visual_check": {
@@ -33,6 +39,8 @@
     "モデル: 実行環境の設定値として確認できたものだけを記入。providerとsession_idは未確認のためnull。",
     "費用・トークン: 管理サービスが実測値を提供していないためnull。",
     "検証と表示: どちらも本担当では実行していない。",
-    "文字混入: 作成中に生成された本文の一部に日本語以外の言語の断片が混入した。該当箇所はhandoffの要修正に列挙し、未修正のまま保存した。"
+    "追加回016〜030: refsは空配列、unresolved_refsはID未指定の要求のみ。Peer候補の内容は読んでおらず、創作していない。",
+    "文字混入: 追加回の作成中に日本語以外の言語の断片が混入したため、該当箇所はWriteで保存し直して解消した。020と021、022、023、024、025、026、027、028、029、030の各JSONとHTMLを確認済み。",
+    "パスの注意: common-pack-v0.3とsources.jsonは runtime/initial-only-no-deadline/roots/A 側にあり、今回の新保存先には無い。参照先は旧rootのままである。"
   ]
 }

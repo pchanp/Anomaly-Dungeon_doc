@@ -100,3 +100,9 @@ OpenCode / space-bunny-free、アカウントは既存設定、権限YOLO、期�
 - [共通パック v0.2](work/design-brainstorm/overnight-design-pilot-v1/common-pack-v0.2/README.md)
 
 このMDは一時的なリポジトリ直下の入口で、不要になったら削除できる。
+
+## 全マップ共通追加回（暫定）
+
+追加37件、前回込み82件。A30/B30/C22。未完・未レビューのため公開サイトへの追加は未実施。
+
+[停止原因と暫定記録](work/design-brainstorm/overnight-design-pilot-v1/runtime/common-solo-plus-15/PROVISIONAL.md)

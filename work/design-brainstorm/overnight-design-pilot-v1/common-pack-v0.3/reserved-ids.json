@@ -1,0 +1,911 @@
+{
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_count": 90,
+  "roles": {
+    "A": 30,
+    "B": 30,
+    "C": 30
+  },
+  "slots": [
+    {
+      "candidate_id": "ROLE-A-001",
+      "role": "A",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": true,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-002",
+      "role": "A",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-003",
+      "role": "A",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-004",
+      "role": "A",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": true,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-005",
+      "role": "A",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-006",
+      "role": "A",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-007",
+      "role": "A",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-008",
+      "role": "A",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-009",
+      "role": "A",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-010",
+      "role": "A",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-011",
+      "role": "A",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-012",
+      "role": "A",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-013",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": true,
+      "note": "通常モブイベントを含める枠"
+    },
+    {
+      "candidate_id": "ROLE-A-014",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-015",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-001",
+      "role": "B",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": true,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-002",
+      "role": "B",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-003",
+      "role": "B",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-004",
+      "role": "B",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": true,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-005",
+      "role": "B",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-006",
+      "role": "B",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-007",
+      "role": "B",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-008",
+      "role": "B",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-009",
+      "role": "B",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-010",
+      "role": "B",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-011",
+      "role": "B",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-012",
+      "role": "B",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-013",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": true,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-014",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-B-015",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-001",
+      "role": "C",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": true,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-002",
+      "role": "C",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-003",
+      "role": "C",
+      "primary_map": "8/31",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-004",
+      "role": "C",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": true,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-005",
+      "role": "C",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-006",
+      "role": "C",
+      "primary_map": "廃TSUTAYA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-007",
+      "role": "C",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-008",
+      "role": "C",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-009",
+      "role": "C",
+      "primary_map": "SEKIGAHARA",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-010",
+      "role": "C",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-011",
+      "role": "C",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-012",
+      "role": "C",
+      "primary_map": "研究所",
+      "classification": "マップ固有",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-013",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": true,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-014",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-C-015",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "主文脈の予約だけ。案の内容は未指定。"
+    },
+    {
+      "candidate_id": "ROLE-A-016",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-A-017",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-A-018",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-A-019",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-A-020",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-A-021",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-A-022",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-A-023",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-A-024",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-A-025",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-A-026",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-A-027",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-A-028",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-A-029",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-A-030",
+      "role": "A",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-B-016",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-B-017",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-B-018",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-B-019",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-B-020",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-B-021",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-B-022",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-B-023",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-B-024",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-B-025",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-B-026",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-B-027",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-B-028",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-B-029",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-B-030",
+      "role": "B",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-C-016",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-C-017",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-C-018",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-C-019",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-C-020",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-C-021",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-C-022",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-C-023",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-C-024",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-C-025",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-C-026",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-C-027",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-C-028",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-C-029",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    },
+    {
+      "candidate_id": "ROLE-C-030",
+      "role": "C",
+      "primary_map": "全マップ共通",
+      "classification": "全マップ共通",
+      "reservation_status": "reserved",
+      "content_status": "not_created",
+      "pilot_slot": false,
+      "note": "追加回。ソロPvEアクション探索を優先し、他案との接続は任意。"
+    }
+  ]
+}

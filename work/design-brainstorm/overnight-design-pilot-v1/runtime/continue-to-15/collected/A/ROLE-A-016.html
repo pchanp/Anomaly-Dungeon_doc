@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-A-016 囮の音 — 索敵を外へ逃がす</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+<p class="sub">overnight-design-pilot-v1 ／ ROLE-A-016 ／ 全マップ共通 ／ GimmickEvent</p>
+<h1>囮の音 — 索敵を外へ逃がす</h1>
+<p>自分で出した音で、追跡中の敵の狙いを別の場所へ向ける。</p>
+<div class="badges"><span class="badge hyp">Idea</span><span class="badge">unreviewed</span><span class="badge unknown">減衰距離は未定</span></div>
+<nav class="nav"><a href="index.html">← 一覧</a><a href="ROLE-A-016.json">同IDのJSON</a></nav>
+</header>
+
+<section id="hypothesis">
+<h2>何の案か</h2>
+<p>音だけを使って、交戦せずに距離を稼ぐ。</p>
+<ul>
+<li>走り踏み音と物を壊した音は別の強さで届き、届いた距離のモブの注意が音源へ向く。</li>
+<li>反応するのは索敵中の個体だけ。攻撃中の個体と待機中の個体では変わらない。</li>
+<li>音は個体数を変えない。何度使っても補充は起こらない。</li>
+</ul>
+<p><strong>選択と代償:</strong> 遠目に鳴らして横を抜ける／自分の足音を逆方向に使って離れる／鳴らさず静かに回る。誘導の音は自分の位置も晒す。減衰距離は未定なので、逃げ切れる保証はない。</p>
+<p class="sub">接続タグ: SoundInteraction / StateChange / Combat / Environment ／ requires_code: true ／ conflicts 0件・未解決1件（JSONに記載）</p>
+</section>
+
+<section id="diagram">
+<h2>仕組みの図</h2>
+<div class="board">
+<svg viewBox="0 0 1000 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="プレイヤーが出した音が減衰範囲内の索敵中モブの狙いを音源へ向け替え、個体数は変わらないことを示す図">
+<rect width="1000" height="360" fill="#0a1118"/>
+<text class="label" x="24" y="28">入力となる音</text>
+<text class="label" x="430" y="28">対象の反応</text>
+
+<rect x="24" y="52" width="200" height="72" rx="8" fill="#142330" stroke="#d3b653"/>
+<text class="label" x="38" y="82">走り踏み・物を壊す</text>
+<text class="small" x="38" y="106">強度ごとに別。値は未定</text>
+
+<rect x="248" y="52" width="180" height="72" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="label" x="262" y="82">到達判定</text>
+<text class="small" x="262" y="106">減衰と遮蔽は未実装</text>
+<path d="M224 88h20" class="active"/>
+<path d="M238 82l9 6-9 6" class="active"/>
+
+<rect x="452" y="52" width="240" height="72" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="label" x="466" y="82">索敵の狙いが音源へ</text>
+<text class="small" x="466" y="106">StateChange 一時</text>
+<path d="M428 88h20" class="active"/>
+<path d="M442 82l9 6-9 6" class="active"/>
+
+<rect x="716" y="52" width="260" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="730" y="82">（a）遠目に鳴らす</text>
+<text class="small" x="730" y="106">横道を通り抜ける</text>
+<rect x="716" y="142" width="260" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="730" y="172">（b）自分の足音を逆へ</text>
+<text class="small" x="730" y="198">位置も晒す。暴露が大きい</text>
+<rect x="716" y="232" width="260" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="730" y="262">（c）鳴らさず回る</text>
+<text class="small" x="730" y="288">安全だが時間を要する</text>
+<path d="M692 88h18" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M704 82l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M692 178h18" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M704 172l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M692 268h18" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M704 262l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+
+<rect x="24" y="170" width="200" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="small" x="38" y="200">反応しない個体</text>
+<text class="small" x="38" y="224">攻撃中・待機中・遠い</text>
+<path d="M338 106h-90v40" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+
+<rect x="24" y="262" width="660" height="52" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="small" x="38" y="294">個体数は変わらない。別系統：アノマリーの同時出現数、博士Questの補正。個体は既存のイベントから来る。</text>
+<text class="small" x="24" y="338">この図で分かること：音を入れる、対象の狙いだけが変わる、戦わずに距離を取れる。減衰距離は未確定。</text>
+</svg>
+</div>
+<p>図注：狙いを向け替えても個体数は減らない。時間を掛けて安全に離れるか、音の遠ざけに賭けて一気に離れるかの判断になる。</p>
+</section>
+
+<footer>overnight-design-pilot-v1 ／ ROLE-A-016 ／ 実表示は未確認（担当セッションでブラウザを使用していない）。</footer>
+</main>
+</body>
+</html>

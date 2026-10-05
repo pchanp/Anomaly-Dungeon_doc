@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-A-029 曲がった道標 — 通ると一度だけ向きが変わる</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+<p class="sub">overnight-design-pilot-v1 ／ ROLE-A-029 ／ 全マップ共通 ／ GimmickEvent</p>
+<h1>曲がった道標 — 通ると一度だけ向きが変わる</h1>
+<p>道標は一度だけ裏返り、その理由を教えてくれない。</p>
+<div class="badges"><span class="badge hyp">Idea</span><span class="badge">unreviewed</span><span class="badge unknown">向きの条件は未定</span></div>
+<nav class="nav"><a href="index.html">← 一覧</a><a href="ROLE-A-029.json">同IDのJSON</a></nav>
+</header>
+
+<section id="hypothesis">
+<h2>何の案か</h2>
+<p>案内を信じ続けるか、信じないかがそのまま問いになる。</p>
+<ul>
+<li>道標がひとつあり、通るまでは通常の向きを向く。</li>
+<li>一度通ると向きが別の方向へ変わる。二度目はない。戻す方法もない。</li>
+<li>変化の通知は出さない。理由は説明されず、地形も変更されない。</li>
+</ul>
+<p><strong>選択と代償:</strong> 道標に従って進む／逆へ曲がって自分で見る／別の目印を探す。なぜ曲がったかは説明されない。従った場合だけ先に進めない可能性がある。</p>
+<p class="sub">接続タグ: WorldChange / StateChange / Environment / Guidance ／ requires_code: true ／ conflicts 0件・未解決2件（JSONに記載）</p>
+</section>
+
+<section id="diagram">
+<h2>仕組みの図</h2>
+<div class="board">
+<svg viewBox="0 0 1000 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="道標は通るまでは通常の向きを向き、一度通ると別の方向へ変更され、戻らないことを示す図">
+<rect width="1000" height="360" fill="#0a1118"/>
+<text class="label" x="24" y="28">道標の向き</text>
+<text class="label" x="540" y="28">通ったあとに変わること</text>
+
+<rect x="24" y="52" width="220" height="72" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="label" x="38" y="82">通常の向き</text>
+<text class="small" x="38" y="106">通るまでは指示どおり</text>
+
+<rect x="24" y="142" width="220" height="76" rx="8" fill="#142330" stroke="#d3b653"/>
+<text class="label" x="38" y="172">別の方向</text>
+<text class="small" x="38" y="198">一度だけ。戻らない</text>
+<path d="M134 124v14" stroke="#d3b653" stroke-width="2" fill="none"/>
+<path d="M128 136l6 8 6-8z" fill="#d3b653"/>
+
+<rect x="300" y="52" width="240" height="76" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="314" y="82">変化を通知しない</text>
+<text class="small" x="314" y="108">見た目だけ。理由は返さない</text>
+<path d="M244 90h52" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M288 84l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+
+<rect x="300" y="146" width="240" height="76" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="314" y="176">地形は変更しない</text>
+<text class="small" x="314" y="202">通路の構造はそのまま</text>
+<path d="M244 184h52" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M288 178l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+
+<rect x="600" y="52" width="376" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="614" y="82">（a）道標に従って進む</text>
+<text class="small" x="614" y="106">早い。先が読めない</text>
+<rect x="600" y="142" width="376" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="614" y="172">（b）逆へ曲がって見る</text>
+<text class="small" x="614" y="198">時間をかける。自分で確かめる</text>
+<rect x="600" y="232" width="376" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="614" y="262">（c）別の目印を探す</text>
+<text class="small" x="614" y="288">案内に依存しない</text>
+<path d="M540 88h54" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M586 82l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M540 178h54" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M586 172l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M540 268h54" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M586 262l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+
+<text class="small" x="24" y="290">別系統：案内NPC（ROLE-A-003）。こちらは物の向きだけを行い、言葉は使わない。</text>
+<text class="small" x="24" y="338">この図で分かること：向きは一度しか変わらない。通知がないので、変わったこと自体を読む必要がある。</text>
+</svg>
+</div>
+<p>図注：嘘をつく理由も書き換えた主体も説明しない。信じるか、自分で確かめるかだけが判断になる。</p>
+</section>
+
+<footer>overnight-design-pilot-v1 ／ ROLE-A-029 ／ 実表示は未確認（担当セッションでブラウザを使用していない）。</footer>
+</main>
+</body>
+</html>
