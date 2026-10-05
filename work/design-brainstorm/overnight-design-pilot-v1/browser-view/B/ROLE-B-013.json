@@ -1,0 +1,344 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-013",
+  "role": "B",
+  "title": "入出庫札（安全を1段買うたび異常性に近づく）— 作業用見出し",
+  "design_status": "Draft",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/decisions/010-real-route-secure-slot-progression.md",
+      "section": "Secure Slotへの入出庫時点と、Player Anomaly時の利用制約。",
+      "source_status": "Status: Accepted（採用）",
+      "claim": "Secure Slotへの入出庫時点とPlayer Anomaly時の利用制約は、未決事項として明示されている。候補はこの未決に対して1つの解を提示する。"
+    },
+    {
+      "path": "docs/decisions/010-real-route-secure-slot-progression.md",
+      "section": "別種のスロット強化は将来の候補として残すが、現時点の成長仕様には追加しない。",
+      "source_status": "Status: Accepted（採用）",
+      "claim": "永続スロット強化は現状の成長仕様から外されている。候補は枠数を増やさないことを前提とし、枠数の拡張ではなく運用タイミングだけを扱う。"
+    },
+    {
+      "path": "docs/systems/economy-and-progression.md",
+      "section": "Secure Conversion（確定）",
+      "source_status": "Status: Draft（草案）",
+      "claim": "Secure Conversionはレアルート品を消費して通常スロット1枠をSecure Slotへ変換し、総枠数は増えない。候補はこの枠数を一切増やさない。"
+    },
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "Exposureはダメージ値ではなく、Anomaly発生、Individual Anomaly、スキル、マップ状態、ポータル遷移、Run終了条件に影響し得る内部状態として扱う。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "Exposureはダメージではなく内部状態であり、既に複数の帰結を持つ。候補はこれを操作の対価として使う。"
+    },
+    {
+      "path": "docs/systems/current-implementation.md",
+      "section": "Anomaly Exposureが設定可能な閾値へ達したプレイヤー1人を異常状態にする処理。",
+      "source_status": "Status: Implemented（実装棚卸し）",
+      "claim": "ExposureはプレイヤーAttributeとして実装され、閾値到達で異常状態への変化が処理される。候補はExposureの既存実装を利用するため、段という単位を設計しなくてよい。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "適用対象と優先順位を個別に明記する",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "RuleOverrideは無制限の受け皿にせず、適用対象と優先順位を個別に明記する。候補はこの要求に従い、優先順位が未確定の部分を未決として残す。"
+    },
+    {
+      "path": "docs/decisions/011-real-route-acquisition.md",
+      "section": "具体的なItem ID、確率、必要数、段階ごとの増加量は今回決めない。",
+      "source_status": "Status: Accepted（採用）",
+      "claim": "判断011は系統の用途と相対的な入手性を決めているが、個別Item IDと必要数は未決。候補は系統の定義を書き換えず、扱いを採用判断として残す。"
+    },
+    {
+      "path": "docs/anomalies/dev-null.md",
+      "section": "アイテム使用 -> 使用結果が発生しない",
+      "source_status": "Status: Draft（草案）",
+      "claim": "/dev/nullは結果の不成立を主題とし、アイテム使用を無効化する候補がある。候補の入出庫操作もアイテム操作に重なるため、優先順位が未決になる。"
+    }
+  ],
+  "design_hypothesis": "判断010の未決事項に、Secure Slotへの入出庫時点という項目がある。現状の実装は枠を増やして失敗に備えることだけで、Runの途中で自分の持ち物を出し入れする経路は無い。本候補は、枠は増やさずにRun中の入出庫を1回だけ許可し、その対価としてExposureを1段上げる設計を提示する。安全を1段買うたびに異常性へ近づくため、効果の代償を数値ではなく関係として示す。数値の上がり幅ではなく、残り1回を誰に分けるかという取り合いだけが設計の中心になる。",
+  "experience": {
+    "goal": "死んだ時に何を守っていたかという判断を、Runの途中でも組み直せるようにする。そのために異常性へ近づくという操作の代償を明示し、自由に保険が買える構造にしない。",
+    "player_choice": "① 使う。Run中に1回だけ出し入れできる。Exposureが1段上がる。② 使わない。Exposureは上がらないが、Run中は枠を組み替えられない。③ この札をSecure Slotに入れて死亡に備える。確実に残るが、確保した手段が1つ減る。④ 捨てて枠を空ける。判断019のPvPと閾値設計が未実装のため、①と③のどちらが安全かは数字では示せない。",
+    "sacrifice_or_risk": "①は異常化とその帰還の制限に近づく。異常化は同時に1人までという制約を持ち、他の異常化候補との枠取り合いも生じる。②はRun中の組み替えを諦める。どちらの判断も数字で正当化できないように設計しており、知識ではなく判断を問う。"
+  },
+  "placement_assumption": "新しい地形や部屋や施設は提案しない。既存のSecure Conversionは都市ロビーのアノマリー研究室で行われる永続強化であり、本候補はその研究室での交換から外し、Run内での使用に限定する案を置く。Secure Slotの枠構造は既存のまま変更しない。Run中で操作する入口をどこに置くかは未確定。",
+  "components": [
+    {
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "通常存在しないRun中のSecure Slot入出庫という操作を、1操作だけ許可する。適用対象をこの操作に限定し、無制限の受け皿にしない。"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "操作の対価として対象個人のAnomaly Exposureを1段上げる。段の単位そのものは既存仕様にないため、候補側で確定しない。"
+    },
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "残り操作が1回だけであることを個人HUDへ提示する。使用済みか未使用かのみを示し、他者へは共有しない。"
+    },
+    {
+      "component": "InventoryBoundary",
+      "availability": "catalog",
+      "usage": "20枠と初期Secure Slot 4枠のサーバー権威境界。枠数を増やさず、Run中の操作だけを追加する。"
+    },
+    {
+      "component": "SkillActivation",
+      "availability": "catalog",
+      "usage": "既存の3スキルと4枠UIの前提。ビルド取得と強化は未実装であり、本候補はこれを前提にしない。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "RuleOverride",
+      "trigger": "所持個人がRun中に、Secure Slotの出し入れ操作の許可を求める。入口は専用端末か所持時の操作かで未確定",
+      "condition": "RunがACTIVE、対象品が個人インベントリまたはSecure Slotのどちらかに存在、移動先が枠数制約を満たす、対象個人の残り操作回数が1以上。初期値は1で、回数の単位は未確定",
+      "result": "通常存在しないRun中のSecure Slot入出庫というゲームルールを、対象個人に対して1操作だけ許可する。枠数は増えず、Secure ConversionともCapacity Expansionとも無関係",
+      "target": "対象の品1点と操作した個人",
+      "scope": "個人。同じ操作を通った他の個人にもRun共有の枠にも波及しない",
+      "lifetime": "同一Run中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "許可された1操作が解決した時点で、この例外は解除する",
+        "Run終了で破棄する。マップ遷移では保持しない",
+        "対象品がSecure Slotの外で喪失した場合は、以降の入出庫は対象不在として成立しない"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。例外としての存続は1操作の解決までで、Run終了が強制的な破棄条件である。2つを別規則に分ける理由がない。",
+      "stacking": {
+        "exception": true,
+        "rule": "同じEffectへの再適用は例外として扱い、2枚目でも操作回数だけを1増やさない。残り回数を非加算1件に保つ。固定秒数は持たない",
+        "conflict_resolution": "/dev/nullのような結果傍受系のEffectや、個々のアノマリーによるアイテム操作の無効化との優先順位は未定義である。anomaly-interaction.mdでも未決のままなので、候補側で適用順を確定せず保留して記録する"
+      },
+      "server_validation": "ServerがRun状態、移動対象が対象個人の所持物であること、枠数制約、残り操作回数、操作者IDを検証する。クライアントの要求回数や表示だけを根拠にしない。",
+      "client_presentation": "クライアントは操作画面の可否と結果表示のみを担う。操作の許可そのものはServerが確定する。残り回数は本人だけに1回と表示し、他者HUDには出さない。",
+      "feedback": {
+        "success": "枠の表示が1つ移動し、残りの表示が0になる。確定音は鳴らさない",
+        "failure": "枠も残り回数も変わらず、注意表示が1回だけ出る。理由の区別は日本語で出さない",
+        "ambiguous": "残り回数が0になった後で操作口が出ても、回数不足なのか権限不足なのかを区別しない"
+      }
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "上のRuleOverrideの1操作が解決したのと同時に、対象個人の状態としてAnomaly Exposureを1段上げる",
+      "condition": "対象個人がRunに参加中で、Exposureの上限を判定できること。上限の有無と値は未確定",
+      "result": "対象個人のAnomaly Exposureが1段上がる。HPは変化しない。異常化へ至るかどうかは閾値設計次第であり、候補側では確定しない",
+      "target": "対象個人（Exposureという個人内部状態）",
+      "scope": "個人。Run共有のアノマリー出現計算は直接書き換えない",
+      "lifetime": "同一Run中",
+      "resolution": "instant",
+      "end_conditions": [
+        "上昇の記録は即時に確定する",
+        "Run終了でExposureの状態は次のRunへ持ち越さない"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。即時記録とRun終了による状態リセットは別の条件として列挙する。",
+      "stacking": {
+        "exception": false,
+        "rule": "同じ操作から来る上昇は1操作につき1段。固定秒数を持たない。既に記録済みの対象への再上昇を加算とするか置換とするかは候補側で決めない",
+        "conflict_resolution": "他のアイテムや状態から同じExposureへ作用する場合、解決規則が未定義のため保留して記録する。8/32のExposure取得速度2.4倍という既存実装との合算順序も未確定であり、自動合算にしない"
+      },
+      "server_validation": "ServerがExposureの現在値と上限を判定して更新する。クライアントが提示した値を書き込まない。",
+      "client_presentation": "既存のExposureの個人表示が更新されるのと同じ経路を使い、本候補独自のHUDは増やさない。段という単位はUIに出さない。",
+      "feedback": {
+        "success": "既存の個人表示が更新されるのみ。本候補に特有な通知は出さない",
+        "failure": "上限に達している場合は上昇せず、操作の表示だけがRuleOverride側で変わる",
+        "ambiguous": "上升した結果がどの判断へ近いのかを示す表現は出さない。既存仕様に従い、候補で説明しない"
+      }
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "本候補を所持している間、または1操作が成立したあと、個人HUDが状態を再描画する",
+      "condition": "対象個人がRunの参加中で、個人HUDの表示が有効なとき",
+      "result": "残り操作が1回であることを示す印を表示する。使用済みか未使用かのみを示し、枠数や内訳は出さない",
+      "target": "対象個人（提示は個人に閉じる）",
+      "scope": "個人。共有のRun状態は書き換えない",
+      "lifetime": "同一Run中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "Run終了またはHUD非表示で解除",
+        "切断で個人提示は破棄する。再接続時に復元するかは未決"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。HUD表示と個人状態の寿命は結びついているため、別規則を定めない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一個人への同一提示は非加算1件。残り時間を更新せず状態を上書きする",
+        "conflict_resolution": "既存のRun情報HUDや他のアイテム提示と競合する場合、表示枠の優先順位が未決定なので強制作業しない"
+      },
+      "server_validation": "Serverが残り操作回数が1か0かを返す。内部の累積値は返さない。HUDの描画権限はClient側の表現に限る。",
+      "client_presentation": "HUDは小さな印を1つだけ提示する。他者のHUDに同じ印を出さない。印の説明文は表示しない。",
+      "feedback": {
+        "success": "印が点いた状態のときだけ再描画される。初回は1回だけ",
+        "failure": "不成立時は印が変化しない",
+        "ambiguous": "印の意味は本人だけが判断する。ゲームは数字で安全性や有利さを保証しない"
+      }
+    }
+  ],
+  "provides_traits": [
+    "RuleOverrideを、通常存在しない操作を1回だけ許可する限定用途として書き、適用対象と残存期間を記述する例",
+    "既存の内部状態であるExposureを対価として上げ、効果の安全性を数字で保証しない価格付け",
+    "Secure Slotの枠数を増やさずに運用タイミングだけを拡張する候補の書き方"
+  ],
+  "connection_tags": [
+    "Item",
+    "Interface",
+    "Rule"
+  ],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": [
+        "アイテム操作の入力について、どのEffectを先に評価するかを規定する共通規則"
+      ],
+      "reason": "dev-null.mdはアイテム操作の無効化を候補に挙げるが、anomaly-interaction.mdでも傍受系と通常結果の優先順位は未決事項のままである。優先順位を規則として置けないため、採用側の判断として残す。",
+      "adoption_blocker": true
+    },
+    {
+      "target_id": null,
+      "required_traits": [
+        "Anomaly Exposureの単位（段階か絶対加算か）と上限を定義する資料"
+      ],
+      "reason": "既存MDはExposureが閾値へ達すると異常化すると書くが、段階表現と単位を定めていない。候補側で1段の意味を決めれば実装仕様を創作することになるため、未決として残す。",
+      "adoption_blocker": true
+    },
+    {
+      "target_id": null,
+      "required_traits": [
+        "判断011のレアルート品分類に本件を置くか、新しい系統を立てるかの判断"
+      ],
+      "reason": "判断011はスロットレアルート品を Secure Conversion と Capacity Expansion の消費品と定義しており、本件はそのどちらにも当たらない。予約されているのは担当IDのみで、系統定義の更新は正本の判断事項として残す。",
+      "adoption_blocker": false
+    }
+  ],
+  "conflicts": [
+    {
+      "source_path": "docs/decisions/011-real-route-acquisition.md",
+      "existing_rule": "汎用スキルレアルート品（博士の過去の研究成果から抽出した汎用スキルの獲得と強化）、スロットレアルート品（Secure Conversion と Capacity Expansion）、およびアノマリー固有の交換品（対応する専用スキル）の3系統を定義する。",
+      "proposal_difference": "枠数を増やさずRun中の入出庫タイミングだけを可能にする消費品を、Secure Slotの運用に作用的レアルート品として置こうとする。Secure ConversionやCapacity Expansionの消費品ではない。",
+      "correction": "判断011の3系統自体は変更しない。本件をスロット系の別系統として追記するか、新しい系統を立てるかは採用判断とする。枠数を増やさず永続強化の枠を消費しないため、判断010が除外している別種のスロット強化には該当しないと判断している。",
+      "reason_correctable": "判断010が列挙から外しているのは枠数を増やす永続強化の追加であり、Run内の一時的な運用緩和ではない。効果の目的が枠数ではなくタイミングであるため、スロット系の文脈に置く説明が成立する。",
+      "decision_needed": "本件を判断011へ追記するか、新しい分類を立てるか。どちらを選ぶかによって配布経路と消費内容の記述が変わる。"
+    }
+  ],
+  "uncertainties": [
+    "Exposureの1段という単位そのものを設計していない。既存仕様に段という表現は無い。段と書いたのは意図的な近似であり、実装時には単位と上限を決める必要がある",
+    "残り操作回数1回の初期値と、対象を同一品だけとするか枠内の全品とするかは未確定",
+    "Run中の入出庫操作の入口が専用端末か所持時の操作かは未確定",
+    "/dev/nullなど結果傍受系のEffectとの評価順が未定義。候補側で先に評価すると決めない",
+    "判断019はPlayer AnomalyのRuntime満了時を通常Returnと同じ帰還処理とするが、current-implementation.mdには暫定の失敗処理が残る。この差が残るため、異常性へ近づく副次効果を数値で説明しきれない部分がある",
+    "通常プレイヤー同士のHP80%下限が変わると、この札で1枠を守る判断の重みが変わる。数値は候補側で計算しない",
+    "Secure Slotへの入出庫時点は判断010の未決事項。本候補はその1つの解として提示するが、Run中の入出庫を認めない方針などを否定するものではない",
+    "衝突の確認範囲：判断010と011のレアルート定義と枠強化の除外、判断019とcurrent-implementation.mdの満了処理の差、判断021とeffect-componentsのRuleOverrideの記述要求、game-rules.mdのExposureの位置づけ、8/32のExposure取得速度2.4倍、博士Questの1.40倍補正と発生毎0.90倍減衰を照合した。Robux変換経路はIdeaとして扱い、本候補はRobux経路を設計していない",
+    "全マップ共通として書いたが、特定のマップでの配置や入手を保証しない。TSUTAYAと8/31のどちらでも成立し得るという主張にとどまる"
+  ],
+  "worldview": {
+    "defamiliarized_element": "保険を恒久的な道具として買うのではなく、Runの中で自分の持ち物を組み替える操作そのものを1回だけ売る形にした。安全を1段買うたびに異常性の側へ一歩進むため、効果と危険が同じ方向に並ぶ。ゲームはどちらが安全かを数字では返さない。",
+    "in_world_rationale": "既に Secure Conversion と Capacity Expansion という、危険な資産を確保できる状態へ変える操作が設計済みであり、それをRunの中で使う不便さは既存の世界観と矛盾しない。世界側はアノマリーを完全に理解していないため、この道具の正体ではなく手順だけを教える。判断010が描く研究者像とも矛盾しない。",
+    "meaning_left_ambiguous": "入出庫札が誰の手で後から作られたのか、何のためにあったのか、1回という限界が物的条件なのか運用上の都合なのか、博士の主張と関係するのかは確定しない。残り1回だけが明確で、意味は説明しない。博士の真意やダンジョンの起源は断定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "Secure Slotの拡張手段と上限とコストと入出庫タイミングはいずれも未実装であり、SecureSlotCapacity属性が拡張値の受け口として存在するだけである。正式なInventoryとItemStackも未実装で、正式な取得源はデバッグ付与だけである。本候補は新しい消費品とRun中のSecure Slot操作の新しい経路を必要とするため true とする。Exposureの単位が未設計であることは、判定の根拠が弱いのではなく未決であることを示す。",
+  "new_logic": [
+    "Run中のSecure Slot入出庫を許可する例外経路（RuleOverride）。枠数を増やさない前提を明示する",
+    "操作の対価として対象個人のAnomaly Exposureを1段上げる更新処理。段の単位と上限は候補側で定義しない",
+    "結果傍受系との評価順の規則。優先順位が未決のため候補側で確定しない",
+    "残り操作回数を個人提示として返す経路と、再接続時の復元規則。判断012と同じ留保"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "20枠と初期Secure Slot 4枠の枠数境界とRun終了時の分類は既にサーバー権威で動く。追加はRun中に枠を移動させる操作1本と、対価としてのExposure更新1本と、残り回数の表示だけで、UIの拡張は小さい。正式なInventoryとItemStackが未実装で取得源がないため、そこはデバッグ付与で代用する前提になる。効果の絶対的な強さは未設計なので、大とも小とも断定できない。",
+    "implementation_steps": [
+      "デバッグ付与で入出庫札1個を持たせる。正式な取得源は未実装なのでデバッグで代用する",
+      "InventoryServiceにRun中の枠移動操作を1つ足す。枠数の増加とSecure Conversionの処理は変更しない",
+      "その操作の残り回数を個人単位に1回だけ保持し、操作成立時にExposureの個人値を更新する",
+      "HUDに残り操作が1回か0回かの印だけを出す。段や内訳は出さない",
+      "Play Soloの1人セッションで、操作が成立すること、枠数が変わらないこと、Exposureの表示が更新されること、残り回数が1回だけであることを確認する",
+      "複数人、切断と再接続、異常化と満了の扱いは今回確認しない"
+    ],
+    "assumed_existing_parts": [
+      "InventoryService（20枠・初期Secure Slot 4枠・枠制約・獲得と喪失の分類）",
+      "SecureSlotCapacity属性（拡張値の受け口。既存の値は使わない）",
+      "ExposureServiceとAnomaly ExposureのプレイヤーAttribute",
+      "RunService.FinishとRunOutcomesの終了種別集約",
+      "クライアントRunControllerの既存Run情報HUDと既存のExposure表示"
+    ]
+  },
+  "role_details": {
+    "item_kind": "スロットレアルート品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Undecided",
+        "detail": "判断011の取得経路（相互作用成立、低難度以外のQuest、チュートリアル）のどれに載せるか未確定。効果の重さを考えるとチュートリアル配布は保留。博士Questの枠へ載せると出現確率補正と経路が重なるため、その判断も採用側に残す。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "1枠を消費する。相対的な希少さは方針としてだけ持ち、数値と確率は未確定。ここでは3つ目の判断が生まれる。他の重要品とこの札と本当に安全な場所へ入れる物の3枠を取り合うことになる。"
+      },
+      {
+        "route": "Use",
+        "status": "Proposed",
+        "detail": "使用が1つある。Run中に1回だけ、対象の品1点をSecure Slotと通常スロットの間で移動する。残り操作回数を使い切れば同じ操作は二度と成立しない。入口が専用端末か所持時の操作かは未確定。"
+      },
+      {
+        "route": "Present",
+        "status": "NotApplicable",
+        "detail": "受け取る側の人物と機関を確定していない。都市ロビーの研究室へ渡すのは博士の過去の研究成果を渡す交換であり、本候補は使用型の消費品として研究室での交換先を持たない。受け渡し先を創作せず対象外とする。"
+      },
+      {
+        "route": "Place",
+        "status": "NotApplicable",
+        "detail": "置き場を設けない。置けるようにすると Secure Conversion の枠を交換する契約と二重になり、またどこに置いたかが新しい所在管理を必要とする。試作時はデバッグ端末の操作口だけで実装する。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "Run終了時にSecure Slotの外なら喪失物。Secure Slotに入れていれば残るが、その1枠は他の重要品へ譲ることになる。切断と再接続時の扱いは未決。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "核心的な判断。この札をSecure Slotに入れて死亡に備えるか、通常枠に残して対価を払って使うかの二択になる。前者は確実ですが残す手段が1つ減り、後者は安全になりますが異常性へ近づく。どちらが合理的かは数字では出ないため、ゲームは既定の正解を提示しない。"
+      },
+      {
+        "route": "Sell",
+        "status": "Undecided",
+        "detail": "換金可能にすると、対価を払って安全を買う構造がただの回収素材へ緩むため換金しない方向を推奨するが、Item IDと換金額は判断011で未決なので採用判断として残す。本候補は換金にも博士研究室での永続枠への変換にも置かない。"
+      },
+      {
+        "route": "Quest",
+        "status": "Undecided",
+        "detail": "依頼主と依頼種別が未確定。博士Questに載せる場合は相互作用成立時の固有品（判断012）と経路が重なるため、置かない判断も保留する。判断014の固有品交換と明確に別系統であることを示す必要がある。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "Undecided",
+        "detail": "本候補はアイテム操作であり、Anomaly Interactionの分類のうちItem Interactionの範囲にある。ただし /dev/null のアイテム使用の無効化のような傍受系との評価順が未定義で、anomaly-interaction.mdの未決事項と直結する。採用時に順序を決める必要があり、候補側では決めない。対象とする既存アノマリーは未実装のものは含めない。"
+      }
+    ],
+    "ownership_state": "入出庫札はplayer単位の個人所持で1枠。Secure Slotへの出し入れは対象の品についてServerが検証してから、個人インベントリとSecure Slotのどちらか一方の枠へ移す。所有権そのものは移動しない。残り操作回数は個人ごとのRun単位の状態であり共有しない。HUDに示すのは本人だけの印で、回数はServerが確定する。切断と再接続時の個人所持と回数の復元は未決。",
+    "server_run_state": "残り操作回数はServer権威の個人Run状態として保持し、他の個人には共有しない。Run終了で消え、次のRunでは初期値に戻る。本候補はアノマリー出現コンポーネントを変更しないためWorldChangeのEffectは発生させず、RuleOverrideとStateChangeとInformationChangeのみとする。8/32のExposure取得速度2.4倍との合算順序は未確定であり、自動合算にしない。"
+  },
+  "html_file": "ROLE-B-013.html"
+}

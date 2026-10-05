@@ -1,0 +1,247 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-009",
+  "role": "B",
+  "title": "枠を売る札（身軽になる代わりにHPを買う）— 作業用見出し",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "SEKIGAHARA",
+  "classification": "マップ固有",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "通常プレイヤー同士のダメージでは、対象HPが最大HPの80%未満にならない下限を常に適用する。したがって通常プレイヤー同士はキルできない。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "PvPにはHPの下限がある。候補は回復を扱いますが、単体での戦闘結果には触れない。"
+    },
+    {
+      "path": "docs/anomalies/mad-stomper.md",
+      "section": "Healを単なるHP回復ではなく、アノマリーを正常化する能力として利用できるようにする。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "回復はHeal相互作用の入力になり得る。候補の回復をどちらとして扱うかは未決として残す。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "`Heal` | HP回復、Heal入力への反応 | Mad Stomperの鎮静はHP回復そのものとは区別する",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "HP回復と鎮静のような別の結果を区別する分類。"
+    },
+    {
+      "path": "docs/systems/economy-and-progression.md",
+      "section": "Capacity Expansion（確定）",
+      "source_status": "Status: Draft（草案）",
+      "claim": "枠を減らす操作は既存の成長仕様に無い。候補は枠を減らすのではなく空枠を一つ残す形にして、既存と衝突させない。"
+    }
+  ],
+  "design_hypothesis": "戦場では枠が常に不足する。候補は『枠を一つ捨てる代わりに体力を買う』札にする。ここで捨てるのは中身ではなく枠そのもので、しかも次のRunにも戻らない。回復を『効果』ではなく『永久的な損失との交換』として提示する案。",
+  "experience": {
+    "goal": "回復を数値でなく損失で買う。探索の余裕の作り方を一回の取捨選択にする。",
+    "player_choice": "使う（枠を一つ失って回復する）。使わない。捨てる。確保枠に入れて守る。",
+    "sacrifice_or_risk": "失うのは中身ではなく枠。枠は一つ戻らないため、次も次も狭い状態で始まる。"
+  },
+  "placement_assumption": "新しい地形・部屋・戦場は提案しない。使う場所も指定しない。獲得源は未実装の人物・施設であり創作しない。枠の消費は既存の枠境界のみで表現し、成長処理には触れない。",
+  "components": [
+    {
+      "component": "Effect.Heal",
+      "availability": "catalog",
+      "usage": "対象の個人のHPを回復する。回復量は未確定。"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "枠の1つを恒久的に空けた状態にする。保存境界は永続。"
+    },
+    {
+      "component": "InventoryBoundary",
+      "availability": "catalog",
+      "usage": "20枠と初期4枠の境界。Secure Slotの枠数は増やさない。"
+    },
+    {
+      "component": "ItemLifecycle",
+      "availability": "catalog",
+      "usage": "正式な取得源とItemStackが未実装であることを前提とする。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "Heal",
+      "trigger": "個人が札を使う",
+      "condition": "実行中であること、札を個人所持にもつこと。回復量の上限は未確定",
+      "result": "対象個人のHPが回復する。Shield効果ではなく回復量として扱うか、相互作用の入力として扱うかは未決",
+      "target": "対象の個人",
+      "scope": "個人。他者のHPは変化しない",
+      "lifetime": "永続",
+      "resolution": "instant",
+      "end_conditions": [
+        "回復の解決で確定"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。回復は解決のみ。lifetimeは枠の消費側の永続に合わせるため本Effectも永続と表記する。",
+      "stacking": {
+        "exception": false,
+        "rule": "一回につき一回。回復量は他为核心的効果と自動合算しない。固定秒数は持たない",
+        "conflict_resolution": "回復系の他の入力と同時に成立する場合は解決規則が未定義のため保留する"
+      },
+      "server_validation": "Serverが実行状態と所有を検証し、回復量をサーバー側で決める",
+      "client_presentation": "クライアントは結果表示のみ。回復量の決定はServerが行う",
+      "feedback": {
+        "success": "HP表示が更新される。回復量だけを強調する表示は出さない",
+        "failure": "何も変わらない。注意表示のみ",
+        "ambiguous": "他の異常に対する反応が起きても、原因を説明しない"
+      }
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "札の使用が確定した瞬間",
+      "condition": "上の回復と同じ検証内で成立すること",
+      "result": "枠の1つがその個人について恒久的に空く。中身は消えないが、同じ枠は二度と使えない。次のRunでも戻らない",
+      "target": "対象の個人の枠",
+      "scope": "個人。共有のRun状態は書き換えない",
+      "lifetime": "永続",
+      "resolution": "instant",
+      "end_conditions": [
+        "枠の消費が解決した時点で確定",
+        "このEffectに解除条件は無い。枠へ戻す処理は既存仕様に無く、候補でも追加しない"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。永続かつ解除なしという構成で、解除手段を候補側で増やさない。",
+      "stacking": {
+        "exception": true,
+        "rule": "同じ枠を二度空けない。例外として扱い、2枚目でも枠数は増やさない",
+        "conflict_resolution": "他の効果で枠数が変わる場合の解決規則は未定義のため保留する"
+      },
+      "server_validation": "Serverが枠の消費を個人Run状態の外側で確定する。クライアントの計算を認めない",
+      "client_presentation": "所持枠の表示が一つ減る。中身は個別に消えない。",
+      "feedback": {
+        "success": "枠の表示が一つ減る",
+        "failure": "枠もHPも変わらない。注意表示のみ",
+        "ambiguous": "残った枠の番号は表示しない。总数だけを示す"
+      }
+    }
+  ],
+  "provides_traits": [
+    "効果と永続の枠損失を交換する価格付けの例",
+    "回復を数値でなく損失として提示する設計"
+  ],
+  "connection_tags": [
+    "Item",
+    "Combat"
+  ],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": [
+        "アイテム由来の回復をHeal相互作用の入力として扱うか、回復量としてだけ扱うかの規定"
+      ],
+      "reason": "mad-stomper.mdはHealで鎮静できるとし、anomaly-interaction.mdはHeal相互作用を入力分類として挙げている。候補の回復をどちらの位置に置いたかで固有品との重複が変わため、採用判断として残す。",
+      "adoption_blocker": true
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "回復量は未確定。枠を一つ失う対価に見合うかは未計算であり、候補で数値を決めない。",
+    "枠を失った後に元へ戻す経路は無い。判断010は枠を消費するだけで戻す手段を定義していない。",
+    "SEKIGAHARAが未実装のため、実戦での意味は未検証。",
+    "照合範囲：PvP下限、Heal相互作用の分類、Secure ConversionとCapacity Expansion、効果の永続境界。矛盾は見つからず conflicts は空配列"
+  ],
+  "worldview": {
+    "defamiliarized_element": "回復を『インストール』ではなく『恒久的な損失』として提示した。 HPを戻すために、将来のための余地を一つ捨てる。",
+    "in_world_rationale": "既にSecure ConversionとCapacity Expansionが『枠を永久に削る』操作として存在し、枠には明確な価値がある。そこにHPという別の通貨を交換 inserting しても表記は一貫する。",
+    "meaning_left_ambiguous": "札が誰のための物なのか、誰が供需 hitch 出したのか、捨てた枠は本当に戻らないのかは確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "枠の恒久的な消費と回復の経路が未実装であり、正式な取得源もItemStackも無い（current-implementation.md）。永続の枠変化は既にExpansion側の未実装領域と重なるため true とする。",
+  "new_logic": [
+    "個人ごとに恒久的に空く枠を持つ",
+    "その枠を対価とする回復の実行"
+  ],
+  "prototype_cost": {
+    "band": "小",
+    "rationale": "枠境界と回復表示は既に存在する。个人ごとに恒久枠を一つ減らすフラグと、その対価としての回復を入れれば足りる。大改造は無い。",
+    "implementation_steps": [
+      "デバッグ付与で札1枚を持たせる",
+      "個人ごとに恒久枠を一つ持つ",
+      "使うと枠が減りHPが回復する処理を入れる",
+      "Play Soloで次のRunでも枠が減ったままかを確認する"
+    ],
+    "assumed_existing_parts": [
+      "枠境界を持つInventoryService",
+      "HPの個人表示",
+      "HP回復の表示更新"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Undecided",
+        "detail": "配る主体は未確定。戦場にも都市にも該当する人物が未実装であり創作しない。試作のみデバッグ付与。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "1枠を消費するが、使わない限り意味はない。決めるのは使う瞬間。"
+      },
+      {
+        "route": "Use",
+        "status": "Proposed",
+        "detail": "HPを回復し、その代わりに枠を一つ恒久的に失う。中核の操作。"
+      },
+      {
+        "route": "Present",
+        "status": "NotApplicable",
+        "detail": "渡さない。渡すと相手の枠まで減り、自分の回復と二重に損になる。"
+      },
+      {
+        "route": "Place",
+        "status": "NotApplicable",
+        "detail": "置かない。枠を捨てる操作に置き場を加えると操作が二重になる。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "確保枠の外なら死亡時に失う。ただし枠は戻らないため、死亡時の損失は物と枠の二重になる。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "NotApplicable",
+        "detail": "確保枠は消費しない。消費するのは通常枠なので、確保枠に入れる意味は『守ること』だけになる。"
+      },
+      {
+        "route": "Sell",
+        "status": "Undecided",
+        "detail": "換金の可否は判断010・判断011・経済と成長で未決。枠を捨てる品は換金しにくい。"
+      },
+      {
+        "route": "Quest",
+        "status": "Undecided",
+        "detail": "依頼主と依頼種別が未確定。博士の依頼が定める固有品交換と別系統にする必要がある。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "Undecided",
+        "detail": "回復を入力として扱う場合は相互作用と接続する。どちらとするかは未決であり、相手の挙動は作らない。"
+      }
+    ],
+    "ownership_state": "札はplayer単位の個人所持。使用すると枠が個人について恒久的に減る。枠の減少は個人状態に紐づき、共有のRun状態は変えない。切断と再接続時の扱いは未決。",
+    "server_run_state": "永続の個人枠状態を書き換えるが、Run共有のマップ状態は変えない。出現率と同時出現数は変更しないためWorldChangeのEffectは発生しない。"
+  },
+  "html_file": "ROLE-B-009.html"
+}

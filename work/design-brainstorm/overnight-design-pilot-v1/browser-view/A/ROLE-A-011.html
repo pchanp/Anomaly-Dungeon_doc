@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-A-011 装置の音 — 研究所の稼動音</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+<p class="sub">overnight-design-pilot-v1 ／ ROLE-A-011 ／ 研究所（マップ固有）／ GimmickEvent</p>
+<h1>装置の音 — 研究所の稼動音</h1>
+<p>残った装置の稼動音が、廊下のどちら側で鳴っているかを耳で読ませる。</p>
+<div class="badges"><span class="badge hyp">Idea</span><span class="badge">unreviewed</span><span class="badge unknown">到達と再始動は未定</span></div>
+<nav class="nav"><a href="index.html">← 一覧</a><a href="ROLE-A-011.json">同IDのJSON</a></nav>
+</header>
+
+<section id="hypothesis">
+<h2>何の案か</h2>
+<p>開けずに、装置が今どちら側で動いているかを知る。</p>
+<ul>
+<li>近くにいると、音のする側だけが個人提示として1行で出る。人の声ではない機械音である。</li>
+<li>連続の長さや基準は出さない。方向だけが返る。</li>
+<li>音は遮れる。遮ると提示の入力が成立しなくなる（装置の状態は変えない案）。</li>
+</ul>
+<p><strong>選択と代償:</strong> 耳を澄ます（時間を使う）／そのまま進む／遮る。方向の手掛かりは人の有無を意味せず、止めた音は戻らない。</p>
+<p class="sub">接続タグ: Sound / InformationChange / WhisperTransfer ／ requires_code: true ／ conflicts 1件・未解決2件（JSONに記載）</p>
+</section>
+
+<section id="diagram">
+<h2>仕組みの図</h2>
+<div class="board">
+<svg viewBox="0 0 1000 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="装置の稼動音が個人へ方向だけを提示し、遮ると提示の入力が成立しなくなることを示す図">
+<rect width="1000" height="320" fill="#0a1118"/>
+<text class="label" x="24" y="28">既存の廊下（構造は未確定）</text>
+<text class="label" x="620" y="28">個人に返るもの</text>
+<rect x="24" y="60" width="200" height="80" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="small" x="38" y="94">廊下・左</text>
+<rect x="264" y="60" width="200" height="80" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="small" x="278" y="94">装置のある側</text>
+<text class="small" x="278" y="118">稼動音（機械音）</text>
+<path d="M464 100h140" class="active"/>
+<path d="M598 94l9 6-9 6" class="active"/>
+<rect x="620" y="60" width="356" height="80" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="small" x="634" y="94">「音がする側」だけが1行で出る</text>
+<text class="small" x="634" y="118">基準も連続も表示しない</text>
+<rect x="620" y="168" width="356" height="80" rx="8" fill="#142330" stroke="#ea9380"/>
+<text class="small" x="634" y="202">遮ると提示の入力が成立しない</text>
+<text class="small" x="634" y="226">装置の状態は変えない（案）</text>
+<path d="M464 232h-60v-84" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<text class="small" x="24" y="180">遮る操作</text>
+<text class="small" x="24" y="286">この図で分かること：音は所在の片側だけを渡す。人の状態は導けない。</text>
+<text class="small" x="24" y="308">装置の正体、人物の行方、博士の処分はこの候補で確定しない。</text>
+</svg>
+</div>
+<p>図注：耳で読むしかできないが、音が何を示しているのかは分からない。</p>
+</section>
+
+<footer>overnight-design-pilot-v1 ／ ROLE-A-011 ／ 実表示は未確認（担当セッションでブラウザを使用していない）。</footer>
+</main>
+</body>
+</html>

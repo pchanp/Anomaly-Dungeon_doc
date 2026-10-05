@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-A-009 運ぶ人 — SEKIGAHARAの戦場の外れ</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+<p class="sub">overnight-design-pilot-v1 ／ ROLE-A-009 ／ SEKIGAHARA（マップ固有）／ NPC</p>
+<h1>運ぶ人 — SEKIGAHARAの戦場の外れ</h1>
+<p>戦闘で動けなくなったものを、敵味方に関係なく運ぶ人が1人いる。</p>
+<div class="badges"><span class="badge hyp">Idea</span><span class="badge">unreviewed</span><span class="badge unknown">周期と報酬は未定</span></div>
+<nav class="nav"><a href="index.html">← 一覧</a><a href="ROLE-A-009.json">同IDのJSON</a></nav>
+</header>
+
+<section id="hypothesis">
+<h2>何の案か</h2>
+<p>戦闘の外側で続く、敵味方とは別の仕事を描く。</p>
+<ul>
+<li>運搬NPCは戦場の外れと外の間を往復し、動けなくなった個体を運ぶ。</li>
+<li>近くを通ると「一本を運んでいる」ことが1行で出る。相手と身元は出さない。</li>
+<li>攻撃を受けると仕事を止め、原地で止まる。停止の解除は置かない。</li>
+</ul>
+<p><strong>選択と代償:</strong> 邪魔せず通す／手を出す（時間を使う）／荷を落として通す。助けた場合の報酬は未確定で、放任するとその個体は戻らない。</p>
+<p class="sub">接続タグ: NPCState / Combat / InformationSharing ／ requires_code: true ／ conflicts 1件・未解決2件（JSONに記載）</p>
+</section>
+
+<section id="diagram">
+<h2>仕組みの図</h2>
+<div class="board">
+<svg viewBox="0 0 1000 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="戦場の外れと外の間を往復して動けなくなった個体を運ぶNPCと、攻撃で仕事が止まることを示す図">
+<rect width="1000" height="320" fill="#0a1118"/>
+<text class="label" x="24" y="28">往復する仕事（戦場の中ではない）</text>
+<text class="label" x="620" y="28">プレイヤーから見えること</text>
+<rect x="24" y="60" width="170" height="80" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="small" x="38" y="94">戦場の外れ</text>
+<text class="small" x="38" y="118">動けなくなった個体</text>
+<rect x="330" y="60" width="170" height="80" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="small" x="344" y="94">外（立ち入れない側）</text>
+<text class="small" x="344" y="118">運搬先</text>
+<path d="M194 90h130" class="active"/>
+<path d="M318 84l9 6-9 6" class="active"/>
+<path d="M318 116H194" class="hyp-line"/>
+<path d="M200 110l-9 6 9 6" class="hyp-line"/>
+<circle cx="262" cy="46" r="14" fill="#172d3b" stroke="#70c9c3"/>
+<text class="small" x="284" y="42">運搬NPC</text>
+<text class="small" x="24" y="196">往復の周期と1回の本数は未定</text>
+
+<rect x="620" y="60" width="356" height="80" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="small" x="634" y="94">「一本を運んでいる」ことが1行で出る</text>
+<text class="small" x="634" y="118">敵か味方か、身元は出さない</text>
+<rect x="620" y="168" width="356" height="80" rx="8" fill="#142330" stroke="#ea9380"/>
+<text class="small" x="634" y="202">攻撃を受けると仕事を止める</text>
+<text class="small" x="634" y="226">原地で止まり、最後の往復が残る</text>
+<path d="M502 100h110" class="active"/>
+<path d="M606 94l9 6-9 6" class="active"/>
+<path d="M620 208h-110" stroke="#ea9380" stroke-width="2" fill="none"/>
+<path d="M516 202l-9 6 9 6" stroke="#ea9380" stroke-width="2" fill="none"/>
+<text class="small" x="24" y="286">この図で分かること：勝利の手段ではない。判断は手を出すかどうかだけになる。</text>
+<text class="small" x="24" y="308">地形・配置は提案しない（SEKIGAHARAはIdeaで未実装）。</text>
+</svg>
+</div>
+<p>図注：戦いの外側にはまだ仕事がある。手伝うかどうかはプレイヤーが決める。</p>
+</section>
+
+<footer>overnight-design-pilot-v1 ／ ROLE-A-009 ／ 実表示は未確認（担当セッションでブラウザを使用していない）。</footer>
+</main>
+</body>
+</html>

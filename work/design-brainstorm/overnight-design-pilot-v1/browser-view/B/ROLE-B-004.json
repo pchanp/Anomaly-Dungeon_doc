@@ -1,0 +1,331 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-004",
+  "role": "B",
+  "title": "未整理ケースの1本（個人試聴か共有BGMか）— 作業用見出し",
+  "design_status": "Draft",
+  "review_status": "unreviewed",
+  "primary_map": "廃TSUTAYA",
+  "classification": "マップ固有",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "個人試聴は`PreviewDuration`で自動的に終わり",
+      "source_status": "Status: Prototype: Implemented（実装済みプロトタイプ）",
+      "claim": "試聴機3台。個人試聴はPreviewDurationで自動的に終わり、共有BGM（SharedBgm）とは独立している。候補の個人側経路は既に実装済みの境界に立つ。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "共有BGMはマップモデル直下の`Sound`として保持し、Server Stateで管理する。個人試聴がこの音を変えることはない。",
+      "source_status": "Status: Prototype: Implemented（実装済みプロトタイプ）",
+      "claim": "共有BGMはServer Stateで管理される共有事象であり、個人試聴がこれを変更しないという分離が実装済み。候補は個人入力からこの共有状態へ書き込む案を追加するもので、既存の分離を壊さない。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "共有BGMの選択UIは未実装であり、現状は固定の音源をループ再生する",
+      "source_status": "Status: Prototype: Implemented（実装済みプロトタイプ）",
+      "claim": "現状の共有BGMは固定音源のループであり、選択UIは未実装。候補が要求する選択経路は未実装範囲であり、実装済みとして扱わない。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "TSUTAYA独自の異常は未実装",
+      "source_status": "Status: Prototype: Implemented（実装済みプロトタイプ）",
+      "claim": "Map固有のAnomalyは未実装であり、本マップにはアノマリーEntityの受理先が存在しない。よってAnomalyInteraction経路を対象外にする根拠になる。"
+    },
+    {
+      "path": "docs/systems/current-implementation.md",
+      "section": "TSUTAYAのメディア項目は名前と選択結果のみを持ち、映像・音声の実体は未実装である。",
+      "source_status": "Status: Implemented（実装棚卸し）",
+      "claim": "メディアは名前と選択結果のみを持つ。候補は音の実体や内容を前提にした表現を一切使わない。"
+    },
+    {
+      "path": "docs/decisions/009-tsutaya-closing-time-archive.md",
+      "section": "返却作業場へカートと未整理ケースを追加する",
+      "source_status": "Status: Draft（ソース反映済み・Studio未確認）",
+      "claim": "判断009は返却作業場へカートと未整理ケースの追加を実装範囲に含め、床とPromptとArchive UIは変更しないと定める。候補はこの配置先にのみ作用する。"
+    },
+    {
+      "path": "docs/systems/economy-and-progression.md",
+      "section": "レアルート品は、換金ではなく特定の成長・研究へ消費する選択を持ち得る",
+      "source_status": "Status: Draft（草案）",
+      "claim": "レアルート品は換金ではなく特定の成長や研究へ消費する選択を持つ。候補はレアルート品への分類を主張せず、換金も研究消費も行わない経路として分離する。"
+    }
+  ],
+  "design_hypothesis": "TSUTAYAには既に『個人試聴は個人にだけ聞こえ、共有BGMはServer Stateで管理される』という分離が実装済みで、map-gimmick-ideas.mdには『Back Roomなどで再生すると店舗のShared BGMを変えられる』という案も既にある。本候補はその案をそのまま再掲せず、媒体を一本の運べる品として個体化して、運んでから個人で聴くか共有回線へ出すかを先に選ばせる。取り出した側はRun中に何度でも試聴でき、共有へ出した側はRun中に戻せない。音の実体が未実装でも成立する経路で、個人提示とRun共有の世界状態の書き換えを同じアイテムの別操作として分離して示す。",
+  "experience": {
+    "goal": "『この音を自分のものにするか、店全体のものにするか』という媒体の扱い方を判断材料にする。共有へ出した瞬間から他者にも音が届き、出した本人にも撤回できない。试聴だけなら誰も傷まないが、その結果Run中に手元に何も残らない。",
+    "player_choice": "① 試聴機で個人試聴する。他者には何も伝わらず、手元に残り、あとで何度でも試せる。② 共有回線へ出してRun全員に聴かせる。Run中の情報網は得られるが、音源は説明できず、撤回も再選択もできない。③ Secure Slotに入れて取り出さない。確実だが共有へ出す機会を捨てる。④ 再生端末に触れず持ち出す。痕跡だけが残り、選択の記録は残らない。",
+    "sacrifice_or_risk": "②を選ぶと、音源そのものは誰にも説明できないままRun中に届き続ける。③を選ぶと、共有から得られるはずだった情報を捨てる。①だけだと、手持ちが常に自分の手元へ閉じ、他者との差がそのまま残る。"
+  },
+  "placement_assumption": "新しい部屋や通路、地形は提案しない。既存の返却作業場（判断009が未整理ケースの配置先として挙げている場所）と、既存の試聴機3台、CRT4台、店内放送という既存装置だけを使う。判断009の棚追加にも、Archive Selection UIにも新しい遷移は足さない。音の音源は未選定なので、候補は音の同定やタイトルを提示しない。",
+  "components": [
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "個人試聴の結果を個人提示として返す。共有BGMは変化させず、個人にだけ閉じる提示として書く。音源が無いため、内容の同定は行わない。"
+    },
+    {
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "共有BGMというWorldの共有状態をServerが更新する。Run単位の保存境界を持ち、Run終了で破棄する。個人表示からServerの共有状態を書かない。"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "共有へ出した時点で媒体が消費され、共有BGMの音源として固定される状態遷移。この遷移で個人側へ戻せなくする。"
+    },
+    {
+      "component": "ArchiveMedia",
+      "availability": "catalog",
+      "usage": "検索UIとCRTと試聴の枠組み。媒体の実内容と共有BGMの選択は未実装という実装状況を前提とし、候補は未実装部分を埋めない。"
+    },
+    {
+      "component": "SoundInteraction",
+      "availability": "catalog",
+      "usage": "音の到達と遮蔽と同期という入力分類。候補はこれをアノマリーへの受理として扱わず、共有世界状態への変更として書く。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "InformationChange",
+      "trigger": "試聴機の前で、所持個人が対象の媒体を個人試聴として開始する",
+      "condition": "対象のRoomに試聴機があり、対象媒体がServer上で操作者の所持品として存在する。試聴時間は実装済みのPreviewDurationに従い、個人側の上限を個別のEffectで増やさない",
+      "result": "対象個体だけが個人枠で試聴できる。共有BGMは変化せず、他の個人のHUDにも共有BGMにも何も起こらない",
+      "target": "操作した個人（提示は個人に閉じる）",
+      "scope": "個人。他者の聴取も共有Server状態も書き換えない",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "PreviewDurationの経過、または操作者による停止で個人提示のみ解除する",
+        "マップ離脱またはRun終了で残りの個人提示も消える"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。個人提示の寿命はマップ内に閉じる設計で、Run単位の共有状態とは別の境界に置く。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一個人と同一媒体の再試行は1件として扱い、残り時間を更新する。別媒体の試聴は別のEffectとして非加算で並行しうる。固定秒数の延長はしない",
+        "conflict_resolution": "CRTのチャンネル変更や店内放送など別の音の経路と同時に成立する場合は、競合規則が未定義のため保留して記録する。個人試聴を常に優先させるルールは作らない"
+      },
+      "server_validation": "Serverが対象の所在、Room内の試聴機の有無、試聴者のRun参加を検証する。個人提示の生成はServerが発行し、Clientの表示だけで他者の提示を作れないようにする。",
+      "client_presentation": "操作者には試聴中と残り時間の提示のみ。他者には何も出さない。UIは何が鳴っているかを説明しない。画面に出るものは名前と選択結果だけであり、実の内容は説明しない。",
+      "feedback": {
+        "success": "試聴中UIが始まり、終了時に終了表示が出る。音の同定は提示しない",
+        "failure": "試聴機が無いRoom、対象が無い、Run参加でない、のいずれかでは同じ不成立表示を1回出して終わる",
+        "ambiguous": "同じ媒体を試聴しても毎回同じ反応とするか変化させるかは未決。判断009にも既存案にも音の実体に関する記載が無いため、候補側で内容を作り出さない"
+      }
+    },
+    {
+      "kind": "WorldChange",
+      "trigger": "対象の媒体を、共有BGMを差し替えられる経路（CRT、店内放送、共有再生端末）へ提示する",
+      "condition": "対象個人がRunに参加中であり、対象のRoomに共有BGMを変更できる経路が存在する。個人試聴との同一視はしない。試聴機の個人試聴のみでは本Effectは成立しない",
+      "result": "マップモデル直下の共有BGM（SharedBgmに相当するServer State）が差し替わり、Runに参加している他の個人の聴取内容が変わる",
+      "target": "マップ共有のBGM状態（Server State）",
+      "scope": "Run全体。Runのすべての参加者が同じ音を共有する",
+      "lifetime": "同一Run中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "別の媒体が共有へ出されたとき、または既定音源へ戻されたとき上書きされる",
+        "Run終了時に破棄する。マップ生成物とともに共有BGMも消える。マップ内の別室への移動では破棄しない"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。上書きとRun終了は別の条件として列挙し、どちらも同一Run中の状態を終わらせる。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Run中の共有BGMは常に1件。個人試聴は別Effectとして非加算で同時に成立できる。個人側の試聴回数で共有音を強くしない",
+        "conflict_resolution": "別のEffectが共有BGMへ作用する場合は、解決規則が未定義のため保留して記録する。個人入力で個人出力を自動的に置き換えない"
+      },
+      "server_validation": "Serverだけが共有BGMを差し替える。個人端末の表示状態や試聴履歴を根拠に差し替えない。差し替えの同時要求は1件に解決するが、競合時の規則は未確定として記録する。",
+      "client_presentation": "全員に新しい音が聞こえ、何が選ばれたかを示す共有メッセージは出さない。発信者の位置や選択理由は個人にも共有しない。他者の再生端末に近いかどうかだけを伝える案は未採用とする。",
+      "feedback": {
+        "success": "全員が同じ音を聞き始める。発信成功を示す個人通知を出すか、個数だけを示すかは未決",
+        "failure": "経路が無いRoomや対象が無い場合、共有音は変わらず個人に不成立だけが返る",
+        "ambiguous": "他の参加者が何を出したかは共有音の変化から推測するしかなく、UIで説明しない。ルールは明確、意味は曖昧という情報設計を保つ"
+      }
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "共有BGMへの差し替えがServerで確定した瞬間（WorldChangeの適用と同時）",
+      "condition": "対象の媒体が個人所持からRun共有の共有音源へ移る状態になること。個人に同じ媒体が残らないことを同じ操作で保証する",
+      "result": "対象媒体が消費され、Run共有の共有BGMの音源として固定される。以後この媒体を個人側へ取り戻すことは永久に成立しない。不成立時に個人側の媒体は残る",
+      "target": "対象の媒体1点と、共有へ出した個人",
+      "scope": "個人からRun共有の音源へ。個人側の所有権は失われる",
+      "lifetime": "同一Run中",
+      "resolution": "instant",
+      "end_conditions": [
+        "差し替えが確定した時点で結果が確定する",
+        "Run終了時に媒体データと音源が一緒に破棄される。成功帰還でも媒体は個人へ戻らない"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。差し替えが不成立なら個人側の媒体は移動しないため、このEffectは発動しない。",
+      "stacking": {
+        "exception": false,
+        "rule": "媒体1点につき1件。同じ媒体を2回共有へ出すことはできない。別の媒体は別のEffectとして順に適用できる",
+        "conflict_resolution": "2人が同時に別の媒体を共有へ出した場合、共有BGMは1件しか無いため一方しか反映できない。解決規則が未定義のため保留して記録する"
+      },
+      "server_validation": "Serverが媒体が操作者の所持品であること、共有経路が存在すること、対象個人がRun中であることを検証してから個人側の媒体を除去する。除去と差し替えは同一の検証内で行う。",
+      "client_presentation": "個人HUDから媒体の所持表示が消える。消えたことだけを個人に伝えるが、共有された先や他者の反応は個人にも共有しない。",
+      "feedback": {
+        "success": "所持リストから該当の媒体が消え、共有音が全参加者に届く。個人に公開したという説明文は出さない",
+        "failure": "検証に失敗した場合は媒体が個人に残る。不成立表示のみを出し、共有音も変わらない",
+        "ambiguous": "Run終了時に消えた媒体がどこへ行ったのかは不明。破棄されたことだけを表現し、回収先を示さない"
+      }
+    }
+  ],
+  "provides_traits": [
+    "同一アイテムから、個人に閉じる提示だけを出す経路とRun共有の世界状態を書き換える経路を別Effectとして分離できる例",
+    "個人入力をServerが検証してRun共有のマップ状態を更新するWorldChangeの書き方",
+    "WorldChangeを同一Run中の保存境界で持ち、Run終了で破棄する契約の例"
+  ],
+  "connection_tags": [
+    "Item",
+    "Sound",
+    "Interface"
+  ],
+  "refs": [
+    {
+      "target_id": "ROLE-A-005",
+      "kind": "optional_connection",
+      "required_traits": [
+        "メディアの選択結果を個人提示へ変換し、選択結果を世界状態から分離して扱えるNPCまたはギミック"
+      ],
+      "fallback": "既存のTsutayaArchiveServiceとArchiveSelectionControllerが持つ名前と選択結果の枠に個人提示を追加するだけで成立する。A-005が成立しなくても本候補は成立する。",
+      "resolution": "reserved_unresolved"
+    }
+  ],
+  "unresolved_refs": [
+    {
+      "target_id": "ROLE-A-005",
+      "required_traits": [
+        "メディアの選択結果を個人提示へ変換し、選択結果を世界状態から分離して扱えるNPCまたはギミック"
+      ],
+      "reason": "peer-snapshotsが本セッションに配布されておらず、A-005の本文とprovides_traitsを確認できない。予約枠の存在だけを根拠に解決扱いにしない。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": null,
+      "required_traits": [
+        "個人入力からServerの共有BGM差し替えを検証する経路"
+      ],
+      "reason": "既存MDは共有BGMがServer Stateで管理されることまでしか記されておらず、どの入力から差し替えられるかの権限規定がない。共有BGMの選択UIは未実装であり、候補側で実装経路を確定しない。",
+      "adoption_blocker": true
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "既有案との差分：map-gimmick-ideas.mdの『CDはListening Stationで個人試聴でき、Back Roomなどで再生すると店舗のShared Bgmを変えられる』という案は既に存在する。本候補は媒体を一本の運べる品として個体化し、個人試聴と共有提示の前に選ばせる点、および共有へ出した媒体をRun中に戻せない点が異なる。既有案へ本候補の媒体個体化を加えるかは採用判断とし、正本の書き換えはしない",
+    "音の同定ができない。実在の作品名と製品名と店名と曲名は使わず、候補は名前と選択結果のみを扱う",
+    "同じ媒体を二度試聴したときに内容が変化する場合の扱い。判断009にも既存案にも音の実体に関する記載が無いため、二度目はどうなるかは未確定として扱う",
+    "共有へ出した媒体を上書きで別の音源に置き換えられるか、元へ戻せるかも未確定。戻せる場合は公開が撤回できる設計になり、戻せない場合は本候補の不可逆性が核になる",
+    "同時に2人が共有へ出した場合の選択規則が未定。先着順か投票かサーバーのキューかを候補側で決めない",
+    "離線時の扱い。試聴機の個別再生と共有の再生履歴はRun内で閉じるが、再接続時に何を復元するかは未決。判断012と同じ留保",
+    "AnomalyInteractionは対象外としたが、共通Anomaly Systemが導入された場合はアイテム操作の無効化やアイテムと認識の干渉と競合しうる。共通の未決であり候補側で決めない",
+    "衝突の確認範囲：判断010の枠強化、判断011のレアルート3系統とItem ID未決、判断014から016の博士Quest補正、判断021とeffect-componentsの効果分類と保存境界、map-gimmick-ideasの個人試聴と共有BGMの独立、判断009の配置と既存Prompt非改変を照合した。Robux変換経路はIdeaとして扱った。矛盾は見つからなかったため conflicts は空配列にしてある",
+    "本候補は世界の意味の完成形を持たない。メディアが誰の手元から生まれ、誰が収納していたのかを断定しない"
+  ],
+  "worldview": {
+    "defamiliarized_element": "試聴可能な音を観察するだけの行為から、媒体そのものを運んで公開するかを決める一回の資源へ引き下げた。試聴機は何度でも試せて所有物が変わらない装置、共有回線はマップの公開側を持つ装置、その間に運べる品が1点だけある、という三択を発生させた。",
+    "in_world_rationale": "廃店舗化したTSUTAYAは誰も回収に来ないアーカイブとして扱われており、棚に残っているものは本来は閉店処理の行き場がない。探索者がそれを1本だけ持ち出して試聴の本人になるか店内へ戻すかは、そのアーカイブの持ち出され方として自然に成立する。世界側はアノマリーを完全に理解していないため、何が鳴ることを個別に説明する必要はない。",
+    "meaning_left_ambiguous": "その媒体が誰の手元から生まれ、誰が収納していたのか。共有音が何を指しているのか。共有が長く続いたことが何を意味するのか。博士の記録と繋がっていないのか。いずれも確定しない。共有が起きたことだけが明確で、誰が何をなぜ共有したかは説明しない。ダンジョンの起源や博士の真意の断定にも踏み込まない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "TSUTAYAのメディア項目は名前と選択結果のみを持ち実体が未実装であり、共有BGMの選択UIも未実装で現状は固定音源のループである。個人入力からServerの共有BGMを差し替える経路は実装済みでも設計済みでもないため true とする。個人試聴だけなら既存実装の上に成立するが、本候補の中核は共有への提示なので false とはしない。同時要求の解決規則は未確定であり、true の一部が未確定である。",
+  "new_logic": [
+    "個人所持の媒体を、Serverが検証した上でRun共有の共有BGMへ差し替える入力経路。個人試聴の既存経路とは別の権限として扱う",
+    "共有へ出した媒体を消費させ、Run中に個人へ戻せない状態遷移。戻せる場合は別設計とする",
+    "同時要求の解決。複数の個人が続けて共有へ出した場合どの音を反映するか。規則は候補側で決めず未決として記録する",
+    "離線と再接続時に個人試聴履歴と共有状態をどう復元するかの規則。判断012と同じ留保で未決"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "試聴機とCRTと共有BGMの枠組み、そしてServer Stateで管理される共有音は既に実装済みで、Archive Selection UIも名前と選択結果まで存在する。追加が必要なのは個人所持品から共有音を更新する1本の入力と公開不可の消費、そして提示UIの区別だけなので中程度。音の実体が未実装であるため試作では音の入れ替えを確認できず、名前と選択結果の表示変化だけを検証し実音の質には触れない。",
+    "implementation_steps": [
+      "既存のデバッグ付与で媒体1本を渡せるようにする。正式な取得源は未実装なのでデバッグで代用する",
+      "既存の共有BGM（Server Stateで管理されているもの）に対してServer管理の一時差し替え口を設ける。固定音源のループはそのまま残す",
+      "対象Roomの共有再生経路で個人所持の媒体を提示すると、Serverが所持と経路とRun参加を検証してから差し替える",
+      "差し替え確定と同時に個人側の媒体を除去し、Run中は戻せないようにする",
+      "試聴機での個人試聴は既存のPreviewDurationのまま動かし、共有音には触れないことを1人で確認する",
+      "Play Soloの1人セッションで、個人試聴が共有BGMを変えないこと、提示で共有音が変わること、提示後に媒体が戻せないことを確認する。複数人の同時提示と切断は今回確認しない"
+    ],
+    "assumed_existing_parts": [
+      "TsutayaGenerator（7ルームと通路。地形は増やさない）",
+      "TsutayaArchiveServiceとArchiveSelectionController（棚の検索UIと名前および選択結果）",
+      "試聴機3台とPreviewDurationによる個人試聴の自動終了",
+      "CRT4台とチャンネルの切り替え",
+      "マップモデル直下に保持されServer Stateで管理される共有BGMのSound",
+      "InventoryServiceの枠境界（枠数は増やさない）"
+    ]
+  },
+  "role_details": {
+    "item_kind": "未確定",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Proposed",
+        "detail": "判断009が返却作業場へカートと未整理ケースを追加すると定めた配置先に回収する案を置く。既定の棚からの取得は別候補で扱って競合を避ける。未整理ケースの正確な座標は判断009のStudio確認待ちであり、候補では確定しない。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "1枠を消費し、Secure Slotと枠を取り合う。試聴しない限り効果がないため、Secure Slotへ入れて死亡に備えるか、通常枠に残して共有へ出す機会を残すかの判断が必要になる。试聴は複数回可能なので消費しないが、共有へ出した場合は消費される。スタック規則は未確定。"
+      },
+      {
+        "route": "Use",
+        "status": "Proposed",
+        "detail": "使用が2つある。試聴機での個人試聴（個人提示のみ、共有音は不変、PreviewDurationで自動終了）と、共有再生経路への提示（WorldChangeとして共有音を差し替え、個体内で不可逆の消費）。1本の媒体でどちらの操作にも使える。"
+      },
+      {
+        "route": "Present",
+        "status": "Undecided",
+        "detail": "誰が買うのか、誰が要求するのかが未確定。古物商やコレクターや店内放送の誰かへ渡す筋は考えうるが、TSUTAYAマップ内にも都市ロビーにも該当する人物は未実装であり、候補側で人物や組織を創作しない。"
+      },
+      {
+        "route": "Place",
+        "status": "Proposed",
+        "detail": "本候補の中核。対象のRoomにある共有再生経路へ媒体を提示し、Run共有のBGMを差し替える。新たな装置は増やさず、既存の装置に操作口を与えるだけにする。個人試聴と同じ口で処理しない。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "Run終了時にSecure Slot外なら通常の喪失物。共有へ出した媒体は共有音に吸収された状態でRun終了とともに消え、成功帰還でも個人へ戻らない。放置して棚へ戻す操作は痕跡としてのみ扱う案で、獲得物にはしない。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "核心的な判断。Secure Slotに入れると死亡に耐えられるが、Run中の共有提示はできなくなる。逆なら提示の可能性はあるが失敗時に消える。Secure Slotへの入出庫時点自体が判断010の未決事項であり、本候補はその未決に確定を与えない。"
+      },
+      {
+        "route": "Sell",
+        "status": "Undecided",
+        "detail": "判断010と判断011および経済と成長はいずれもレアルート品と換金の関係を未決のままとし、本候補はレアルート品への分類を主張しない。換金可能にすると共有へ出すかどうかという判断の重みが消えるため、採用時に換金を別ルートとして扱うかは要判断。"
+      },
+      {
+        "route": "Quest",
+        "status": "Undecided",
+        "detail": "依頼主と依頼種別が未確定。博士Questに載せる場合は相互作用成立時の固有品（判断012）と経路が重なるため、置かない判断も保留する。特定の音を店へ持ち出すことを依頼とする案は、依頼の成立条件ではなく世界情報の配布になるため別設計とする。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "NotApplicable",
+        "detail": "TSUTAYAマップ固有の異常は未実装であり、本マップにはアノマリーEntityの受理先が無いため、本候補をAnomaly Interactionとして作らない。共通Anomaly System導入後にアイテム操作の無効化やアイテムと認識の干渉と競合しうることは未決として別項目に記録する。"
+      }
+    ],
+    "ownership_state": "試聴前の媒体はplayer単位の個人所持で1枠。個人試聴は所持を変えない。共有再生経路へ提示してWorldChangeが確定した瞬間に媒体は個人からRun共有の共有音源へ移り、個人側の所持表示から消える。個人HUDは操作提示のみを担い、共有音源の内容や他者の聴取状態を個人には表示しない。切断と再接続時の個人所持復元は未決。",
+    "server_run_state": "共有BGMはServer権威のRun状態として保持され、Runのすべての参加者が同じ音を共有する。個人入力がこの状態を書き換えるが、その前にServerが所持と経路とRun参加を検証する。Run終了で破棄し、マップ内の別室への移動では破棄しない。WorldChangeのEffectであり、保存境界は同一Run中。この候補はアノマリー出現コンポーネントを変更しないため、博士Questの1.40倍補正や発生毎0.90倍減衰とは競合しない。"
+  },
+  "html_file": "ROLE-B-004.html"
+}

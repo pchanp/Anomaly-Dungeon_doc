@@ -1,0 +1,248 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-007",
+  "role": "B",
+  "title": "遺品札（最後に戦った相手から1度だけ取る）— 作業用見出し",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "SEKIGAHARA",
+  "classification": "マップ固有",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "NPCは有限数を常時生成せず、Active NPC数の上限を設け、倒されたNPCを後方から補充する。プレイヤーには戦争が永遠に続くように見せる。",
+      "source_status": "Status: Prototype: Implemented（実装済みプロトタイプ）",
+      "claim": "SEKIGAHARAはIdeaであり、この記述も案。倒された個体の扱いが未確定であることを根拠とする。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "複数勢力のNPCが常時戦闘し、プレイヤーは戦闘回避、戦場を利用した探索、弱ったNPCの撃破、戦闘介入、乱戦への参加を選べる。",
+      "source_status": "Status: Mixed（案ごとに下記）",
+      "claim": "複数の勢力が常に戦闘している文脈。勢力・地形・戦況はいずれも未確定であり、候補は地形を増やさない。"
+    },
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "通常プレイヤー同士のダメージでは、対象HPが最大HPの80%未満にならない下限を常に適用する。したがって通常プレイヤー同士はキルできない。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "PvPには下限がある。候補は個人内の反応だけを変え、戦闘結果の規則には触らない。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| 同一Run中 | 当該Runの終了で破棄する。マップ遷移では原則保持する |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "回収も目立ちもRun内だけ。"
+    }
+  ],
+  "design_hypothesis": "戦場では倒した相手から取れる物と、その後に見つかる代償が同時に進む。候補は最後に戦った相手から一度だけまとめて取る札にし、その代わりに『その側に目をつけられた』状態を残す。奪取の面白さと逃げにくさを一続きにする案。",
+  "experience": {
+    "goal": "強襲と目立ちを同じ操作にまとめ、逃げ道のない戦場にする。",
+    "player_choice": "最後の相手の残骸から取る。取らずに持ち歩く。捨てる。",
+    "sacrifice_or_risk": "取った直後から、その側の注意が自分に向く。取り込みは一括で、選ぶ余地がない。"
+  },
+  "placement_assumption": "新しい地形・部屋・戦場は提案しない。残骸を置く場所も作らず、倒れた個体のある場所で使う前提だけを置く。勢力名も地形も戦況も確定しない。取得源は未実装の人物・施設であり創作しない。",
+  "components": [
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "残骸の所持を個人へ移す状態遷移。同一Run中。"
+    },
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "その側に目をつけられたことを本人にだけ示す印。"
+    },
+    {
+      "component": "InventoryBoundary",
+      "availability": "catalog",
+      "usage": "一括取り込みは枠制約の対象。枠数は増やさない。"
+    },
+    {
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "通常NPCの状態設計の語彙。巨人Entityの状態実装を通常NPCの根拠にしない。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "個人が札を使い、直前に戦闘した相手の残骸のそばで『取る』操作を行う",
+      "condition": "実行中であること、直前の戦闘の記録があること、残骸が存在すること、枠制約を満たすこと。一括なので個数の上限は未確定",
+      "result": "その残骸の所持が個人所持へ一括で取り込まれる。選べない。取り込み後、札は消費される",
+      "target": "対象残骸の所持と操作した個人",
+      "scope": "個人。Run共有の戦況は書き換えない",
+      "lifetime": "同一Run中",
+      "resolution": "instant",
+      "end_conditions": [
+        "取り込みの解決で確定",
+        "Run終了で残骸側の所持記録は消える。取り込んだ分は通常の所持として帰還判定に載る"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。Run終了は残骸側の記録だけを消す。",
+      "stacking": {
+        "exception": false,
+        "rule": "一枚につき一回の残骸。別の残骸には非加算で並行しうる。固定秒数は持たない",
+        "conflict_resolution": "他のEffectが同じ残骸の所持へ作用する場合は解決規則が未定義のため保留する"
+      },
+      "server_validation": "Serverが実行状態、直前の戦闘の記録、残骸の存在、枠制約を検証する",
+      "client_presentation": "クライアントは操作可否と結果表示のみ。取り込みの確定はServerが行う",
+      "feedback": {
+        "success": "枠表示がまとめて増える。何かを数えた表示は出さない",
+        "failure": "何も変わらない。注意表示のみ",
+        "ambiguous": "何が入ったかは獲得物のまとめ表示に任せる"
+      }
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "取り込みが確定した直後",
+      "condition": "対象個人が参加中で個人表示が有効なとき",
+      "result": "『その側に目をつけられた』印を表示する。相手の思考や次の一手は表示しない",
+      "target": "対象個人",
+      "scope": "個人。相手のAI状態は表示しない",
+      "lifetime": "同一Run中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "Run終了または表示の非表示で解除",
+        "切断で個人提示は破棄する。再接続時の復元は未決"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。",
+      "stacking": {
+        "exception": false,
+        "rule": "印は非加算1件。残り時間を更新せず状態を上書きする",
+        "conflict_resolution": "他の表示との優先順位は未決定なので強制作業しない"
+      },
+      "server_validation": "Serverは印の有無だけを返す。相手の内部状態は返さない",
+      "client_presentation": "個人HUDに小さな印1つ。他者には出さない",
+      "feedback": {
+        "success": "印が点いた状態のままになる",
+        "failure": "印が変化しない",
+        "ambiguous": "いつ消えるかは未確定として扱う"
+      }
+    }
+  ],
+  "provides_traits": [
+    "倒した相手から一括で得られる回収型のアイテム例",
+    "得られる量と目立ちを同じ操作に置く設計"
+  ],
+  "connection_tags": [
+    "Item",
+    "Combat"
+  ],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": [
+        "戦闘対象の選択規則を個人状態付きで書き換えられること"
+      ],
+      "reason": "SEKIGAHARAのNPC状態も戦闘対象選択も未実装であり、候補IDが予約されているだけの相手は作らない。『目をつけられた』側の実装は相手の設計に委ねる。",
+      "adoption_blocker": true
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "一括取り込みの上限は未確定。枠を超える場合は全部入らないのか一部だけなのかも未決。",
+    "直前の戦闘の記録はどの範囲を指すかは未確定。実体のある 개념ではないため判定規則が決まらない。",
+    "『目をつけられた』側の実装は候補側で決めない。",
+    "照合範囲：SEKIGAHARAがIdeaであること、PvPの下限、効果の保存境界、判断010の枠強化。矛盾は見つからず conflicts は空配列"
+  ],
+  "worldview": {
+    "defamiliarized_element": "戦利の回収を『場所を探して一件ずつ拾う』操作ではなく、『最後に戦った相手を一まとめに引き剥がす』操作にした。奪取と同時に見つかりやすさが進む。",
+    "in_world_rationale": "終わりなき戦場では個体が絶えず補充され、倒した相手の持ち物が次の巡回の種になる。奪うほど見つかりやすさが進むという関係は、補充が続く以上自然に生じる。",
+    "meaning_left_ambiguous": "札が何のために作られたのか、誰が戦場の残骸を整理しているのかは確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "残骸という新しい所在と、直前の戦闘記録からの一括移管が未実装である（current-implementation.md）。新しい消費品と新しい移管経路が要るため true とする。",
+  "new_logic": [
+    "直前の戦闘の記録と、それを根拠とする残骸からの一括回収",
+    "『目をつけられた』という個人状態の印。実際の選択規則は作らない"
+  ],
+  "prototype_cost": {
+    "band": "不明",
+    "rationale": "SEKIGAHARA自体が未実装で、戦闘も残骸も存在しない。試作の土台がないため小とも大とも決められない。既存の枠境界と残骸プロキシだけを用意すれば検証は可能。",
+    "implementation_steps": [
+      "デバッグ床に『残骸』として置くだけの箱を1つ用意する",
+      "戦闘ではなく手動で残骸を生成する",
+      "一括取り込みを1つ実装し、枠制約に収まるかだけを確認する",
+      "印の表示は個人HUDに1つだけ足す"
+    ],
+    "assumed_existing_parts": [
+      "枠境界を持つInventoryService",
+      "クライアントの個人HUD",
+      "死亡と獲得物・喪失物の分類"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Undecided",
+        "detail": "配る主体は未確定。戦場にも都市にも該当する人物が未実装であり創作しない。試作のみデバッグ付与。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "1枠を消費するが、战中は何もしない。残骸の前で使わないと無意味。"
+      },
+      {
+        "route": "Use",
+        "status": "Proposed",
+        "detail": "直前に戦った相手の残骸から一括で取る。中核の操作。"
+      },
+      {
+        "route": "Present",
+        "status": "NotApplicable",
+        "detail": "渡さない。受け取る個人がおらず、相手側に渡す設計は勢力を作るため作らない。"
+      },
+      {
+        "route": "Place",
+        "status": "NotApplicable",
+        "detail": "置かない。置場を作ると地形を足すことになるため、残骸のある場所で使う形に限る。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "確保枠の外なら死亡時に失う。取り込み済みの品は通常の所持として残る。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "確保枠に入れて死に備えるか、通常枠で残骸まで持っていくかの二択になる。"
+      },
+      {
+        "route": "Sell",
+        "status": "Undecided",
+        "detail": "換金の可否は判断010・判断011・経済と成長で未決。戦利由来の品が換金できるかは判断011と経済と成長で未決であり、採用時に別途考える。"
+      },
+      {
+        "route": "Quest",
+        "status": "Undecided",
+        "detail": "依頼主と依頼種別が未確定。博士の依頼が定める固有品交換と別系統にする必要がある。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "Undecided",
+        "detail": "アイテムとして扱うが、『目をつけられた』側は戦闘対象選択の未実装に依存する。相手の設計は作らず、未決として残す。"
+      }
+    ],
+    "ownership_state": "札はplayer単位の個人所持。取り込みで残骸の所持が個人へ移り、札は消費される。印は本人だけに見える。切断と再接続時の復元は未決。",
+    "server_run_state": "残骸の所持はServer権威の個人Run状態を扱い、Run共有の戦況は書き換えない。出現率と同時出現数の変更は行わない。Run終了で残骸側の記録は破棄する。"
+  },
+  "html_file": "ROLE-B-007.html"
+}

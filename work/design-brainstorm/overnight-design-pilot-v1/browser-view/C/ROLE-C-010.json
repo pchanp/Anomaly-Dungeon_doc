@@ -1,0 +1,203 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-010",
+  "role": "C",
+  "title": "手を置いたまま",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "研究所",
+  "classification": "マップ固有",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/decisions/018-whisper-colleague-quest-and-anxiety.md",
+      "section": "決定",
+      "source_status": "Status: Accepted（採用済み）",
+      "claim": "元同僚はアノマリーを制御し分析すること自体に疑問を抱き、考え方の違いから博士のもとを去った。研究所マップでこの人物とwhisperの追従先移送を扱い、元同僚が研究機材へ閉じこもると器材と装置が残る。装置の正体と処分の真偽は未確定である。"
+    },
+    {
+      "path": "docs/anomalies/whisper.md",
+      "section": "博士の元同僚Quest",
+      "source_status": "Status: Draft（草案）",
+      "claim": "研究所マップには博士と元同僚がいる。この人物がダンジョン内の研究所で研究を続けている理由は説明しない。研究機材と装置を誰にどう表示するかは未確定である。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "設計方針",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "永続的に蓄積した能力だけで優位性が決まる構造にはしない。Run中のビルド、操作、観察、判断が結果を左右することを優先する。"
+    },
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "スキルビルドとマップ",
+      "source_status": "Status: Draft（草案）",
+      "claim": "各マップは独立したゲームシステムを増やすためのものではなく、既存の基盤システムが、異なる場で別の価値を持つようにする。"
+    }
+  ],
+  "design_hypothesis": "器材に手を添え、自分の視点の揺れを一時的に整える。 対応タグのある既存器材へ接触して発動する。 本人の通常カメラ揺れを抑え、細部を見比べやすくする。 移動・攻撃・手を離す操作で終了。再開には再発動が必要。",
+  "experience": {
+    "goal": "器材に手を添え、自分の視点の揺れを一時的に整える。",
+    "player_choice": "その場で観察するか、離れて危険を避けるか。whisperの音・UI・非選択カウントやExposureには作用しない。",
+    "sacrifice_or_risk": "その場で観察するか、離れて危険を避けるか。whisperの音・UI・非選択カウントやExposureには作用しない。"
+  },
+  "placement_assumption": "既存マップで使用する文脈。配置・建物構造・地形・Questの結末を新設しない。対応対象が未実装なら試作用の対象で確認する。",
+  "components": [
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "器材に手を添え、自分の視点の揺れを一時的に整える。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "InformationChange",
+      "trigger": "装備中に本人が発動入力。対応タグのある既存器材へ接触して発動する。",
+      "condition": "対応タグのある既存器材へ接触して発動する。 ServerがRun・対象・クールダウンを検査。",
+      "result": "対応タグのある既存器材へ接触して発動する。 本人の通常カメラ揺れを抑え、細部を見比べやすくする。 移動・攻撃・手を離す操作で終了。再開には再発動が必要。",
+      "target": "本人",
+      "scope": "同一マップ内の対象限定。共有Quest・出現率・Exposureは変更しない。",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "移動・攻撃・手を離す操作で終了。再開には再発動が必要。",
+        "マップ離脱",
+        "Run終了",
+        "対象の戦闘不能または切断"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "最初に成立した終了条件で解除し、Runを越えて状態を保存しない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effect・同一対象は非加算の1件。即時結果は一回解決し、重複要求を再適用しない。",
+        "conflict_resolution": "競合する移動・入力制限・観察の適用順は採用前の確認事項。"
+      },
+      "server_validation": "対象・距離・安全な位置・使用状態をServerで検査。個人画面を世界状態の証明にしない。",
+      "client_presentation": "器材に手を添え、自分の視点の揺れを一時的に整える。",
+      "feedback": {
+        "success": "成立・消費・終了を対象本人に表示。",
+        "failure": "不成立の理由を短く表示。効果を付与しない。",
+        "ambiguous": "原因・正体は説明しない。操作の成否は曖昧にしない。"
+      }
+    }
+  ],
+  "provides_traits": [
+    "器材に手を添え、自分の視点の揺れを一時的に整える。",
+    "対応タグのある既存器材へ接触して発動する。",
+    "本人の通常カメラ揺れを抑え、細部を見比べやすくする。",
+    "移動・攻撃・手を離す操作で終了。再開には再発動が必要。"
+  ],
+  "connection_tags": [
+    "Skill",
+    "Environment",
+    "Observation"
+  ],
+  "refs": [
+    {
+      "target_id": "ROLE-A-011",
+      "kind": "optional_connection",
+      "required_traits": [
+        "研究所の既存の器材が、接触可能な対象としてServer側で扱えること"
+      ],
+      "fallback": "A-011が成立しない場合、本候補は既存の器材と個人状態の保持だけから成立する。研究記録や出現条件には依存しない。",
+      "resolution": "reserved_unresolved"
+    }
+  ],
+  "unresolved_refs": [
+    {
+      "target_id": "ROLE-A-011",
+      "required_traits": [
+        "研究所の既存の器材が、接触可能な対象としてServer側で扱えること"
+      ],
+      "reason": "peer-snapshotsが配布されておらず、A-011は予約枠のままで本文を確認できない。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": null,
+      "required_traits": [
+        "器材との接触判定と個人状態の保持を、Server側で扱えること"
+      ],
+      "reason": "研究所は未実装で、器材の一覧、接触判定の経路、個人状態の保存先が記録されていない。",
+      "adoption_blocker": false
+    }
+  ],
+  "conflicts": [
+    {
+      "source_path": "docs/decisions/018-whisper-colleague-quest-and-anxiety.md",
+      "existing_rule": "元同僚は研究機材へ閉じこもり、研究機材を開くと器材と装置が残る。装置の正体と処分の真偽は未確定である。",
+      "proposal_difference": "本候補は器材の状態やQuestの進行には手を加えず、個人が触れているあいだだけ作用する。",
+      "correction": "採用する場合は判断018の進行条件を変更せず、個人状態という別系統として扱う。研究機材を開いたときの扱いは変更しない。",
+      "reason_correctable": "判断018の内容と装置の扱いを変えず、個人側の状態にのみ追加する。",
+      "decision_needed": "本候補の対象器材が、判断018で定義された研究機材と同じものかどうか。"
+    }
+  ],
+  "uncertainties": [
+    "受付時間・距離・上限・クールダウン・速度などの値は仮案段階。",
+    "レベル差は候補であり、効果量と操作負担を試作して調整する。",
+    "通常スキルとしてのみ扱い、Player Anomalyの専用能力には一般化しない。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "器材に手を添え、自分の視点の揺れを一時的に整える。",
+    "in_world_rationale": "既存の移動・音・観察を通常と異なる条件で操作する候補。成立理由を世界の起源や装置の正体へ結び付けない。",
+    "meaning_left_ambiguous": "なぜこの操作が成立するか。博士の意図・Entityの正体は確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "この候補の入力条件・状態・提示の専用処理は実装記録がなく、新規ロジックが必要。",
+  "new_logic": [
+    "器材に手を添え、自分の視点の揺れを一時的に整える。",
+    "Serverで成立条件と終了を検査する処理",
+    "本人または対象へのFeedback"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "専用入力と状態管理が必要。対象側基盤が未実装なら、その試作費用は別途見積もる。",
+    "implementation_steps": [
+      "単一対象で成立・不成立を確認",
+      "解除とRun終了時の破棄を確認",
+      "複数参加者と競合Effectを確認"
+    ],
+    "assumed_existing_parts": [
+      "既存スキル発動経路",
+      "CharacterとRun参加者の管理"
+    ]
+  },
+  "role_details": {
+    "skill_family": "探索",
+    "rank": null,
+    "rank_rationale": "系統内の候補が揃った時点で比較する。ランク解放条件自体は変更しない。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "器材に手を添え、自分の視点の揺れを一時的に整える。"
+      },
+      {
+        "level": 2,
+        "proposal": "揺れを抑える強さを発動時に選べる。"
+      },
+      {
+        "level": 3,
+        "proposal": "視点の比較用に自分の直前の向きを一つ控えられる。"
+      }
+    ],
+    "equipped_slot_policy": "通常スキルの4装備枠のうち1枠。取得ランク条件は既存規則に従い、装備切替時点は未決定。",
+    "normal_attack_link": "通常攻撃からの連携候補。発動中の制限は本案に従い、受付窓・キャンセル時点は未決定。",
+    "avoids": "器材に手を添え、自分の視点の揺れを一時的に整える。",
+    "intervenes_in": "対応タグのある既存器材へ接触して発動する。 本人の通常カメラ揺れを抑え、細部を見比べやすくする。 移動・攻撃・手を離す操作で終了。再開には再発動が必要。",
+    "sacrifices": "その場で観察するか、離れて危険を避けるか。whisperの音・UI・非選択カウントやExposureには作用しない。",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-010.html"
+}

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-B-002 帰還点の目印（置き直すと前の場所は忘れる）</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<p class="sub">overnight-design-pilot-v1 ／ ROLE=B ／ 8/31 ／ Idea</p>
+<h1>ROLE-B-002 帰還点の目印（置き直すと前の場所は忘れる）— 作業用見出し</h1>
+</header>
+
+<section id="hypothesis">
+<h2>何の案？</h2>
+<p>帰還面は一つしかない。だから「自分で帰る場所を一つだけ覚えておける」枠をRun内へ足す案。</p>
+<h2>仕組み</h2>
+<ul>
+<li>任意の探索点で目印を置くと、その座標が自分の帰還点記録になる。</li>
+<li>記録は一つだけ。置き直すと前の座標が上書きされ、記録から消える。</li>
+<li>Runが終われば記録も品も消える。8/32では帰還面が閉じていて記録は使えない。</li>
+</ul>
+<h2>選択と代償</h2>
+<p>覚えても帰れるとは限らない。置き直すたびに一つ前の場所は記憶から落ちるため、2か所を保てない。</p>
+</section>
+
+<section id="diagram">
+<h2>作用図</h2>
+<div class="board">
+<svg viewBox="0 0 980 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="探索点に目印を置いて個人記録1件を作る図。記録は一つしかなく、置き直すと前の座標が上書きされて消え、Run終了で記録も品も消える">
+<rect width="980" height="380" fill="#0a1118"/>
+<rect x="30" y="40" width="250" height="120" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text x="46" y="70" class="label">持ち歩く</text>
+<text x="46" y="96" class="small">1枠を消費する</text>
+<text x="46" y="118" class="small">置かずに終わることもある</text>
+<text x="46" y="140" class="small">死亡時は喪失物</text>
+<rect x="365" y="40" width="250" height="120" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="381" y="70" class="label">置く</text>
+<text x="381" y="96" class="small">その座標が記録になる</text>
+<text x="381" y="118" class="small">帰還点候補として覚える</text>
+<text x="381" y="140" class="small">記録は他人に見せない</text>
+<rect x="700" y="40" width="250" height="120" rx="8" fill="#142330" stroke="#c4a0ec"/>
+<text x="716" y="70" class="label">記録 1件</text>
+<text x="716" y="96" class="small">内容は本人だけが見る</text>
+<text x="716" y="118" class="small">合計は常にひとつ</text>
+<text x="716" y="140" class="small">持ち越しはしない</text>
+<path d="M282 100 H362" class="active"/>
+<path d="M362 94 l10 6 -10 6" class="active"/>
+<path d="M617 100 H697" class="hyp-line"/>
+<path d="M697 94 l10 6 -10 6" class="hyp-line"/>
+<path d="M535 236 V186" class="hyp-line"/>
+<path d="M527 194 l8 8 8 -8" class="hyp-line"/>
+<rect x="365" y="238" width="340" height="86" rx="8" fill="#142330" stroke="#ea9380"/>
+<text x="381" y="266" class="label">置き直す</text>
+<text x="381" y="290" class="small">前の座標が記録から消える</text>
+<text x="381" y="312" class="small">置き直した回数だけ、帰れる場所を失う</text>
+<text x="30" y="352" class="small">記録はRun内だけ。帰還そのものは既存のReturn Portalの規則で変わりない。</text>
+</svg>
+</div>
+<p>左が持ち歩く選択、中央を置く操作、右が記録ひとつ分。</p>
+</section>
+
+<footer>
+<p><a href="index.html">← B候補一覧</a> ／ 詳細データ <a href="ROLE-B-002.json">ROLE-B-002.json</a> ／ connection_tags: Item, Observation ／ requires_code: true ／ 試作コスト: 小</p>
+</footer>
+</main>
+</body>
+</html>

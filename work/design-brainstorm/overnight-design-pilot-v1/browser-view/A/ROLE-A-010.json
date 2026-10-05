@@ -1,0 +1,109 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-010",
+  "role": "A",
+  "title": "補佐の者の巡回 — 研究所の廊下",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "研究所",
+  "classification": "マップ固有",
+  "category": "NPC",
+  "source_evidence": [
+    {"path": "docs/anomalies/whisper.md", "section": "## 博士の元同僚Quest", "source_status": "Status: Draft（草案）", "claim": "元同僚はwhisperを伴って接触すると追従先が移り、恐怖して研究機材へ閉じこもり、機材を開くと二者だけが消えて装置が残る。"},
+    {"path": "docs/decisions/018-whisper-colleague-quest-and-anxiety.md", "section": "## 決定", "source_status": "Status: Accepted（採用済み）", "claim": "装置を博士へ渡すとanxietyを得る。装置の正体、人物の行方、博士の意図は断定しない。"},
+    {"path": "docs/world/information-design.md", "section": "## 「説明」ではなく「痕跡」", "source_status": "Status: Draft（草案）", "claim": "長い設定説明を基本手段にせず、NPCの会話や記録から推測できるようにする。"}
+  ],
+  "design_hypothesis": "廊下を巡回して機材の作業状態を記す通常NPCが1人いると仮定します。追加NPCは仮説です。元同僚が閉じこもったあとも仕事を続けます。ただし人物の行方も装置の正体も博士の処分もこの候補では確定しません。",
+  "experience": {
+    "goal": "既存の連鎖に、説明を足さずに通常NPCを1人だけ足す。",
+    "player_choice": "黙って作業を見る／短い会話だけ試す／触らず 지나る。",
+    "sacrifice_or_risk": "得られるのは機材名と所作だけ。博士の処分には影響しない。"
+  },
+  "placement_assumption": "研究所の建物構造は未確定であり、部屋と配置は提案しない。巡回経路は各マップ側の判断に委ねる。",
+  "components": [
+    {"component": "NPCState", "availability": "catalog", "usage": "巡回NPCの状態をServerが保持する。"},
+    {"component": "Effect.InformationChange", "availability": "catalog", "usage": "作業中の機材名を個人提示として返す。"},
+    {"component": "Effect.StateChange", "availability": "catalog", "usage": "巡回と作業停止の状態遷移として扱う。"},
+    {"component": "WhisperTransfer", "availability": "catalog", "usage": "既存の連鎖を壊さないため、このNPCは追従先にならない。"}
+  ],
+  "effects": [
+    {
+      "kind": "InformationChange",
+      "trigger": "対象の近くで作業中の機材を見る。",
+      "condition": "NPCが作業中であること。対象が通常のプレイヤーであること。距離は未定。",
+      "result": "機材名を個人提示として返す。記録の内容は出さない。",
+      "target": "見た個人",
+      "scope": "個人",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": ["提示の取得だけなので適用解決"],
+      "end_mode": "any",
+      "end_rule_reason": "即時。取得ごとに解決する。",
+      "stacking": {"exception": false, "rule": "取得ごとに解決する。", "conflict_resolution": "他の提示との競合は保留。"},
+      "server_validation": "Serverが個体の状態と権限を検証する。",
+      "client_presentation": "機材名の1行のみ",
+      "feedback": {"success": "機材名が出る", "failure": "いなければ出ない", "ambiguous": "何のために動くかは説明しない"}
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "NPCが次の機材へ移る、または攻撃を受ける。",
+      "condition": "巡回中であること、または攻撃が成立したこと。",
+      "result": "巡回が続き、攻撃で作業を止めて現位置で止まる。",
+      "target": "NPCの個体（Server Run共有）",
+      "scope": "Run共有の個体",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": ["Run終了", "マップ終了"],
+      "end_mode": "any",
+      "end_rule_reason": "停止の解除は置かない",
+      "stacking": {"exception": false, "rule": "同一個体の遷移はイベントごとに1件", "conflict_resolution": "他Effectとの順序は共通既定に従う"},
+      "server_validation": "Serverが移動と攻撃の成立を検証する。",
+      "client_presentation": "個体の移動表現のみ",
+      "feedback": {"success": "次の機材へ向かう", "failure": "攻撃で作業が止まる", "ambiguous": "仕事の目的は示さない"}
+    }
+  ],
+  "provides_traits": ["既存の連鎖の周囲に通常NPCを1体だけ置ける", "作業中の機材だけを個人提示できる"],
+  "connection_tags": ["NPCState", "WhisperTransfer", "InformationSharing", "Environment"],
+  "refs": [
+    {"target_id": "ROLE-C-010", "kind": "optional_connection", "required_traits": ["他者の作業を判断材料にできる"], "fallback": "接続なしでも成立する。待機と移動で完結する。", "resolution": "reserved_unresolved"}
+  ],
+  "unresolved_refs": [
+    {"target_id": "ROLE-C-010", "required_traits": ["他者の作業を判断材料にできる"], "reason": "Cの候補が配布されておらず内容が不明。語彙のみ記録する。", "adoption_blocker": false},
+    {"target_id": null, "required_traits": ["巡回経路と機材の位置を決める方針"], "reason": "ID未指定の要求。研究所の建物構造が未確定のため共通設計側の判断が必要。", "adoption_blocker": true}
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "巡回周期、順番、提示の文面は未定",
+    "追加NPCを既存資料へ追記するかは判断が必要",
+    "研究所マップは未実装であり、実装の有無は未確認"
+  ],
+  "worldview": {
+    "defamiliarized_element": "恐怖や装置の正体に触れないまま、危険な場所と所作だけが残る廊下を描いた点。",
+    "in_world_rationale": "古い設備と紙の記録が混在する文明では、器械が動く間に人が記録を書くことは自然である。正体ではなく所作だけを見せる。",
+    "meaning_left_ambiguous": "なぜこの人がここにいるのか。何を記録しているのか。博士は本当に処分するのか。装置は何なのか。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "研究所マップが未実装で、巡回NPCの状態機械と個人提示の経路が存在しないため。コード生成の許可ではない。",
+  "new_logic": ["巡回NPCの作業状態と移動", "機材名を返す個人提示"],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "NPC1体と提示1行で試せるが、研究所マップ自体が未実装で、機材と部屋が先に要る。実時間の見積もりは出していない。",
+    "implementation_steps": ["仮の機材と巡回経路を用意する", "作業状態の個人提示を実装する", "攻撃で停止することを検証する", "既存の連鎖と衝突しないことを確認する"],
+    "assumed_existing_parts": ["既存のwhisperの連鎖", "通常のHPとDamageの受け口", "Server権威のRun状態"]
+  },
+  "role_details": {
+    "npc_purpose": "機材の作業状態を記すだけの通常NPC。追加NPCは仮説である。博士の理論やアノマリーの意味は話さない。個体数は1体。",
+    "player_anomaly_handling": "判断019によりPlayer Anomalyは通常NPCとInteractionできないため、会話は成立しない。他のプレイヤーが見た内容は他の個人の表示に留まる。",
+    "mob_contract": {
+      "applicable": false,
+      "spawn_condition": "対象外。通常NPC1体のみ。イベント由来のモブはROLE-A-013で扱う。",
+      "population_cap": "対象外。常駐1体で湧きも補充も持たない。",
+      "non_combat_response": "対象外。戦闘を設計していない。",
+      "exit_condition": "対象外。退場はRun終了とマップ終了のみ。",
+      "entity_distinction": "通常NPCでありAnomaly EntityでもPlayer Anomalyでもない。追従先の移送は発生させない。装置の正体も明かさない。"
+    }
+  },
+  "html_file": "ROLE-A-010.html"
+}

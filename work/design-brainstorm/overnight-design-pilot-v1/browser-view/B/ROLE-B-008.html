@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-B-008 値札の付いた装備（拾うと痕跡が消える）</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<p class="sub">overnight-design-pilot-v1 ／ ROLE=B ／ SEKIGAHARA ／ Idea</p>
+<h1>ROLE-B-008 値札の付いた装備（拾うと痕跡が消える）— 作業用見出し</h1>
+</header>
+
+<section id="hypothesis">
+<h2>何の案？</h2>
+<p>値札の付いた装備を見つけたら、痕跡が本人の記録に残る。拾った瞬間に痕跡は本人からも他者からも消える。</p>
+<h2>仕組み</h2>
+<ul>
+<li>装備を見つけた事実だけが、個人の記録として印になる。位置も数も出ない。</li>
+<li>「拾う」を選ぶと、装備は自分の枠に入り、痕跡の印が消える。</li>
+<li>そのとき、同じ地点の痕跡は他の個人の記録からも消える。作られることはない。</li>
+</ul>
+<h2>選択と代償</h2>
+<p>実物を取るか、場所を知っていた記憶を取るか。片方しか残らない。</p>
+</section>
+
+<section id="diagram">
+<h2>作用図</h2>
+<div class="board">
+<svg viewBox="0 0 980 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="値札の付いた装備を見つけると個人の痕跡印が残り、拾うとその印と他の個人の痕跡記録が同時に消える図。実物か記憶かのどちらかしか残らない">
+<rect width="980" height="380" fill="#0a1118"/>
+<text x="30" y="26" class="small">戦場はIdea段階。配置は模式図であり、地形ではない。</text>
+<rect x="30" y="46" width="220" height="96" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text x="46" y="76" class="label">見つける</text>
+<text x="46" y="102" class="small">装備は置かれたまま</text>
+<text x="46" y="124" class="small">まだ誰の手にもない</text>
+<rect x="340" y="46" width="220" height="96" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="356" y="76" class="label">印が残る</text>
+<text x="356" y="102" class="small">本人だけの印になる</text>
+<text x="356" y="124" class="small">数と場所は出ない</text>
+<rect x="690" y="46" width="260" height="96" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="706" y="76" class="label">実物を選ぶ</text>
+<text x="706" y="102" class="small">枠が1つ増える</text>
+<text x="706" y="124" class="small">死んだら枠外なら失う</text>
+<path d="M252 94 H337" class="active"/>
+<path d="M337 88 l10 6 -10 6" class="active"/>
+<path d="M562 94 H687" class="hyp-line"/>
+<path d="M687 88 l10 6 -10 6" class="hyp-line"/>
+<path d="M450 144 V194" class="active"/>
+<path d="M442 186 l8 8 8 -8" class="active"/>
+<rect x="330" y="196" width="250" height="86" rx="8" fill="#142330" stroke="#ea9380"/>
+<text x="346" y="226" class="label">印が消える</text>
+<text x="346" y="252" class="small">本人の記憶から消える</text>
+<text x="346" y="274" class="small">後から戻せない</text>
+<path d="M450 284 V312" class="hyp-line"/>
+<path d="M442 304 l8 8 8 -8" class="hyp-line"/>
+<rect x="640" y="196" width="310" height="116" rx="8" fill="#142330" stroke="#ea9380"/>
+<text x="656" y="226" class="label">他の個人の痕跡も消える</text>
+<text x="656" y="252" class="small">削除は一方向。作る操作は無い</text>
+<text x="656" y="274" class="small">本人にも、その消え方は伝わらない</text>
+<text x="30" y="352" class="small">登録条件と削除が届く範囲は未確定。模式図であり配置図ではない。</text>
+</svg>
+</div>
+<p>上が痕跡の成立、下が拾った瞬間に同時に落ちる記憶。</p>
+</section>
+
+<footer>
+<p><a href="index.html">← B候補一覧</a> ／ 詳細データ <a href="ROLE-B-008.json">ROLE-B-008.json</a> ／ connection_tags: Item, Observation ／ requires_code: true ／ 試作コスト: 不明</p>
+</footer>
+</main>
+</body>
+</html>
