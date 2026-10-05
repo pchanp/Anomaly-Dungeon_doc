@@ -1,0 +1,154 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-005",
+  "role": "A",
+  "title": "留守番の放送 — 廃TSUTAYAの放送室",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "廃TSUTAYA",
+  "classification": "マップ固有",
+  "category": "NPC",
+  "source_evidence": [
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "### 実装済みの範囲",
+      "source_status": "Status: Prototype: Implemented（実装済みプロトタイプ）",
+      "claim": "FRONT、VHS、DVD、CD、BROADCAST、TAPE、BACKROOMの7ルームがあり、放送卓を持つBROADCASTが含まれる。各部屋は袋小路構造で視界が分断される。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "### 未実装の境界",
+      "source_status": "Status: Prototype: Implemented（実装済みプロトタイプ）",
+      "claim": "共有BGMの選択UIは未実装で固定の音源をループ再生している。TSUTAYA独自の異常は未実装である。"
+    },
+    {
+      "path": "docs/decisions/009-tsutaya-closing-time-archive.md",
+      "section": "### 基準状態",
+      "source_status": "Status: Draft（ソース反映済み・Studio未確認）",
+      "claim": "放送室と返却作業場は暗く、作業物や未整理ケースが残る。"
+    },
+    {
+      "path": "docs/decisions/019-player-anomaly-runtime-pvp-and-return.md",
+      "section": "## 決定",
+      "source_status": "Status: Accepted（採用済み）",
+      "claim": "Player Anomalyは通常NPCとInteractionできない。"
+    }
+  ],
+  "design_hypothesis": "誰も回収に来ない閉店後の店舗に、放送室に残る通常NPCが1人だけいる状態を仮定します。役目は店内放送を読むことで、棚の鳴りsound要找している対象を走来回る仕事です。声は店内放送として届き、個人試聴とは独立します。攻撃を受けると放送を止めます。この人は閉店と店の仕事についてだけは話しません。",
+  "experience": {
+    "goal": "『どの棚が鳴ったか』を知る手段を、店内を巡回しなくても得られるようにする。",
+    "player_choice": "放送を聞く（その場に残って待つ）／自分で棚へ向かう（放送udis消費せず、位置_notify）／攻撃して止める（放送は途切れる）。",
+    "sacrifice_or_risk": "放送は周期が未定で、聞けるかに差が出る。自分で聞かずに棚へ行くと、鳴っている Hoje_applyを見失うことがある。"
+  },
+  "placement_assumption": "既存のBROADCASTルームと、既に 生成済みの放送卓だけを使う。新しいルーム、放送設備、配置は提案しない。NPCの位置は既存の歩行可能範囲に限る。",
+  "components": [
+    {"component": "NPCState", "availability": "catalog", "usage": "通常NPC1体の読む、回る、止まるの状態をServerが持つ。"},
+    {"component": "ArchiveMedia", "availability": "catalog", "usage": "棚の選択結果の鳴り状態を、放送の対象として参照する。実内容（映像、音声）は未実装のまま扱う。"},
+    {"component": "Effect.InformationChange", "availability": "catalog", "usage": "放送による棚のNotifyを個人提示として返す。"},
+    {"component": "Effect.StateChange", "availability": "catalog", "usage": "NPCの巡回と、攻撃による放送停止を扱う。"},
+    {"component": "InStoreBroadcastLoop", "availability": "proposed", "usage": "店内放送を周期で再生する経路。共有BGMの選択処理とは独立に保つ。"}
+  ],
+  "effects": [
+    {
+      "kind": "InformationChange",
+      "trigger": "NPCの放送が始まり、対象の近くで聞き取れる。",
+      "condition": "NPCが放送中であること。対象が通常のプレイヤーであること。距離と到達は未定。",
+      "result": "今鳴っている棚の区画名を個人提示として返す。鳴った時刻や回数は出さない。",
+      "target": "聞いた個人",
+      "scope": "個人。店内全員に同時表示しない。",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": ["提示の取得だけなので適用解決"],
+      "end_mode": "any",
+      "end_rule_reason": "即時。取得ごとに解決する。",
+      "stacking": {"exception": false, "rule": "取得ごとに解決し、履歴を累計しない。", "conflict_resolution": "他の店内情報の提示との競合規則は未定のため保留。"},
+      "server_validation": "Serverが放送の主体、対象の権限、到達を検証する。",
+      "client_presentation": "区画名の1行。放送そのものは既存の店内音として鳴らす。",
+      "feedback": {"success": "区画名が出る。", "failure": "届かない場合は何も出ない。", "ambiguous": "なぜその棚が鳴るのか、鳴り方の意味は示さない。"}
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "NPCが放送卓を離れて棚を確認了一圈戻る、または攻撃を受ける。",
+      "condition": "巡回中であること、または攻撃ダメージが成立したこと。",
+      "result": "再巡回で次に伝える対象が変わる。攻撃を受けると放送を止め、最後の放送内容を保持したまま動かない。",
+      "target": "NPCの個体（Server Run共有）",
+      "scope": "Run共有の個体。放送内容は個人。",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": ["Run終了", "マップ終了"],
+      "end_mode": "any",
+      "end_rule_reason": "停止の解除は置かない。復帰は別個体の新規生成として扱う。",
+      "stacking": {"exception": false, "rule": "同一個体の遷移はイベントごとに1件。", "conflict_resolution": "他の状態異常との順序は共通既定に従い、回復は停止の解除を意味しない。"},
+      "server_validation": "Serverが移動と攻撃の成立を検証する。",
+      "client_presentation": "個体の移動と、放送が止まる表現のみ。",
+      "feedback": {"success": "次に違う区画名が流れる。", "failure": "攻撃で放送が止まる。", "ambiguous": "見回りが何を探す目的かは示さない。"}
+    }
+  ],
+  "provides_traits": ["店内放送を通じて他拠点の情報を個人提示できる", "巡回で内容が更新され、攻撃で止められる"],
+  "connection_tags": ["NPCState", "ArchiveMedia", "Sound", "InformationSharing"],
+  "refs": [
+    {
+      "target_id": "ROLE-C-005",
+      "kind": "optional_connection",
+      "required_traits": ["音や放送を位置の手掛かりとして使える"],
+      "fallback": "接続なしでも成立する。聞く・自行で調べる・止めるは待機と移動と攻撃だけで完結する。",
+      "resolution": "reserved_unresolved"
+    },
+    {
+      "target_id": "ROLE-B-005",
+      "kind": "optional_connection",
+      "required_traits": ["棚の結果を個人所持として扱える場合"],
+      "fallback": "本候補は棚の鳴り状態だけを参照し、所持には依存しない。Bの候補が無くても成立する。",
+      "resolution": "reserved_unresolved"
+    }
+  ],
+  "unresolved_refs": [
+    {"target_id": "ROLE-C-005", "required_traits": ["音や放送を位置の手掛かりとして使える"], "reason": "Cの候補は配布されておらず、Cの005の内容が不明。語彙のみを記録する。", "adoption_blocker": false},
+    {"target_id": "ROLE-B-005", "required_traits": ["棚の結果を個人所持として扱える場合"], "reason": "正式なItemStackと取得源は未実装（SRC-01）。棚の結果と所持を結びつけるかは判断できない。", "adoption_blocker": false},
+    {"target_id": null, "required_traits": ["店内放送を既存経路で鳴らすか新しいSoundとするかを決める方針"], "reason": "ID未指定の要求。共有BGMの選択UIが未実装である以上、既存の店内音の扱いは共通設計側の判断が必要。", "adoption_blocker": true}
+  ],
+  "conflicts": [
+    {
+      "source_path": "docs/systems/map-gimmick-ideas.md",
+      "existing_rule": "共有BGMはマップモデル直下のSoundとしてServer Stateで管理し、個人試聴が変えることはない。選択UIは未実装である。",
+      "proposal_difference": "本候補は店内放送の経路をNPCの個体に持たせ、共有BGMの選択処理とは独立させる。",
+      "correction": "共有BGMの状態も選択UIも変更しない。放送は別系統として扱う。",
+      "reason_correctable": "個人試聴と共有BGMの境界を崩さないため補正可能である。",
+      "decision_needed": "店内放送を別Soundとしてよいか、既存の店内音の枠を使ってもよいか。"
+    }
+  ],
+  "uncertainties": [
+    "放送の周期と内容、対象区画の決め方は未定。数値を決めていない。",
+    "放送が鳴る棚の数は1つか複数かは未定。",
+    "Attackを受けた場合の挙動は未確定（逃走か無反応か）。実装の有無はStudio未確認。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "静かな廃店舗に、店内放送を読む人が1人だけ残っている状態を足した点。閉店後も放送的工作が続くことを、異常の説明ではなく生活の痕迹として描く。",
+    "in_world_rationale": "古い設備と紙の記録が混在する文明では、閉店後も放送ostsが流れることはありえる。読み上げられるのは区画名だけで、店や世界の説明は含まれない。",
+    "meaning_left_ambiguous": "なぜこの人だけ残っているのか。誰のための放送なのか。棚の鳴りは何を意味するのか。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "既存に店内放送の経路、通常NPCの状態機械、区画の鳴り状態のいずれも未実装のため。コード生成の許可ではない。",
+  "new_logic": ["店内放送を周期再生する経路", "NPCの巡回と放送対象の切替", "攻撃による放送停止"],
+  "prototype_cost": {
+    "band": "小",
+    "rationale": "NPC1体と放送1経路に限定すれば小さい。ただし既存のBroadcastRoomの暗さと音量、既存音との重なりは未確認。実時間の見積もりは出していない。",
+    "implementation_steps": ["NPC1体を既存の放送室に配置する", "放送を周期で再生し、区画名を個人提示する", "巡回で対象を切替える", "攻撃で停止することを検証する"],
+    "assumed_existing_parts": ["既存の7ルームと放送卓", "個人試聴とPreviewDuration", "共有BGMのServer State"]
+  },
+  "role_details": {
+    "npc_purpose": "店内放送を読むことが仕事の人。言葉は区画名と短い定型句だけで、店のこと、世界のこと、アノマリーの意味は話さない。見回りと放送は仕事の所作であり、世界の説明ではない。個体数は1体。",
+    "player_anomaly_handling": "判断019によりPlayer Anomalyは通常NPCとInteractionできないため、放送の聞き取りも-interactiveなAskも成立しない。放送はServerがTrap続け、他のプレイヤーが得た内容は他の個人の表示に留まる。Player Anomalyが最後の放送を保持するかは未確定。",
+    "mob_contract": {
+      "applicable": false,
+      "spawn_condition": "対象外。通常NPC1体のみ。イベント由来のモブはROLE-A-013で扱う。",
+      "population_cap": "対象外。個体数は1体固定で湧きも補充も持たない。",
+      "non_combat_response": "対象外。戦闘を設計していない。攻撃は放送を止める結果になるだけ。",
+      "exit_condition": "対象外。退場はRun終了とマップ終了のみ。個体数の増減は起こさない。",
+      "entity_distinction": "通常NPCでありAnomaly Entityではない。Interaction KindはSoundと近接の観測のみ。Heal、Skill、Combat Interactionの受理は宣言しない。共有BGMは変更しない。"
+    }
+  },
+  "html_file": "ROLE-A-005.html"
+}

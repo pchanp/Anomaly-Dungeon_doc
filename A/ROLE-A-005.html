@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-A-005 留守番の放送 — 廃TSUTAYAの放送室</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+<p class="sub">overnight-design-pilot-v1 ／ ROLE-A-005 ／ 廃TSUTAYA（マップ固有）／ NPC</p>
+<h1>留守番の放送 — 廃TSUTAYAの放送室</h1>
+<p>誰も来ない閉店後の店舗で、放送室に一人だけ残って放送を読む人がいる。</p>
+<div class="badges"><span class="badge hyp">Idea</span><span class="badge">unreviewed</span><span class="badge unknown">周期と内容は未定</span></div>
+<nav class="nav"><a href="index.html">← 一覧</a><a href="ROLE-A-005.json">同IDのJSON</a></nav>
+</header>
+
+<section id="hypothesis">
+<h2>何の案か</h2>
+<p>鳴っている棚の区画名を、店内放送で知る。</p>
+<ul>
+<li>放送は周期で流れ、targetsの近くにいると区画名が1行で出る。</li>
+<li>放送する人は見回り一圈ごとに次が変わる。更新には時間がかかる。</li>
+<li>攻撃を受けると放送が止まる。最後の放送は保持される。共有BGMは変わらない。</li>
+</ul>
+<p><strong>選択と代償:</strong> 放送を聞く（待つ）／自分で棚へ向かう（時間は惜さない）／攻撃して止める。聞かずに進めると、鳴っている棚を見失うことがある。</p>
+<p class="sub">接続タグ: NPCState / ArchiveMedia / Sound ／ requires_code: true ／ conflicts 1件・未解決3件（JSONに記載）</p>
+</section>
+
+<section id="diagram">
+<h2>仕組みの図</h2>
+<div class="board">
+<svg viewBox="0 0 1000 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="放送室の一人が店内放送で棚の区画名を伝え、見回りで対象が変わり、攻撃で放送が止まることを示す図">
+<rect width="1000" height="340" fill="#0a1118"/>
+<text class="label" x="24" y="28">既存の要素</text>
+<text class="label" x="600" y="28">放送の流れ</text>
+<rect x="24" y="52" width="240" height="76" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="38" y="82">放送室（既存）</text>
+<text class="small" x="38" y="108">放送卓のみ使う</text>
+<rect x="24" y="220" width="240" height="76" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="38" y="250">棚（既存5基）</text>
+<text class="small" x="38" y="276">鳴り状態を参照のみ</text>
+<path d="M144 128v86" class="active"/>
+<path d="M144 220l-6-9h12z" fill="#70c9c3"/>
+<text class="small" x="284" y="176">鳴り状態を</text>
+<text class="small" x="284" y="196">放送する</text>
+
+<rect x="600" y="52" width="376" height="76" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="label" x="614" y="82">放送を聞く</text>
+<text class="small" x="614" y="108">区画名が個人に1行。時刻も回数も出さない</text>
+<rect x="600" y="142" width="376" height="76" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="614" y="172">見回了一圈</text>
+<text class="small" x="614" y="198">次に伝える対象が変わる</text>
+<rect x="600" y="232" width="376" height="76" rx="8" fill="#142330" stroke="#ea9380"/>
+<text class="label" x="614" y="262">攻撃で放送停止</text>
+<text class="small" x="614" y="288">最後の放送だけが残る</text>
+<path d="M268 90h180v10h144" class="active"/>
+<path d="M586 100l9 6-9 6" class="active"/>
+<path d="M600 180h-40" class="hyp-line"/>
+<path d="M560 180l9 6-9 6" class="hyp-line"/>
+<path d="M600 270h-40" stroke="#ea9380" stroke-width="2" fill="none"/>
+<path d="M560 270l9 6-9 6" stroke="#ea9380" stroke-width="2" fill="none"/>
+<text class="small" x="24" y="322">この図で分かること：情報は巡回と時間を経て届く。放送は共有BGMを動かさない。</text>
+</svg>
+</div>
+<p>図注：聞けば早く知り、聞かずに回れば遅いが確実、という取り引きになる。</p>
+</section>
+
+<footer>overnight-design-pilot-v1 ／ ROLE-A-005 ／ 実表示は未確認（担当セッションでブラウザを使用していない）。</footer>
+</main>
+</body>
+</html>

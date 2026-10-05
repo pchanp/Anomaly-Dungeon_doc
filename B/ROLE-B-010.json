@@ -1,0 +1,248 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-010",
+  "role": "B",
+  "title": "一度きりの解錠札（開けたままなら全員が取れる）— 作業用見出し",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "研究所",
+  "classification": "マップ固有",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/anomalies/whisper.md",
+      "section": "研究所マップには、博士と過去に共同研究をしていた元同僚がいる。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "研究所には元同僚が存在する。候補は既存の人物やQuest装置を置き換えず、部屋の設備だけを扱う。"
+    },
+    {
+      "path": "docs/anomalies/whisper.md",
+      "section": "装置は、Quest報告の通常報酬ではなく、`whisper` の追従先移送という相互作用から残る関連アイテムとして扱う。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "既存の装置は博士へ渡して専用スキルへ交換する資産。候補はこれと別の物品として置き換えるものではない。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "`WorldChange` | 出現率・同時出現数、経路・Portal・Map状態などの世界変化 | 個人表示だけでRun共有状態を確定しない",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "容器の開閉はマップ状態として扱い、個人表示で確定しない。"
+    },
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "| Map State、Anomaly State、NPC State、Combat Event | UI、音響、カメラ、エフェクト |",
+      "source_status": "Status: Draft（草案）",
+      "claim": "マップ状態はサーバーが確定する。候補の容器もこれに従う。"
+    }
+  ],
+  "design_hypothesis": "候補は研究室内にある保管容器を一度だけ開ける札にする。開けたまま放置すると容器はRun共有の『開いた』状態になり、パーティ全員が中身を取れる。閉じる操作を選べば本人だけが取れる。開けるだけを選ぶのか、閉じて独り占めするのかを選ぶ設計。",
+  "experience": {
+    "goal": "他人に見せるか、独占するかを同じ容器で選ばせる。独占のための時間を渡す。",
+    "player_choice": "開けて放置する。全員が取れる。閉じて自分が取る。どちらでもなく放置する（解錠札が消費される）。",
+    "sacrifice_or_risk": "閉じる操作で解錠札を1回消費する。放置している間は何も起きず、確保も分配も生まれない。"
+  },
+  "placement_assumption": "新しい部屋・壁・研究機材は提案しない。既存の保管容器と小物にのみ作用する。装置そのものの座標や構造は未確定であり、候補では指定しない。既存のwhisperの装置は本候補の対象外であり、置き換えない。",
+  "components": [
+    {
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "容器の解錠状態をRun共有のマップ状態として書き換える。"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "閉じる操作で、本人だけが中身を受け取る。"
+    },
+    {
+      "component": "ItemLifecycle",
+      "availability": "catalog",
+      "usage": "正式な取得源とItemStackが未実装であることを前提とする。"
+    },
+    {
+      "component": "WhisperTransfer",
+      "availability": "catalog",
+      "usage": "既存の元同僚Questと装置の語彙。候補はこの装置を置き換えず、参照も複製もしない。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "WorldChange",
+      "trigger": "個人が解錠札を容器の鍵前に『貼る』",
+      "condition": "実行中であること、対象容器に未使用の鍵があること、札を個人所持にもつこと。同時に一容器、一回",
+      "result": "その容器がRun共有で『開いた』状態になる。中身はどの参加者でも回収できる。容器そのものは消えない",
+      "target": "対象容器のマップ共有の状態",
+      "scope": "Run全体。開いた状態は参加者に共通",
+      "lifetime": "同一Run中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "閉じる操作で解錠状態が解除される（操作口は未確定）",
+        "Run終了で破棄する。マップ内の移動では破棄しない"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。閉操作とRun終了を別の条件として列挙する。",
+      "stacking": {
+        "exception": false,
+        "rule": "一札につき一容器。別の容器には非加算で並行しうる。固定秒数は持たない",
+        "conflict_resolution": "他の候補が同じマップ状態を書き換える場合は解決規則が未定義のため保留する"
+      },
+      "server_validation": "Serverが実行状態、容器の鍵の有無、札の所有を検証する",
+      "client_presentation": "クライアントは操作可否のみ。解錠の確定はServerが行う",
+      "feedback": {
+        "success": "容器の蓋が開いた表示が出る。誰が開けたかは出さない",
+        "failure": "何も変わらない。注意表示のみ",
+        "ambiguous": "中身が何物かは開けるまで表示しない"
+      }
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "開いた状態で、個人が『閉じる』操作を行う",
+      "condition": "実行中であること、その個人が先に開けた容器であること、中身が未取得であること",
+      "result": "中身が個人所持へ移り、容器は閉じる。他の参加者はその中身を得られない",
+      "target": "対象の中身と操作した個人",
+      "scope": "個人。容器の状態は閉じた状態へ戻る",
+      "lifetime": "同一Run中",
+      "resolution": "instant",
+      "end_conditions": [
+        "取得の解決で確定",
+        "Run終了で容器の状態は破棄される。取得済みの品は通常の帰還判定に載る"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。取得とRun終了の破棄は別の条件とする。",
+      "stacking": {
+        "exception": false,
+        "rule": "同じ中身は一度しか取得できない。他の人が先に取った場合、本人には何も残らない",
+        "conflict_resolution": "別の個人が先に閉じた場合は解決規則が未定義のため保留する"
+      },
+      "server_validation": "Serverが最初の開けた個人、対象の未取得状態、枠制約を検証する",
+      "client_presentation": "HUDから印が付き、所持枠が増える。他者の表示には影響しない。",
+      "feedback": {
+        "success": "枠が増える。容器は閉じる",
+        "failure": "何も変わらない。注意表示のみ",
+        "ambiguous": "他の参加者が先に取ったかどうかは説明しない"
+      }
+    }
+  ],
+  "provides_traits": [
+    "マップ状態を個人入力で開け閉めする例",
+    "他者との分配と独占を同じ操作の中で選ばせる設計"
+  ],
+  "connection_tags": [
+    "Item",
+    "Interface"
+  ],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": [
+        "同じ研究室内で複数の個人が同じ容器の鍵を処理するときの競合規則"
+      ],
+      "reason": "既存の判断018は元同僚のQuestと装置の連鎖を定めるが、複数の個人が同じ鍵を扱う規則は無い。候補は解錠した最初の個人だけが有利になるように書いており、正式な規格にはしていない。",
+      "adoption_blocker": true
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "解除する容器の種類と数、配分は未確定。研究室内に保管容器がいくつあるかは正本に記載が無い。",
+    "閉じ操作の消費（解錠札を1回使う）は未確定の案で、既存仕様ではない。",
+    "既存のwhisperの装置（博士へ渡す品）は本候補の対象外。同じ研究室内に置く関係だけを書く。",
+    "照合範囲：whisperの装置の位置づけ、WorldChangeの分類、Server責務、効果の保存境界、判断010の枠強化。矛盾は見つからず conflicts は空配列"
+  ],
+  "worldview": {
+    "defamiliarized_element": "封を切る行為を『受けるもの』から『分けるか独占するかを決めるもの』へ変えた。開けたままにすることで、中身が探索者全員のものになる。",
+    "in_world_rationale": "元同僚が研究を続けた結果は、閉じたままに置かれた品や設備が複数残っている状況として自然に成立する。鍵の権利を誰かに与えるのではなく、開けたあとの扱いを共に決める形は、誰も整理していない研究室内で粗末に扱われている状況と合う。",
+    "meaning_left_ambiguous": "鍵は今誰が作ったのか、中身は誰のための研究用だったのか、閉じるかどうかは誰がどう決めたのかは確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "物品の所在と容器の開閉状態、パーティ内の競合処理が未実装であり、正式な取得源もItemStackも無い（current-implementation.md）。新しい共有状態の書き込みと競合処理が要るため true とする。",
+  "new_logic": [
+    "容器の解錠状態をRun共有のマップ状態として持つ",
+    "閉操作で最初の個人だけが中身を得る競合処理"
+  ],
+  "prototype_cost": {
+    "band": "不明",
+    "rationale": "研究所マップの構造が未確定で、保管容器という前提自体が存在しない。小とも大とも決められず、箱を一つ置いた試作で検証できる段階である。",
+    "implementation_steps": [
+      "デバッグ床に箱を一つ置き、鍵と解錠札の条件を付ける",
+      "箱の開閉をRun共有状態として持つ",
+      "解錠、放置、取得、閉じるの順に一人で検証する",
+      "二人の個人が同じ箱を開けたときの挙動は記録だけして決めない"
+    ],
+    "assumed_existing_parts": [
+      "枠境界を持つInventoryService",
+      "クライアントの個人HUD",
+      "既存のプロンプトの配置規約"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Undecided",
+        "detail": "配る主体は未確定。研究所には人物の記載はあるが、該当する装置は未実装であり創作しない。試作のみデバッグ付与。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "1枠を消費するが、未使用の鍵がある場所まで意味を持たない。"
+      },
+      {
+        "route": "Use",
+        "status": "Proposed",
+        "detail": "『閉じる』に使って本人だけが中身を受け取る。一回ごと。"
+      },
+      {
+        "route": "Present",
+        "status": "NotApplicable",
+        "detail": "渡さない。解錠の権利を渡すと中身の配分が二重になる。"
+      },
+      {
+        "route": "Place",
+        "status": "Proposed",
+        "detail": "中核。容器の鍵前に札を貼る。開いたままか閉じるかを後に選ぶ。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "確保枠の外なら死亡時に失う。容器は開いたまま残り、中身は参加者全員のものになる。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "確保枠に入れて解錠の手段を守れる。ただし『全員に開ける』選択はできなくなる。"
+      },
+      {
+        "route": "Sell",
+        "status": "NotApplicable",
+        "detail": "換金しない。鍵札を売ると鍵の入手の意味が崩れる。"
+      },
+      {
+        "route": "Quest",
+        "status": "Undecided",
+        "detail": "既存の博士の依頼が定める固有品の交換と経路が重なるため、置かない判断を推奨するが、依頼主は未確定。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "Undecided",
+        "detail": "既存の装置はwhisperの相互作用の結果として残るものであり、本候補の札とは別の物品。whisperとの相互作用は作らない。"
+      }
+    ],
+    "ownership_state": "札はplayer単位の個人所持。容器の状態はServer権威のRun共有。閉じたときの中身は個人所持へ移り、他の個人には見えない。切断と再接続時の扱いは未決。",
+    "server_run_state": "容器の開閉はRun共有のマップ状態を書き換えるためWorldChangeとして記録し、Run終了で破棄する。出現率と同時出現数は変更しない。"
+  },
+  "html_file": "ROLE-B-010.html"
+}

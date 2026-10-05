@@ -1,0 +1,117 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-009",
+  "role": "A",
+  "title": "運ぶ人 — SEKIGAHARAの戦場の外れ",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "SEKIGAHARA",
+  "classification": "マップ固有",
+  "category": "NPC",
+  "source_evidence": [
+    {"path": "docs/systems/map-gimmick-ideas.md", "section": "## SEKIGAHARA", "source_status": "Status: Mixed（案ごとに下記）", "claim": "複数勢力のNPCが常時戦闘し、プレイヤーは戦闘回避、弱ったNPCの撃破、戦闘介入、乱戦への参加を選べる。勢力と戦況ロジックは未決である。"},
+    {"path": "docs/systems/anomaly-interaction.md", "section": "## 対象としないこと", "source_status": "ステータス: Draft", "claim": "Player Anomalyはプレイヤー側に発生する状態であり、外部から相互作用を受けるAnomaly Entityと同一視しない。NPCへの万能な会話解決手段にしない。"},
+    {"path": "docs/world/information-design.md", "section": "### 意図的に曖昧にするもの", "source_status": "Status: Draft（草案）", "claim": "NPCがアノマリーをどこまで認識、理解しているかは意図的に曖昧にする。"}
+  ],
+  "design_hypothesis": "戦場の外れを往復して、戦闘で動けなくなった個体を運ぶ通常NPCが1人いる状態を仮定します。目的はその仕事だけです。積んでいる相手や身元は出しません。攻撃を受けると仕事を止めます。この人の正体は作成しません。",
+  "experience": {
+    "goal": "戦闘の外側で、敵味方に関係なく動けなくなったものを扱う判断を発生させる。",
+    "player_choice": "邪魔せず通す／手を出す（時間を使って一本が運ばれる）／荷を落として通す。",
+    "sacrifice_or_risk": "助けた場合の報酬は未確定。放任するとその個体は戻らない（補充の Ideaと結論が異なる未確定点として扱う）。"
+  },
+  "placement_assumption": "SEKIGAHARAは未実装であり、地形・配置は提案しない。運搬路は既存の Idea内の通り道に委ねる。",
+  "components": [
+    {"component": "NPCState", "availability": "catalog", "usage": "運搬NPCの往復と停止の状態をServerが保持する。"},
+    {"component": "Effect.StateChange", "availability": "catalog", "usage": "運搬と攻撃による停止を扱う。"},
+    {"component": "Effect.InformationChange", "availability": "catalog", "usage": "運搬の状況を個人提示として返す（何を運んでいるかは出さない）。"}
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "運搬NPCが外れへ出て、動けなくなった個体を拾って戻る、または攻撃を受ける。",
+      "condition": "運搬中であること、または攻撃ダメージが成立したこと。",
+      "result": "往復の状態が続き、攻撃を受けると仕事を止めて現位置で止まる。",
+      "target": "運搬NPCの個体（Server Run共有）",
+      "scope": "Run共有の個体",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": ["Run終了", "マップ終了"],
+      "end_mode": "any",
+      "end_rule_reason": "停止の解除は置かない。",
+      "stacking": {"exception": false, "rule": "同一個体の遷移はイベントごとに1件。", "conflict_resolution": "他Effectとの順序は共通既定に従う。"},
+      "server_validation": "Serverが移動と攻撃の成立を検証する。",
+      "client_presentation": "個体の移動表現のみ。",
+      "feedback": {"success": "往復が繰り返される。", "failure": "攻撃で仕事が止まる。", "ambiguous": "何を運んでいるかは示さない。"}
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "運搬NPCが Visible を(player Near) 通る。",
+      "condition": "対象が通常のプレイヤーであること。距離の閾値は未定。",
+      "result": "「今、一本を運んでいる」ことを個人提示として返す。内容と相手は出さない。",
+      "target": "見た個人",
+      "scope": "個人",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": ["提示の取得だけなので適用解決"],
+      "end_mode": "any",
+      "end_rule_reason": "即時。取得ごとに解決する。",
+      "stacking": {"exception": false, "rule": "取得ごとに解決する。", "conflict_resolution": "他の提示との競合は保留。"},
+      "server_validation": "Serverが個体の状態と権限を検証する。",
+      "client_presentation": "短い1行のみ。",
+      "feedback": {"success": "1行が出る。", "failure": "いなければ出ない。", "ambiguous": "運ばれているのが敵か味方は示さない。"}
+    }
+  ],
+  "provides_traits": ["戦闘の外側で人間の仕事が回っていることを示せる", "敵味方を区別しない運搬という行為を提示できる"],
+  "connection_tags": ["NPCState", "Combat", "InformationSharing", "Environment"],
+  "refs": [
+    {"target_id": "ROLE-C-009", "kind": "optional_connection", "required_traits": ["戦闘の外側の仕事を拒絶せず扱える"], "fallback": "接続なしでも成立する。見送る・邪魔する・荷を落とすは待機と移動と攻撃で完結する。", "resolution": "reserved_unresolved"}
+  ],
+  "unresolved_refs": [
+    {"target_id": "ROLE-C-009", "required_traits": ["戦闘の外側の仕事を拒絶せず扱える"], "reason": "Cの候補が配布されておらず内容が不明。語彙のみ記録する。", "adoption_blocker": false},
+    {"target_id": null, "required_traits": ["運搬路をどこに設定するかを決める方針"], "reason": "ID未指定の要求。SEKIGAHARAはIdeaで地形が未確定のため、共通設計側の判断が必要。", "adoption_blocker": true}
+  ],
+  "conflicts": [
+    {
+      "source_path": "docs/systems/map-gimmick-ideas.md",
+      "existing_rule": "SEKIGAHARAのNPCは後方から補充され、勢力と戦況ロジックは未決と記されている。",
+      "proposal_difference": "本候補は戦闘個体ではない運搬NPCを1人足す。",
+      "correction": "補充の枠には含めない。戦闘個体とは別の通常NPCとして置く。",
+      "reason_correctable": "既存のIdeaの枠を壊さずに追加できる。",
+      "decision_needed": "戦闘個体と非戦闘NPCを同じ個体系に含めるか分けるか。"
+    }
+  ],
+  "uncertainties": [
+    "運搬周期と1回の本数は未定。数値を決めていない。",
+    "助けた場合の報酬は未確定（新しい報酬は創作しない）。",
+    "SEKIGAHARAは未実装であり、実装の有無は未確認。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "戦闘の中で、敵味方lessly 動けなくなったものを運ぶ仕事をしている人间がいる点。戦いの外側の営みとして描く。",
+    "in_world_rationale": "古い設備が残る文明では、戦場でも後始末の仕事は続く。誰のためかは説明せず、仕事だけを見せる。",
+    "meaning_left_ambiguous": "なぜこの人がそこで働くのか。誰が雇ったのか。運ばれた先はどこなのか。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "通常NPCの状態機械と運搬の往復処理が未実装のため。コード生成の許可ではない。",
+  "new_logic": ["運搬NPCの往復状態と荷物表現", "攻撃による仕事停止"],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "NPC1体と往復動作で試せる。ただし戦闘個体との衝突判定、運搬路、性能影響は未確認。実時間の見積もりは出していない。",
+    "implementation_steps": ["NPC1体を外れに配置する", "往復と停止を実装する", "個人提示の1行を追加する", "戦闘個体との干渉を確認する"],
+    "assumed_existing_parts": ["通常のHPとDamageの受け口", "Server権威のRun状態"]
+  },
+  "role_details": {
+    "npc_purpose": "動けなくなった個体を運ぶ仕事だけの通常NPC。敵味方にも世界のことは話さない。往復と所作だけを見せる。個体数は1体。",
+    "player_anomaly_handling": "判断019によりPlayer Anomalyは通常NPCとInteractionできないため、受け渡しや会話の提示は成立しない。運搬はServerが続けるので、他のプレイヤーが見た内容は他の個人の表示に留まる。",
+    "mob_contract": {
+      "applicable": false,
+      "spawn_condition": "対象外。戦闘枠の補充には含めない（ROLE-A-007とROLE-A-008で扱う）。",
+      "population_cap": "対象外。常駐1体で補充枠を持たない。",
+      "non_combat_response": "対象外。戦闘を設計していない。",
+      "exit_condition": "対象外。退場はRun終了とマップ終了のみ。",
+      "entity_distinction": "通常NPCであり戦闘個体でもAnomaly Entityでもない。Interaction Kindは近接の観測とPresentのみ。"
+    }
+  },
+  "html_file": "ROLE-A-009.html"
+}

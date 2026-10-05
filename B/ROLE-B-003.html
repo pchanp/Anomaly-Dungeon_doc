@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-B-003 日付の書き残し（8/32の日付を紙に写す）</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<p class="sub">overnight-design-pilot-v1 ／ ROLE=B ／ 8/31 ／ Idea</p>
+<h1>ROLE-B-003 日付の書き残し（8/32の日付を紙に写す）— 作業用見出し</h1>
+</header>
+
+<section id="hypothesis">
+<h2>何の案？</h2>
+<p>日付板のそばで使うと、現実には存在しない日付を紙一枚に写せる。持ち帰れるのは証人一枚だけ。</p>
+<h2>仕組み</h2>
+<ul>
+<li>日付板のそばで「書き取る」を選ぶと、紙一枚が自分の手元に残る。</li>
+<li>その場で日付が本人に一度だけ読まれる。HUDには残らない。</li>
+<li>紙だけがRunをまたいで残る。世界の日付や帰還の規則は変わらない。</li>
+</ul>
+<h2>選択と代償</h2>
+<p>紙は何にも使えない。8/32の日付を写したなら、その記録は現実には存在しない일을証明するものになる。</p>
+</section>
+
+<section id="diagram">
+<h2>作用図</h2>
+<div class="board">
+<svg viewBox="0 0 980 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="日付板のそばで書き取る操作により、紙一枚が個人所持に入り次のRunへ持ち越される図。日付の提示は一瞬で消え、世界の状態は変わらず、死亡時は確保枠の外なら紙を失う">
+<rect width="980" height="380" fill="#0a1118"/>
+<rect x="30" y="40" width="230" height="110" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text x="46" y="70" class="label">日付板（既存）</text>
+<text x="46" y="96" class="small">日付変更に合わせて更新</text>
+<text x="46" y="118" class="small">読むだけの場所</text>
+<text x="46" y="140" class="small">2枚がマップ内にある</text>
+<rect x="320" y="40" width="230" height="110" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="336" y="70" class="label">書き取る</text>
+<text x="336" y="96" class="small">日付を紙一枚に写す</text>
+<text x="336" y="118" class="small">本人に一度だけ読ませる</text>
+<text x="336" y="140" class="small">操作は一瞬で終わる</text>
+<rect x="610" y="40" width="340" height="110" rx="8" fill="#142330" stroke="#c4a0ec"/>
+<text x="626" y="70" class="label">紙（永続）</text>
+<text x="626" y="96" class="small">次のRunへ持ち越される</text>
+<text x="626" y="118" class="small">効果はない。何にも使えない</text>
+<text x="626" y="140" class="small">世界の日付は変わらない</text>
+<path d="M262 95 H317" class="active"/>
+<path d="M317 89 l10 6 -10 6" class="active"/>
+<path d="M552 95 H607" class="hyp-line"/>
+<path d="M607 89 l10 6 -10 6" class="hyp-line"/>
+<rect x="320" y="196" width="230" height="96" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text x="336" y="226" class="label">日付の表示</text>
+<text x="336" y="252" class="small">本人に一度だけ出る</text>
+<text x="336" y="274" class="small">後から読み返せない</text>
+<path d="M435 152 V194" class="active"/>
+<path d="M427 186 l8 8 8 -8" class="active"/>
+<rect x="610" y="196" width="340" height="96" rx="8" fill="#142330" stroke="#ea9380"/>
+<text x="626" y="226" class="label">死亡時</text>
+<text x="626" y="252" class="small">確保枠の外なら喪失物</text>
+<text x="626" y="274" class="small">失っても8/32は変わらない</text>
+<path d="M745 152 V194" class="hyp-line"/>
+<path d="M737 186 l8 8 8 -8" class="hyp-line"/>
+<text x="30" y="330" class="small">8/31 も 8/32 も同じ形式で書ける。どちらを写しても警告は出ない。</text>
+<text x="30" y="352" class="small">模式図であり、地図や日付板の配置図ではない。紙の上限とDiscoveryとの関係は未確定。</text>
+</svg>
+</div>
+<p>左の看板で日付を写し、右の紙だけがRunをまたいで残る。</p>
+</section>
+
+<footer>
+<p><a href="index.html">← B候補一覧</a> ／ 詳細データ <a href="ROLE-B-003.json">ROLE-B-003.json</a> ／ connection_tags: Item, Observation ／ requires_code: true ／ 試作コスト: 中</p>
+</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,238 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-003",
+  "role": "C",
+  "title": "水面の道",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "8/31",
+  "classification": "マップ固有",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/current-implementation.md",
+      "section": "実装済みの基盤",
+      "source_status": "Status: Implemented（実装棚卸し）",
+      "claim": "8月31日マップの湖面は円柱を水平に寝かせた円盤で、水面は地形より高く縁は地形で覆われる半径を取る。湖底は湖底の泥、水際は砂、それ以外は草で塗り分ける。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "未実装の境界",
+      "source_status": "Status: Mixed（案ごとに下記）",
+      "claim": "湖とAPARTMENTを結ぶTrailが未実装として列挙されている。8月31日マップの地形と追加植生の作り直しも未実装で、現状は旧生成物を流用している。"
+    },
+    {
+      "path": "docs/systems/anomaly-interaction.md",
+      "section": "Environment Interaction",
+      "source_status": "ステータス: Draft",
+      "claim": "マップ状態、ポータル、時間経過、近接、地形、他アノマリー、パーティ状態など、プレイヤーの単発操作ではない世界側の変化を入力にする相互作用。既存の近接ObserverはExposureを蓄積する環境・近接ベースの仕組みであり、視覚的Observation Interactionとは同一ではない。"
+    },
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "探索系",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "探索系はアイテムスタックの解放、検知、スニークを扱う。ランク1案はロックされたアイテムスタックを解放する開錠。ランク2案のSHADEは直線上を瞬間移動し、経路の相手へ中ダメージと中Stunを与え、不可視となる案である。"
+    }
+  ],
+  "design_hypothesis": "岸から湖面を直進し、対岸への迂回を省く。 岸で進行方向を決め、水面を直進する。 渡行中は通常攻撃と他スキルを使えず、足取りと音が残る。 着岸・制限時間・被弾で終了し、安全な降下位置を検査する。",
+  "experience": {
+    "goal": "岸から湖面を直進し、対岸への迂回を省く。",
+    "player_choice": "岸を回るか、目立つ直線移動を選ぶか。途中停止・被弾時の退避先は採用前に決める。",
+    "sacrifice_or_risk": "岸を回るか、目立つ直線移動を選ぶか。途中停止・被弾時の退避先は採用前に決める。"
+  },
+  "placement_assumption": "既存マップで使用する文脈。配置・建物構造・地形・Questの結末を新設しない。対応対象が未実装なら試作用の対象で確認する。",
+  "components": [
+    {
+      "component": "Effect.Move",
+      "availability": "catalog",
+      "usage": "岸から湖面を直進し、対岸への迂回を省く。"
+    },
+    {
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "岸から湖面を直進し、対岸への迂回を省く。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "Move",
+      "trigger": "装備中に本人が発動入力。岸で進行方向を決め、水面を直進する。",
+      "condition": "岸で進行方向を決め、水面を直進する。 ServerがRun・対象・クールダウンを検査。",
+      "result": "岸で進行方向を決め、水面を直進する。 渡行中は通常攻撃と他スキルを使えず、足取りと音が残る。 着岸・制限時間・被弾で終了し、安全な降下位置を検査する。",
+      "target": "本人",
+      "scope": "同一マップ内の対象限定。共有Quest・出現率・Exposureは変更しない。",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "着岸・制限時間・被弾で終了し、安全な降下位置を検査する。",
+        "マップ離脱",
+        "Run終了",
+        "対象の戦闘不能または切断"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "最初に成立した終了条件で解除し、Runを越えて状態を保存しない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effect・同一対象は非加算の1件。即時結果は一回解決し、重複要求を再適用しない。",
+        "conflict_resolution": "競合する移動・入力制限・観察の適用順は採用前の確認事項。"
+      },
+      "server_validation": "対象・距離・安全な位置・使用状態をServerで検査。個人画面を世界状態の証明にしない。",
+      "client_presentation": "岸から湖面を直進し、対岸への迂回を省く。",
+      "feedback": {
+        "success": "成立・消費・終了を対象本人に表示。",
+        "failure": "不成立の理由を短く表示。効果を付与しない。",
+        "ambiguous": "原因・正体は説明しない。操作の成否は曖昧にしない。"
+      }
+    },
+    {
+      "kind": "RuleOverride",
+      "trigger": "装備中に本人が発動入力。岸で進行方向を決め、水面を直進する。",
+      "condition": "岸で進行方向を決め、水面を直進する。 ServerがRun・対象・クールダウンを検査。",
+      "result": "岸で進行方向を決め、水面を直進する。 渡行中は通常攻撃と他スキルを使えず、足取りと音が残る。 着岸・制限時間・被弾で終了し、安全な降下位置を検査する。",
+      "target": "本人",
+      "scope": "同一マップ内の対象限定。共有Quest・出現率・Exposureは変更しない。",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "着岸・制限時間・被弾で終了し、安全な降下位置を検査する。",
+        "マップ離脱",
+        "Run終了",
+        "対象の戦闘不能または切断"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "最初に成立した終了条件で解除し、Runを越えて状態を保存しない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effect・同一対象は非加算の1件。即時結果は一回解決し、重複要求を再適用しない。",
+        "conflict_resolution": "競合する移動・入力制限・観察の適用順は採用前の確認事項。"
+      },
+      "server_validation": "対象・距離・安全な位置・使用状態をServerで検査。個人画面を世界状態の証明にしない。",
+      "client_presentation": "岸から湖面を直進し、対岸への迂回を省く。",
+      "feedback": {
+        "success": "成立・消費・終了を対象本人に表示。",
+        "failure": "不成立の理由を短く表示。効果を付与しない。",
+        "ambiguous": "原因・正体は説明しない。操作の成否は曖昧にしない。"
+      }
+    }
+  ],
+  "provides_traits": [
+    "岸から湖面を直進し、対岸への迂回を省く。",
+    "岸で進行方向を決め、水面を直進する。",
+    "渡行中は通常攻撃と他スキルを使えず、足取りと音が残る。",
+    "着岸・制限時間・被弾で終了し、安全な降下位置を検査する。"
+  ],
+  "connection_tags": [
+    "Skill",
+    "Environment",
+    "Observation"
+  ],
+  "refs": [
+    {
+      "target_id": "ROLE-A-001",
+      "kind": "optional_connection",
+      "required_traits": [
+        "8/31の湖岸と湖面で起きる出来事をServer確定の共有事実として提示できること"
+      ],
+      "fallback": "A-001が成立しない場合、本候補は既存の湖面と地形だけで成立する。ギミックの追加脱出条件や出現物、報酬を参照しない。",
+      "resolution": "reserved_unresolved"
+    }
+  ],
+  "unresolved_refs": [
+    {
+      "target_id": "ROLE-A-001",
+      "required_traits": [
+        "8/31の湖岸と湖面で起きる出来事をServer確定の共有事実として提示できること"
+      ],
+      "reason": "peer-snapshotsが配布されておらず、A-001は予約枠のままで本文を確認できない。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": null,
+      "required_traits": [
+        "既存の湖面Partsを歩行可能として扱えるかどうかと、水面上を移動できる高さをServer側が決めているかを確認できること"
+      ],
+      "reason": "current-implementation.mdは湖面が円盤で水面が地形より高いと記すだけで、歩行判定と移動可能範囲の記録がない。水位や当たり判定を改造するかは判断できない。",
+      "adoption_blocker": false
+    }
+  ],
+  "conflicts": [
+    {
+      "source_path": "docs/systems/map-gimmick-ideas.md",
+      "existing_rule": "湖とAPARTMENTを結ぶTrailが未実装として列挙されている。マップの作り直しも未実装で、旧生成物を流用している。",
+      "proposal_difference": "本候補はTrailを足すのではなく、既存の湖面をスキルで渡れるようにする。",
+      "correction": "採用する場合は、Trailを追加する判断と水面を渡る判断のどちらを採るかを先に決め、両方を同時に提供しない。既存の未実装リストは変更しない。",
+      "reason_correctable": "地形の造営やTrailの追加には踏み込まず、既存Partsの扱いだけで成立する。",
+      "decision_needed": "湖の横断をTrailの造営で解くか、スキルで解くか。どちらを先にするか。"
+    }
+  ],
+  "uncertainties": [
+    "受付時間・距離・上限・クールダウン・速度などの値は仮案段階。",
+    "レベル差は候補であり、効果量と操作負担を試作して調整する。",
+    "通常スキルとしてのみ扱い、Player Anomalyの専用能力には一般化しない。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "岸から湖面を直進し、対岸への迂回を省く。",
+    "in_world_rationale": "既存の移動・音・観察を通常と異なる条件で操作する候補。成立理由を世界の起源や装置の正体へ結び付けない。",
+    "meaning_left_ambiguous": "なぜこの操作が成立するか。博士の意図・Entityの正体は確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "この候補の入力条件・状態・提示の専用処理は実装記録がなく、新規ロジックが必要。",
+  "new_logic": [
+    "岸から湖面を直進し、対岸への迂回を省く。",
+    "Serverで成立条件と終了を検査する処理",
+    "本人または対象へのFeedback"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "専用入力と状態管理が必要。対象側基盤が未実装なら、その試作費用は別途見積もる。",
+    "implementation_steps": [
+      "単一対象で成立・不成立を確認",
+      "解除とRun終了時の破棄を確認",
+      "複数参加者と競合Effectを確認"
+    ],
+    "assumed_existing_parts": [
+      "既存スキル発動経路",
+      "CharacterとRun参加者の管理"
+    ]
+  },
+  "role_details": {
+    "skill_family": "探索",
+    "rank": null,
+    "rank_rationale": "系統内の候補が揃った時点で比較する。ランク解放条件自体は変更しない。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "岸から湖面を直進し、対岸への迂回を省く。"
+      },
+      {
+        "level": 2,
+        "proposal": "途中で一度だけ方向転換できる。"
+      },
+      {
+        "level": 3,
+        "proposal": "発動前に到達可能な岸の候補を確認できる。"
+      }
+    ],
+    "equipped_slot_policy": "通常スキルの4装備枠のうち1枠。取得ランク条件は既存規則に従い、装備切替時点は未決定。",
+    "normal_attack_link": "通常攻撃からの連携候補。発動中の制限は本案に従い、受付窓・キャンセル時点は未決定。",
+    "avoids": "岸から湖面を直進し、対岸への迂回を省く。",
+    "intervenes_in": "岸で進行方向を決め、水面を直進する。 渡行中は通常攻撃と他スキルを使えず、足取りと音が残る。 着岸・制限時間・被弾で終了し、安全な降下位置を検査する。",
+    "sacrifices": "岸を回るか、目立つ直線移動を選ぶか。途中停止・被弾時の退避先は採用前に決める。",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-003.html"
+}

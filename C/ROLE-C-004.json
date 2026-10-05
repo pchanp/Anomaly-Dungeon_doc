@@ -1,0 +1,299 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-004",
+  "role": "C",
+  "title": "試聴の記録",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "廃TSUTAYA",
+  "classification": "マップ固有",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "Abandoned TSUTAYA",
+      "source_status": "Status: Mixed（案ごとに下記）",
+      "claim": "廃TSUTAYAには個人試聴と共有BGMの使用文脈がある。未閲覧項目の保存UIは本候補の仮説であり、この根拠から確定しない。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "アーカイブと相互作用",
+      "source_status": "Status: Mixed（案ごとに下記）",
+      "claim": "廃TSUTAYAには個人試聴と共有BGMの使用文脈がある。未閲覧項目の保存UIは本候補の仮説であり、この根拠から確定しない。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "未実装の境界",
+      "source_status": "Status: Mixed（案ごとに下記）",
+      "claim": "共有BGMの選択UIは未実装で、現状は固定の音源をループ再生する。個別メディアの実際の内容（映像、音声）は未実装であり、項目は名前と選択結果のみを持つ。Archive Selection UIには一覧、選択、閉じる以外の遷移がない。TSUTAYA独自の異常は未実装である。"
+    },
+    {
+      "path": "docs/systems/current-implementation.md",
+      "section": "実装済みの基盤",
+      "source_status": "Status: Implemented（実装棚卸し）",
+      "claim": "廃TSUTAYAには個人試聴と共有BGMの使用文脈がある。未閲覧項目の保存UIは本候補の仮説であり、この根拠から確定しない。"
+    },
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "探索系",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "探索系はアイテムスタックの解放、検知、スニークを扱う。ランク1案はロックされたアイテムスタックを解放する開錠で、レベルを1上げるごとに成功率が20ポイント上昇する案。ランク2案のSHADEはステルス状態で直線上を瞬間移動し、経路の相手へ中ダメージと中Stunを与え、不可視となる案である。不可視がすべてのAnomaly Entityに通用するかは未決定。"
+    },
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "通常攻撃と連携",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "素手の通常攻撃はワンツーである。4つの装備枠すべてが攻撃系スキルの場合はフルアタック構成となり、ワンツー、アッパー、回し蹴りの4連撃になる。通常攻撃からスキルへ、スキルから別のスキルへ連携できるが、入力受付時間、キャンセル可能時点、硬直、同一スキルの再連携、スタミナ等のコストは未決定。"
+    },
+    {
+      "path": "docs/systems/anomaly-interaction.md",
+      "section": "Sound Interaction",
+      "source_status": "ステータス: Draft",
+      "claim": "音を発した、聞いた、音源の方向や強度を認識したといった音の事実を入力にする相互作用である。実際の音声波形を常時解析することを意味せず、音源の種別、位置、到達範囲、方向、遮蔽、強度など実装するシステムが提供できる文脈だけを使う。BGMや通常の環境音が自動的に相互作用になるわけではない。伝播、遮蔽、同期の方式は未決定。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "解除の既定規則",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "効果は自身に定義された終了条件と保存境界によって解除する。解除手段が明記されていない効果を、別のスキルが汎用的に消せるとは扱わない。"
+    }
+  ],
+  "design_hypothesis": "個人試聴を途中で止め、未閲覧の項目を一件だけ控える。 対応試聴UIに記録候補がある場合だけ使える。 中断時に一件を控え、残りの候補はその試聴では開けない。 控えは本人限定。一度開くかマップを離れると消える。",
+  "experience": {
+    "goal": "個人試聴を途中で止め、未閲覧の項目を一件だけ控える。",
+    "player_choice": "最後まで聴くか、一件を残して切り上げるか。記録操作中は移動と攻撃を止める。",
+    "sacrifice_or_risk": "最後まで聴くか、一件を残して切り上げるか。記録操作中は移動と攻撃を止める。"
+  },
+  "placement_assumption": "既存マップで使用する文脈。配置・建物構造・地形・Questの結末を新設しない。対応対象が未実装なら試作用の対象で確認する。",
+  "components": [
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "個人試聴を途中で止め、未閲覧の項目を一件だけ控える。"
+    },
+    {
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "個人試聴を途中で止め、未閲覧の項目を一件だけ控える。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "InformationChange",
+      "trigger": "装備中に本人が発動入力。対応試聴UIに記録候補がある場合だけ使える。",
+      "condition": "対応試聴UIに記録候補がある場合だけ使える。 ServerがRun・対象・クールダウンを検査。",
+      "result": "対応試聴UIに記録候補がある場合だけ使える。 中断時に一件を控え、残りの候補はその試聴では開けない。 控えは本人限定。一度開くかマップを離れると消える。",
+      "target": "本人",
+      "scope": "同一マップ内の対象限定。共有Quest・出現率・Exposureは変更しない。",
+      "lifetime": "同一マップ中",
+      "resolution": "instant",
+      "end_conditions": [
+        "控えは本人限定。一度開くかマップを離れると消える。",
+        "マップ離脱",
+        "Run終了",
+        "対象の戦闘不能または切断"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "最初に成立した終了条件で解除し、Runを越えて状態を保存しない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effect・同一対象は非加算の1件。即時結果は一回解決し、重複要求を再適用しない。",
+        "conflict_resolution": "競合する移動・入力制限・観察の適用順は採用前の確認事項。"
+      },
+      "server_validation": "対象・距離・安全な位置・使用状態をServerで検査。個人画面を世界状態の証明にしない。",
+      "client_presentation": "個人試聴を途中で止め、未閲覧の項目を一件だけ控える。",
+      "feedback": {
+        "success": "成立・消費・終了を対象本人に表示。",
+        "failure": "不成立の理由を短く表示。効果を付与しない。",
+        "ambiguous": "原因・正体は説明しない。操作の成否は曖昧にしない。"
+      }
+    },
+    {
+      "kind": "RuleOverride",
+      "trigger": "装備中に本人が発動入力。対応試聴UIに記録候補がある場合だけ使える。",
+      "condition": "対応試聴UIに記録候補がある場合だけ使える。 ServerがRun・対象・クールダウンを検査。",
+      "result": "対応試聴UIに記録候補がある場合だけ使える。 中断時に一件を控え、残りの候補はその試聴では開けない。 控えは本人限定。一度開くかマップを離れると消える。",
+      "target": "本人",
+      "scope": "同一マップ内の対象限定。共有Quest・出現率・Exposureは変更しない。",
+      "lifetime": "同一マップ中",
+      "resolution": "instant",
+      "end_conditions": [
+        "控えは本人限定。一度開くかマップを離れると消える。",
+        "マップ離脱",
+        "Run終了",
+        "対象の戦闘不能または切断"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "最初に成立した終了条件で解除し、Runを越えて状態を保存しない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effect・同一対象は非加算の1件。即時結果は一回解決し、重複要求を再適用しない。",
+        "conflict_resolution": "競合する移動・入力制限・観察の適用順は採用前の確認事項。"
+      },
+      "server_validation": "対象・距離・安全な位置・使用状態をServerで検査。個人画面を世界状態の証明にしない。",
+      "client_presentation": "個人試聴を途中で止め、未閲覧の項目を一件だけ控える。",
+      "feedback": {
+        "success": "成立・消費・終了を対象本人に表示。",
+        "failure": "不成立の理由を短く表示。効果を付与しない。",
+        "ambiguous": "原因・正体は説明しない。操作の成否は曖昧にしない。"
+      }
+    }
+  ],
+  "provides_traits": [
+    "個人試聴を途中で止め、未閲覧の項目を一件だけ控える。",
+    "対応試聴UIに記録候補がある場合だけ使える。",
+    "中断時に一件を控え、残りの候補はその試聴では開けない。",
+    "控えは本人限定。一度開くかマップを離れると消える。"
+  ],
+  "connection_tags": [
+    "Skill",
+    "Environment",
+    "Observation"
+  ],
+  "refs": [
+    {
+      "target_id": "ROLE-A-004",
+      "kind": "interaction_loop",
+      "required_traits": [
+        "試聴機とアーカイブ棚の操作がServer側の操作事実として記録され、共有できる",
+        "個人試聴が共有BGMを変更しないという既存の実装事実を崩さずに提示できる"
+      ],
+      "fallback": "A-004が成立しない場合、本候補は試聴機とArchive Selection UIの既存の挙動だけで成立する。NPC、出現物、報酬、退場条件には依存しない。",
+      "resolution": "reserved_unresolved"
+    },
+    {
+      "target_id": "ROLE-B-004",
+      "kind": "optional_connection",
+      "required_traits": [
+        "棚の検索や試聴の結果として残る固有品を、博士Questの直接報酬と区別して扱える"
+      ],
+      "fallback": "B-004が成立しない場合、本候補は記録から物品を生成しない。記録の対象はArchive Selection UIが既に持つ項目名と選択結果に限られる。",
+      "resolution": "reserved_unresolved"
+    }
+  ],
+  "unresolved_refs": [
+    {
+      "target_id": "ROLE-A-004",
+      "required_traits": [
+        "試聴機とアーカイブ棚の操作がServer側の操作事実として記録され、共有できる",
+        "個人試聴が共有BGMを変更しないという既存の実装事実を崩さずに提示できる"
+      ],
+      "reason": "peer-snapshotsが配布されておらず、A-004は予約枠のままで本文を確認できない。要求だけを記載する。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": null,
+      "required_traits": [
+        "個人試聴セッションの開始と終了をServerがイベントとして通知できること",
+        "PreviewDurationによる自動終了とプレイヤーによる中断を区別できること"
+      ],
+      "reason": "current-implementation.mdは個人試聴の存在と一定時間で終わること、共有BGMが変わらないことを記すが、開始と終了をどの経路で通知しているかの記録がない。ID未指定の接続要求として残す。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": null,
+      "required_traits": [
+        "1回の棚検索で返る項目集合を、サーバー側でどう決めているかを観測できること"
+      ],
+      "reason": "1回の検索で全項目は返らないとの記述はあるが、返る集合を決める規則が文書にない。記録できる項目の選定基準を既存の仕様から導けないため、未確定の接続要求として残す。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": "ROLE-B-004",
+      "required_traits": [
+        "棚の検索や試聴の結果として残る固有品を、博士Questの直接報酬と区別して扱える"
+      ],
+      "reason": "接続要求。個別内容との互換性をまだ確認していない。",
+      "adoption_blocker": false
+    }
+  ],
+  "conflicts": [
+    {
+      "source_path": "docs/systems/anomaly-interaction.md",
+      "existing_rule": "Sound Interactionは音源の種別、位置、到達範囲、方向、遮蔽、強度など実装するシステムが提供できる文脈だけを使い、BGMや通常の環境音が自動的に相互作用にはならない。伝播、遮蔽、同期の方式は未決定。",
+      "proposal_difference": "本候補は音の伝播や遮蔽に依存せず、個人試聴セッションの開始と終了というServer側の事実だけを入力にする。",
+      "correction": "採用する場合、音の伝播、遮蔽、同期という未決定の領域に手を入れず、試聴セッションの開始と終了という個別の文脈として記録する。共有BGMの選択UIは未実装のまま維持する。",
+      "reason_correctable": "共有BGMと個人試聴の分離、およびArchive Selection UIの未実装境界を変更しない。候補が作るのは個人記録というUI層の事実だけである。",
+      "decision_needed": "個人試聴をSound Interactionとして記録するか。記録する場合、最小の文脈をどこで定義するか。"
+    },
+    {
+      "source_path": "docs/systems/map-gimmick-ideas.md",
+      "existing_rule": "個別メディアの実際の内容（映像、音声）は未実装であり、項目は名前と選択結果のみを持つ。",
+      "proposal_difference": "本候補は項目の内容を一切作らず、名前と選択結果だけを扱ったまま、再閲覧という到達だけを可能にする。",
+      "correction": "採用する場合もメディアの実内容は追加しない。追加するのは個人記録というUI層の事実だけで、外部作品や商標の扱いは変更しない。",
+      "reason_correctable": "メディアの内容が未実装という境界と、外部作品および商標に関する未決の扱いを変えない。",
+      "decision_needed": "記録した項目を再度開いたとき、何を見せるか（選択結果の再提示か別の表現か）を未実装のまま扱うか、別途決めるか。"
+    }
+  ],
+  "uncertainties": [
+    "受付時間・距離・上限・クールダウン・速度などの値は仮案段階。",
+    "レベル差は候補であり、効果量と操作負担を試作して調整する。",
+    "通常スキルとしてのみ扱い、Player Anomalyの専用能力には一般化しない。",
+    "試聴中に未閲覧項目を選ぶUIは既存の確定仕様ではない。B-004などとの接続時に対象契約が必要。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "個人試聴を途中で止め、未閲覧の項目を一件だけ控える。",
+    "in_world_rationale": "既存の移動・音・観察を通常と異なる条件で操作する候補。成立理由を世界の起源や装置の正体へ結び付けない。",
+    "meaning_left_ambiguous": "なぜこの操作が成立するか。博士の意図・Entityの正体は確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "この候補の入力条件・状態・提示の専用処理は実装記録がなく、新規ロジックが必要。",
+  "new_logic": [
+    "個人試聴を途中で止め、未閲覧の項目を一件だけ控える。",
+    "Serverで成立条件と終了を検査する処理",
+    "本人または対象へのFeedback"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "専用入力と状態管理が必要。対象側基盤が未実装なら、その試作費用は別途見積もる。",
+    "implementation_steps": [
+      "単一対象で成立・不成立を確認",
+      "解除とRun終了時の破棄を確認",
+      "複数参加者と競合Effectを確認"
+    ],
+    "assumed_existing_parts": [
+      "既存スキル発動経路",
+      "CharacterとRun参加者の管理"
+    ]
+  },
+  "role_details": {
+    "skill_family": "探索",
+    "rank": null,
+    "rank_rationale": "系統内の候補が揃った時点で比較する。ランク解放条件自体は変更しない。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "個人試聴を途中で止め、未閲覧の項目を一件だけ控える。"
+      },
+      {
+        "level": 2,
+        "proposal": "控える一件を候補から選べる。"
+      },
+      {
+        "level": 3,
+        "proposal": "対応する別の試聴機からも控えを開ける。"
+      }
+    ],
+    "equipped_slot_policy": "通常スキルの4装備枠のうち1枠。取得ランク条件は既存規則に従い、装備切替時点は未決定。",
+    "normal_attack_link": "通常攻撃からの連携候補。発動中の制限は本案に従い、受付窓・キャンセル時点は未決定。",
+    "avoids": "個人試聴を途中で止め、未閲覧の項目を一件だけ控える。",
+    "intervenes_in": "対応試聴UIに記録候補がある場合だけ使える。 中断時に一件を控え、残りの候補はその試聴では開けない。 控えは本人限定。一度開くかマップを離れると消える。",
+    "sacrifices": "最後まで聴くか、一件を残して切り上げるか。記録操作中は移動と攻撃を止める。",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-004.html"
+}

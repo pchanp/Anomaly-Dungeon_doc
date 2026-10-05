@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-A-002 先の一枚 — 8/31の日付板2枚</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+<p class="sub">overnight-design-pilot-v1 ／ ROLE-A-002 ／ 8/31（マップ固有）／ GimmickEvent</p>
+<h1>先の一枚 — 8/31の日付板2枚</h1>
+<p>既存の2枚の日期板のうち片方だけが先に更新され、その差が進行の順序の手掛かりになる。</p>
+<div class="badges"><span class="badge hyp">Draft</span><span class="badge">unreviewed</span><span class="badge unknown">先行する板は未定</span></div>
+<nav class="nav"><a href="index.html">← 一覧</a><a href="ROLE-A-002.json">同IDのJSON</a></nav>
+</header>
+
+<section id="hypothesis">
+<h2>何の案か</h2>
+<p>同じマップにある2枚の日期板のうち、1枚だけが先に更新される。</p>
+<ul>
+<li>板を1枚読むと、その値が個人へ1行で出る。単位も基準も残秒も出さない。</li>
+<li>2枚を別々に読むと、どちらが先に進んだかを読み取れる。</li>
+<li>残り時間の表示はしない。フェーズ長は未確定値なので、導出しない。</li>
+</ul>
+<p><strong>選択と代償:</strong> 2枚とも読む／片方だけ読む／読まずに進む。差を読んでも意味は説明されないので、返るのは進行の順序だけになる。</p>
+<p class="sub">接続タグ: Observation / Environment / AugustPhase ／ requires_code: true ／ conflicts 1件・未解決1件（JSONに記載）</p>
+</section>
+
+<section id="diagram">
+<h2>仕組みの図</h2>
+<div class="board">
+<svg viewBox="0 0 1000 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="日付板2枚のうち片方だけが先に更新され、2枚を別に読んだ個人だけが差を読めることを示す図">
+<rect width="1000" height="330" fill="#0a1118"/>
+<text class="label" x="24" y="28">既存の2枚（数を増やさない）</text>
+<text class="label" x="600" y="28">個人に返るもの</text>
+<rect x="24" y="52" width="200" height="90" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="label" x="38" y="84">板A</text>
+<text class="small" x="38" y="110">先に更新される（仮）</text>
+<rect x="248" y="52" width="200" height="90" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="262" y="84">板B</text>
+<text class="small" x="262" y="110">遅れて更新される（仮）</text>
+<path d="M124 142v34" class="hyp-line"/>
+<path d="M124 176l-6-9h12z" fill="#d3b653"/>
+<path d="M348 142v34" class="hyp-line"/>
+<path d="M348 176l-6-9h12z" fill="#d3b653"/>
+<rect x="24" y="186" width="424" height="70" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="38" y="216">既存の更新：日付変更／帰還面の開放など</text>
+<text class="small" x="38" y="240">先行する板はRun開始時に決めてよい</text>
+<path d="M452 221h140" class="active"/>
+<path d="M586 215l9 6-9 6" class="active"/>
+<rect x="600" y="150" width="376" height="106" rx="8" fill="#142330" stroke="#d3b653"/>
+<text class="label" x="614" y="180">2枚を別に読む</text>
+<text class="small" x="614" y="206">差＝進行の順序だけを読める</text>
+<text class="small" x="614" y="230">意味、基準、残り時間は出さない</text>
+<text class="small" x="24" y="292">この図で分かること：差を読むという行為だけが情報を生む。板の数や地形は増やさない。</text>
+<text class="small" x="24" y="314">この図で確定しないこと：どちらが先行するか、遅れの長さ、板の正確な表示仕様。</text>
+</svg>
+</div>
+<p>図注：同じ情報の2枚がずれるとき、比較する行為だけが順序の手掛かりになる。</p>
+</section>
+
+<footer>overnight-design-pilot-v1 ／ ROLE-A-002 ／ 実表示は未確認（担当セッションでブラウザを使用していない）。</footer>
+</main>
+</body>
+</html>

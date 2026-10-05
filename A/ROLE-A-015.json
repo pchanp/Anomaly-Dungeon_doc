@@ -1,0 +1,117 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-015",
+  "role": "A",
+  "title": "最後の数え — 終了直前の静けさ",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "GimmickEvent",
+  "source_evidence": [
+    {"path": "docs/systems/game-rules.md", "section": "## Runの終了と寿命", "source_status": "Status: Draft（草案）", "claim": "Runの終了はReturn、戦闘不能、異常化、マップや世界による終了、プレイヤー行動による終了候補を持つ。"},
+    {"path": "docs/systems/effect-components.md", "section": "## 作用範囲と保存境界", "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）", "claim": "保存境界は永続、同一Run中、同一マップ中、一時で、終了条件のいずれかが成立したら解除する。"},
+    {"path": "docs/world/information-design.md", "section": "### 意図的に曖昧にするもの", "source_status": "Status: Draft（草案）", "claim": "アノマリー発生の原因や世界の歴史は説明しすぎない。"}
+  ],
+  "design_hypothesis": "Runの終盤に連続する段階を、世界側の小さな変化として数えるだけの状態を仮定します。数えるのは段階の順番のみで、残り時間でも終了理由でもありません。新たな個体も発生も出しません。",
+  "experience": {
+    "goal": "Runの終盤に、何も起こらない時間が流れていることを知らせる。",
+    "player_choice": "その時間を探索に使う／段階を読みにいく。",
+    "sacrifice_or_risk": "段階の意味は説明されない。誤読しても終了条件にはならない。"
+  },
+  "placement_assumption": "全マップ共通のRunイベントとして扱い、選択中のマップの地形や配置には依存しない。新しい小物は増やさない。",
+  "components": [
+    {"component": "Effect.WorldChange", "availability": "catalog", "usage": "Run全体の段階状態をRun共有で更新する。"},
+    {"component": "Effect.InformationChange", "availability": "catalog", "usage": "段階だけを個人提示として返す。残秒は出さない。"},
+    {"component": "RunPhaseCounter", "availability": "proposed", "usage": "終了へ向かう段階をServerで数える。定義と長さは未定。"}
+  ],
+  "effects": [
+    {
+      "kind": "WorldChange",
+      "trigger": "Runの連続の段階が進む。",
+      "condition": "選択中のマップが本候補を許可すること。段階の定義と長さは未定。",
+      "result": "Run全体の段階が1つ進む。個人への報酬はない。",
+      "target": "Run全体の段階",
+      "scope": "Run全体",
+      "lifetime": "同一Run中",
+      "resolution": "sustained",
+      "end_conditions": ["Run終了"],
+      "end_mode": "any",
+      "end_rule_reason": "Runの終わりに破棄する",
+      "stacking": {"exception": false, "rule": "段階は1つ進む。累計しない。", "conflict_resolution": "他のRun進行表示との競合は未確定のため保留"},
+      "server_validation": "Serverが段階を確定する",
+      "client_presentation": "段階表現のみ（環境の変化）",
+      "feedback": {"success": "段階が進む", "failure": "進む場合は更新される", "ambiguous": "何を数えているかは説明しない"}
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "対象へ段階の表示が更新される。",
+      "condition": "対象が通常のプレイヤーであること。範囲は未定。",
+      "result": "段階だけを個人提示として返す。残秒も終了理由も出さない。",
+      "target": "対象個人",
+      "scope": "個人",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": ["段階が変わる", "提示範囲外へ出る", "Run終了"],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかで閉じる",
+      "stacking": {"exception": false, "rule": "同一対象は非加算1件", "conflict_resolution": "他の進行提示との競合は保留"},
+      "server_validation": "Serverが段階を検証する",
+      "client_presentation": "短い1行のみ",
+      "feedback": {"success": "段階が更新される", "failure": "変化しない場合は出ない", "ambiguous": "終了理由は表示しない"}
+    }
+  ],
+  "provides_traits": ["Run全体の進行を個人提示として落とせる", "残秒を出さずに終盤の空気を作れる"],
+  "connection_tags": ["WorldChange", "InformationChange", "Environment"],
+  "refs": [
+    {"target_id": "ROLE-C-015", "kind": "optional_connection", "required_traits": ["進行の提示を判断の材料にできる"], "fallback": "接続なしでも成立する。Cの候補が無くても提示は残る。", "resolution": "reserved_unresolved"}
+  ],
+  "unresolved_refs": [
+    {"target_id": "ROLE-C-015", "required_traits": ["進行の提示を判断の材料にできる"], "reason": "Cの候補が配布されておらず内容が不明。語彙のみ記録する。", "adoption_blocker": false},
+    {"target_id": null, "required_traits": ["段階の定義と長さを決める方針"], "reason": "ID未指定の要求。終了条件の既存設計と重なるため共通設計側の判断が必要。", "adoption_blocker": true}
+  ],
+  "conflicts": [
+    {
+      "source_path": "docs/decisions/003-august-31-time-and-phase-design.md",
+      "existing_rule": "8/31のフェーズ長は実測調整前の値であり確定値ではない。終了条件の候補は未確定と記されている。",
+      "proposal_difference": "本候補はRun全体の段階を数えて提示する。",
+      "correction": "既存のフェーズ長やRunの寿命から残秒を導出しない。段階の定義は既存の終了条件と切り離す。",
+      "reason_correctable": "既存の値を使わなければ未確定値を確定値として見せる副作用は起きない。",
+      "decision_needed": "段階の提示を終盤の手掛かりとして認めてよいか。"
+    }
+  ],
+  "uncertainties": [
+    "段階の数と長さは未定。数値を決めていない。",
+    "終了条件と重なる場合の扱いは未確定",
+    "各マップで常時成立するかの判断は未検証"
+  ],
+  "worldview": {
+    "defamiliarized_element": "終盤の時間を残秒ではなく、段階として示す点。説明ではなく段階だけを見せる。",
+    "in_world_rationale": "古い設備が残る文明では、進み方が数字ではなく段階として見えることがある。誰が数えているかは説明しない。",
+    "meaning_left_ambiguous": "何を数えているのか。誰が数えているのか。この段階が何を意味するのか。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "Run全体の段階をServerで持ち、個人提示する経路が存在しないため。コード生成の許可ではない。",
+  "new_logic": ["Run段階のServer管理", "段階だけを返す個人提示"],
+  "prototype_cost": {
+    "band": "小",
+    "rationale": "段階1つの管理と提示1行で試せる。既存のRun進行との重複を避ける調整が要る。実時間の見積もりは出していない。",
+    "implementation_steps": ["段階のServer管理を入れる", "提示を個人へ送る", "残秒を出さないことを確認する", "各マップで成立するかを確認する"],
+    "assumed_existing_parts": ["Runの状態機械", "既存の終了集約処理"]
+  },
+  "role_details": {
+    "npc_purpose": "NPCを含まない。Runの段階を数えるだけ。人物も目的も登場しない。",
+    "player_anomaly_handling": "Run全体の提示なので対象全体で成立する。NPCとのInteractionではない。",
+    "mob_contract": {
+      "applicable": false,
+      "spawn_condition": "対象外。湧きも補充も扱わない。",
+      "population_cap": "対象外。個体数を増やさない。",
+      "non_combat_response": "対象外。戦闘がない。",
+      "exit_condition": "対象外。湧きや自然消滅の機構がない。",
+      "entity_distinction": "進行の提示であり、Anomaly EntityでもNPCでもモブでもない。"
+    }
+  },
+  "html_file": "ROLE-A-015.html"
+}

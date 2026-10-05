@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-B-004 未整理ケースの1本（個人試聴か共有BGMか）</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<p class="sub">overnight-design-pilot-v1 ／ ROLE=B ／ 廃TSUTAYA ／ Draft</p>
+<h1>ROLE-B-004 未整理ケースの1本（個人試聴か共有BGMか）— 作業用見出し</h1>
+</header>
+
+<section id="hypothesis">
+<h2>何の案？</h2>
+<p>再生を1本の「運べる品」にして、应当在自分で聴くか店内へ出すかを先に選ばせる案。</p>
+<h2>仕組み</h2>
+<ul>
+<li>試聴機で個人試聴すると、本人だけが試聴時間だけ聴ける。共有BGMは変わらず、手元にも残る。</li>
+<li>同じ品をCRTや店内放送へ提示すると、店全体で聴く音が変わる。Run中は続く。</li>
+<li>提示が確定した時点で、その品は消費される。Runが終わっても自分には戻らない。</li>
+</ul>
+<h2>選択と代償</h2>
+<p>公開すれば音の網は得られるが、出所も理由も説明できないまま届き続ける。個人試聴だけなら安全だが、その差はRun中ずっと残る。</p>
+</section>
+
+<section id="diagram">
+<h2>作用図</h2>
+<div class="board">
+<svg viewBox="0 0 980 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="所持した1本の媒体から、試聴機を通じた個人試聴と、共有再生経路を通じた共有BGMの差し替えが分かれる図。個人試聴は他者には届かないが共有音も変わらず、共有へ出した場合は媒体が消費されてRun中に戻せない">
+<rect width="980" height="470" fill="#0a1118"/>
+<rect x="30" y="140" width="200" height="130" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="46" y="170" class="label">所持 1枠</text>
+<text x="46" y="196" class="small">個人インベントリ</text>
+<text x="46" y="218" class="small">Secure Slot なら</text>
+<text x="46" y="240" class="small">死亡に耐えられる</text>
+<text x="46" y="262" class="small">ただし公開機会は捨てる</text>
+<path d="M232 200 H258" class="active"/>
+<path d="M260 194 l10 6 -10 6" class="active"/>
+<circle cx="270" cy="200" r="4" fill="#70c9c3"/>
+<path d="M270 200 V120 H322" class="active"/>
+<path d="M320 114 l10 6 -10 6" class="active"/>
+<rect x="330" y="70" width="250" height="100" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text x="346" y="100" class="label">試聴機 個人試聴</text>
+<text x="346" y="126" class="small">試聴時間で自動終了</text>
+<text x="346" y="148" class="small">他者には何も届かない</text>
+<path d="M270 200 V290 H322" class="hyp-line"/>
+<path d="M320 284 l10 6 -10 6" class="hyp-line"/>
+<rect x="330" y="240" width="250" height="100" rx="8" fill="#142330" stroke="#d3b653"/>
+<text x="346" y="270" class="label">共有再生経路</text>
+<text x="346" y="296" class="small">CRT や店内放送など</text>
+<text x="346" y="318" class="small">既存の装置だけを使う</text>
+<path d="M582 120 H618" class="active"/>
+<path d="M618 114 l10 6 -10 6" class="active"/>
+<rect x="630" y="70" width="330" height="100" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="646" y="100" class="label">個人提示 InformationChange</text>
+<text x="646" y="126" class="small">本人にだけ閉じる</text>
+<text x="646" y="148" class="small">共有BGM は変化しない</text>
+<path d="M582 290 H618" class="hyp-line"/>
+<path d="M618 284 l10 6 -10 6" class="hyp-line"/>
+<rect x="630" y="240" width="330" height="100" rx="8" fill="#142330" stroke="#c4a0ec"/>
+<text x="646" y="270" class="label">共有BGM差替 WorldChange</text>
+<text x="646" y="296" class="small">Run 全体で同じ音を共有</text>
+<text x="646" y="318" class="small">Run終了で破棄する</text>
+<path d="M795 340 V352" class="hyp-line"/>
+<path d="M787 346 l8 8 8 -8" class="hyp-line"/>
+<rect x="630" y="354" width="330" height="60" rx="8" fill="#142330" stroke="#ea9380"/>
+<text x="646" y="380" class="label">公開不可の消費 StateChange</text>
+<text x="646" y="402" class="small">HUDから消え、Run中に戻せない</text>
+<text x="30" y="440" class="small">個人試聴は共有BGMを変えない。提示すると共有音がRun全体に変わる。公開は撤回できない。</text>
+<text x="30" y="460" class="small">作用の分岐の模式図であり、地図や装置の配置図ではない。音源は未選定。</text>
+</svg>
+</div>
+<p>左が所持。上下の二股が個人試聴と店内公開で、右がその帰結。</p>
+</section>
+
+<footer>
+<p><a href="index.html">← B候補一覧</a> ／ 詳細データ <a href="ROLE-B-004.json">ROLE-B-004.json</a> ／ connection_tags: Item, Sound, Interface ／ requires_code: true ／ 試作コスト: 中</p>
+</footer>
+</main>
+</body>
+</html>
