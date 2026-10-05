@@ -1,0 +1,200 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-031",
+  "role": "C",
+  "title": "落としの音",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "系統・ランク・レベル",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "通常スキルは4系統、4装備枠、レベル1〜3。系統別の固定枠ではない。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "Effectの種別",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "Effectは結果の変化で分類し、対象・保存境界・終了条件を分ける。"
+    },
+    {
+      "path": "docs/systems/observation-and-recognition.md",
+      "section": "役割と境界",
+      "source_status": "Status: Draft（草案）",
+      "claim": "Detect・Observe・Visible・Recognitionを区別し、後続効果は個別案が定める。"
+    }
+  ],
+  "design_hypothesis": "通常攻撃で頭上に吊り下がった物体の支えを切り、落下物でその地点を数秒間塞ぎ、着地点の通常モブを一時的に停止する。落下物は回収せず、その場に残る。吊り下がり物体の存在は既存の配置規約の範囲内で想定し、新地形は提案しない。",
+  "experience": {
+    "goal": "正面の通常モブ群と交わらず、通路を塞いで通り抜ける体験",
+    "player_choice": "落下させる地点とタイミングを選ぶ。通路を塞ぐか、モブを止めるか、両方に使うかを判断する",
+    "sacrifice_or_risk": "通常攻撃1回を消費し、落下物は自分の通行も塞ぐ。落下物の下にいると自分も停止する"
+  },
+  "placement_assumption": "配置は未定。吊り下がり物体が存在する既存ルームのpoint規約の範囲内で想定。新地形・新部屋は提案しない",
+  "components": [
+    {
+      "component": "SkillActivation",
+      "availability": "catalog",
+      "usage": "通常攻撃の命中を発動入力に使う。既存のスキル発動経路の範囲内"
+    },
+    {
+      "component": "PlacementContext",
+      "availability": "catalog",
+      "usage": "吊り下がり物体の配置pointを既存規約の範囲内で検査する"
+    },
+    {
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "結果のWorldChangeを分類する。"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "WorldChange",
+      "trigger": "通常攻撃が吊り下がり物体の支えに命中したとき",
+      "condition": "頭上にServerが確認した吊り下がり物体があり、通常攻撃の射程内にある",
+      "result": "落下物で地点を仮値5秒間塞ぐ。",
+      "target": "着地地点と、その地点にいた通常モブ",
+      "scope": "Run全体",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": [
+        "仮値5秒の経過",
+        "Run終了",
+        "マップ離脱"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかが成立すれば解除する既定規則。通行不能の解除は時間経過を主とする。",
+      "stacking": {
+        "exception": false,
+        "rule": "即時イベントごとに解決する。同一地点への再落下は上書きせず、既存の通行不能の残り時間を更新する。",
+        "conflict_resolution": "別Effectとの競合は、解決規則を定めるまで保留して記録する。"
+      },
+      "server_validation": "Serverが支えへの命中、吊り下がり物体の存在、着地地点の安全性を検査する。不成立時は通常攻撃として解決する。 対象は対応通常モブ・環境に限定。Entity・Player Anomalyの固有ルールを汎用解除しない。",
+      "client_presentation": "落下音と物体の着地は共有表現する。停止時間は個人に出さず、世界の状態として読む。",
+      "feedback": {
+        "success": "落下音とともに通路が塞がれ、着地点のモブが止まる",
+        "failure": "支えに命中しなければ通常攻撃として解決する",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "通常攻撃が吊り下がり物体の支えに命中したとき",
+      "condition": "対象と動作条件を満たす",
+      "result": "着地点の対応通常モブを仮値3秒停止する。",
+      "target": "着地点の対応通常モブ",
+      "scope": "Run全体",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "仮値3秒経過",
+        "対象喪失",
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "いずれか成立で終了。",
+      "stacking": {
+        "exception": false,
+        "rule": "即時効果はイベントごと。持続効果は同一対象に非加算1件。",
+        "conflict_resolution": "同じ値への競合適用は保留。"
+      },
+      "server_validation": "Serverが対象・距離・衝突・発動状態を検証する。",
+      "client_presentation": "成立した動作と終了を本人へ提示する。",
+      "feedback": {
+        "success": "動作と作用対象が見える。",
+        "failure": "不成立なら動作を適用せず短い反応を返す。",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    }
+  ],
+  "provides_traits": [],
+  "connection_tags": [
+    "SkillActivation",
+    "SoundInteraction",
+    "Environment"
+  ],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": [
+    "吊り下がり物体の全マップでの存在可否",
+    "通行停止とモブ停止の仮値",
+    "落下物がAnomaly Entityへ効くか"
+  ],
+  "worldview": {
+    "defamiliarized_element": "攻撃の対象が敵でなく、環境の「支え」であること",
+    "in_world_rationale": "既存の通常攻撃が物体に命中する経路を、落下のトリガーとして再利用するだけ。物体の材質や吊り方は各マップの配置規約に従う。",
+    "meaning_left_ambiguous": "落下物がなぜその場に吊り下がっていたかは説明しない",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "本案固有の対象判定・状態遷移・提示を追加する必要がある。実装許可ではない。",
+  "new_logic": [
+    "吊り下がり物体の支え判定",
+    "落下物の一時通行不能化",
+    "通常モブの一時停止"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "物体の落下と通行不能化は既存の物理と状態遷移で試作できるが、支え判定と停止範囲の検証が要る",
+    "implementation_steps": [
+      "吊り下がり物体のModel化と支えPartの定義",
+      "支えPartへの命中検査",
+      "落下と着地のWorldChange",
+      "通行不能領域の仮設と解除"
+    ],
+    "assumed_existing_parts": [
+      "通常攻撃の命中経路",
+      "PlacementContextのpoint規約"
+    ]
+  },
+  "role_details": {
+    "skill_family": "アクション",
+    "rank": 2,
+    "rank_rationale": "ランクは試作上の仮案。既定の解放条件は変更しない。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "落下物で仮値5秒間の通行停止。着地点のモブ停止は仮値3秒"
+      },
+      {
+        "level": 2,
+        "proposal": "通行停止を仮値7秒へ延長。モブ停止を仮値4秒へ延長する案"
+      },
+      {
+        "level": 3,
+        "proposal": "落下時に足元の音を出さない案。停止時間はレベル2準拠"
+      }
+    ],
+    "equipped_slot_policy": "通常スキルとして4装備枠のうち1枠を使う。系統別の固定枠は設けない。",
+    "normal_attack_link": "通常攻撃の命中を発動に使う。通常攻撃→本スキルの連携を前提に、命中判定を流用する",
+    "avoids": "正面の通常モブ群、直接交戦",
+    "intervenes_in": "通路の通行可否、通常モブの一時停止",
+    "sacrifices": "通常攻撃1回、落下物の回収不能、自分の通行も塞がる",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-031.html"
+}

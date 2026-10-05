@@ -1,0 +1,180 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-038",
+  "role": "A",
+  "title": "追い越しの規則",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "MobEnemy",
+  "source_evidence": [
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "Effectの種別",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "Effectは結果の変化で分類し、対象・保存境界・終了条件を分ける。"
+    },
+    {
+      "path": "docs/world/information-design.md",
+      "section": "中心原則",
+      "source_status": "Status: Draft（草案）",
+      "claim": "ルールは明確、意味は曖昧。NPCは目的を持って行動し、世界の真相を解説しない。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "マップ設計原則",
+      "source_status": "Status: Mixed（案ごとに下記）",
+      "claim": "マップ文脈を基盤システムに接続する。新しい地形や正式配置は本案で確定しない。"
+    }
+  ],
+  "design_hypothesis": "同じ枠の通常モブ2体がプレイヤーを追跡するとき、先行する一体だけが攻撃を始める状態を仮定する。後続の一体は一定距離を保って待つ。先行一体を退けると、後続が攻撃側を引き継ぐ。交代の判定距離と待機距離は未定。地形・部屋・正式配置は追加しない。",
+  "experience": {
+    "goal": "二体制の追跡で、攻撃側を交代させる間合いの選択",
+    "player_choice": "先行一体を退けて後続を交代させるか、二体の距離を保って先を急ぐかを選ぶ",
+    "sacrifice_or_risk": "先行一体を退けても後続が攻撃側を引き継ぐため、戦闘は続く。間合いだけが変わる"
+  },
+  "placement_assumption": "既存の湧き枠のある区画を想定。2体の配置点は既存規約の範囲内で、正式配置は確定しない",
+  "components": [
+    {
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "先行・後続の役割と交代の挙動"
+    },
+    {
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "追跡と距離の判定"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "2体がプレイヤーを追跡しているとき",
+      "condition": "先行一体と後続一体の両方が追跡中の場合のみ",
+      "result": "先行一体だけが攻撃を始める",
+      "target": "先行一体",
+      "scope": "ServerのRun事実",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "先行一体の退場",
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかで解除する既定規則。",
+      "stacking": {
+        "exception": false,
+        "rule": "持続同一Effectは非加算1件。攻撃側は常に一体だけ",
+        "conflict_resolution": "別Effectとの競合は、解決規則を定めるまで保留して記録する。"
+      },
+      "server_validation": "Serverが2体の追跡状態と先行・後続の役割を確認する。片方しか追跡していなければ役割は成立しない 通常プレイヤーのNPC接触のみ受理し、Player AnomalyのNPC Interactionは禁止。NPC案の場合に適用。",
+      "client_presentation": "先行一体だけが攻撃する様子を共有して見せる。役割の表示はしない",
+      "feedback": {
+        "success": "先行一体が攻撃を始める",
+        "failure": "通常どおり二体が行動する",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "先行一体を退けたとき",
+      "condition": "後続一体が追跡を続けている場合のみ",
+      "result": "後続が攻撃側を引き継ぎ、一定距離を保っていた待機を終える。役割を入れ替える",
+      "target": "後続一体",
+      "scope": "ServerのRun事実",
+      "lifetime": "同一マップ中",
+      "resolution": "instant",
+      "end_conditions": [
+        "役割の入れ替え完了",
+        "後続の退場",
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかで状態が完了する既定規則。",
+      "stacking": {
+        "exception": false,
+        "rule": "交代は退場ごとにイベントごと適用。攻撃側は常に一体だけ",
+        "conflict_resolution": "別Effectとの競合は、解決規則を定めるまで保留して記録する。"
+      },
+      "server_validation": "Serverが先行一体の退場と後続の追跡継続を確認する。後続も退場していれば交代は起こらない 通常プレイヤーのNPC接触のみ受理し、Player AnomalyのNPC Interactionは禁止。NPC案の場合に適用。",
+      "client_presentation": "後続一体が攻撃側へ移る様子を共有して見せる。役割の表示はしない",
+      "feedback": {
+        "success": "後続が攻撃を始める",
+        "failure": "攻撃側がいなくなる",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    }
+  ],
+  "provides_traits": [],
+  "connection_tags": [
+    "NPCState",
+    "Observation"
+  ],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": [
+    "交代の判定距離は未定",
+    "後続の待機距離は未定",
+    "2体を超える枠でも役割分担が成立するかは未定",
+    "通常モブの配置・上限・索敵は候補上の仮説。既存実装と見なさない。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "追跡が「役割分担」で動く異化。異化しない理由はない",
+    "in_world_rationale": "先に来た者だけが声をかける番の仕組みは、役割を持つだけの存在として既存世界観の範囲で成立し得る",
+    "meaning_left_ambiguous": "2体が同じ目的を持つか、交代の理由は確定しない",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "本案固有の対象判定・状態遷移・提示を追加する必要がある。実装許可ではない。",
+  "new_logic": [
+    "先行・後続の役割管理",
+    "退場時の役割交代"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "役割管理と交代の判定が必要。地形・部屋の追加は不要",
+    "implementation_steps": [
+      "役割の初期化",
+      "攻撃側の制限",
+      "退場の検知",
+      "役割の交代"
+    ],
+    "assumed_existing_parts": [
+      "NPCState",
+      "Observation"
+    ]
+  },
+  "role_details": {
+    "npc_purpose": "対象外理由：本案はイベント発生モブ案であり、目的を持つ通常NPCは登場しない",
+    "player_anomaly_handling": "判断019に従いPlayer AnomalyとはInteractionしない。2体はPlayer Anomalyを通常の追跡対象として扱う",
+    "mob_contract": {
+      "applicable": true,
+      "spawn_condition": "局所ギミックへの接近で一度だけ発生する候補。再発生はしない。",
+      "population_cap": "イベントごとに少数、Serverが通常モブ用の上限を管理する新規仮説。Anomaly Entityの枠は消費しない。",
+      "non_combat_response": "追跡中、先行一体だけが攻撃を始める。後続一体は一定距離を保って待つ。索敵の起点を他の個体へ共有しない",
+      "exit_condition": "撃破、追跡不能が一定時間継続、マップ離脱、Run終了のいずれか。時間・数は未定。",
+      "entity_distinction": "局所イベントから発生する通常モブ。Anomaly Entityの固有Interaction・出現枠やPlayer AnomalyのRuntimeを持たない。"
+    }
+  },
+  "html_file": "ROLE-A-038.html"
+}

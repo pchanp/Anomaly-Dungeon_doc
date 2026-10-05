@@ -1,0 +1,176 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-032",
+  "role": "C",
+  "title": "踏み鳴らし",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "系統・ランク・レベル",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "通常スキルは4系統、4装備枠、レベル1〜3。系統別の固定枠ではない。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "Effectの種別",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "Effectは結果の変化で分類し、対象・保存境界・終了条件を分ける。"
+    },
+    {
+      "path": "docs/systems/anomaly-interaction.md",
+      "section": "Sound Interaction",
+      "source_status": "ステータス: Draft",
+      "claim": "音源の位置・種別・方向・到達範囲など、提供できる文脈を入力に使う。"
+    }
+  ],
+  "design_hypothesis": "足を踏み鳴らし、一定範囲の通常モブの狙いを自分の位置へ変えてから、指定した方向へ誘導する。発動中は動けない。音による誘引はSoundInteractionの入力を、追跡対象の変更はStateChangeの候補として記録する。",
+  "experience": {
+    "goal": "追いかけてくる複数のモブを、退路の反対へ誘い出す体験",
+    "player_choice": "踏み鳴らす位置と、誘導する方向を選ぶ。誘導後に反対へ回り込むか、そのまま離れるかを判断する",
+    "sacrifice_or_risk": "発動中は動けず、自分の位置が範囲内の全モブに知れる。誘導先の地形は自分も読めない"
+  },
+  "placement_assumption": "配置は未定。音が届く既存の通路・部屋の範囲内で想定。新地形は提案しない",
+  "components": [
+    {
+      "component": "SoundInteraction",
+      "availability": "catalog",
+      "usage": "足踏みの音源を、モブの狙いの入力に使う"
+    },
+    {
+      "component": "SkillActivation",
+      "availability": "catalog",
+      "usage": "スキル発動の入力受付と、発動中の移動禁止を扱う"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "足踏みの入力",
+      "condition": "発動範囲（仮値15メートル）内に通常モブがいる",
+      "result": "範囲内の通常モブの追跡対象を自分の位置へ変更し、指定した方向へ仮値6秒間誘導する。発動中は移動できない",
+      "target": "発動範囲内の通常モブ",
+      "scope": "Run共有（Serverが確定）",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "誘導時間の経過（仮値6秒）",
+        "モブとの交戦",
+        "発動者の移動入力",
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかが成立すれば解除する既定規則。移動入力での即解除を主とする。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effect・同一対象は非加算1件。再発動は残り時間を更新する。",
+        "conflict_resolution": "別Effectとの競合は、解決規則を定めるまで保留して記録する。"
+      },
+      "server_validation": "Serverが発動位置、範囲内のモブ、発動中の移動入力を検査する。移動入力があれば即解除する。 対象は対応通常モブ・環境に限定。Entity・Player Anomalyの固有ルールを汎用解除しない。",
+      "client_presentation": "足踏みの音は共有表現する。誘導中のモブの向きは世界の状態として表現する。誘導された個数は個人に出さない。",
+      "feedback": {
+        "success": "足踏みの音とともに、モブがこちらへ向きを変える",
+        "failure": "範囲内にモブがいないと、音だけが残る",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    }
+  ],
+  "provides_traits": [],
+  "connection_tags": [
+    "SoundInteraction",
+    "SkillActivation",
+    "Observation"
+  ],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": [
+    "音の伝播方式と範囲",
+    "誘導中のモブの挙動と交戦の優先順位",
+    "Anomaly Entityへの効果"
+  ],
+  "worldview": {
+    "defamiliarized_element": "足音が敵の「狙い」を書き換えること",
+    "in_world_rationale": "既存のSoundInteractionが音源の位置と強度を入力にできることを、モブの追跡対象変更へ接続する案。音の伝播方式は未定。",
+    "meaning_left_ambiguous": "モブがなぜ足踏みに従うかは説明しない",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "本案固有の対象判定・状態遷移・提示を追加する必要がある。実装許可ではない。",
+  "new_logic": [
+    "追跡対象の指定変更",
+    "発動中の移動禁止",
+    "誘導方向の入力"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "音の入力と追跡の切り替えはSoundInteractionとモブAIの接続で試作できるが、誘導挙動の検証が要る",
+    "implementation_steps": [
+      "足踏みの音源の登録",
+      "範囲内のモブの追跡対象変更",
+      "誘導方向の入力と時間管理",
+      "発動中の移動入力の検査"
+    ],
+    "assumed_existing_parts": [
+      "SoundInteractionの音源入力",
+      "通常モブの追跡状態"
+    ]
+  },
+  "role_details": {
+    "skill_family": "補助",
+    "rank": 2,
+    "rank_rationale": "ランクは試作上の仮案。既定の解放条件は変更しない。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "仮値15メートル範囲、誘導仮値6秒。発動中は移動不能"
+      },
+      {
+        "level": 2,
+        "proposal": "範囲を仮値20メートルへ、誘導を仮値8秒へ延長する案"
+      },
+      {
+        "level": 3,
+        "proposal": "誘導中、モブ同士が衝突して仮値2秒停止する隙間が開く案"
+      }
+    ],
+    "equipped_slot_policy": "通常スキルとして4装備枠のうち1枠を使う。系統別の固定枠は設けない。",
+    "normal_attack_link": "通常攻撃とは非連携。発動中は攻撃も移動も止まる",
+    "avoids": "個別の追跡、背後からの襲撃",
+    "intervenes_in": "通常モブの追跡対象と進行方向",
+    "sacrifices": "発動中の移動不可、自分の位置の露出",
+    "real_techniques": [
+      {
+        "name": "足踏みの誘引",
+        "confirmation": "Unconfirmed",
+        "source_url": null,
+        "evidence": "実在の足踏みによる誘引の確認根拠を外部調査で得ていない",
+        "real_inspiration": "音で注意を引く行為そのもの",
+        "game_extension": "範囲と誘導時間を持つスキル化"
+      }
+    ]
+  },
+  "html_file": "ROLE-C-032.html"
+}

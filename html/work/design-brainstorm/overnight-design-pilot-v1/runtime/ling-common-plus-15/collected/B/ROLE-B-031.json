@@ -1,0 +1,221 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-031",
+  "role": "B",
+  "title": "繋ぎの紐 — 束ねた二品を同時にしか使えない",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/systems/economy-and-progression.md",
+      "section": "ビルド／スキル強化の世界内解釈",
+      "source_status": "Status: Draft（草案）",
+      "claim": "初期20枠のうち4枠がSecure Slot。通常探索品と成長用のレアルート品を区別する。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "Effectの種別",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "Effectは結果の変化で分類し、対象・保存境界・終了条件を分ける。"
+    }
+  ],
+  "design_hypothesis": "本案は紐一つで二品を束ね、一枠にまとめて運ぶ。束ねている間はどちらか一方だけでは効果を発揮せず、片方を喪失すると残りも使えなくなる。枠を一つ節約する代償として、二品を同時に運ぶリスクを負う判断を作る。",
+  "experience": {
+    "goal": "所持枠を一つ空ける代わりに、二品を結びつけて運ぶ緊張を持たせる",
+    "player_choice": "どの二品を束ねるか、そして束ねたまま進むか解くかをRun中に選ぶ",
+    "sacrifice_or_risk": "片方を失った瞬間に両方が使えなくなる共同喪失"
+  },
+  "placement_assumption": "配置未定。マップ構造や正式配置は提案しない。手持ち品が存在する文脈で使える品として仮置きする。",
+  "components": [
+    {
+      "component": "InventoryBoundary",
+      "availability": "catalog",
+      "usage": "束ねた二品を一枠として数える棚卸し区分"
+    },
+    {
+      "component": "ItemLifecycle",
+      "availability": "proposed",
+      "usage": "品の束ね状態と共同喪失の管理"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "結果のRuleOverrideを分類する。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "手持ちの二品に紐を使う",
+      "condition": "二品とも手持ちにあり、紐を所持していること。束ね上限は未定。 通常枠の通常探索品のみ。Quest品・固有品・レアルート品は対象外。",
+      "result": "二品を束ね状態にし、占有枠を一つに減らす",
+      "target": "束ねた二品",
+      "scope": "個人",
+      "lifetime": "同一Run中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "紐を解いたとき",
+        "片方の品を喪失したとき",
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかで束ねを解除する既定規則。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effect・同一対象は非加算1件。束ねは一組につき一件。",
+        "conflict_resolution": "別Effectとの競合は、解決規則を定めるまで保留して記録する。"
+      },
+      "server_validation": "Serverが二品の所持と紐の所持を確認する。どちらかがなければ不成立。 Secure Slot、死亡、Run終了の既定喪失処理は上書きしない。",
+      "client_presentation": "束ねられた二品は一つの枠にまとめて表示し、束ね中であることを本人に提示する。",
+      "feedback": {
+        "success": "二品が一枠に束ねられたことが本人に分かる",
+        "failure": "二品か紐が足りないときは束ねられない",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    },
+    {
+      "kind": "RuleOverride",
+      "trigger": "束ねた二品のうち片方が喪失した",
+      "condition": "束ね状態が継続していること。 通常枠の通常探索品のみ。Quest品・固有品・レアルート品は対象外。",
+      "result": "残った一方も使えなくなる（共同喪失）",
+      "target": "束ねの残り一方",
+      "scope": "個人",
+      "lifetime": "同一Run中",
+      "resolution": "instant",
+      "end_conditions": [
+        "束ねが解かれたとき",
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかで共同喪失の状態を終える既定規則。",
+      "stacking": {
+        "exception": false,
+        "rule": "即時イベントごとに1回だけ解決し、品を複製しない。",
+        "conflict_resolution": "別Effectとの競合は、解決規則を定めるまで保留して記録する。"
+      },
+      "server_validation": "Serverが喪失イベントと束ね状態を確認し、残り一方の使用不可を確定する。 Secure Slot、死亡、Run終了の既定喪失処理は上書きしない。",
+      "client_presentation": "残り一方が使えないことが本人に提示される。喪失の原因は表示しない。",
+      "feedback": {
+        "success": "残り一方が使えなくなったことが本人に分かる",
+        "failure": "束ねが解けていれば共同喪失は起きない",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    }
+  ],
+  "provides_traits": [],
+  "connection_tags": [
+    "InventoryBoundary",
+    "ItemLifecycle"
+  ],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": [
+    "束ねられる二品の種類制限と上限は未定",
+    "共同喪失がSecure Slotの品にも適用されるかは未定",
+    "対象は通常探索品のみ。Quest品・固有交換品・レアルート品・Secure Slot内の品は対象外とする候補。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "品を束ねると共同で失うという、所有の結びつきを異化した。",
+    "in_world_rationale": "既存の枠管理と獲得・喪失分類の範囲内で、品同士の関係を一つ足すだけ。世界の起源や正体には触れない。",
+    "meaning_left_ambiguous": "紐の出自や、なぜ共同で失うのかは確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "本案固有の対象判定・状態遷移・提示を追加する必要がある。実装許可ではない。",
+  "new_logic": [
+    "二品を束ねて一枠として数える管理",
+    "片方喪失での共同喪失ルール"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "束ね状態と共同喪失をServerで管理する必要があるが、新地形やNPCは不要。",
+    "implementation_steps": [
+      "束ね状態のデータ仮置き",
+      "占有枠の再計算",
+      "喪失時の共同喪失判定"
+    ],
+    "assumed_existing_parts": [
+      "InventoryServiceの20枠／Secure Slot 4枠の棚卸し"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Proposed",
+        "detail": "探索で紐を一つ得る。入手経路は未定。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "紐を手持ちに保持し、束ねたい二品が揃った時点で使える状態にする。"
+      },
+      {
+        "route": "Use",
+        "status": "Proposed",
+        "detail": "手持ちの二品に紐を使って束ねる。使うのは紐で、束ねた品そのものではない。"
+      },
+      {
+        "route": "Present",
+        "status": "NotApplicable",
+        "detail": "紐は他人に渡す想定がなく、ソロ判断のみ。Partyを前提としない。"
+      },
+      {
+        "route": "Place",
+        "status": "NotApplicable",
+        "detail": "紐は束ねるだけで世界に配置しない。配置は束ねた品の判断に委ねる。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "束ねた品の片方を喪失すると共同喪失が起きる。紐自体の喪失は束ねを解く。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "道具自体のSecure Slot保護は既定どおり。Secure Slot内の内容物は加工・喪失変更の対象外。"
+      },
+      {
+        "route": "Sell",
+        "status": "Undecided",
+        "detail": "既存の換金方針に沿う売却候補。価格・買い取り条件は未定。Robux経路は設けない。"
+      },
+      {
+        "route": "Quest",
+        "status": "NotApplicable",
+        "detail": "研究所のQuest装置の置換をせず、Quest依存もしない。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "NotApplicable",
+        "detail": "アノマリーとの直接相互作用を持たない。束ねは品同士の関係のみ。"
+      }
+    ],
+    "ownership_state": "紐は個人所有。束ね状態は個人ごとに管理し、共有しない。 対象は本人の通常探索品のみ。消費・移動をServerで原子的に確定し、複製しない。",
+    "server_run_state": "束ね状態と共同喪失はServerのRun事実として保持し、Run終了で破棄する。 個人所持と配置物の位置を別に保持し、Entity出現率・同時出現数は変更しない。"
+  },
+  "html_file": "ROLE-B-031.html"
+}

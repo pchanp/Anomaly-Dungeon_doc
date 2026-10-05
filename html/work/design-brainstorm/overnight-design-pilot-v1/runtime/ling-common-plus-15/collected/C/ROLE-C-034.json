@@ -1,0 +1,175 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-034",
+  "role": "C",
+  "title": "壁蹴り",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "系統・ランク・レベル",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "通常スキルは4系統、4装備枠、レベル1〜3。系統別の固定枠ではない。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "Effectの種別",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "Effectは結果の変化で分類し、対象・保存境界・終了条件を分ける。"
+    },
+    {
+      "path": "docs/systems/observation-and-recognition.md",
+      "section": "役割と境界",
+      "source_status": "Status: Draft（草案）",
+      "claim": "Detect・Observe・Visible・Recognitionを区別し、後続効果は個別案が定める。"
+    }
+  ],
+  "design_hypothesis": "壁を蹴って直角に進路を変える。視線を切れる壁際で使うと追跡を外しやすいが、蹴った後は速度が落ちる。自動的な索敵リセットや無敵は付けない。",
+  "experience": {
+    "goal": "壁を蹴る一瞬で進路を変え、追手の線を外す体験",
+    "player_choice": "蹴る壁とタイミングを選ぶ。追手が近いほど、蹴り返す方向を工夫する",
+    "sacrifice_or_risk": "蹴った後は速度が落ち、壁から離れると再び捕捉される"
+  },
+  "placement_assumption": "配置は未定。壁が既存のルームにある範囲内で想定。新地形は提案しない",
+  "components": [
+    {
+      "component": "SkillActivation",
+      "availability": "catalog",
+      "usage": "壁接触時のスキル発動入力と、発動中の移動制御を扱う"
+    },
+    {
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "捕捉リセットの評価を、観察の中断・減衰規則の範囲内で近似する"
+    },
+    {
+      "component": "Effect.Move",
+      "availability": "catalog",
+      "usage": "結果のMoveを分類する。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "Move",
+      "trigger": "壁に接した状態での入力",
+      "condition": "Serverが確認した壁の接触範囲内にいる",
+      "result": "壁を蹴って進行方向を90度変える。壁で視線が切れた場合だけ、通常の索敵で捕捉が外れる。",
+      "target": "自分",
+      "scope": "個人",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": [
+        "適用解決",
+        "壁接触の喪失",
+        "被弾",
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかが成立すれば解除する既定規則。即時効果のため適用解決を主とする。",
+      "stacking": {
+        "exception": false,
+        "rule": "即時イベントごとに解決する。同一モブへの捕捉リセットはイベントごとに適用する。",
+        "conflict_resolution": "別Effectとの競合は、解決規則を定めるまで保留して記録する。"
+      },
+      "server_validation": "Serverが壁接触、方向変更の安全性を検査する。安全な着地点がなければ移動しない。 対象は対応通常モブ・環境に限定。Entity・Player Anomalyの固有ルールを汎用解除しない。",
+      "client_presentation": "蹴りの演出と方向変更を個人に表現する。捕捉リセットは本人にだけ分かる。",
+      "feedback": {
+        "success": "方向が変わり、追手の足音が遠のく",
+        "failure": "壁に接していないと入力は無効",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    }
+  ],
+  "provides_traits": [],
+  "connection_tags": [
+    "SkillActivation",
+    "Observation"
+  ],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": [
+    "壁接触の検出方式",
+    "捕捉リセットの仮値",
+    "全マップでの壁の存在"
+  ],
+  "worldview": {
+    "defamiliarized_element": "壁蹴りが「捕捉の記録」をリセットすること",
+    "in_world_rationale": "既存のMove Effectが位置変更を扱えることを、捕捉の再評価タイミングへ接続する案。壁の存在は配置規約に従う。",
+    "meaning_left_ambiguous": "なぜ壁蹴りが捕捉をリセットするかは説明しない",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "本案固有の対象判定・状態遷移・提示を追加する必要がある。実装許可ではない。",
+  "new_logic": [
+    "壁接触判定",
+    "90度方向変更",
+    "捕捉のリセット"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "方向変更の移動は既存のMoveで試作できるが、壁接触判定と捕捉リセットの接続検証が要る",
+    "implementation_steps": [
+      "壁接触の検出",
+      "90度方向変更の移動",
+      "捕捉のリセット",
+      "発動後の速度低下"
+    ],
+    "assumed_existing_parts": [
+      "Effect.Moveの位置変更",
+      "通常モブの追跡状態"
+    ]
+  },
+  "role_details": {
+    "skill_family": "アクション",
+    "rank": 1,
+    "rank_rationale": "ランクは試作上の仮案。既定の解放条件は変更しない。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "壁接触で進行方向を90度変える。無敵・自動捕捉解除なし。"
+      },
+      {
+        "level": 2,
+        "proposal": "蹴った直後の速度低下を仮値30%へ軽減する案"
+      },
+      {
+        "level": 3,
+        "proposal": "壁を蹴った直後に通常攻撃の入力を受け付ける案"
+      }
+    ],
+    "equipped_slot_policy": "通常スキルとして4装備枠のうち1枠を使う。系統別の固定枠は設けない。",
+    "normal_attack_link": "レベル3で壁蹴り→通常攻撃の連携を追加する。それ以外は非連携",
+    "avoids": "直線的な追撃。壁で視線を切るかは位置取り次第。",
+    "intervenes_in": "なし",
+    "sacrifices": "蹴った後の速度低下、壁から離れると再捕捉",
+    "real_techniques": [
+      {
+        "name": "壁蹴り（ウォールキック）",
+        "confirmation": "Unconfirmed",
+        "source_url": null,
+        "evidence": "実在の身体技術としての確認根拠を外部調査で得ていない",
+        "real_inspiration": "壁を蹴って進行方向を変える身体操作",
+        "game_extension": "捕捉リセットを伴うスキル化"
+      }
+    ]
+  },
+  "html_file": "ROLE-C-034.html"
+}

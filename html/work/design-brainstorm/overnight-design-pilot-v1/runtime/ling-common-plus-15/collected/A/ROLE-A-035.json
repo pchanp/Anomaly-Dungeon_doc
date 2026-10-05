@@ -1,0 +1,177 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-035",
+  "role": "A",
+  "title": "数合わせの扉",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "GimmickEvent",
+  "source_evidence": [
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "Effectの種別",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "Effectは結果の変化で分類し、対象・保存境界・終了条件を分ける。"
+    },
+    {
+      "path": "docs/world/information-design.md",
+      "section": "中心原則",
+      "source_status": "Status: Draft（草案）",
+      "claim": "ルールは明確、意味は曖昧。NPCは目的を持って行動し、世界の真相を解説しない。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "マップ設計原則",
+      "source_status": "Status: Mixed（案ごとに下記）",
+      "claim": "マップ文脈を基盤システムに接続する。新しい地形や正式配置は本案で確定しない。"
+    }
+  ],
+  "design_hypothesis": "マップ内の扉が、開いてから決まった人数の通常モブが通過するまで開き続ける状態を仮定する。プレイヤーは先に渡るか、モブが通過するのを待ってから渡るかを選べる。規定数に達すると扉は閉じ、以後の開閉はしない。規定数は仮値：3体。扉の開く条件・時刻は未定。地形・部屋・正式配置は追加しない。",
+  "experience": {
+    "goal": "扉の開閉をモブの通行で数えるという、タイミングと通行の選択",
+    "player_choice": "先に渡って扉を閉じさせるか、モブに通過させてから渡るかを選ぶ",
+    "sacrifice_or_risk": "先に渡るとモブは扉を通れなくなるが、規定数に達しないと扉は開いたまま残る"
+  },
+  "placement_assumption": "既存の区画の境目にある扉を想定。正式配置は確定しない",
+  "components": [
+    {
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "通過を数えるモブの通行挙動"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "結果のInformationChangeを分類する。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "扉が開いたとき",
+      "condition": "開扉の条件が成立した場合のみ",
+      "result": "通常モブの通過を数え、規定数（仮値：3体）に達するまで扉を開いたままにする",
+      "target": "扉",
+      "scope": "ServerのRun事実",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "規定数の通過完了",
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかで解除する既定規則。",
+      "stacking": {
+        "exception": false,
+        "rule": "持続同一Effectは非加算1件。数えは扉ごとに独立する",
+        "conflict_resolution": "別Effectとの競合は、解決規則を定めるまで保留して記録する。"
+      },
+      "server_validation": "Serverが開扉の成立と通過した通常モブを確認する。プレイヤーの通過は数えない 通常プレイヤーのNPC接触のみ受理し、Player AnomalyのNPC Interactionは禁止。NPC案の場合に適用。",
+      "client_presentation": "扉が開いたまま残ることを共有して見せる。数えの進行は個人に提示する",
+      "feedback": {
+        "success": "扉が開いたまま残り、通過数が進む",
+        "failure": "扉は通常どおり閉じる",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "通常モブが扉を通過したとき",
+      "condition": "扉が開いた状態で数え中の場合のみ",
+      "result": "通過数を個人に提示する。共有はしない",
+      "target": "扉の近くにいるプレイヤー",
+      "scope": "個人提示",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": [
+        "提示の完了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "即時Effectの適用解決で終了する既定規則。",
+      "stacking": {
+        "exception": false,
+        "rule": "即時イベントごとに適用。通過ごとに回数が更新される",
+        "conflict_resolution": "別Effectとの競合は、解決規則を定めるまで保留して記録する。"
+      },
+      "server_validation": "Serverが通過の成立と数え中の状態を確認する。不成立時は提示は起こらない 通常プレイヤーのNPC接触のみ受理し、Player AnomalyのNPC Interactionは禁止。NPC案の場合に適用。",
+      "client_presentation": "通過数だけを個人に提示する。誰が通ったかは出さない",
+      "feedback": {
+        "success": "通過数の個人提示",
+        "failure": "何も出ない",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    }
+  ],
+  "provides_traits": [],
+  "connection_tags": [
+    "NPCState"
+  ],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": [
+    "規定数は仮値（3体）で、実装値は未定",
+    "扉の開く条件・時刻は未定",
+    "プレイヤーの通過を数えない扱いは未定",
+    "通常モブの配置・上限・索敵は候補上の仮説。既存実装と見なさない。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "扉の開閉が「モブの通行の数」で決まる異化。異化しない理由はない",
+    "in_world_rationale": "通行を数えて一定数で閉じる扉は、誰かが数を守る仕事の痕跡として既存世界観の範囲で成立し得る",
+    "meaning_left_ambiguous": "誰が数を守っているか、規定数の意味は確定しない",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "本案固有の対象判定・状態遷移・提示を追加する必要がある。実装許可ではない。",
+  "new_logic": [
+    "モブ通過のカウント",
+    "規定数での閉扉"
+  ],
+  "prototype_cost": {
+    "band": "小",
+    "rationale": "扉の開閉と通過カウントのみ。地形・部屋の追加は不要",
+    "implementation_steps": [
+      "開扉の検知",
+      "モブ通過のカウント",
+      "規定数での閉扉",
+      "数えの個人提示"
+    ],
+    "assumed_existing_parts": [
+      "AugustPhase",
+      "NPCState"
+    ]
+  },
+  "role_details": {
+    "npc_purpose": "対象外理由：本案はギミックイベント案であり、目的を持つ通常NPCは登場しない",
+    "player_anomaly_handling": "判断019に従いPlayer AnomalyとはInteractionしない。扉自体はInteraction対象の小物として扱う",
+    "mob_contract": {
+      "applicable": false,
+      "spawn_condition": "対象外理由：ギミックイベント案のため、モブの湧き枠を持たない。通過を数えるのは既存のモブ個体",
+      "population_cap": "対象外理由：ギミックイベント案のため、モブの上限管理の対象外",
+      "non_combat_response": "対象外理由：モブの索敵・戦闘挙動は変更しない。通過の事実だけを数える",
+      "exit_condition": "対象外理由：ギミックイベント案のため、モブの退場条件は持たない",
+      "entity_distinction": "対象外理由：扉は通常の小物であり、Anomaly EntityでもPlayer Anomalyでもない"
+    }
+  },
+  "html_file": "ROLE-A-035.html"
+}

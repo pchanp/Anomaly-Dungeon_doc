@@ -1,0 +1,220 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-045",
+  "role": "B",
+  "title": "落としの糸 — 品を道標として落とす",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/systems/economy-and-progression.md",
+      "section": "ビルド／スキル強化の世界内解釈",
+      "source_status": "Status: Draft（草案）",
+      "claim": "初期20枠のうち4枠がSecure Slot。通常探索品と成長用のレアルート品を区別する。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "Effectの種別",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "Effectは結果の変化で分類し、対象・保存境界・終了条件を分ける。"
+    }
+  ],
+  "design_hypothesis": "本案は糸一つで、進む道に品を一つずつ落として道標にする。落とした品は消えるが、道標の列が本人に記され、戻る道しるべになる。安全に戻る代償として、落とした品を失う。",
+  "experience": {
+    "goal": "品を道標として残し、安全に戻る判断を持たせる",
+    "player_choice": "どの品を道標にするか、どこで落とすかを選ぶ",
+    "sacrifice_or_risk": "落とした品は消え、道標は自分にしか見えない"
+  },
+  "placement_assumption": "配置未定。糸は手持ち品が存在する文脈で使える品として仮置きする。",
+  "components": [
+    {
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "道標の位置を本人に観察させる"
+    },
+    {
+      "component": "ItemLifecycle",
+      "availability": "proposed",
+      "usage": "道標の品の消費と記録"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "結果のStateChangeを分類する。"
+    },
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "結果のInformationChangeを分類する。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "糸を使いながら進む",
+      "condition": "糸を所持し、品が手持ちにあること。道標の間隔は未定。 通常枠の通常探索品のみ。Quest品・固有品・レアルート品は対象外。",
+      "result": "品を一つ落として道標にし、品は消える",
+      "target": "落とした品",
+      "scope": "個人",
+      "lifetime": "同一Run中",
+      "resolution": "instant",
+      "end_conditions": [
+        "品が足りなくなったとき",
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかで道標の形成を終える既定規則。",
+      "stacking": {
+        "exception": false,
+        "rule": "即時イベントごとに1回だけ解決し、品を複製しない。",
+        "conflict_resolution": "別Effectとの競合は、解決規則を定めるまで保留して記録する。"
+      },
+      "server_validation": "Serverが糸の所持と品の所持を確認し、道標の位置を記録する。 Secure Slot、死亡、Run終了の既定喪失処理は上書きしない。",
+      "client_presentation": "道標が置かれたことが本人に提示される。",
+      "feedback": {
+        "success": "品を道標にして落とせたことが本人に分かる",
+        "failure": "糸か品が足りないときは落とせない",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "道標を置いた",
+      "condition": "道標が置かれていること。 通常枠の通常探索品のみ。Quest品・固有品・レアルート品は対象外。",
+      "result": "道標の列が本人に記され、戻る道標になる",
+      "target": "道標の列",
+      "scope": "個人",
+      "lifetime": "同一Run中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "Run終了で道標の記録を終える既定規則。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effect・同一対象は非加算1件。道標の列は一件。",
+        "conflict_resolution": "別Effectとの競合は、解決規則を定めるまで保留して記録する。"
+      },
+      "server_validation": "Serverが道標の位置列を保持し、本人へだけ提示する。 Secure Slot、死亡、Run終了の既定喪失処理は上書きしない。",
+      "client_presentation": "道標の列が本人にだけ表示され、他者には見えない。",
+      "feedback": {
+        "success": "道標の列が本人に記されたことが分かる",
+        "failure": "道標がなければ記録されない",
+        "ambiguous": "作用の成立・終了は知らせるが、現象の由来は説明しない。"
+      }
+    }
+  ],
+  "provides_traits": [],
+  "connection_tags": [
+    "Observation",
+    "ItemLifecycle"
+  ],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": [
+    "道標の間隔と上限は未定",
+    "道標が他者に見えるかは未定",
+    "対象は通常探索品のみ。Quest品・固有交換品・レアルート品・Secure Slot内の品は対象外とする候補。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "品を道標として落とすという、戻り方を異化した。",
+    "in_world_rationale": "既存のObservationとItemLifecycleの範囲内で、戻る道標を一つ足すだけ。正体や起源には触れない。",
+    "meaning_left_ambiguous": "糸の出自や、なぜ道標が本人にだけ見えるのかは確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "本案固有の対象判定・状態遷移・提示を追加する必要がある。実装許可ではない。",
+  "new_logic": [
+    "道標の品の消費と位置記録",
+    "道標の列の本人提示"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "道標の位置記録をServerで管理するが、新地形やNPCは不要。",
+    "implementation_steps": [
+      "道標のデータ仮置き",
+      "品の消費",
+      "道標の列の保持"
+    ],
+    "assumed_existing_parts": [
+      "InventoryServiceの獲得・喪失分類",
+      "Observationの位置観察"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Proposed",
+        "detail": "探索で糸を一つ得る。入手経路は未定。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "糸を手持ちに保持し、道標にしたい品が揃った時点で使える状態にする。"
+      },
+      {
+        "route": "Use",
+        "status": "Proposed",
+        "detail": "糸を使いながら進み、道に品を一つ落とす。使うのは糸で、落とした品は消える。"
+      },
+      {
+        "route": "Present",
+        "status": "NotApplicable",
+        "detail": "糸は他人に渡す想定がなく、ソロ判断のみ。Partyを前提としない。"
+      },
+      {
+        "route": "Place",
+        "status": "Proposed",
+        "detail": "道に品を落として道標にする。置いた道標が戻る道しるべになる。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "落とした品は消える。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "道具自体のSecure Slot保護は既定どおり。Secure Slot内の内容物は加工・喪失変更の対象外。"
+      },
+      {
+        "route": "Sell",
+        "status": "Undecided",
+        "detail": "既存の換金方針に沿う売却候補。価格・買い取り条件は未定。Robux経路は設けない。"
+      },
+      {
+        "route": "Quest",
+        "status": "NotApplicable",
+        "detail": "研究所のQuest装置の置換をせず、Quest依存もしない。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "NotApplicable",
+        "detail": "アノマリーとの直接相互作用を持たない。道標は位置の記録のみ。"
+      }
+    ],
+    "ownership_state": "糸と落とした品は個人所有。道標の記録は個人ごとに管理し、共有しない。 対象は本人の通常探索品のみ。消費・移動をServerで原子的に確定し、複製しない。",
+    "server_run_state": "道標の位置列はServerのRun事実として保持し、Run終了で破棄する。 個人所持と配置物の位置を別に保持し、Entity出現率・同時出現数は変更しない。"
+  },
+  "html_file": "ROLE-B-045.html"
+}
