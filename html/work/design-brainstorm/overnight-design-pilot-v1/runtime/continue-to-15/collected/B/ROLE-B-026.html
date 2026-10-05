@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-B-026 視界印（視界内だけは常に見える。代わりに居場所は渡る）</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<p class="sub">overnight-design-pilot-v1 ／ ROLE=B ／ 全マップ共通 ／ Idea</p>
+<h1>ROLE-B-026 視界印（視界内だけは常に見える。代わりに居場所は渡る） — 作業用見出し</h1>
+</header>
+<section id="hypothesis">
+<h2>何の案？</h2>
+<p>6秒だけ視界内の見える対象を常に見せる印。居場所は同じ6秒間相手に渡る。</p>
+<h2>仕組み</h2>
+<ul>
+<li>使うと6秒間、個人画面中方角印が常時出る。個数と距離は出さない。</li>
+<li>同じ6秒間、自分の所在が相手側の追跡の材料になる。</li>
+<li>対象の動きは通常どおり。印は重ねられない。</li>
+</ul>
+<h2>選択と代償</h2>
+<p>詰めるか、印なしで回るか。見つかる秒数と見える秒数の取引。</p>
+</section>
+<section id="diagram">
+<h2>作用図</h2>
+<div class="board">
+<svg viewBox="0 0 980 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="6秒間だけ視界内の方角印が個人画面に出ると同時に同じ6秒間だけ自分の所在が相手側の追跡材料になり、対象の生死も出現率も変わらない図">
+<rect width="980" height="360" fill="#0a1118"/>
+<text x="30" y="26" class="small">表示距離・個数・6秒は未確定。候補は値の決定を渡さない。</text>
+<rect x="30" y="60" width="250" height="120" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text x="46" y="90" class="label">印なし</text>
+<text x="46" y="116" class="small">相手は見えない</text>
+<text x="46" y="138" class="small">推測で動く</text>
+<text x="46" y="160" class="small">見つかりにくい</text>
+<rect x="370" y="60" width="250" height="120" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="386" y="90" class="label">6秒だけ見せる</text>
+<text x="386" y="116" class="small">視界内の方角印</text>
+<text x="386" y="138" class="small">距離と個数は出ない</text>
+<text x="386" y="160" class="small">手前へ進める</text>
+<rect x="700" y="60" width="250" height="120" rx="8" fill="#142330" stroke="#ea9380"/>
+<text x="716" y="90" class="label">同じ6秒</text>
+<text x="716" y="116" class="small">所在が相手に渡る</text>
+<text x="716" y="138" class="small">相手の追跡が早まる</text>
+<text x="716" y="160" class="small">印は重ねられない</text>
+<path d="M282 120 H355" class="active"/><path d="M355 120 l10 6 -10 6" class="active"/>
+<path d="M622 120 H685" class="active"/><path d="M685 120 l10 6 -10 6" class="active"/>
+<rect x="30" y="230" width="920" height="60" rx="8" fill="#142330" stroke="#c4a0ec"/>
+<text x="46" y="260" class="label">変わらないもの：対象の生死・出現率・他者の視界</text>
+<text x="46" y="286" class="small"></text>
+<text x="46" y="308" class="small"></text>
+<text x="46" y="330" class="small"></text>
+</svg>
+</div>
+<p>中央が見せる効果、両端が代償。最下段が守らないもの。</p>
+</section>
+<footer>
+<p><a href="index.html">← B候補一覧</a> ／ 詳細データ <a href="ROLE-B-026.json">ROLE-B-026.json</a> ／ connection_tags: Item, Observation, Combat ／ requires_code: true ／ 試作コスト: 中</p>
+</footer>
+</main>
+</body>
+</html>

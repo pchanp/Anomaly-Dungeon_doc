@@ -1,0 +1,248 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-008",
+  "role": "B",
+  "title": "値札の付いた装備（拾うと痕跡が消える）— 作業用見出し",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "SEKIGAHARA",
+  "classification": "マップ固有",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/anomalies/cognitive-anomalies.md",
+      "section": "認知差は便利な答えの表示ではなく、情報の不一致とトレードオフとして扱う。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "情報を得ることと失うことを対にする方針。候補はこのトレードオフをそのまま形にする。"
+    },
+    {
+      "path": "docs/systems/observation-and-recognition.md",
+      "section": "Cameraを共有世界のServer事実として保存しない。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "見えたという個人側の観察を、共有世界の事実として保存しない原則。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "NPCは有限数を常時生成せず、Active NPC数の上限を設け、倒されたNPCを後方から補充する。プレイヤーには戦争が永遠に続くように見せる。",
+      "source_status": "Status: Mixed（案ごとに下記）",
+      "claim": "SEKIGAHARAはIdeaであり、放置された物の存在も地形も未確定。候補は地形を増やさない。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| 同一マップ中 | 当該マップから離れた時点で破棄する |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "痕跡の記録はマップ内に閉じる。"
+    }
+  ],
+  "design_hypothesis": "誰かが値札を付けた装備が戦場に取り残されている。候補は『見つけたこと』自体を痕跡として個人記録に持たせる。拾わない限り、その場所が戦場の一部だったという記録は本人に残る。拾った瞬間に、痕跡は本人からも他の個人からも消える。実物を取ることと、場所を知っていたことを両立できない。",
+  "experience": {
+    "goal": "物を取るか、場所を知る記憶を取るかを迫る。痕跡と実物の二択にする。",
+    "player_choice": "拾う（実物は得るが痕跡は消える）。そのままにする（痕跡だけが残る）。捨てる。",
+    "sacrifice_or_risk": "痕跡は共有ではなく個人に閉じる。自分が残したのか、誰かが残したのかは判らない。"
+  },
+  "placement_assumption": "新しい地形・部屋・戦場は提案しない。既存の配置point規約に置く前提だけを置き、具体的な座標は提案しない。戦場の無限継続という理念は仮定としてのみ扱う。",
+  "components": [
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "『未取得の目印が1件ある』ことを本人にだけ示す印。"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "拾う操作で、その地点の痕跡記録を他の個人からも消す。"
+    },
+    {
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "観察の根拠と進行を扱う共通契約。視野Raycastだけを条件にしない。"
+    },
+    {
+      "component": "ItemLifecycle",
+      "availability": "catalog",
+      "usage": "正式な取得源とItemStackが未実装であることを前提とする。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "InformationChange",
+      "trigger": "値札の付いた装備が視野に入るなどして、対象が痕跡として記録される",
+      "condition": "実行中であること、対象が痕跡として登録可能であること。記録は個人単位",
+      "result": "本人の記録に『未取得の目印が1件ある』印が残る。位置は本人にも他者にも出さない",
+      "target": "対象個人",
+      "scope": "個人。共有の戦況は書き換えない",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "マップを離れる、またはRun終了で破棄",
+        "拾う操作で印は消える。切断時の復元は未決"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。印の寿命はマップ内に閉じる。",
+      "stacking": {
+        "exception": false,
+        "rule": "印は非加算1件。何件あるかは出さない。固定秒数は持たない",
+        "conflict_resolution": "他の観察記録との競合は保存先が未定義のため保留する"
+      },
+      "server_validation": "Serverが実行状態と痕跡の登録可否を検証する。画面内かどうかの判定は個人側の問題であり、Serverは報告の妥当性だけを検証する",
+      "client_presentation": "クライアントは記録の表示のみ。共有の事実としては扱わない",
+      "feedback": {
+        "success": "印が1つ点く。数や場所は出さない",
+        "failure": "印が変化しない",
+        "ambiguous": "誰が残した品かは表示しない"
+      }
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "個人が痕跡として登録された装備を『拾う』操作で取る",
+      "condition": "実行中であること、対象が本人の痕跡記録に残っていること、枠制約を満たすこと",
+      "result": "装備は個人所持へ移り、その地点の痕跡記録が他の個人からも消える。削除は本人から他個人への一方向で、他の個人の痕跡を消したり作ったりはしない",
+      "target": "対象の装備と、その地点の痕跡記録",
+      "scope": "個人から共有記録への削除。装備は個人、記録は他者からも消える",
+      "lifetime": "同一マップ中",
+      "resolution": "instant",
+      "end_conditions": [
+        "削除の解決で確定",
+        "Run終了で痕跡記録は破棄される。装備は通常の帰還判定に載る"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。削除とRun終了の破棄は別の条件として列挙する。",
+      "stacking": {
+        "exception": false,
+        "rule": "同じ痕跡を二度拾えない。他者の痕跡記録には触れない",
+        "conflict_resolution": "他の個人が同時に拾った場合は解決規則が未定義のため保留する"
+      },
+      "server_validation": "Serverが本人の痕跡記録に属しているかどうかと枠制約を検証してから削除する",
+      "client_presentation": "HUDから印が消え、所持枠が1つ増える。他者の表示には影響しない",
+      "feedback": {
+        "success": "印が消え、枠が増える。他者の画面は変わらない",
+        "failure": "何も変わらない。注意表示のみ",
+        "ambiguous": "他の個人の画面から痕跡が消えたことは本人にも伝わらない"
+      }
+    }
+  ],
+  "provides_traits": [
+    "情報を得ることと失うことを対にする例",
+    "他者の記録を削除するが、他者の記録を作らない单向の副作用"
+  ],
+  "connection_tags": [
+    "Item",
+    "Observation"
+  ],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": [
+        "複数の個人に属する観察記録の保存先と、削除が他の個人へ届く範囲"
+      ],
+      "reason": "observation-and-recognition.mdは記録の保存先を個人・Party・共有に分ける必要があると記すだけで定めていない。候補は削除方向だけを書いており、作成方向は未決として残す。",
+      "adoption_blocker": true
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "痕跡の登録条件は未確定。視野だけで充分か、別の接近を要するかは決めない。",
+    "他者の痕跡記録を消せるのは誰の痕跡か。候補は本人か本人と戦った相手のみとした。",
+    "拾った装備の中身は未実装。名前と選択結果のみ。",
+    "照合範囲：認知アノマリーのトレードオフ方針、観察の責務、SEKIGAHARAがIdeaであること、効果の保存境界、判断010の枠強化。矛盾は見つからず conflicts は空配列"
+  ],
+  "worldview": {
+    "defamiliarized_element": "戦利を『見つける』と『取る』を切り離し、場所を知っていた記憶そのものを報酬に組み込んだ。痕跡は共有ではなく本人に閉じる。",
+    "in_world_rationale": "終わりなき戦場では個体が絶えず補充され、『かつてそこに何かがあった』という記憶だけが静かに積み上がる。取得と記憶のどちらかしか保てないという関係は、世界側が記録を管理しないため自然に生じる。",
+    "meaning_left_ambiguous": "値札を付けたのは誰か、なぜ残したのか、その場所がかつて何だったのかは確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "観察記録の保存先と複数個人にまたがる削除が未実装であり、正式な取得源とItemStackも無い（current-implementation.md / observation-and-recognition.md）。記録層が要るため true とする。",
+  "new_logic": [
+    "痕跡としての装備の登録と、個人ごとの記録",
+    "取得と同時に他者からも記録を削除する一方向の副作用"
+  ],
+  "prototype_cost": {
+    "band": "不明",
+    "rationale": "SEKIGAHARAが未実装で、観察記録の共有範囲も未決である。試作の土台が定まらないため小とも大とも決められない。デバッグ床で装備を1個置いて登録と取得だけを試すことは可能。",
+    "implementation_steps": [
+      "デバッグ床に装備を1個置く",
+      "個人ごとに『未取得の痕跡が1件ある』印を持たせる",
+      "取得時に印と他者側の記録を消す処理を入れる",
+      "他者の印が変わらないことを2人セッションで確認する"
+    ],
+    "assumed_existing_parts": [
+      "枠境界を持つInventoryService",
+      "クライアントの個人HUD",
+      "観察の共通契約（Camera評価は個人側）"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Proposed",
+        "detail": "既存の配置pointに放置されている前提を置く。座標は提案しない。試作はデバッグ付与。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "持ち歩くなら1枠を消費し、痕跡の印は消える。置いたままなら印だけが残る。"
+      },
+      {
+        "route": "Use",
+        "status": "NotApplicable",
+        "detail": "使う操作は持たない。取るか残すかの二択だけにする。"
+      },
+      {
+        "route": "Present",
+        "status": "Undecided",
+        "detail": "誰に渡したときの痕跡の変化は未確定。受け取る側の設計が未作成のため保留。"
+      },
+      {
+        "route": "Place",
+        "status": "NotApplicable",
+        "detail": "再度置かない。置く操作を持つと『残す』の選択がPlaceに二重化するため。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "確保枠の外なら死亡時に失う。死亡しても痕跡の記録は残るため、『場所を知る』だけが受け渡せる。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "確保枠に入れて死んでも残せるが、取得を諦める。記録との二者択一になる。"
+      },
+      {
+        "route": "Sell",
+        "status": "Undecided",
+        "detail": "換金の可否は判断010・判断011・経済と成長で未決。戦利由来は換金と Discovery のどちらに寄せるか判断が要る。"
+      },
+      {
+        "route": "Quest",
+        "status": "Undecided",
+        "detail": "依頼主と依頼種別が未確定。博士の依頼が定める固有品交換と別系統にする必要がある。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "NotApplicable",
+        "detail": "SEKIGAHARAの異常も一般の共通異常も未実装で受理先が無く、Item Interactionとして作らない。"
+      }
+    ],
+    "ownership_state": "装備と痕跡記録はplayer単位の個人状態。装備は個人枠を持ち、痕跡の印は本人にだけ出る。取得時に他者側の記録を削除するが、他者の痕跡を作ることはしない。切断と再接続時の復元は未決。",
+    "server_run_state": "個人記録の削除という副作用はあるが、Run共有のマップ状態は書き換えない。出現率と同時出現数は変更しないためWorldChangeのEffectは発生しない。Run終了で痕跡記録は破棄する。"
+  },
+  "html_file": "ROLE-B-008.html"
+}

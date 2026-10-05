@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-B-019 遮光板（暗くして、見つかりにくくする）</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<p class="sub">overnight-design-pilot-v1 ／ ROLE=B ／ 全マップ共通 ／ Idea</p>
+<h1>ROLE-B-019 遮光板（暗くして、見つかりにくくする） — 作業用見出し</h1>
+</header>
+<section id="hypothesis">
+<h2>何の案？</h2>
+<p>見られている前提を捨てて、6秒だけ暗がりに入る板。</p>
+<h2>仕組み</h2>
+<ul>
+<li>使うと6秒間、自分の表示が暗い側へ寄る。遠い表示は本人から消える。</li>
+<li>同じ6秒间、対象個人に関する索敵・追跡の更新が成立しない。直撃の攻撃は通る。</li>
+<li>等他Seb の影は動かない。解除条件は時間だけ。</li>
+</ul>
+<h2>選択と代償</h2>
+<p>隠れるか、明るいまま通り抜けるか。隠れている間は遠くを見られない。</p>
+</section>
+<section id="diagram">
+<h2>作用図</h2>
+<div class="board">
+<svg viewBox="0 0 980 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="見られている対象が6秒だけ索敵の外れ、表示範囲が暗い側へ寄る、代償として遠い対象が画面から外れる図">
+<rect width="980" height="360" fill="#0a1118"/>
+<text x="30" y="26" class="small">索敵の入力層は未実装。距離と持続時間の具体値は候補側で確定しない。</text>
+<rect x="30" y="60" width="250" height="120" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="46" y="90" class="label">使う前</text>
+<text x="46" y="116" class="small">遠くの対象が描画される</text>
+<text x="46" y="138" class="small">索敵が個人を拾う</text>
+<text x="46" y="160" class="small">共有の照明は変わらない</text>
+<rect x="370" y="60" width="250" height="120" rx="8" fill="#142330" stroke="#c4a0ec"/>
+<text x="386" y="90" class="label">6秒間の個人状態</text>
+<text x="386" y="116" class="small">表示が暗い側へ寄る</text>
+<text x="386" y="138" class="small">遠い表示は本人から消える</text>
+<text x="386" y="160" class="small">共有の照明は不変</text>
+<rect x="700" y="60" width="250" height="120" rx="8" fill="#142330" stroke="#ea9380"/>
+<text x="716" y="90" class="label">6秒間だけ</text>
+<text x="716" y="116" class="small">対象に関する索敵が成立しない</text>
+<text x="716" y="138" class="small">直撃の攻撃は通る</text>
+<text x="716" y="160" class="small">接触では解除しない</text>
+<path d="M282 120 H355" class="active"/><path d="M355 120 l10 6 -10 6" class="active"/>
+<path d="M622 120 H685" class="active"/><path d="M685 120 l10 6 -10 6" class="active"/>
+<rect x="30" y="230" width="920" height="60" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text x="46" y="260" class="label">代償：隠れている6秒は、遠いREQUIREが本人から消えたままになる</text>
+<text x="46" y="286" class="small"></text>
+<text x="46" y="308" class="small"></text>
+<text x="46" y="330" class="small"></text>
+</svg>
+</div>
+<p>左が使う前、中央が個人状態、右が索敵の除外。最下段が代償。</p>
+</section>
+<footer>
+<p><a href="index.html">← B候補一覧</a> ／ 詳細データ <a href="ROLE-B-019.json">ROLE-B-019.json</a> ／ connection_tags: Item, Observation, Environment ／ requires_code: true ／ 試作コスト: 中</p>
+</footer>
+</main>
+</body>
+</html>

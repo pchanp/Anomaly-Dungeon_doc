@@ -1,0 +1,105 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-030",
+  "role": "A",
+  "title": "残る音 — 鳴った装置がRunを通じてもう一度鳴る",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "GimmickEvent",
+  "source_evidence": [
+    {"path": "docs/systems/anomaly-interaction.md", "section": "### Sound Interaction", "source_status": "ステータス: Draft", "claim": "音を聞いたという事実、音源の方向や強さを認識した事実などを入力とする相互作用。"},
+    {"path": "docs/systems/game-rules.md", "section": "## ServerとClientの責務", "source_status": "Status: Draft（草案）", "claim": "ゲーム進行上の事実はServerが決定し、Clientは主に表現を担う。共有BGMはServer側が決める。"},
+    {"path": "docs/systems/effect-components.md", "section": "## 設計方針", "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）", "claim": "永続的に蓄積した能力だけで優位性が決まる構造にはしない。Run中のビルド、操作、観察、判断が結果を左右することを優先する。"}
+  ],
+  "design_hypothesis": "マップ内に鳴る装置がひとつあり、一度鳴ると鳴った事実だけがRunを通じて残る状態を仮定します。鳴った回数や時刻は個人提示として返り、共有はしません。二度目以降は同じ音が同じ強さで鳴り、近い通常モブだけが音源へ向かいます。装置は手で叩いても鳴らず、鳴る時刻は未定です。鳴ったまま消えないので、Run中に必ずもう一度は聞けます。",
+  "experience": {
+    "goal": "鳴ったという事実だけが残り、何が起きたかを推測する。",
+    "player_choice": "二度目を待って敵を寄せる／先に通り過ぎる／音の方向から敵の位置を測る。",
+    "sacrifice_or_risk": "音は自分にも聞こえる。待つあいだは安全ではなく、集まった個体の内訳は未知である。"
+  },
+  "placement_assumption": "全マップ共通のWorldChangeとして扱い、装置の形・置き場・鳴る時刻は各マップの判断に委ねます。既存の環境音とは別の扱いにすべきか、共有するかは未定です。地形や構造は提案しません。",
+  "components": [
+    {"component": "SoundInteraction", "availability": "catalog", "usage": "装置の音を入力として、近くの個体を向からせる。"},
+    {"component": "Effect.WorldChange", "availability": "catalog", "usage": "鳴った事実と音の状態を共有で管理する。"},
+    {"component": "Effect.InformationChange", "availability": "catalog", "usage": "鳴った事実だけを個人へ返す。時刻は返さない。"}
+  ],
+  "effects": [
+    {
+      "kind": "WorldChange",
+      "trigger": "対象マップが本候補の装置を鳴らす。",
+      "condition": "対象マップが本候補を許可していること。時刻は未定。",
+      "result": "装置が鳴り、鳴った事実がRun共有で残る。回数は個人だけが知る。",
+      "target": "対象の装置",
+      "scope": "Run全体",
+      "lifetime": "同一Run中",
+      "resolution": "instant",
+      "end_conditions": ["音の適用が解決する"],
+      "end_mode": "any",
+      "end_rule_reason": "即時。鳴るごと。",
+      "stacking": {"exception": false, "rule": "1回につき1件。音は足さない。", "conflict_resolution": "他の音源が同時に鳴る場合は未確定のため保留。"},
+      "server_validation": "Serverが音を鳴らし、鳴った事実を管理する。",
+      "client_presentation": "音のみ。時刻や回数は表示しない。",
+      "feedback": {"success": "音が鳴る。", "failure": "条件を満たさなければ鳴らない。", "ambiguous": "鳴った理由も、誰に向けた音かは説明しない。"}
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "装置の音が、近くの通常モブに届いた。",
+      "condition": "対象マップが本候補を許可していること。距離は未定。",
+      "result": "その個体が音源へ向かう。体力も個体数も変わらない。",
+      "target": "近くの通常モブ個体",
+      "scope": "Run共有の個体",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": ["音源に到達する", "別の音に付け替わる", "対象が戦闘不能になる", "Run終了"],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかで付け替えを解く。",
+      "stacking": {"exception": false, "rule": "1個体への付け替えは非加算1件。新しい音は残り時間を更新する。", "conflict_resolution": "同時刻に複数の音源がある場合は未確定のため保留。"},
+      "server_validation": "Serverが音源と到達可否を確定する。",
+      "client_presentation": "個体の動きのみ。音源の位置は表示しない。",
+      "feedback": {"success": "個体の方向が変わる。", "failure": "音が届かない距離では変わらない。", "ambiguous": "音がどこまで届いたかは説明しない。"}
+    }
+  ],
+  "provides_traits": ["鳴った事実がRunを通じて残る", "音を待つことで敵を引き寄せられる"],
+  "connection_tags": ["SoundInteraction", "WorldChange", "StateChange", "Sound"],
+  "refs": [],
+  "unresolved_refs": [
+    {"target_id": null, "required_traits": ["装置の音と既存の環境音を分ける方針"], "reason": "ID未指定の要求。既存の環境音との干渉の有無は未実装であり、共通設計側の判断が必要。", "adoption_blocker": true}
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "鳴る時刻と、音が届く距離は未定。数値を決めていない。",
+    "装置を手で叩けるかどうかは未定。",
+    "既存の環境音と干渉するかは未確認。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "鳴った事実だけが同じRunを通じて残り、時刻も回数は個人だけが知る、という置き方をした点。",
+    "in_world_rationale": "古い設備が残る文明では、装置が鳴った事実は運用上の記録として残ることがあった。残るのは鳴ったかどうかだけなら、書いた側の都合も読み手の都合も残らない。誰が管理していたかは説明しない。",
+    "meaning_left_ambiguous": "なぜ一度鳴ったのにRunを通じて鳴り続けるのか。この音は何を誘うのか。装置は呼んでいるのか、呼んでいるように見えるのか。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "装置の音の共有管理と、近くの個体への音による付け替えが未実装で、既存の環境音との切り分けも必要になるため。コード生成の許可ではない。",
+  "new_logic": ["装置の音の共有管理", "音による個体の一時的な付け替え"],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "装置1つと音の付け替え1本なら中程度。ただし既存の環境音と共有すると音が混ざるため、分離を決める必要がある。実時間の見積もりは出していない。",
+    "implementation_steps": ["鳴る装置を1つだけ置く", "一度鳴ることを確認する", "鳴った回数が個人提示になることを確認する", "近い個体だけが音源へ向かうことを確認する"],
+    "assumed_existing_parts": ["既存の環境音の再生経路", "通常のHPとDamageの受け口", "Server権威のRun状態"]
+  },
+  "role_details": {
+    "npc_purpose": "NPCは置かない。装置の音と、通常の個体への付け替えだけを扱う。",
+    "player_anomaly_handling": "Run共有の変化なので対象全体で成立する。通常NPCとのInteractionではない。判断019の枠は変えない。",
+    "mob_contract": {
+      "applicable": false,
+      "spawn_condition": "対象は発生しない。既存のイベント由来モブの注意だけを変える。どのイベントなのかは本候補では決めない。",
+      "population_cap": "対象は増やさない。個体数の上限は発生側の枠に従う。",
+      "non_combat_response": "音を待つ判断と、音の届かない距離を回って通過する判断が成立する。",
+      "exit_condition": "対象の通常の退場規則を妨げない。Run終了時に音の記録を破棄する。",
+      "entity_distinction": "モブを発生させる案ではない。Anomaly Entityの枠も同時出現数も使わず、通常の戦闘NPCの索敵状態だけを音で書き換える。"
+    }
+  },
+  "html_file": "ROLE-A-030.html"
+}

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-B-012 返し札（渡した副作用は相手へ返る）</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<p class="sub">overnight-design-pilot-v1 ／ ROLE=B ／ 研究所 ／ Idea</p>
+<h1>ROLE-B-012 返し札（渡した副作用は相手へ返る）— 作業用見出し</h1>
+</header>
+
+<section id="hypothesis">
+<h2>何の案？</h2>
+<p>渡した相手が被った変化が、渡した側へそのまま返ってくる札。</p>
+<h2>仕組み</h2>
+<ul>
+<li>同じRunの別の個人に差し出すと、相手がその場で受けた変化が本人に適用される。</li>
+<li>適用対象は本人に限る。相手の状態は書き換えない。相手も本人も同時に持つ。</li>
+<li>札は消費され、同じ結果は重ねない。返る結果の種類は未確定。</li>
+</ul>
+<h2>選択と代償</h2>
+<p>渡すという行為が、片側に押しつけるだけでなく双方の総量になる。渡した相手も、渡した本人も結果を持つ。</p>
+</section>
+
+<section id="diagram">
+<h2>作用図</h2>
+<div class="board">
+<svg viewBox="0 0 980 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="札を個人から個人へ渡すと、相手が受けた結果が本人個人状態にも適用される図。相手の所持は変わらず、同じ結果は重ねない">
+<rect width="980" height="380" fill="#0a1118"/>
+<text x="30" y="26" class="small">既存のwhisperの装置とは別の物品。相互作用は作らない。</text>
+<rect x="30" y="60" width="230" height="116" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="46" y="90" class="label">渡した側</text>
+<text x="46" y="116" class="small">結果を1つ持つ</text>
+<text x="46" y="138" class="small">札は消費される</text>
+<text x="46" y="160" class="small">同じ結果は重ねない</text>
+<rect x="720" y="60" width="230" height="116" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="736" y="90" class="label">受け手</text>
+<text x="736" y="116" class="small">結果を1つ持つ</text>
+<text x="736" y="138" class="small">所持は変わらない</text>
+<text x="736" y="160" class="small">表示にも変化の痕跡がない</text>
+<rect x="360" y="60" width="260" height="116" rx="8" fill="#142330" stroke="#c4a0ec"/>
+<text x="376" y="90" class="label">結果が戻る</text>
+<text x="376" y="116" class="small">因果の戻り道</text>
+<text x="376" y="138" class="small">物の移動ではない</text>
+<text x="376" y="160" class="small">適用対象は本人だけ</text>
+<path d="M262 118 H357" class="active"/>
+<path d="M357 112 l10 6 -10 6" class="active"/>
+<path d="M622 118 H717" class="hyp-line"/>
+<path d="M717 112 l10 6 -10 6" class="hyp-line"/>
+<path d="M490 178 V214" class="hyp-line"/>
+<path d="M482 206 l8 8 8 -8" class="hyp-line"/>
+<rect x="330" y="216" width="320" height="90" rx="8" fill="#142330" stroke="#ea9380"/>
+<text x="346" y="246" class="label">Run終了で消える</text>
+<text x="346" y="272" class="small">戻った結果も次のRunへは残らない</text>
+<text x="346" y="294" class="small">返る結果の種類は未確定</text>
+<text x="30" y="352" class="small">結果の優先順位は未決。候補側で先に評価すると決めない。</text>
+</svg>
+</div>
+<p>渡した側と受け手が、同じ結果を一つずつ持つ。下が寿命の切れ目。</p>
+</section>
+
+<footer>
+<p><a href="index.html">← B候補一覧</a> ／ 詳細データ <a href="ROLE-B-012.json">ROLE-B-012.json</a> ／ connection_tags: Item, Interface ／ requires_code: true ／ 試作コスト: 不明</p>
+</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-A-001 水位を読む人 — DAMの記録役</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+<p class="sub">overnight-design-pilot-v1 ／ ROLE-A-001 ／ 8/31（マップ固有）／ GimmickEvent</p>
+<h1>水位を読む人 — DAMの記録役</h1>
+<p>堤防で測るだけの点検役が1人いて、その測定値が個人に1行で返る。</p>
+<div class="badges"><span class="badge hyp">Draft</span><span class="badge">unreviewed</span><span class="badge unknown">周期と単位は未定</span></div>
+<nav class="nav"><a href="index.html">← 一覧</a><a href="ROLE-A-001.json">同IDのJSON</a></nav>
+</header>
+
+<section id="hypothesis">
+<h2>何の案か</h2>
+<p>8/31のDAMゾーンを巡回する点検役の測定値を、帰還判断の材料にする。</p>
+<ul>
+<li>測定区域内にとどまると、個人HUDに測定値が1行出る。単位も基準も残秒も出さない。</li>
+<li>一巡ごとに値が進み、進行の順序と方向だけが読める。</li>
+<li>点検役が攻撃を受けると巡回が止まり、最後の測定値だけが残る。</li>
+</ul>
+<p><strong>選択と代償:</strong> 待つ（読む）／通り過ぎる／攻撃して止める。読むにはその場の時間を使い、止めると記録源を失う（固定ペナルティはない）。放置でも成立する。</p>
+<p class="sub">接続タグ: Observation / NPCState / Environment / AugustPhase ／ requires_code: true ／ conflicts 3件・未解決3件（JSONに記載）</p>
+</section>
+
+<section id="diagram">
+<h2>仕組みの図</h2>
+<div class="board">
+<svg viewBox="0 0 1000 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="点検役の測定値が個人に提示され、攻撃を受けると巡回が止まって更新が途切れることを示す図">
+<rect width="1000" height="340" fill="#0a1118"/>
+<text class="label" x="24" y="28">Serverが持つ記録</text>
+<text class="label" x="560" y="28">点検役と、受け取る結果</text>
+<path d="M40 200h280" stroke="#2a3c49"/>
+<path d="M60 200v-14h80v14M140 186v-16h80v16M220 170v-16h80v16" stroke="#70c9c3" stroke-width="2" fill="none"/>
+<text class="small" x="52" y="222">DAY</text>
+<text class="small" x="146" y="222">EVENING</text>
+<text class="small" x="222" y="222">NIGHT</text>
+<text class="small" x="40" y="128">値は1段ずつ進む（周期と単位は未定）</text>
+
+<path d="M330 186h40" class="active"/>
+<path d="M364 180l9 6-9 6" class="active"/>
+<rect x="410" y="52" width="230" height="70" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="label" x="424" y="80">巡回中</text>
+<text class="small" x="424" y="104">測る、記録する、次へ</text>
+<rect x="410" y="240" width="230" height="70" rx="8" fill="#142330" stroke="#ea9380"/>
+<text class="label" x="424" y="268">巡回停止（攻撃後）</text>
+<text class="small" x="424" y="292">最後の値を保持する</text>
+<path d="M525 122v112" stroke="#ea9380" stroke-width="2" fill="none"/>
+<path d="M525 240l-6-9h12z" fill="#ea9380"/>
+<text class="small" x="404" y="168">攻撃</text>
+
+<rect x="680" y="52" width="296" height="70" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="label" x="694" y="80">個人HUDに1行出る</text>
+<text class="small" x="694" y="104">同じフェーズでも値は一致しない</text>
+<rect x="680" y="240" width="296" height="70" rx="8" fill="#142330" stroke="#ea9380"/>
+<text class="label" x="694" y="268">更新が止まる</text>
+<text class="small" x="694" y="292">最後の表示だけが残る</text>
+<path d="M642 87h32" class="active"/>
+<path d="M668 81l9 6-9 6" class="active"/>
+<path d="M642 275h32" stroke="#ea9380" stroke-width="2" fill="none"/>
+<path d="M668 269l9 6-9 6" stroke="#ea9380" stroke-width="2" fill="none"/>
+<text class="small" x="24" y="318">この図で分かること：記録は個人に落ち、攻撃は記録源を止める。危険度の表現は増やさない。</text>
+</svg>
+</div>
+<p>図注：値はServerが持っており、読み取るのは個人。攻撃は進行を早めず、手掛かりを消すだけ。</p>
+</section>
+
+<footer>overnight-design-pilot-v1 ／ ROLE-A-001 ／ 実表示は未確認（担当セッションでブラウザを使用していない）。</footer>
+</main>
+</body>
+</html>

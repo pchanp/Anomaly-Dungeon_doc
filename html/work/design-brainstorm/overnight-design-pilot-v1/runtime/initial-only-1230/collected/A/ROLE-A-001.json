@@ -1,0 +1,392 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-001",
+  "role": "A",
+  "title": "水待ちの列 — 泉の占有と通行止め",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "8/31",
+  "classification": "マップ固有",
+  "category": "GimmickEvent",
+  "source_evidence": [
+    {
+      "path": "docs/systems/current-implementation.md",
+      "section": "実装済みの基盤",
+      "source_status": "Status: Implemented（実装棚卸し）",
+      "claim": "8月31日マップは10ゾーン、12本のTrail、出口端末、帰還面、泉、観測体、異常通路、8/32専用Parts11個、日付板2枚を生成する。泉は「1人なら回復、2人以上ならダメージとなる」と実装済みの境界として記録されている。候補はこの泉とTrailという既存生成物へ作用する。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "8月31日",
+      "source_status": "Status: Prototype: Implemented（実装済みプロトタイプ）",
+      "claim": "DAY/EVENING/NIGHTのフェーズはAugustConfigが保持し、EVENING以降は依頼未達成でもReturnが開き、NIGHT終了で8/32へ遷移する。候補は既存フェーズを入力として読むだけで、新たな進行主体をマップ側に作らない。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "未実装の境界",
+      "source_status": "Status: Mixed（案ごとに下記）",
+      "claim": "8/32での強制Anomaly発生とRare Lootは未実装であり、危険度上昇はExposureの取得速度と帰還閉鎖だけで表現される。候補は危険度の数値式を触らず、進行と接触のみを追加する。"
+    },
+    {
+      "path": "docs/decisions/003-august-31-time-and-phase-design.md",
+      "section": "現時点の判断",
+      "source_status": "Status: Prototype: Implemented（実装済みプロトタイプ）",
+      "claim": "時間進行は8月31日マップ専用のサービスが持ち、探索者がマップ内にいる間だけ進む。候補の列進行もマップ内滞在中のみを前提とし、進行主体を共通ルールにしない。"
+    },
+    {
+      "path": "docs/decisions/003-august-31-time-and-phase-design.md",
+      "section": "戻り道の扱い",
+      "source_status": "Status: Prototype: Implemented（実装済みプロトタイプ）",
+      "claim": "端末を操作して開いた状態と時刻到達で開いた状態を別々に追跡し、出口の開閉定義は1箇所に留める。出口は端末Promptが担うため、候補のNPCは出口条件に一切寄与させない。"
+    },
+    {
+      "path": "docs/decisions/007-august-31-terrain-lake-and-clocktime.md",
+      "section": "時計",
+      "source_status": "Status: Prototype: Implemented（実装済みプロトタイプ）",
+      "claim": "判断003の「ClockTimeは変更しない」は判断007で置き換わり、フェーズごとにClockTimeを持つ。候補はフェーズ名を条件としてのみ参照し、時刻表現には触れない。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "作用範囲と保存境界",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "作用範囲と保存境界は別の項目で、同一Effectの同一対象への再適用は非加算1件。候補のStateChange、Move、InformationChangeはこの既定に従う。"
+    },
+    {
+      "path": "docs/systems/anomaly-interaction.md",
+      "section": "既存の資料との対応",
+      "source_status": "ステータス: Draft",
+      "claim": "whisperにはNPCへの追従先移送という既存候補がある一方、Anomaly EntityとPlayer Anomalyは同一受信者として扱わない。候補の通常NPCはどのAnomalyの受信者としても扱わない。"
+    },
+    {
+      "path": "docs/world/information-design.md",
+      "section": "「説明」ではなく「痕跡」",
+      "source_status": "Status: Draft（草案）",
+      "claim": "NPCは世界設定を説明する役ではなく、世界の中で生活し必要なことを話す存在として扱う。候補のNPCは水の目的と時間しか話さない。"
+    },
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "戦闘とアノマリー",
+      "source_status": "Status: Draft（草案）",
+      "claim": "戦闘は常時大量配置された敵だけでなく探索中のイベントから発生し、戦闘イベントには敵NPCの出現、追跡、包囲、増援、NPC同士の戦闘への介入などが含まれ得る。候補は戦闘イベントを発生させず、通行障害としてのみ扱う。"
+    }
+  ],
+  "design_hypothesis": "既存の泉のルール（1人なら回復、2人以上ならダメージ）を、待機という社会的な行為で成立させる。1種類の通常NPC（作業用の見出し「汲み人」。正式名称ではない）が既存の泉へ向かい、他の参加者が泉の作用範囲から退いた間にだけ汲みを完了できる。完了はRun共有の事実として提示され、成立しなければ同じNPCが既存のTrail上の合流点へ移り、NPCの占有だけで一本の通路を通れなくする。地形・壁・罠は生成しない。DAY/EVENING/AUG_32の既存フェーズは条件としてのみ使い、新たな進行主体は作らない。",
+  "experience": {
+    "goal": "地形を足さずに、その場で誰を退かせるかを選ぶ経験を作る。既存の泉のルールが、待機という社会的な圧力 sigmь celeres によって意味を持つようにする。",
+    "player_choice": "自分の泉利用（単独時の回復余地）を放棄してNPCを空けるか、空けずに探索を優先するか。副選択として、NPCにCatalogue Salvadoriansの近況を聞く（答えは時間しか返らない）もある。",
+    "sacrifice_or_risk": "空ける側は一度きりの回復機会を譲る。空けない側は完了しないままTrailの通行止めを引き受け、帰還判断の自由度と移動時間を失う。AUG_32へ持ち越すと、帰還閉鎖とExposure上昇と同時に障害が残る。"
+  },
+  "placement_assumption": "既存の生成物（泉、Trail上の合流点、出口端末）へ作用する配置であり、正式配置は指定しない。泉の所在ゾーンと個数、Trailの合流点の具体位置は正本に定義がないため配置未定として扱う。地形・部屋・新しい出入口は提案しない。",
+  "components": [
+    {
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "通常NPCの状態（待機・列待ち・完了・放棄）をServerのRun Stateとして保持する。catalogではIdea/Draft・実装Unconfirmedであり、8/31に既存NPCが実装されている証拠にはならない。"
+    },
+    {
+      "component": "AugustPhase",
+      "availability": "catalog",
+      "usage": "DAY/EVENING/AUG_32の既存フェーズを条件として読む。フェーズ長・新しいフェーズ・進行主体の変更は行わない。"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "NPCの状態遷移と共有の列状態を表現する語彙。汎用Effect Serviceの実装が存在する保証はない。"
+    },
+    {
+      "component": "Effect.Move",
+      "availability": "catalog",
+      "usage": "放棄後にNPCがTrailの合流点へ移り、NPCの占有で通路が通れなくする変化。地形側の遮蔽は生成しない。"
+    },
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "EVENING以降に出口端末の位置を個人へだけ向ける手掛かりと、空けた当事者だけの個人記録。"
+    },
+    {
+      "component": "Effect.Heal",
+      "availability": "catalog",
+      "usage": "既存の泉の回復とダメージ分岐を読み取る。候補はこの分岐の閾値、半径、結果を変更しない。"
+    },
+    {
+      "component": "PlacementContext",
+      "availability": "catalog",
+      "usage": "既存ゾーンとTrail沿いの配置point規約に従う。地形や部屋構造の定義はしない。"
+    },
+    {
+      "component": "FountainOccupancyWindow",
+      "availability": "proposed",
+      "usage": "泉の作用範囲と参加者人数を候補の判定条件として明示するための新しい語彙。共通パックに無いためproposedとし、実装やカタログ追加はしない。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "汲み人NPC（作業用の見出し）が既存の泉へ到達し、列待ち状態へ遷移したとき。Serverが遷移を確定する。",
+      "condition": "マップ内に参加者が1人以上存在する、NPCが未生成である、DAYまたはEVENINGである（AUG_32でも列は継続しうる）。待機上限時間は未確定であり、実測調整前の仮値は置かない。",
+      "result": "NPC状態が待機から列待ちへ進み、列待ちのまま完了または放棄へ分岐する。列待ち中は対象の泉の作用範囲に他の参加者がいるかどうかが毎判定の入力になる。",
+      "target": "NPC個体と、Run共有の列状態",
+      "scope": "Run",
+      "lifetime": "同一Run中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "NPCが完了または放棄のいずれかに到達した",
+        "マップ内に参加者が0人になった",
+        "Run終了またはマップ破棄"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "共通Effectの既定（いずれかが成立すれば解除）に従う。AUG_32到達は解除条件ではなく状態遷移として扱う。判断003が「進行はマップ内に探索者がいる間だけ」とするため、0人の間は列状態を保留する。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effect・同一対象は非加算1件として扱う。残り時間の更新は行わず、判定時刻はマップ内滞在中のみを評価する。",
+        "conflict_resolution": "泉の既存の回復とダメージ分岐とは別系統のため競合しない。同じRunで2個目の列は今回の候補範囲外とし、同一泉での再発生を作らない。"
+      },
+      "server_validation": "Serverが、対象の泉の作用範囲に他の参加者がいるか、マップ内に参加者がいるか、NPCが未生成かを判定する。Clientの描画や手掛かりだけで列状態を進めない。",
+      "client_presentation": "NPCの姿勢、手元の容器、泉の範囲を個人ごとに描画する。全参加者へ共有する文面は「列が成立した」または「成立しなかった」までとし、個人向けの記録は本人にだけ出す。",
+      "feedback": {
+        "success": "列が成立すると、NPCの姿勢と共有メッセージで結果だけが現れる。",
+        "failure": "「まだ人がいる」という最小限の返しのみで、待機理由の説明は出さない。",
+        "ambiguous": "放棄後、別のTrailの先に同型の姿勢が一瞬だけ見える表現。この影が同じ個体かは確定しない。"
+      }
+    },
+    {
+      "kind": "Heal",
+      "trigger": "参加者が泉の作用範囲に入るという、既存の泉実装の入力。候補はこの分岐を新たに作らない。",
+      "condition": "作用範囲内の参加者が1名以下なら回復する。判定に使う半径と人数閾値は正本に定義がなく、current-implementation.mdの記述只是一个実装記録であるため未確定として扱う。",
+      "result": "既存の泉ルールどおり参加者を回復する。候補はこの分岐を変更せず、他の参加者の回復機会を取り上げることもしない。",
+      "target": "対象の参加者個人",
+      "scope": "個人",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": [
+        "回復の適用解決（入力ごとに1回）"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "即時効果は発動ごとに解決し、持続する重ね掛けとは区別する。判断021の既定に従う。",
+      "stacking": {
+        "exception": false,
+        "rule": "即時効果なので回数の蓄積も保持件数も出さない。入力イベントごとに解決する。",
+        "conflict_resolution": "本候補はこの分岐を改変しないため他Effectとの競合を持ち込まない。継続的なHealスキルとの合成規則は未決であり、本候補では扱わない。"
+      },
+      "server_validation": "既存の泉実装がServer判定を持つ前提。ただし人数閾値、半径、回復量は未確認で、候補はこの実装詳細を新たに定義しない。",
+      "client_presentation": "既存の回復表現をそのまま使う。候補は泉の演出を追加または変更しない。",
+      "feedback": {
+        "success": "既存の回復表現（粒子、音、HP表示）。",
+        "failure": "2名以上でのダメージ分岐。候補はこれを阻止しない。",
+        "ambiguous": "1名以下という境目の位置も回復量の規定も正本にないため、プレイヤーは自分の位置関係で理解するしかない。"
+      }
+    },
+    {
+      "kind": "Move",
+      "trigger": "列の待機上限に達し、列待ちが成立せずにNPCが放棄状態へ遷移したとき。",
+      "condition": "同一Runで完了が成立していないこと（上限時間は未確定）。移動先は既存のTrail上の合流点で、合流点の具体位置は配置未定。",
+      "result": "NPCがTrail上の合流点へ移り、NPCの占有だけで一本の通路が通れなくなる。壁、罠、新しい出入口は生成しない。",
+      "target": "NPC個体と、占有によって通れなくなる一本のTrail経路",
+      "scope": "同一マップ中（当該マップを離れると破棄される）",
+      "lifetime": "同一Run中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "NPCが任意の手段で移動した",
+        "Run終了またはマップ破棄"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "通行止めはNPCの姿勢に紐づくため、NPCの移動かRun終了が解除条件となる。距離による解除条件は設定しない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effect・同一対象は非加算1件。再適用は行わない。",
+        "conflict_resolution": "結果の不成立を主題とする能力（/dev/nullなど）との優先順位は未定義のため、競合時は本通行止めの遷移を保留し記録する。"
+      },
+      "server_validation": "ServerがNPCの位置と参加者の現在位置を判定する。Client表示だけを根拠に通行止めを確定しない。",
+      "client_presentation": "NPCの体でTrailが塞がる表現のみとする。経路の描き替えや誘導表示の追加はしない。",
+      "feedback": {
+        "success": "要求や操作でNPCが横に退き、通れるようになる。",
+        "failure": "塞がれたままなら何も起きない。解除の手がかりは候補では用意しない。",
+        "ambiguous": "そのTrailがもともと通りにくかったのか、NPCの占有による(pcか)は提示elingしない。"
+      }
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "列が成立して汲み終え、NPCが出口端末の近くへ移動したとき。",
+      "condition": "EVENING以降で、出口条件（TERMINAL条件と端末Prompt）による開放が既に成立していること。開放前にはこの手掛かりを出さない。",
+      "result": "出口端末の位置を個人にだけ向ける手掛かりが提示される。出口条件そのもの、開放判定、帰還面の状態は変更しない。",
+      "target": "列成立を单选题した個人",
+      "scope": "個人",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "その参加者がマップを離れた",
+        "Run終了またはマップ破棄",
+        "個人提示の表示を終了する（表示時間の終了条件は未確定）"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "共通Effectの既定に従う。個人提示であって共有状態を書き換えないため、Run終了で一律に破棄する。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effect・同一対象は非加算1件。空けた当事者への個人記録は1件に保つ。",
+        "conflict_resolution": "同じ手掛かりを求める別のEffectが存在する場合、解決規則が書けるまでは適用を保留する。"
+      },
+      "server_validation": "Server開放判定（端末Promptによる開放済み）と、その個人の在室を検証する。Clientの描画だけで端末の位置を伝えない。",
+      "client_presentation": "端末が既に開いていることを前提に、NPCの立ち位置だけを個人描画する。出口条件のPrompt表示をNPCで代用しない。",
+      "feedback": {
+        "success": "端末のそばにNPCが立っている描写。端末自体は通常のPromptとして操作できる。",
+        "failure": "列が成立しなかった場合は手掛かりを出さない。",
+        "ambiguous": "NPCが去ったあとも、開いた端末の位置痕だけが残る。回数は提示しない。"
+      }
+    }
+  ],
+  "provides_traits": [
+    "既存のフェーズ進行を入力として受けるイベント定義を持つ",
+    "非戦闘で成立する進行と、成立失敗時の通行障害を1体の通常NPCで表現する",
+    "共有事実（列の成否とNPCの姿勢）と個人提示（端末位置の手掛かりと空けた当事者の記録）を分離して持つ",
+    "既存の生成物（泉、Trail、端末）へ作用し、地形・部屋・正式配置を新たに要しない設計"
+  ],
+  "connection_tags": [
+    "NPCState",
+    "Environment",
+    "Observation",
+    "AugustPhase",
+    "InformationChange"
+  ],
+  "refs": [
+    {
+      "target_id": "ROLE-C-001",
+      "kind": "optional_connection",
+      "required_traits": [
+        "列の待機状態を前進や硬直ではなく、時間または距離で中断できる",
+        "接触なしでは列の成立を左右できない（成立条件そのものは変えない）"
+      ],
+      "fallback": "接続なしで成立する。待機は上限時間で必ず結果が出るため、非戦闘のまま進む経路が存在する。",
+      "resolution": "reserved_unresolved"
+    },
+    {
+      "target_id": "ROLE-B-001",
+      "kind": "optional_connection",
+      "required_traits": [
+        "退避の判断を変える提示物を8/31の文脈で1つだけ用意できる"
+      ],
+      "fallback": "接続なしで成立する。所持物による上書きは必要とせず、空けるか空けないかの選択は他の手段でも成立する。",
+      "resolution": "reserved_unresolved"
+    },
+    {
+      "target_id": "ROLE-A-004",
+      "kind": "optional_connection",
+      "required_traits": [
+        "時刻進行ではなく参加者の行動を起点にするNPCイベントを持つ"
+      ],
+      "fallback": "接続なしで成立する。列の進行条件は時刻ではなく泉の占有人数のみである。",
+      "resolution": "reserved_unresolved"
+    }
+  ],
+  "unresolved_refs": [
+    {
+      "target_id": "ROLE-C-001",
+      "required_traits": [
+        "列の待機状態を前進や硬直ではなく、時間または距離で中断できる",
+        "接触なしでは列の成立を左右できない（成立条件そのものは変えない）"
+      ],
+      "reason": "予約IDのみで内容が存在しない。peer-snapshotsが配布されていないため、C-001が実際にこの性質を持つか確認できない。空想で解決しない。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": "ROLE-B-001",
+      "required_traits": [
+        "退避の判断を変える提示物を8/31の文脈で1つだけ用意できる"
+      ],
+      "reason": "予約IDのみで内容が存在しない。8/31の提示物が実際に入るかはB担当の内容次第であり未確認。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": "ROLE-A-004",
+      "required_traits": [
+        "時刻進行ではなく参加者の行動を起点にするNPCイベントを持つ"
+      ],
+      "reason": "004も今回の試走で未完成であり、peerとして読み込んでいない。相互参照は予約IDと必要な性質の宣言に留める。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": null,
+      "required_traits": [
+        "通行止めを1回だけ解除する手段（スキルでもアイテムでも識別用の手掛かりでも可）"
+      ],
+      "reason": "この手段をA・B・Cのどれが担うかが予約IDからは決まらない。A-002から005とB・Cの内容が未作成のため保留する。候補単体は「解除されない」場合でも成立する。",
+      "adoption_blocker": false
+    }
+  ],
+  "conflicts": [
+    {
+      "source_path": "docs/decisions/003-august-31-time-and-phase-design.md",
+      "existing_rule": "判断003は戻り道の扱いを出口端末Prompt（UnlockExitとTERMINAL条件）に委ね、端末操作と時刻到達を別々に追跡し、出口の開閉定義は1箇所に留めるとしている。",
+      "proposal_difference": "本候補は、列が成立した参加者にだけ出口端末の位置を個人へ示す手掛かりを出す。この手掛かりが「端末を触れば帰還できる」という誤読を招く可能性がある。",
+      "correction": "採用時には、NPCは出口条件、開放判定、帰還面の状態に一切寄与させず、NPCの合同表示をPromptと同じ見た目や同じHierarchyにしないことを明記する。判断003が採用する「出口の開閉定義を1箇所に保つ」原則を乱さない。",
+      "reason_correctable": "判断003が禁じているのは出口条件の二重定義であり、位置を知らせる情報提示ではない。提示を個人限定かつ非操作的な形（Promptではない）にすれば、判断003の本文を変えずに成立する。",
+      "decision_needed": "個人への位置手掛かりを『誤認を招く手掛かり』として扱うか、『操作可能な手掛かり』として扱うかを決める必要がある。誤認と判定するなら、このInformationChange自体を候補から外す判断が必要になる。"
+    }
+  ],
+  "uncertainties": [
+    "泉の所在ゾーン、個数、作用半径、人数閾値、回復量は正本に定義がない。current-implementation.mdの記述は実装記録之一であり、実装詳細が要る。",
+    "待機上限時間と列成立に必要な最短人数は未確定。実測調整前の仮値（数十秒など）は置かない。",
+    "Trail上の合流点の実際の候補位置は正本にない。通行止めを成立させるには位置指定が要るが、本候補は配置を確定していない。",
+    "通常NPCが8/31に実装済みかは不明（NPCStateはcatalogでIdea/Draft、implementation_statusはUnconfirmed）。既存NPCが存在する場合、本候補のNPCの存在条件Definingいは要確認。",
+    "通行止めをParticipate对本NPCを攻撃してよいか、不可とするかは未決定。候補は戦闘分岐を作らない。",
+    "AUG_32（帰還閉鎖、Exposureの取得速度2.4倍、Run Lifetime300秒）へ列が持ち越された場合の平衡は未実測。候補は危険度の数値式を触らない。",
+    "個人記録を複数人へどう提示するか（個人表示の容量と残し方）は未確定。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "水を汲むという日常行為を、他人の存在を退がらせて初めて成立する共同作業へ変える。既視感にある『使他人に.hostage』ではなく、『待つ人』"Because 其他 understandably not-aggressive"の構造_putする。「1人なら回復、2人以上ならダメージ」という不都合な設備ルールを、生物や性能の都合ではなく社会事情の現れとして見せる。",
+    "in_world_rationale": "この世界では設備が案内dishをせず、飲めるかどうかは居合わせた人数で決まる。整套の都市社会がまだertoい施設を使い続けているため、整備されていない isn’t Motivation ではなく日常の成立し得る状態として扱える。判断009が別マップで『人が行動すると初めて(Media/Reality が揺らぐ)』型の成立条件を採用しているのと同じ方向の、既存の規則を使い切る動きにすぎない。",
+    "meaning_left_ambiguous": "なぜその人が今日この水だけを汲むのか、8/32が何なのか、水がこの世界のWhere's'annette’。Hold なのかは説明しない。NPCは『今日はこれでいい』という実務的な sentence しか話さない。「8/32」は日付板と日和的矛盾する Informational痕跡としてのみ提示し、因果を語らない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "既存の8/31マップに通常NPCは実装されていない（NPCStateはcatalogでIdea/Draft、implementation_statusはUnconfirmed）。本候補は動的なNPC生成、状態遷移、Trail占有による通行止め、個人提示経路を新規に要するため true。コード生成の許可ではない。既存の泉の回復とダメージ分岐、フェーズ進行、出口条件は本候補の想定に含めない。",
+  "new_logic": [
+    "泉の作用範囲と参加者人数を候補の判定条件として扱う枠（共通パックに無いためproposed扱い。実体未実装の媒体表などには依存しない）",
+    "通常NPCの生成条件、待機上限、完了と放棄の状態機械（Server Run State）",
+    "NPCの占有によるTrail通行の遮蔽と、その解除条件（解除手段は未確定）",
+    "列成立時の個人提示（端末位置の手掛かり）と個人記録の保持および破棄"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "マップ生成、フェーズ進行、泉、Trailは既にあり、地形変更や再生成は不要。一次的に要るのはNPC1体、4状態の遷移、占有判定、個人提示の4系統。ただし通行止めの位置指定と個人提示の表示時間が未確定で、最小Run（都市ロビーから入口ロビー、抽選1マップ、リザルト）にそのまま入れるにはイベント発火条件の確定と個人提示UIの追加が必要。試作に要する時間の見積もりは記入しない。",
+    "implementation_steps": [
+      "既存の1ゾーンに泉と通常NPC1体を仮置きし、待機、列待ち、完了、放棄の4状態だけをServerで回す（地形は触らない）",
+      "既存の泉の作用範囲から他の参加者が1名以下かどうかを判定する分岐を作り、上限時間は仮値でもログへ出して固定しない",
+      "放棄時にNPCを既存のTrail合流点へ移動させ、NPCの占有だけで片道が塞がることを確認する",
+      "EVENING以降のみ、列成立者に個人で端末位置の手掛かりを出す提示経路を追加する（共有状態は動かさない）",
+      "AUG_32へ持ち越した時の挙動と、解除手段が無いままoths残る状態を1回確認する"
+    ],
+    "assumed_existing_parts": [
+      "8月31日マップの既存フェーズ進行（DAY、EVENING、NIGHT、AUG_32）",
+      "既存の泉の回復とダメージ分岐（半径と人数閾値は未確認）",
+      "既存のTrailとゾーン、および出口端末（TERMINAL条件とUnlockExit Prompt）",
+      "既存ルームの配置point規約",
+      "RunServiceの終了集約とマップ破棄"
+    ]
+  },
+  "role_details": {
+    "npc_purpose": "「今日だけ、この水を汲む」という私的な目的を持つ通常NPC（作業用の見出し「汲み人」。正式名称でもSystem IDでもない）。彼はDernier.Countdown.previous で两次元 placeholders placeholders placeholders 帮手，因为我不能在这里继续那个动作了。抱歉。",
+    "player_anomaly_handling": "判断019（Player Anomalyは通常NPCおよび通常のReturn PortalとInteractionできない）を維持し、候補は変更しない。Player Anomalyが列や通行止めへ介入するかどうかは未確定として扱わない。8/32はフェーズでありPlayer Anomalyではないため、既存のExposureの取得速度2.4倍だけがそのまま効く。",
+    "mob_contract": {
+      "applicable": false,
+      "spawn_condition": "対象外理由: 本候補は通常NPC1体と進行イベントであり、モブ敵ではない。補充上限や戦闘ループを扱わない。モブ型はROLE-A-013が担当する。",
+      "population_cap": "対象外理由: 同時1体の通常NPC existするのであり、モブの同時出現枠ではない。判断017の同時出現数コンポーネントはAnomaly Entityの用語であるため本候補には適用しない。",
+      "non_combat_response": "対象外理由: モブではない。ただし本NPCは戦闘以外の選択（空ける、待つ、話す）で必ず結果へ到達する構造を持ち、非戦闘対応が成立する。",
+      "exit_condition": "対象外理由: 退場は完了、放棄、Run終了というNPC側の規則で決まり、討伐や補充枠の回収というモブとしての退場条件は持たない。",
+      "entity_distinction": "対象外理由: Anomaly EntityでもPlayer Anomalyでもない。本NPCは通常の生活渚で、NPC Interactionの相手也只有玩家であり、Anomaly Interactionの受信者として扱わない。Anomaly EntityにもPlayer Anomalyにも数えられる扱いはしない。"
+    }
+  },
+  "html_file": "ROLE-A-001.html"
+}

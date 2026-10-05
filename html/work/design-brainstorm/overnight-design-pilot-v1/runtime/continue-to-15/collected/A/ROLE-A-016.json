@@ -1,0 +1,105 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-016",
+  "role": "A",
+  "title": "囮の音 — 索敵を外へ逃がす",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "GimmickEvent",
+  "source_evidence": [
+    {"path": "docs/systems/anomaly-interaction.md", "section": "### Sound Interaction", "source_status": "ステータス: Draft", "claim": "音を発した、聞いた、音源の方向や強度を認識した、といった音に関するゲーム上の事実を入力にする。実装するシステムが提供できる文脈だけを使う。"},
+    {"path": "docs/systems/game-rules.md", "section": "## 戦闘とアノマリー", "source_status": "Status: Draft（草案）", "claim": "戦闘イベントには、敵NPCの出現、追跡、包囲、増援などが含まれ得る。"},
+    {"path": "docs/systems/effect-components.md", "section": "## 作用範囲と保存境界", "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）", "claim": "作用範囲と保存境界は別の項目とする。保存境界は永続、同一Run中、同一マップ中、一時で、終了条件のいずれかが成立したら解除する。"}
+  ],
+  "design_hypothesis": "プレイヤー自身が音を出して、追跡中のモブの狙いを別の場所へ向けることを可能にします。走り踏み音と壊した物の音は別の強さで届きます。手がかりとして残るのは音だけなので、どこへ誘導したかは後から読み取れません。音の減衰範囲と個体の聴覚は未実装のため、ここでは仮説として扱います。索敵中の個体だけが反応し、攻撃中の個体と待機中の個体では変わりません。",
+  "experience": {
+    "goal": "戦わずに距離をつくる足場をつくる。",
+    "player_choice": "遠目に鳴らして横へ抜ける／自分の足音を逆方向へ使う／気づかれない位置から静かに回る。",
+    "sacrifice_or_risk": "誘導に使う音は自分の位置も知らせる。減衰範囲は未定なので、逃げ切れる保証はない。"
+  },
+  "placement_assumption": "全マップ共通のWorldChangeとして扱い、地面・天井・配置には依存しません。地形や部屋は追加しません。音の減衰と個体の聴覚は未実装であり、既存の環境音と別系統として扱う必要があるかは未確定です。",
+  "components": [
+    {"component": "SoundInteraction", "availability": "catalog", "usage": "音を発生源の位置と強度として入力し、対象の注意を向ける。"},
+    {"component": "Effect.StateChange", "availability": "catalog", "usage": "モブの索敵対象を発生源へ差し替える。"},
+    {"component": "Effect.InformationChange", "availability": "catalog", "usage": "音が届く範囲を個人へ返す。敵の位置は返さない。"}
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "プレイヤーまたは倒した物体が、対象の認識できる距離内で音を出す。",
+      "condition": "対象が索敵中で、攻撃済みの個体ではないこと。減衰距離は未定。",
+      "result": "対象の狙いが発生源へ差し替わる。HPも個体数も変わらない。",
+      "target": "対象のモブ個体",
+      "scope": "Run共有の個体",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": ["発生源に到達して索敵が解除される", "別の音が優先された", "対象が戦闘不能になる", "Run終了"],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかで誘導を解除する。",
+      "stacking": {"exception": false, "rule": "1個体への誘導は非加算1件。新しい音は残り時間を更新する。", "conflict_resolution": "同時刻に複数の発生源がある場合は未確定のため保留し記録する。"},
+      "server_validation": "Serverが音源の位置と到達可否を確定する。クライアントの主張だけでは索敵を向け替えない。",
+      "client_presentation": "音と対象の挙動のみ。誘導先や減衰半径は表示しない。",
+      "feedback": {"success": "個体の方向が変わる。", "failure": "攻撃済みの個体や音が届かない距離では変わらない。", "ambiguous": "音がどこまで届いたかは説明しない。"}
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "発した音が他の個体へ届く可能性がある。",
+      "condition": "対象マップが本候補を許可していること。",
+      "result": "到達しうる範囲だけを個人提示として返す。敵の数は出さない。",
+      "target": "発した側の個人",
+      "scope": "個人",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": ["提示の表示"],
+      "end_mode": "any",
+      "end_rule_reason": "即時。範囲の表示のみ。",
+      "stacking": {"exception": false, "rule": "1回の発生ごとに1件。前の表示を置き換える。", "conflict_resolution": "他の音の表示と重なる場合は未確定のため保留。"},
+      "server_validation": "Serverの到達判定から範囲だけを送る。",
+      "client_presentation": "到達しうる範囲の1表示のみ。",
+      "feedback": {"success": "自分の音が届くことが分かる。", "failure": "届かない場合は何も出ない。", "ambiguous": "到達先の数は表示しない。"}
+    }
+  ],
+  "provides_traits": ["音を投入すれば索敵を別へ向かえられる", "誘導しても個体数は減らない"],
+  "connection_tags": ["SoundInteraction", "StateChange", "Combat", "Environment"],
+  "refs": [],
+  "unresolved_refs": [
+    {"target_id": null, "required_traits": ["音の減衰・遮蔽とモブの聴覚を実装する方針"], "reason": "ID未指定の要求。伝播方式はanomaly-interaction.mdでも未決定であり、共通設計側の判断が必要。", "adoption_blocker": true}
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "音の減衰距離・到達判定・遮蔽の扱いは未定。数値を決めていない。",
+    "攻撃済みの個体が誘導から抜けるかは未定。",
+    "既存の環境音と本候補の音が干渉するかは未確認。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "戦闘を避ける手段を、自分で音を出す操作に置く点。",
+    "in_world_rationale": "古い設備が残る文明では、待つことが仕事の一部だった。音で相手を遠ざける姿勢は、その環境では普通の作法として成立する。誰がこの手順を覚えているかは説明しない。",
+    "meaning_left_ambiguous": "なぜ音で逸れるのか。音が恐怖なのか、指示なのか。音を避ける対象は何を知っているのか。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "音の伝播評価とモブの索敵付け替えの経路が存在しないため。コード生成の許可ではない。",
+  "new_logic": ["音の発生源と到達判定", "モブの索敵対象の一時差し替え"],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "単発の音と1個体の付け替えだけなら中程度。ただし減衰と優先順位の決定が要るため、音源が複数あると調整が要る。実時間の見積もりは出していない。",
+    "implementation_steps": ["発生源の位置を持つ単一音を作る", "索敵中の1個体だけ反応させる", "到達しない距離で反応しないことを確認する", "攻撃済みの個体が変わらないことを確認する"],
+    "assumed_existing_parts": ["通常のHPとDamageの受け口", "Server権威のRun状態", "既存の環境音の再生経路"]
+  },
+  "role_details": {
+    "npc_purpose": "NPC自体を持たない。既存のモブの注意だけを別へ向ける。会話も説明も行わない。",
+    "player_anomaly_handling": "WorldChangeなので対象全体で成立する。通常NPCとのInteractionではない。判断019の枠は変えない。",
+    "mob_contract": {
+      "applicable": false,
+      "spawn_condition": "対象は発生しない。既存のイベント由来モブの注意のみを変える。どのイベントの話かも本候補では決めない。",
+      "population_cap": "対象は増やさない。個体数の上限は発生側の枠に従う。",
+      "non_combat_response": "攻撃せずそのまま通り過ぎられる。誘導は任意で、反応しない個体があってもよい。",
+      "exit_condition": "対象の通常の退場規則を妨げない。誘導が解けた後に個体は通常どおり動く。",
+      "entity_distinction": "モブを発生させる案ではない。Anomaly Entityの枠も同時出現数も使わず、通常の戦闘NPCの索敵状態だけを書き換える。"
+    }
+  },
+  "html_file": "ROLE-A-016.html"
+}

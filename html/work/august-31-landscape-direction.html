@@ -1,0 +1,58 @@
+<div id="august-landscape-direction" aria-labelledby="landscape-title">
+  <style>
+    #august-landscape-direction { color: var(--foreground); }
+    #august-landscape-direction .legend { display:flex; flex-wrap:wrap; gap:14px; margin:8px 0 12px; }
+    #august-landscape-direction .legend span { display:inline-flex; align-items:center; gap:5px; font-size:12px; color:var(--muted-foreground); }
+    #august-landscape-direction .dot { width:10px; height:10px; border-radius:50%; display:inline-block; }
+    #august-landscape-direction svg { width:100%; height:auto; display:block; }
+    #august-landscape-direction .label { font: 500 13px sans-serif; fill:var(--foreground); paint-order:stroke; stroke:var(--background); stroke-width:3px; stroke-linejoin:round; }
+    #august-landscape-direction .small { font: 12px sans-serif; fill:var(--muted-foreground); }
+  </style>
+  <h2 id="landscape-title">8月31日：夏の谷の視線設計</h2>
+  <div class="legend" aria-label="凡例">
+    <span><i class="dot" style="background:var(--green)"></i>植生の量塊</span>
+    <span><i class="dot" style="background:var(--blue)"></i>水面</span>
+    <span><i class="dot" style="background:var(--orange)"></i>生活の痕跡</span>
+    <span><i class="dot" style="background:var(--purple)"></i>8/32の異常焦点</span>
+  </div>
+  <svg viewBox="0 0 760 510" role="img" aria-label="谷の入口から集落、田、河原、湖、団地へ向かう8月31日のランドスケープ構図">
+    <title>8月31日のランドスケープ構図</title>
+    <desc>プレイヤーがバス停から谷へ入り、遠景の湖と丘上の団地を目印に移動する。生活の小物は道沿いに集約し、森林と水面は広い面で見せる。</desc>
+    <rect x="0" y="0" width="760" height="510" fill="var(--muted)" opacity=".38"/>
+    <path d="M0 74 C92 16 177 50 252 92 C335 22 452 25 538 98 C617 47 700 45 760 88 L760 0 L0 0Z" fill="var(--green)" opacity=".26"/>
+    <path d="M0 433 C85 374 170 411 255 454 C350 385 459 387 548 442 C627 385 690 401 760 442 L760 510 L0 510Z" fill="var(--green)" opacity=".20"/>
+    <path d="M18 327 C118 287 202 304 294 351 C394 402 499 396 585 330 C648 281 708 288 750 310" fill="none" stroke="var(--green)" stroke-width="42" stroke-linecap="round" opacity=".55"/>
+    <path d="M24 337 C124 300 207 317 287 359 C383 409 492 404 583 340 C648 295 704 299 750 319" fill="none" stroke="var(--background)" stroke-width="15" stroke-linecap="round" opacity=".92"/>
+    <path d="M24 337 C124 300 207 317 287 359 C383 409 492 404 583 340 C648 295 704 299 750 319" fill="none" stroke="var(--border)" stroke-width="2" stroke-linecap="round"/>
+    <ellipse cx="549" cy="177" rx="105" ry="55" fill="var(--blue)" opacity=".55"/>
+    <ellipse cx="549" cy="177" rx="79" ry="35" fill="var(--background)" opacity=".23"/>
+    <path d="M125 260 h104 l-20 68 h-104z" fill="var(--green)" opacity=".56"/>
+    <path d="M237 294 h90 l-17 57 h-90z" fill="var(--green)" opacity=".42"/>
+    <g fill="var(--orange)" opacity=".85">
+      <rect x="294" y="280" width="31" height="20"/><path d="M289 280 l20-14 21 14z"/>
+      <rect x="333" y="274" width="35" height="25"/><path d="M327 274 l23-15 24 15z"/>
+      <rect x="371" y="287" width="28" height="18"/><path d="M366 287 l19-13 20 13z"/>
+    </g>
+    <g fill="var(--purple)" opacity=".8">
+      <rect x="597" y="101" width="18" height="58"/><rect x="620" y="93" width="18" height="66"/><rect x="643" y="108" width="18" height="51"/>
+    </g>
+    <g fill="var(--green)" opacity=".75">
+      <circle cx="83" cy="255" r="24"/><circle cx="108" cy="232" r="30"/><circle cx="135" cy="260" r="27"/>
+      <circle cx="425" cy="236" r="22"/><circle cx="443" cy="213" r="30"/><circle cx="468" cy="240" r="26"/>
+      <circle cx="688" cy="214" r="28"/><circle cx="719" cy="230" r="34"/>
+    </g>
+    <g class="label">
+      <text x="35" y="370">バス停／入口</text>
+      <text x="281" y="250">集落：生活の密度</text>
+      <text x="116" y="246">田と用水</text>
+      <text x="438" y="160">静かな湖</text>
+      <text x="587" y="83">丘上の団地</text>
+    </g>
+    <g class="small">
+      <text x="35" y="390">最初に空と遠景を見せる</text>
+      <text x="281" y="267">小物は道沿い、建物は点在</text>
+      <text x="438" y="177">水面を遠景の余白にする</text>
+      <text x="587" y="100">8/32で意味が変わる焦点</text>
+    </g>
+  </svg>
+</div>

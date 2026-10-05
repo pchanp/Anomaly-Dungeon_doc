@@ -1,0 +1,195 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-005",
+  "role": "C",
+  "title": "一打の無音",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "廃TSUTAYA",
+  "classification": "マップ固有",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "通常攻撃と連携",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "素手の通常攻撃はワンツー。4つの装備枠すべてが攻撃系の場合はフルアタック構成となりワンツー、アッパー、回し蹴りの4連撃になる。連携の入力受付時間、キャンセル可能時点、硬直、スタミナ等のコストは未決定。"
+    },
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "攻撃系",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "纏絲勁は小威力の攻撃をParryしながら中ダメージを与え対象を0.5秒Stunさせる。平安初段はParryと攻撃を行う21連撃で実行中は通常移動できない。ダメージの小、中，大やParry、硬直の数値は未定。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "重ね掛けの既定規則",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "DamageやHealなどの即時効果は発動イベントごとに解決する。同じEffect IDが同じ対象へ再適用された場合は既定で効果量を足さず1件とする。解決規則が未定義ならその競合適用は保留して記録する。"
+    },
+    {
+      "path": "docs/systems/anomaly-interaction.md",
+      "section": "Sound Interaction",
+      "source_status": "ステータス: Draft",
+      "claim": "音を発した、聞いた、音源の方向や強度を認識したといった音の事実を入力にする相互作用。実装するシステムが提供できる文脈だけを使い、BGMや通常の環境音が自動的に相互作用になるわけではない。伝播、遮蔽、同期の方式は未決定。"
+    }
+  ],
+  "design_hypothesis": "次の通常攻撃一打だけ、発音を抑える。 発動後の最初の通常攻撃で消費する。空振りでも戻らない。 抑えるのは攻撃者側の対応音源だけ。命中・ダメージ・硬直は通常どおり。 相手や環境が別に出す音、視認、Exposureは止めない。",
+  "experience": {
+    "goal": "次の通常攻撃一打だけ、発音を抑える。",
+    "player_choice": "攻撃系の一枠を音対策に使うか、攻撃力へ回すか。姿と攻撃動作は見える。",
+    "sacrifice_or_risk": "攻撃系の一枠を音対策に使うか、攻撃力へ回すか。姿と攻撃動作は見える。"
+  },
+  "placement_assumption": "既存マップで使用する文脈。配置・建物構造・地形・Questの結末を新設しない。対応対象が未実装なら試作用の対象で確認する。",
+  "components": [
+    {
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "次の通常攻撃一打だけ、発音を抑える。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "RuleOverride",
+      "trigger": "装備中に本人が発動入力。発動後の最初の通常攻撃で消費する。空振りでも戻らない。",
+      "condition": "発動後の最初の通常攻撃で消費する。空振りでも戻らない。 ServerがRun・対象・クールダウンを検査。",
+      "result": "発動後の最初の通常攻撃で消費する。空振りでも戻らない。 抑えるのは攻撃者側の対応音源だけ。命中・ダメージ・硬直は通常どおり。 相手や環境が別に出す音、視認、Exposureは止めない。",
+      "target": "本人",
+      "scope": "同一マップ内の対象限定。共有Quest・出現率・Exposureは変更しない。",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "相手や環境が別に出す音、視認、Exposureは止めない。",
+        "マップ離脱",
+        "Run終了",
+        "対象の戦闘不能または切断"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "最初に成立した終了条件で解除し、Runを越えて状態を保存しない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effect・同一対象は非加算の1件。即時結果は一回解決し、重複要求を再適用しない。",
+        "conflict_resolution": "競合する移動・入力制限・観察の適用順は採用前の確認事項。"
+      },
+      "server_validation": "対象・距離・安全な位置・使用状態をServerで検査。個人画面を世界状態の証明にしない。",
+      "client_presentation": "次の通常攻撃一打だけ、発音を抑える。",
+      "feedback": {
+        "success": "成立・消費・終了を対象本人に表示。",
+        "failure": "不成立の理由を短く表示。効果を付与しない。",
+        "ambiguous": "原因・正体は説明しない。操作の成否は曖昧にしない。"
+      }
+    }
+  ],
+  "provides_traits": [
+    "次の通常攻撃一打だけ、発音を抑える。",
+    "発動後の最初の通常攻撃で消費する。空振りでも戻らない。",
+    "抑えるのは攻撃者側の対応音源だけ。命中・ダメージ・硬直は通常どおり。",
+    "相手や環境が別に出す音、視認、Exposureは止めない。"
+  ],
+  "connection_tags": [
+    "Skill",
+    "Environment",
+    "Combat",
+    "Sound"
+  ],
+  "refs": [
+    {
+      "target_id": "ROLE-A-004",
+      "kind": "optional_connection",
+      "required_traits": [
+        "店内での戦闘の開始と解決をServer側の共有事実として記録できること"
+      ],
+      "fallback": "A-004が成立しない場合、本候補は既存の攻撃判定と音の入力経路だけで成立する。NPCの思考や出現条件には依存しない。",
+      "resolution": "reserved_unresolved"
+    }
+  ],
+  "unresolved_refs": [
+    {
+      "target_id": "ROLE-A-004",
+      "required_traits": [
+        "店内での戦闘の開始と解決をServer側の共有事実として記録できること"
+      ],
+      "reason": "peer-snapshotsが配布されておらず、A-004は予約枠のままで本文を確認できない。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": null,
+      "required_traits": [
+        "一打が命中したときに音の入力を送る経路を、サーバー側で差し替えられること"
+      ],
+      "reason": "音の伝播と遮蔽、同期の方式は未決定で、共通ディスパッチも新設しないと明記されている。差し替えの受け皿の位置が判断できない。",
+      "adoption_blocker": false
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "受付時間・距離・上限・クールダウン・速度などの値は仮案段階。",
+    "レベル差は候補であり、効果量と操作負担を試作して調整する。",
+    "通常スキルとしてのみ扱い、Player Anomalyの専用能力には一般化しない。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "次の通常攻撃一打だけ、発音を抑える。",
+    "in_world_rationale": "既存の移動・音・観察を通常と異なる条件で操作する候補。成立理由を世界の起源や装置の正体へ結び付けない。",
+    "meaning_left_ambiguous": "なぜこの操作が成立するか。博士の意図・Entityの正体は確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "この候補の入力条件・状態・提示の専用処理は実装記録がなく、新規ロジックが必要。",
+  "new_logic": [
+    "次の通常攻撃一打だけ、発音を抑える。",
+    "Serverで成立条件と終了を検査する処理",
+    "本人または対象へのFeedback"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "専用入力と状態管理が必要。対象側基盤が未実装なら、その試作費用は別途見積もる。",
+    "implementation_steps": [
+      "単一対象で成立・不成立を確認",
+      "解除とRun終了時の破棄を確認",
+      "複数参加者と競合Effectを確認"
+    ],
+    "assumed_existing_parts": [
+      "既存スキル発動経路",
+      "CharacterとRun参加者の管理"
+    ]
+  },
+  "role_details": {
+    "skill_family": "攻撃",
+    "rank": null,
+    "rank_rationale": "系統内の候補が揃った時点で比較する。ランク解放条件自体は変更しない。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "次の通常攻撃一打だけ、発音を抑える。"
+      },
+      {
+        "level": 2,
+        "proposal": "発動後に消費する一打を選べる。"
+      },
+      {
+        "level": 3,
+        "proposal": "攻撃前なら一度だけ解除して温存できる。"
+      }
+    ],
+    "equipped_slot_policy": "通常スキルの4装備枠のうち1枠。取得ランク条件は既存規則に従い、装備切替時点は未決定。",
+    "normal_attack_link": "通常攻撃からの連携候補。発動中の制限は本案に従い、受付窓・キャンセル時点は未決定。",
+    "avoids": "次の通常攻撃一打だけ、発音を抑える。",
+    "intervenes_in": "発動後の最初の通常攻撃で消費する。空振りでも戻らない。 抑えるのは攻撃者側の対応音源だけ。命中・ダメージ・硬直は通常どおり。 相手や環境が別に出す音、視認、Exposureは止めない。",
+    "sacrifices": "攻撃系の一枠を音対策に使うか、攻撃力へ回すか。姿と攻撃動作は見える。",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-005.html"
+}

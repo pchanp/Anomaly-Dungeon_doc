@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>06 博士 ／ キャラクター視覚仮説</title>
+<link rel="stylesheet" href="vis.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <h1>06 ／ 博士 — 確信が強いが、外見は未定</h1>
+  <div class="sub">
+    NPC。ダンジョンの研究を主張する研究者。<b>外見は確定していない</b>ため、
+    1つの姿に決めず、複数のシルエットと居室・記録の痕跡だけを並べる。
+  </div>
+  <div class="badges">
+    <span class="badge">Type: NPC</span>
+    <span class="badge hyp">外見・服装・声は仮案（採用未定）</span>
+    <span class="badge unconf">年齢・経歴・外見設定は未確定</span>
+    <span class="badge">顔は描かない</span>
+  </div>
+  <div class="nav"><a href="index.html">← ボードトップ</a><a href="05-whisper.html">← whisper</a><a href="07-former-colleague.html">次: 元同僚 →</a></div>
+</header>
+
+<div class="doc">
+  <h2>(a) 根拠文書</h2>
+  <p>
+    <code>docs/anomalies/whisper.md</code>: 博士は元同僚に不満を示しつつも、追従するアノマリーを本人に見せることを依頼する。
+    元同僚を殺すこと自体は目的にしない。博士は <code>whisper</code> が成立しない例外であり、迷いなく自分を信じているため、
+    不快音反応も潜在要素の引き出しも起こさない。装置の正体は説明せず「危険だから処分する」として回収する。
+    この例外は、博士の確信を説明しすぎずに示す。
+  </p>
+  <p>
+    <code>docs/world/anomaly-worldview.md</code>: ある研究者が「このアノマリーダンジョンは自分が作った」と自称している。
+    真偽、発見しただけか、既存現象の再現か、「作った」が正しい語か、研究者自身がアノマリーかは確定しない。
+  </p>
+  <p>
+    <code>docs/systems/economy-and-progression.md</code>: 研究室の研究者はダンジョンを自ら作ったと主張する博士。
+    アノマリーを完全に説明する専門家ではなく、正体不明の価値を持つ物を受け取り、
+    危険な資産を「確保できる状態」へ変える立場。
+  </p>
+  <p>
+    <code>docs/world/information-design.md</code>: NPCは世界設定を説明する役ではなく、世界の中で生活し必要なことを話す存在。
+  </p>
+</div>
+
+<div class="doc">
+  <h2>(b) 描画上の仮説</h2>
+  <ol style="max-width:78ch;color:#9fb6c4">
+    <li><b>顔は描かない。</b>3案を同じ重心・同じ高さで並べ、どの案も同じ情報量にする。どれかを「正解」として強調しない。</li>
+    <li><b>身体は記号としての輪郭だけ。</b>頭部の形、肩の傾き、手の位置（A:前に組む／B:片手を記録へ／C:背中に手）だけを仮置きし、身長・体格の具体値は出さない。</li>
+    <li><b>服装は仮説の記号で示す。</b>白衣・長外套・作業着の3種を「案A/B/C」として並べる。色・ロゴ・紋章は付けない（看板や施設名の表記規則に従い、現実の制服や組織を模さない）。</li>
+    <li><b>確信は姿勢と距離で出す。</b>向き、手の位置、視線。自信を帯びる特別な光は使わない。「説明しないこと」そのものを指示として扱う。</li>
+    <li><b>居室と手順の痕跡で本人を語る。</b>筆跡の異なる作業台、揃ったが順序の違う叢、説明されていない測定値、古い機械と新しい端末の混在。</li>
+    <li><b>自分の正体には触れない。</b>「ダンジョンを作った本人」であることを示すアイコン・称号・装飾は置かない。自称は会話側の情報として扱い、視覚では示さない。</li>
+  </ol>
+  <div class="note">
+    <b>描かなかったもの:</b> 顔、目、体格、年齢、髪、服装の具体、所属機関、職員情報。これは視覚仮説であり外見の設定ではない。
+  </div>
+</div>
+
+<!-- 図1: 3案のシルエット -->
+<h2 style="font-size:13px;color:#e2f0f7;letter-spacing:.1em;font-weight:400;border-left:2px solid #2d3f4c;padding-left:8px;">図1 ／ 3案のシルエット — どれも選ばない</h2>
+<div class="board">
+<svg viewBox="0 0 1120 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="博士 3案のシルエット">
+  <rect width="1120" height="300" fill="#07090b"/>
+  <g stroke="#101a20" stroke-width="1"><path d="M0 250H1120"/></g>
+
+  <!-- 共通ベースライン -->
+  <g stroke="#1e2a33" stroke-width="1" stroke-dasharray="4 6">
+    <path d="M180 186H830"/>
+  </g>
+
+  <!-- 案A: 前に組んだ手 / 白衣 -->
+  <g transform="translate(210,60)">
+    <text class="lbl-h" x="0" y="0">案A</text>
+    <text class="lbl-s" x="0" y="16">前に組んだ手</text>
+    <g transform="translate(0,26) scale(0.82)">
+      <!-- 頭：形のみ -->
+      <path class="mid-s" d="M46 14c0-10 8-16 18-16s18 6 18 16c0 12-8 20-18 20s-18-8-18-20z"/>
+      <!-- 胴：肩广、下に広がる一枚 -->
+      <path class="mid-s" d="M22 190V92l8-30 16 8 18-14 18 14 16-8 8 30v98z"/>
+      <!-- 前に組んだ手 -->
+      <path class="dim-s" d="M40 150c12 8 30 8 42 0"/>
+      <path class="hyp-t" d="M78 20h40"/>
+      <text class="hyp-t" x="124" y="24">手の位置（仮）</text>
+      <!-- 基準線 -->
+      <path class="hz" d="M0 190h130"/>
+    </g>
+    <text class="unc-t" x="0" y="262">顔・体格は描かない</text>
+  </g>
+
+  <!-- 案B: 片手を記録へ / 長外套 -->
+  <g transform="translate(430,60)">
+    <text class="lbl-h" x="0" y="0">案B</text>
+    <text class="lbl-s" x="0" y="16">片手を記録へ</text>
+    <g transform="translate(0,26) scale(0.82)">
+      <path class="mid-s" d="M52 14c0-11 8-18 18-18s18 7 18 18c0 13-8 21-18 21s-18-8-18-21z"/>
+      <!-- 肩otiationが広い一枚 -->
+      <path class="mid-s" d="M14 190V96l14-34 22 10 20-12 20 12 22-10 14 34v94z"/>
+      <path class="dim-s" d="M84 130c14-6 24-18 28-34"/>
+      <path class="hyp-t" d="M112 86h40"/>
+      <text class="hyp-t" x="158" y="90">記録へ向かう手（仮）</text>
+      <path class="hz" d="M0 190h130"/>
+    </g>
+    <text class="unc-t" x="0" y="262">姿勢だけが異なる</text>
+  </g>
+
+  <!-- 案C: 背中 / 作業着 -->
+  <g transform="translate(650,60)">
+    <text class="lbl-h" x="0" y="0">案C</text>
+    <text class="lbl-s" x="0" y="16">背中を向ける</text>
+    <g transform="translate(0,26) scale(0.82)">
+      <path class="mid-s" d="M46 16c0-10 8-17 18-17s18 7 18 17c0 12-8 20-18 20s-18-8-18-20z"/>
+      <path class="mid-s" d="M26 190V96l10-30 12 8 16-12 16 12 12-8 10 30v94z"/>
+      <path class="dim-s" d="M24 120C14 132 12 148 16 162M106 120c10 12 12 28 8 42"/>
+      <path class="hyp-t" d="M120 160h40"/>
+      <text class="hyp-t" x="166" y="164">両手を背中に（仮）</text>
+      <path class="hz" d="M0 190h130"/>
+    </g>
+    <text class="unc-t" x="0" y="262">「話をしない人」中の1案</text>
+  </g>
+
+  <!-- 判定 -->
+  <g transform="translate(880,60)">
+    <text class="lbl-h" x="0" y="0">この3案の位置づけ</text>
+    <g transform="translate(0,20)">
+      <g class="lbl-s">
+        <text x="0" y="0">・外見は未確定。</text>
+        <text x="0" y="22">・3案は同じ情報量で並べる。</text>
+        <text x="0" y="44">・どれか1つを選ぶこともない。</text>
+        <text x="0" y="66">・顔は3案とも描かない。</text>
+        <text x="0" y="88">・服装は記号のみ（色なし）。</text>
+        <text x="0" y="110">・レンダリング結果を正としない</text>
+        <text x="0" y="126">・本図は参照であり設定ではない</text>
+      </g>
+      <text class="unc-t" x="0" y="164">Unconfirmed: 外見・年齢・所属</text>
+    </g>
+  </g>
+
+  <text class="lbl-s" x="40" y="280">STATUS: Draft ／ この図は外見の候補の列挙であり、キャラクター設定の提案ではない。</text>
+</svg>
+</div>
+
+<!-- 図2: 居室の痕跡 -->
+<h2 style="font-size:13px;color:#e2f0f7;letter-spacing:.1em;font-weight:400;border-left:2px solid #2d3f4c;padding-left:8px;">図2 ／ 居室と手順の痕跡 — 本人は説明しない</h2>
+<div class="board">
+<svg viewBox="0 0 1120 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="博士 居室の痕跡">
+  <rect width="1120" height="340" fill="#07090b"/>
+  <g transform="translate(40,44)">
+    <text class="lbl-h" x="0" y="0">研究室／断片</text>
+    <g transform="translate(0,18)">
+      <rect x="0" y="0" width="520" height="240" fill="#05080a" stroke="#1e2a33"/>
+
+      <!-- 作業台 -->
+      <g stroke="#2d3f4c" stroke-width="1.2" fill="#0b1014">
+        <rect x="20" y="150" width="220" height="14"/>
+        <rect x="26" y="164" width="8" height="46"/><rect x="226" y="164" width="8" height="46"/>
+      </g>
+      <!-- 紙の束（順序がない） -->
+      <g fill="#111a20" stroke="#2d3f4c" stroke-width="1">
+        <rect x="34" y="126" width="46" height="24" transform="rotate(-6 57 138)"/>
+        <rect x="70" y="132" width="46" height="24" transform="rotate(3 93 144)"/>
+        <rect x="46" y="108" width="46" height="24" transform="rotate(9 69 120)"/>
+      </g>
+      <text class="lbl-s" x="20" y="118">紙の記録（高性能機械から出る）</text>
+
+      <!-- 古い端末と新しい端末 -->
+      <g stroke="#3d5464" stroke-width="1.2" fill="#0b1014">
+        <rect x="280" y="112" width="70" height="42"/>
+        <rect x="292" y="154" width="46" height="10"/>
+      </g>
+      <g stroke="#3d5464" stroke-width="1.2" fill="#0b1014">
+        <rect x="380" y="126" width="60" height="28" rx="3"/>
+        <rect x="400" y="154" width="20" height="10"/>
+      </g>
+      <text class="lbl-s" x="280" y="100">CRTと新しい端末が混在</text>
+
+      <!-- 未説明の測定値 -->
+      <g fill="#0e1418" stroke="#2d3f4c" stroke-width="1">
+        <rect x="20" y="34" width="180" height="56"/>
+      </g>
+      <g stroke="#3d5464" stroke-width="1" fill="none">
+        <path d="M30 78l16-10 16 6 16-24 16 12 16-32 16 20 16-14"/>
+      </g>
+      <text class="lbl-s" x="30" y="30">単位も説明されていない測定値</text>
+      <text class="unc-t" x="212" y="30">何の値かは未確定</text>
+
+      <!-- 床の配線と箱 -->
+      <path class="hz" d="M40 210C120 224 200 224 280 210C340 200 400 210 480 206"/>
+      <g fill="none" stroke="#2d3f4c" stroke-width="1">
+        <rect x="440" y="160" width="60" height="50"/>
+      </g>
+      <text class="lbl-s" x="440" y="154">回収された东西の箱（空）</text>
+
+      <!-- ドア -->
+      <path class="dim-s" d="M500 40v90M500 40h20v90"/>
+      <text class="lbl-s" x="440" y="20">出入りしても 来客の気配は薄い</text>
+    </g>
+  </g>
+
+  <g transform="translate(600,44)">
+    <text class="lbl-h" x="0" y="0">Handling の型（仮）</text>
+    <g transform="translate(0,18)">
+      <g fill="#0d1116" stroke="#2d3f4c" stroke-width="1">
+        <rect x="0" y="0" width="480" height="240"/>
+      </g>
+      <!-- 装置の受け取り（無言） -->
+      <g transform="translate(20,20)">
+        <g fill="none" stroke="#c9a227" stroke-width="1.2">
+          <rect x="0" y="20" width="70" height="50"/>
+          <path d="M8 20l-6-12M62 20l6-12"/>
+        </g>
+        <text class="lbl-s" x="0" y="96">装置を受け取る</text>
+      </g>
+      <g transform="translate(150,20)">
+        <g class="mid-s"><path d="M20 70V40l10-14 10 14v30z"/></g>
+        <text class="lbl-s" x="0" y="96">手元で片付ける</text>
+      </g>
+      <g transform="translate(240,20)">
+        <g class="mid-s"><rect x="0" y="40" width="60" height="30"/><path d="M8 40v-14M52 40v-14"/></g>
+        <text class="lbl-s" x="0" y="96">「確保できる状態」へ変換</text>
+      </g>
+      <g transform="translate(370,20)">
+        <g fill="none" stroke="#5b7484" stroke-width="1.2">
+          <rect x="0" y="34" width="60" height="36"/>
+        </g>
+        <g class="dim-s"><path d="M6 52h48M6 58h30"/></g>
+        <text class="lbl-s" x="0" y="96">正体は説明しない</text>
+      </g>
+
+      <!-- 会話の型 -->
+      <g transform="translate(20,140)">
+        <text class="lbl-s" x="0" y="0">会話の型（仮）</text>
+        <g class="lbl-s">
+          <text x="0" y="20">目的と操作目標は明確にする</text>
+          <text x="0" y="38">理由・起源・真意は話さない</text>
+          <text x="0" y="56">「危険だから処分する」＝短い断定</text>
+          <text x="0" y="74">次に何をするかは言わない</text>
+        </g>
+      </g>
+      <text class="unc-t" x="20" y="234">文面は未確定。型のみ。</text>
+    </g>
+  </g>
+
+  <text class="lbl-s" x="40" y="326">STATUS: Draft ／ 居室の家具・備品の配置は仮置き。実在の施設・物品の模倣はしていない。</text>
+</svg>
+</div>
+
+<!-- 図3: 確信の可視化 -->
+<h2 style="font-size:13px;color:#e2f0f7;letter-spacing:.1em;font-weight:400;border-left:2px solid #2d3f4c;padding-left:8px;">図3 ／ 確信の描き方 — 内面を描き切らない</h2>
+<div class="board">
+<svg viewBox="0 0 1120 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="博士 確信の描き方">
+  <rect width="1120" height="210" fill="#07090b"/>
+
+  <g transform="translate(40,40)">
+    <text class="lbl-h" x="0" y="0">観察して分かること</text>
+    <g transform="translate(0,18)">
+      <g fill="none" stroke="#2fbfa0" stroke-width="1">
+        <rect x="0" y="0" width="30" height="30"/>
+        <rect x="46" y="0" width="30" height="30"/>
+        <rect x="92" y="0" width="30" height="30"/>
+      </g>
+      <g class="lbl-s">
+        <text x="0" y="46">whisper の作用が</text>
+        <text x="0" y="60">発生しない</text>
+        <text x="46" y="46">装置の正体を</text>
+        <text x="46" y="60">説明しない</text>
+        <text x="92" y="46">否定も肯定も</text>
+        <text x="92" y="60">しない</text>
+      </g>
+    </g>
+  </g>
+
+  <g transform="translate(400,40)">
+    <text class="lbl-h" x="0" y="0">書いてはいけないこと</text>
+    <g transform="translate(0,18)">
+      <g fill="none" stroke="#b8452f" stroke-width="1.4">
+        <path d="M4 20l26 26M30 20L4 46"/>
+      </g>
+      <g class="lbl-s">
+        <text x="44" y="24">「彼は世界を作った」等の</text>
+        <text x="44" y="40">装飾的記号・称号</text>
+        <text x="44" y="60">异常的と断定する記号</text>
+        <text x="44" y="76">（これは未確定要素）</text>
+      </g>
+      <g class="lbl-s">
+        <text x="44" y="100">内面・例外の可視化</text>
+        <text x="44" y="116">「確信している」印の具体</text>
+      </g>
+    </g>
+  </g>
+
+  <g transform="translate(760,40)">
+    <text class="lbl-h" x="0" y="0">例外（whisper / anxiety）の扱い</text>
+    <g transform="translate(0,18)">
+      <g class="mid-s"><path d="M50 70V40l10-14 10 14v30z"/></g>
+      <circle cx="70" cy="20" r="8" fill="none" stroke="#8a4fbf"/>
+      <text class="lbl-s" x="100" y="24">象形／独自記号なし</text>
+      <text class="lbl-s" x="100" y="42">心理学的な演出を避ける</text>
+      <text class="lbl-s" x="100" y="60">波紋だけ短く</text>
+      <text class="unc-t" x="0" y="100">潜在要素は博士にない</text>
+      <text class="unc-t" x="0" y="118">（例外として確定）</text>
+    </g>
+  </g>
+
+  <text class="lbl-s" x="40" y="196">STATUS: Draft ／ 会話・演出の具体は未確定。観察可能な結果のみ。</text>
+</svg>
+</div>
+
+<div class="doc">
+  <h2>3案の要約（どれも選ばない）</h2>
+</div>
+<table>
+  <tr><th>案</th><th>唯一違う点（仮）</th><th>3案すべてに共通する扱い</th></tr>
+  <tr><td class="k">案A</td><td>前に組んだ手</td><td rowspan="3">顔・目・年齢・体格・服装の具体・所属機関を描かない／色・ロゴ・紋章を付けない／「作った本人」であることを示す記号を置かない／会話の型だけ示す</td></tr>
+  <tr><td class="k">案B</td><td>片手を記録へ向ける</td></tr>
+  <tr><td class="k">案C</td><td>背中を向け、両手を背中に</td></tr>
+</table>
+<p style="max-width:78ch;color:#9fb6c4">
+  差は手の位置だけ。重心と高さはそろえてあり、どれか1つを正解として強調していない。
+  選ぶ場合はキャラクターデザインの作成と採用という別判断が必要で、このボードでは決めない。
+</p>
+
+<div class="doc">
+  <h2>(c) 未確定要素</h2>
+</div>
+<table>
+  <tr><th>要素</th><th>本ボードでの扱い</th><th>確定に必要な判断</th></tr>
+  <tr><td class="k">顔・目・年齢</td><td>描かない（3案とも）</td><td>キャラクターデザインの作成と採用</td></tr>
+  <tr><td class="k">服装</td><td>記号のみ（案A/B/C）</td><td>服装の備品と色</td></tr>
+  <tr><td class="k">姿勢・立ち居</td><td>仮置き（手の位置のみ）</td><td>アニメーション方針</td></tr>
+  <tr><td class="k">声・台詞</td><td>会話の型のみ</td><td>文面、文量の設計</td></tr>
+  <tr><td class="k">居室の設備</td><td>仮置き（痕跡のみ）</td><td>研究室レイアウト</td></tr>
+  <tr><td class="k">「ダンジョンを作った」本人性</td><td>視覚では示さない（自称として会話情報）</td><td>自称の扱い（世界設定は確定しない方針）</td></tr>
+</table>
+
+<footer class="top">
+  OpenCode 分／ work/visual-brainstorm/opencode/ 所有。Draft資料に基づく視覚仮説であり、実装指示ではない。
+</footer>
+</div>
+</body>
+</html>

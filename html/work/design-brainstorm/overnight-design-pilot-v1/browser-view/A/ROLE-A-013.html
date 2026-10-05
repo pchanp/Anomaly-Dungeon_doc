@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-A-013 開いた通路の個体 — イベント由来の通常モブ</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+<p class="sub">overnight-design-pilot-v1 ／ ROLE-A-013 ／ 全マップ共通 ／ MobEnemy</p>
+<h1>開いた通路の個体 — イベント由来の通常モブ</h1>
+<p>既存のギミックイベントが開いたとき、上限内にだけ通常モブが湧き、一方向に通って消える。</p>
+<div class="badges"><span class="badge hyp">Idea</span><span class="badge">unreviewed</span><span class="badge unknown">上限と終端は未定</span></div>
+<nav class="nav"><a href="index.html">← 一覧</a><a href="ROLE-A-013.json">同IDのJSON</a></nav>
+</header>
+
+<section id="hypothesis">
+<h2>何の案か</h2>
+<p>出来事が起きている場所だけを通る通常モブを、上限つきで湧かせる。</p>
+<ul>
+<li>既存のギミックイベントが「開いた」状態をServerが確定し、枠に空きがあれば個体が出る。</li>
+<li>個体は進行方向が1つだけで、終端で自然に消える。戦闘を避けられる。</li>
+<li>イベントが閉じると湧きだけが止まる。残った個体は消えず、枠は個体数の空きに戻る。</li>
+</ul>
+<p><strong>選択と代償:</strong> 交わらない／先読みして迂回する／戦って対処する／イベントを閉じて湧きを止める。回避では報酬が得られず、倒しても枠が余る限り補充が続く。</p>
+<p class="sub">接続タグ: NPCState / WorldChange / Environment / Combat ／ requires_code: true ／ conflicts 2件・未解決3件（JSONに記載）</p>
+</section>
+
+<section id="diagram">
+<h2>仕組みの図</h2>
+<div class="board">
+<svg viewBox="0 0 1000 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="開いたイベントから上限内の個体が一方向に進行して終端で消え、四つの退場経路とAnomalyの枠との分離を示す図">
+<rect width="1000" height="360" fill="#0a1118"/>
+<text class="label" x="24" y="28">入力と湧き</text>
+<text class="label" x="430" y="28">進行と退場</text>
+<rect x="24" y="52" width="200" height="76" rx="8" fill="#142330" stroke="#d3b653"/>
+<text class="label" x="38" y="82">イベントが開いた</text>
+<text class="small" x="38" y="108">採用するイベントは未定</text>
+<rect x="248" y="52" width="180" height="76" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="label" x="262" y="82">枠に空きがある</text>
+<text class="small" x="262" y="108">上限は未定</text>
+<path d="M224 90h20" class="active"/>
+<path d="M238 84l9 6-9 6" class="active"/>
+
+<rect x="452" y="52" width="240" height="76" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="label" x="466" y="82">個体が一方向へ進む</text>
+<text class="small" x="466" y="108">終端で自然に消える</text>
+<path d="M428 90h20" class="active"/>
+<path d="M442 84l9 6-9 6" class="active"/>
+<path d="M572 128v32" class="active"/>
+<path d="M572 160l-6 9h12z" fill="#70c9c3"/>
+<rect x="452" y="170" width="240" height="60" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="small" x="466" y="206">終端到達：枠が1つ戻る</text>
+
+<rect x="24" y="170" width="200" height="60" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="small" x="38" y="206">枠が満杯なら湧かない</text>
+<path d="M338 100h-90v40" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+
+<rect x="716" y="52" width="260" height="76" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="730" y="82">（a）通り過ごす</text>
+<text class="small" x="730" y="108">回避。報酬は得ない</text>
+<rect x="716" y="142" width="260" height="76" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="730" y="172">（b）戦闘で対処</text>
+<text class="small" x="730" y="198">その個体だけ終了。補充は続く</text>
+<rect x="716" y="232" width="260" height="76" rx="8" fill="#142330" stroke="#d3b653"/>
+<text class="label" x="730" y="262">（c）イベントを閉じる</text>
+<text class="small" x="730" y="288">湧きのみ停止。残個体とは残る</text>
+<path d="M692 90h18" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M704 84l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M692 180h18" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M704 174l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M692 270h18" stroke="#d3b653" stroke-width="2" fill="none"/>
+<path d="M704 264l9 6-9 6" stroke="#d3b653" stroke-width="2" fill="none"/>
+
+<rect x="24" y="262" width="660" height="52" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="small" x="38" y="294">別系統：アノマリーの同時出現数、博士Questの補正、発生ごとの減衰。通常の個体はこの枠を使わない。</text>
+<text class="small" x="24" y="338">この図で分かること：湧きの条件、四つの退場、回避が成立することが分かる。数値は未確定。</text>
+</svg>
+</div>
+<p>図注：戦闘を避ける道が必ず残るようにする。枠はアノマリーと別なので、既存の遭遇率とは連動しない。</p>
+</section>
+
+<footer>overnight-design-pilot-v1 ／ ROLE-A-013 ／ 実表示は未確認（担当セッションでブラウザを使用していない）。</footer>
+</main>
+</body>
+</html>

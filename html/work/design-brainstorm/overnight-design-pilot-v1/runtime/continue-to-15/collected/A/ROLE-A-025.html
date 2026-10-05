@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-A-025 見張り — 索敵を共有しない一匹</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+<p class="sub">overnight-design-pilot-v1 ／ ROLE-A-025 ／ 全マップ共通 ／ MobEnemy</p>
+<h1>見張り — 索敵を共有しない一匹</h1>
+<p>立ち位置を変えない一匹だけ、視線を切れても警戒が続く。</p>
+<div class="badges"><span class="badge hyp">Idea</span><span class="badge">unreviewed</span><span class="badge unknown">視線範囲は未定</span></div>
+<nav class="nav"><a href="index.html">← 一覧</a><a href="ROLE-A-025.json">同IDのJSON</a></nav>
+</header>
+
+<section id="hypothesis">
+<h2>何の案か</h2>
+<p>見張り1匹だけを、正面から抜けられない相手にする。</p>
+<ul>
+<li>立ち位置を変えず同じ方向を見張る通常モブが1匹。視線と範囲は未定。</li>
+<li>この個体だけは索敵の起点を共有せず、視線が切れても警戒を戻さない。</li>
+<li>攻撃すれば倒せるが、倒したあとに同じ場所へ別の個体にはならない。</li>
+</ul>
+<p><strong>選択と代償:</strong> 視線の外を回って抜ける／攻撃して隙間を作る／別の個体と戦わせて視線をずらす。視線の外は狭く、待ち伏せになる可能性がある。</p>
+<p class="sub">接続タグ: NPCState / Observation / StateChange / Combat ／ requires_code: true ／ conflicts 0件・未解決1件（JSONに記載）</p>
+</section>
+
+<section id="diagram">
+<h2>仕組みの図</h2>
+<div class="board">
+<svg viewBox="0 0 1000 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="通常モブのうち見張り一匹だけが視線切断後も警戒を保ち、視線の外を通る判断が必要になることを示す図">
+<rect width="1000" height="360" fill="#0a1118"/>
+<text class="label" x="24" y="28">索敵を共有しない個体</text>
+<text class="label" x="540" y="28">視線を切ったあと</text>
+
+<rect x="24" y="52" width="240" height="76" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="38" y="82">普通の個体</text>
+<text class="small" x="38" y="108">視線が切れると追跡をやめる</text>
+
+<rect x="24" y="146" width="240" height="76" rx="8" fill="#142330" stroke="#d3b653"/>
+<text class="label" x="38" y="176">見張りの個体</text>
+<text class="small" x="38" y="202">警戒を維持。共有もしない</text>
+
+<rect x="300" y="52" width="240" height="76" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="314" y="82">視線内にいる間</text>
+<text class="small" x="314" y="108">他の個体に共有しない</text>
+<path d="M264 90h32" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M290 84l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+
+<rect x="300" y="146" width="240" height="76" rx="8" fill="#142330" stroke="#d3b653"/>
+<text class="label" x="314" y="176">視線を切っても警戒</text>
+<text class="small" x="314" y="202">StateChange 一時</text>
+<path d="M264 184h32" stroke="#d3b653" stroke-width="2" fill="none"/>
+<path d="M290 178l9 6-9 6" stroke="#d3b653" stroke-width="2" fill="none"/>
+
+<rect x="600" y="52" width="376" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="614" y="82">（a）視線の外を回って抜ける</text>
+<text class="small" x="614" y="106">交戦なし。視野が要る</text>
+<rect x="600" y="142" width="376" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="614" y="172">（b）攻撃して隙間を作る</text>
+<text class="small" x="614" y="198">倒せる。補充はしない</text>
+<rect x="600" y="232" width="376" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="614" y="262">（c）別の個体と戦わせる</text>
+<text class="small" x="614" y="288">視線をずらす。時間を要る</text>
+<path d="M540 88h54" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M586 82l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M540 178h54" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M586 172l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M540 268h54" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M586 262l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+
+<text class="small" x="24" y="290">別系統：アノマリーの同時出現数、博士Questの補正。通常の戦闘枠として扱い、視線判定は既存の実装を前提とする。</text>
+<text class="small" x="24" y="338">この図で分かること：共有しない個体が1匹だけいる。正面突破より、視線の外を回る判断が要る。</text>
+</svg>
+</div>
+<p>図注：倒したあとに補充されないのは、補充を持つ枠と異なることが分かるようにするため。補充の有無は発生側の規則に従う。</p>
+</section>
+
+<footer>overnight-design-pilot-v1 ／ ROLE-A-025 ／ 実表示は未確認（担当セッションでブラウザを使用していない）。</footer>
+</main>
+</body>
+</html>

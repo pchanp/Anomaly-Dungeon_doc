@@ -1,0 +1,105 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-024",
+  "role": "A",
+  "title": "開いた刹那だけ — 時間が読めない一方通行",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "GimmickEvent",
+  "source_evidence": [
+    {"path": "docs/systems/game-rules.md", "section": "## ReturnとTransition", "source_status": "Status: Draft（草案）", "claim": "Return Portalはマップ攻略完了ではなく、現在のRunから帰還できる状態を意味する。原則としてサーバー共有状態とし、マップ固有のGimmickが成立すると有効化される案とする。"},
+    {"path": "docs/systems/effect-components.md", "section": "## 作用範囲と保存境界", "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）", "claim": "作用範囲と保存境界は別の項目とする。保存境界は永続、同一Run中、同一マップ中、一時で、終了条件のいずれかが成立したら解除する。"},
+    {"path": "docs/systems/anomaly-interaction.md", "section": "### Environment Interaction", "source_status": "ステータス: Draft", "claim": "マップ状態、ポータル、時間経過、近接、地形、他アノマリー、パーティ状態など、プレイヤーの単発操作ではない世界側の変化を入力にする相互作用。"}
+  ],
+  "design_hypothesis": "行き止まりの扉がRun内の一定の時間だけ開き、閉じると二度と開かない状態を仮定します。開いている時間にだけ通り抜けられます。残りの時間は表示されないので、開いているかどうかは世界をそのまま読むしかありません。開いた長さ、閉じた後の扱い、表示の方法はいずれも未定で、Return PortalやTransition Portalとは別の開閉として扱います。",
+  "experience": {
+    "goal": "開いている今だけ通れることを、時間ではなく世界から読む。",
+    "player_choice": "開いている今すぐ抜ける／閉じるのを外から待つ／閉じた後に引き返す。",
+    "sacrifice_or_risk": "閉じた扉は戻って開かない。開いた時刻を後から確認する手段はない。"
+  },
+  "placement_assumption": "全マップ共通のWorldChangeとして扱い、扉の位置・行き止まりの形・開く長さ・配置は各マップの判断に委ねます。正式な配置は提案しません。Portalとは別の開閉として扱います。",
+  "components": [
+    {"component": "Effect.WorldChange", "availability": "catalog", "usage": "扉の開閉状態をRun共有で管理する。"},
+    {"component": "Effect.StateChange", "availability": "catalog", "usage": "開いている間の通り道を許可する。"},
+    {"component": "Effect.InformationChange", "availability": "catalog", "usage": "開いているかだけを表示する。残りの時間は出さない。"}
+  ],
+  "effects": [
+    {
+      "kind": "WorldChange",
+      "trigger": "対象マップが本候補の扉を開ける。",
+      "condition": "対象マップが本候補を許可していること。開く長さは未定。",
+      "result": "扉が開く。閉じるとRun終了まで開き直さない。",
+      "target": "対象の扉",
+      "scope": "Run全体",
+      "lifetime": "同一Run中",
+      "resolution": "sustained",
+      "end_conditions": ["Run終了"],
+      "end_mode": "any",
+      "end_rule_reason": "Runの終わりで扉の状態を破棄する。",
+      "stacking": {"exception": false, "rule": "開閉は1回。繰り返し開閉はしない。", "conflict_resolution": "他のWorldChangeが同じ扉を操作する場合は未確定のため保留。"},
+      "server_validation": "Serverが開閉と時刻を管理する。",
+      "client_presentation": "扉の状態のみ。残秒は出さない。",
+      "feedback": {"success": "開いている間は通り抜けられる。", "failure": "閉じると通れない。", "ambiguous": "いつまで開いているかは説明しない。"}
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "個人が扉の近くに来た、または離れた。",
+      "condition": "対象が通常のプレイヤーであること。",
+      "result": "開いているか閉じているかだけを個人提示として返す。残秒は返さない。",
+      "target": "対象個人",
+      "scope": "個人",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": ["提示の表示"],
+      "end_mode": "any",
+      "end_rule_reason": "即時。開閉の表示のみ。",
+      "stacking": {"exception": false, "rule": "1回の接近につき1件。前の表示を置き換える。", "conflict_resolution": "他の開閉表示と重なる場合は未確定のため保留。"},
+      "server_validation": "Serverが開閉だけを送る。",
+      "client_presentation": "短い1行のみ。",
+      "feedback": {"success": "開いているかが分かる。", "failure": "対象がいない場合は出ない。", "ambiguous": "残りの時間は出さない。"}
+    }
+  ],
+  "provides_traits": ["開いている今だけ通れる一方通行が存在する", "残りの時間が読めないため世界を見る必要がある"],
+  "connection_tags": ["WorldChange", "StateChange", "Environment", "Timing"],
+  "refs": [],
+  "unresolved_refs": [
+    {"target_id": null, "required_traits": ["扉を既存のPortalとは別の機能として実装する方針"], "reason": "ID未指定の要求。Return PortalやTransition Portalと混同しないよう、共通設計側の判断が必要。", "adoption_blocker": true}
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "開く長さ、閉じた後の扱い、開き直す条件は未定。数値を決めていない。",
+    "扉がPortalとして可視化されるべきかは未定。",
+    "複数の扉を置いたときの時刻のずれは未定。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "開く刹那だけが通り道で、残りの時間が読めない一方通行に置いた点。",
+    "in_world_rationale": "古い設備が残る文明では、開閉は人が自分のペースで決めるものだった。一度しか開かない扉は、設備ではなく運用の一部として成立する。誰が管理していたかは説明しない。",
+    "meaning_left_ambiguous": "なぜ一度しか開かないのか。開かないのは故障か、意図か。残りの時間を読めないのは誰の都合か。誰のためのタイミングなのか。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "時間制限のある開閉と、その表示経路が未実装で、Portal系とは別の設計が必要になるため。コード生成の許可ではない。",
+  "new_logic": ["時間制限つきの開閉扉", "残秒を出さない開閉表示"],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "開閉扉1か所と表示だけなら中程度。ただしPortal系と名詞を切り分ける必要があり、名前と所属を最初に決める。実時間の見積もりは出していない。",
+    "implementation_steps": ["開閉する扉を1か所だけ置く", "開時間と閉時間を1回だけ設定する", "開閉表示だけを出す", "閉じた後に開き直さないことを確認する"],
+    "assumed_existing_parts": ["既存の扉と通行の判定", "Server権威のRun状態", "既存の個人提示の経路"]
+  },
+  "role_details": {
+    "npc_purpose": "NPCは置かない。扉の開閉と通り道の許可だけを扱う。",
+    "player_anomaly_handling": "Run共有の変化なので対象全体で成立する。通常NPCとのInteractionではない。判断019の枠は変えない。",
+    "mob_contract": {
+      "applicable": false,
+      "spawn_condition": "対象は発生しない。既存のイベント由来モブの出入りを許すだけである。どのイベントなのかは本候補では決めない。",
+      "population_cap": "対象は増やさない。個体数の上限は発生側の枠に従う。",
+      "non_combat_response": "開いている時間に外交戦なしで通り抜けられる。閉じたままなら通れない。",
+      "exit_condition": "Run終了まで開閉状態は残る。Run終了で閉じて破棄する。",
+      "entity_distinction": "Anomaly Entityの枠も同時出現数も使わない。通行の条件だけを変える案である。"
+    }
+  },
+  "html_file": "ROLE-A-024.html"
+}

@@ -1,0 +1,247 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-016",
+  "role": "B",
+  "title": "足跡消し粉（戻った道が痕跡として残らない）— 作業用見出し",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/systems/observation-and-recognition.md",
+      "section": "Cameraを共有世界のServer事実として保存しない。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "自分の移動痕跡は共有世界の事実ではなく個人の観察対象として扱う。"
+    },
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "探索はアイテム収集だけでなく、構造の把握、危険予測、戦闘回避、イベントやギミックの理解を含む。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "痕跡は危険予測の材料。材料を自分で消せるなら予測の精度は落ちる。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| 同一Run中 | 当該Runの終了で破棄する。マップ遷移では原則保持する |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "削除対象の移動記録は同一Run中の境界に置く。"
+    },
+    {
+      "path": "docs/world/information-design.md",
+      "section": "## 「説明」ではなく「痕跡」",
+      "source_status": "Status: Draft（草案）",
+      "claim": "痕跡は提示手段の一つ。消せる痕跡も世界側の記録としてではなく、所有者の記録として扱う。"
+    }
+  ],
+  "design_hypothesis": "戻るときは通常、直前まで来た道が自分の判断材料として残る。本候補は『戻った直後の3歩だけ、自分の移動痕跡を個人記録から消す』粉を与える。移動そのものは取り消さず、戻った事実は自分からも消える。結果として再来時の危険予測が一段減る。",
+  "experience": {
+    "goal": "追ってくるものの経路を切る。戻ったことに本人も気づかない。",
+    "player_choice": "追跡が確定してから戻るか、足跡が残るまま戻るか。粉を持つか持つか。",
+    "sacrifice_or_risk": "戻った方向の記録が欠ける。次の危険予測は自分からはできない。"
+  },
+  "placement_assumption": "新しい地形・部屋・器材は提案しない。操作は移動と『使う』だけ。どのマップでも成立し得るという主張にとどまり、配置は保証しない。",
+  "components": [
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "個人移動記録の末尾3歩分を削除する状態遷移。"
+    },
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "欠落した経路を本人にだけ印で示す。座標は出さない。"
+    },
+    {
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "痕跡の観察根拠と進行は共通契約に任せる。"
+    },
+    {
+      "component": "ItemLifecycle",
+      "availability": "catalog",
+      "usage": "正式な取得源とItemStackが未実装であることを前提とする。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "連続移動を終えた直後に、対象個人が粉を使う",
+      "condition": "実行中であること、対象個人の連続移動記録が3歩分以上あること。記録は個人単位",
+      "result": "その個人の移動痕跡記録の末尾3歩分が削除される。移動そのものは取り消さず、位置も戻さない。削除後の次の移動から記録は再び積み上がる",
+      "target": "対象個人の移動痕跡記録",
+      "scope": "個人。敵や他の個人の痕跡には触れない",
+      "lifetime": "同一Run中",
+      "resolution": "instant",
+      "end_conditions": [
+        "削除の解決で確定する",
+        "Run終了で個人側の痕跡記録とともに破棄される"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "即時解決のみ。履歴の破棄は解決で終わり、残るものはない。",
+      "stacking": {
+        "exception": false,
+        "rule": "一回につき一回。削除後に新しく積み上がった記録は次の使用対象になる。固定秒数は持たない",
+        "conflict_resolution": "他の個人にまたがる痕跡記録の削除規則は未定義のため保留する"
+      },
+      "server_validation": "Serverが対象個人の移動記録と所有を確認し、記録の末尾からだけ削除する",
+      "client_presentation": "HUDに痕跡の欠落印だけが出る。座標や方向は個人にも出さない",
+      "feedback": {
+        "success": "痕跡の印が一つ欠ける表示になる",
+        "failure": "記録が3歩分未満なら何も変わらない。注意表示のみ",
+        "ambiguous": "他者の痕跡が消えたことは本人にも伝わらない"
+      }
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "削除成立後に個人HUDが再描画する",
+      "condition": "対象個人がRun参加中で個人HUDが有効なとき",
+      "result": "『直近の経路が1つ欠けている』印のみを個人提示する。候補座標は出さない",
+      "target": "対象個人",
+      "scope": "個人。共有のRun状態は書き換えない",
+      "lifetime": "同一Run中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "Run終了またはHUD非表示で解除",
+        "切断で個人提示は破棄する。再接続時の復元は未決"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。表示の寿命を移動記録の寿命に合わせる。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一個人への同一提示は非加算1件。状態を上書きする",
+        "conflict_resolution": "他のHUD表示との優先順位は未決定なので強制作業しない"
+      },
+      "server_validation": "Serverは欠落の有無だけを返し、経路の座標は返さない",
+      "client_presentation": "HUDに小さな欠落印1つだけ。他者のHUDには出さない",
+      "feedback": {
+        "success": "印の再描画のみ",
+        "failure": "印が変化しない",
+        "ambiguous": "なぜ欠けたかの説明文は出さない"
+      }
+    }
+  ],
+  "provides_traits": [
+    "痕跡を消すという結果を作るアイテム例",
+    "自分の判断材料を消費して次の行動を決める型"
+  ],
+  "connection_tags": [
+    "Item",
+    "Environment",
+    "Observation"
+  ],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": [
+        "個人の移動痕跡を保持する層と、他個人の痕跡へアクセスできる範囲"
+      ],
+      "reason": "observation-and-recognition.mdはDetect/Observeの共通契約と保存スコープの分担だけを示し、痕跡の保存先と削除の到達範囲を確定していない。候補は削除方向のみを個人に閉じて書いた。",
+      "adoption_blocker": false
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "3歩という長さは未確定。移動速度や地形可视距離の仕様が未実装のため固定値を候補側で確定しない。",
+    "痕跡の記録がそもそも未実装であり、本候補が成立する前提の層を候補は作らない。",
+    "照合範囲：観察の責務、探索と危険予測の位置づけ、効果の保存境界、痕跡という提示手段。矛盾は見つからず conflicts は空配列"
+  ],
+  "worldview": {
+    "defamiliarized_element": "戻る操作と記録を分けた。『戻った』事実は残るが『戻った道』は消える、という止め方をした。",
+    "in_world_rationale": "既に帰還面が1か所で、探索者は自分の経路だけを頼りに判断している。帰路の痕跡を消す道具があるなら、それは追跡を避けるためではなく自分の判断材料を捨てるために使われる。",
+    "meaning_left_ambiguous": "粉の由来した者は誰で、消えた記録を本当に失ったのか最初から存在しなかったのかは確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "正式なInventoryとItemStackは未実装であり、個人の移動痕跡の保存層も未実装（current-implementation.md）。削除経路が要るため true とする。",
+  "new_logic": [
+    "個人の移動痕跡記録の末尾を削除する操作口"
+  ],
+  "prototype_cost": {
+    "band": "小",
+    "rationale": "既存の枠境界と個人HUDに足すだけ。ただし痕跡記録そのものを足す必要があるため、完全な既存部品だけでは成立しない。",
+    "implementation_steps": [
+      "デバッグ付与で粉を持たせる",
+      "個人の移動に軽量な軌跡記録を1つ持たせる",
+      "使う操作で末尾の3歩分を削除する",
+      "Play Soloで戻り道に痕跡が残らないことを確認する"
+    ],
+    "assumed_existing_parts": [
+      "InventoryServiceの枠境界",
+      "クライアントの個人HUD",
+      "個人移動の入力口"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Undecided",
+        "detail": "配る主体は未確定。正式な取得源が未実装であり創作しない。試作のみデバッグ付与。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "1枠を消費する。使うかどうかだけを先に決める。"
+      },
+      {
+        "route": "Use",
+        "status": "Proposed",
+        "detail": "使うと直近の移動痕跡が個人記録から消える。中核の操作。"
+      },
+      {
+        "route": "Present",
+        "status": "NotApplicable",
+        "detail": "渡さない。渡しても相手側の痕跡には作用しない設計にした。"
+      },
+      {
+        "route": "Place",
+        "status": "NotApplicable",
+        "detail": "置かない。置く操作を持つと『痕跡を消す』と『痕跡を残す置く』を二重に扱うことになる。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "確保枠の外なら死亡時に失う。失っても自分の痕跡は消えない。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "確保枠に入れて追跡に備える選択はできる。その場合は枠が1つ空く。"
+      },
+      {
+        "route": "Sell",
+        "status": "Undecided",
+        "detail": "換金の可否は判断010・判断011・経済と成長で未決。"
+      },
+      {
+        "route": "Quest",
+        "status": "Undecided",
+        "detail": "依頼主は未確定。既存の博士の依頼が定める固有品の交換とは別物品として扱う。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "Undecided",
+        "detail": "どの異常が個人痕跡を入力として取るかは未決。候補は相手の挙動を一切作らない。"
+      }
+    ],
+    "ownership_state": "粉と移動痕跡はplayer単位の個人状態。痕跡の削除は本人から本人への一方通行で、他者の痕跡は作らない。切断と再接続時の復元は未決。",
+    "server_run_state": "個人記録の削除という副作用はあるが、Run共有のマップ状態は書き換えない。出現率と同時出現数は変更しないためWorldChangeのEffectは発生しない。"
+  },
+  "html_file": "ROLE-B-016.html"
+}

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-B-007 遺品札（最後に戦った相手から1度だけ取る）</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<p class="sub">overnight-design-pilot-v1 ／ ROLE=B ／ SEKIGAHARA ／ Idea</p>
+<h1>ROLE-B-007 遺品札（最後に戦った相手から1度だけ取る）— 作業用見出し</h1>
+</header>
+
+<section id="hypothesis">
+<h2>何の案？</h2>
+<p>最後に戦った相手の残骸から、所持を一括で取り込む札。取り込むほど見つかるのも。</p>
+<h2>仕組み</h2>
+<ul>
+<li>直前に戦った相手の残骸で「取る」を選ぶと、所持がまとめて個人枠へ入る。</li>
+<li>選ぶ余地はない。一括で入って、札は消費される。</li>
+<li>取り込んだ直後から、本人の印に『その側に目をつけられた』が出る。</li>
+</ul>
+<h2>選択と代償</h2>
+<p>奪うほど逃げにくくなる。何を取ったかは獲得物のまとめ表示に任せ、個別には出さない。</p>
+</section>
+
+<section id="diagram">
+<h2>作用図</h2>
+<div class="board">
+<svg viewBox="0 0 980 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="最後に戦った相手の残骸から所持を一括で取り込む図。取り込みで枠が増えて個人枠に目をつけられた印が出る。相手の思考や戦況は表示されない">
+<rect width="980" height="380" fill="#0a1118"/>
+<text x="30" y="26" class="small">戦場はIdea段階。勢力・地形・戦況は未確定で、ここでは配置だけを示す。</text>
+<rect x="30" y="46" width="230" height="100" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text x="46" y="76" class="label">最後に戦った相手</text>
+<text x="46" y="102" class="small">倒れはしても補充は続く</text>
+<text x="46" y="124" class="small">残骸の所持は未回収</text>
+<rect x="340" y="46" width="230" height="100" rx="8" fill="#142330" stroke="#c4a0ec"/>
+<text x="356" y="76" class="label">遺品札を使う</text>
+<text x="356" y="102" class="small">一括で取り込む</text>
+<text x="356" y="124" class="small">選ぶ余地はない</text>
+<rect x="650" y="46" width="300" height="100" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="666" y="76" class="label">個人枠が増える</text>
+<text x="666" y="102" class="small">合計枠は20のまま</text>
+<text x="666" y="124" class="small">枠外なら失敗時に失う</text>
+<path d="M262 96 H337" class="active"/>
+<path d="M337 90 l10 6 -10 6" class="active"/>
+<path d="M572 96 H647" class="hyp-line"/>
+<path d="M647 90 l10 6 -10 6" class="hyp-line"/>
+<path d="M455 148 V196" class="hyp-line"/>
+<path d="M447 188 l8 8 8 -8" class="hyp-line"/>
+<rect x="330" y="198" width="250" height="90" rx="8" fill="#142330" stroke="#ea9380"/>
+<text x="346" y="228" class="label">『目をつけられた』印</text>
+<text x="346" y="254" class="small">本人にだけ出る</text>
+<text x="346" y="276" class="small">相手の思考や次の一手は出さない</text>
+<path d="M800 148 V196" class="hyp-line"/>
+<path d="M792 188 l8 8 8 -8" class="hyp-line"/>
+<path d="M455 290 V318" class="active"/>
+<path d="M447 310 l8 8 8 -8" class="active"/>
+<text x="30" y="352" class="small">札は消費される。上限と「最後に戦った」の判定範囲は未確定。</text>
+</svg>
+</div>
+<p>左が残骸、中央が札、右が取り込みの結果。下が代償の印。</p>
+</section>
+
+<footer>
+<p><a href="index.html">← B候補一覧</a> ／ 詳細データ <a href="ROLE-B-007.json">ROLE-B-007.json</a> ／ connection_tags: Item, Combat ／ requires_code: true ／ 試作コスト: 不明</p>
+</footer>
+</main>
+</body>
+</html>

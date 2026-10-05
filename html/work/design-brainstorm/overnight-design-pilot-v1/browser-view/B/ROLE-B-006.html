@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-B-006 未記名の貸出票（差し出した相手だけに判る）</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<p class="sub">overnight-design-pilot-v1 ／ ROLE=B ／ 廃TSUTAYA ／ Idea</p>
+<h1>ROLE-B-006 未記名の貸出票（差し出した相手だけに判る）— 作業用見出し</h1>
+</header>
+
+<section id="hypothesis">
+<h2>何の案？</h2>
+<p>名前がない貸出票。自分で読んでも差し出しても何も分からない。相手に出した瞬間だけ中身を伝える案。</p>
+<h2>仕組み</h2>
+<ul>
+<li>同じRunの別の個人に差し出すと、相手だけが中身の情報を得る。</li>
+<li>相手の所持や体力は変わらない。渡した側の票は消費される。</li>
+<li>相手がマップを去る、死亡する、切断すると提示も消える。</li>
+</ul>
+<h2>選択と代償</h2>
+<p>選択肢は「渡す相手を選ぶ」ことだけ。手元に紙の価値は残らない。</p>
+</section>
+
+<section id="diagram">
+<h2>作用図</h2>
+<div class="board">
+<svg viewBox="0 0 980 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="未記名の貸出票を個人から個人へ差し出す図。受け手の個人だけが情報を得るが、受け手の所持と体力が変わらず、差し出した側の票は消費される">
+<rect width="980" height="380" fill="#0a1118"/>
+<rect x="30" y="60" width="240" height="120" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="46" y="90" class="label">自分</text>
+<text x="46" y="116" class="small">1枠を消費</text>
+<text x="46" y="138" class="small">自分で読んでも空</text>
+<text x="46" y="160" class="small">印は『未記名』だけ</text>
+<rect x="710" y="60" width="240" height="120" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="726" y="90" class="label">相手</text>
+<text x="726" y="116" class="small">1枠を消費</text>
+<text x="726" y="138" class="small">本人だけが中身の情報を得る</text>
+<text x="726" y="160" class="small">所持と体力は変わらない</text>
+<rect x="380" y="90" width="220" height="120" rx="8" fill="#142330" stroke="#c4a0ec"/>
+<text x="396" y="120" class="label">差し出す</text>
+<text x="396" y="146" class="small">提示は相手個人に閉じる</text>
+<text x="396" y="168" class="small">他の人には何も届かない</text>
+<text x="396" y="190" class="small">自分の票は消える</text>
+<path d="M272 120 H377" class="active"/>
+<path d="M377 114 l10 6 -10 6" class="active"/>
+<path d="M602 120 H707" class="hyp-line"/>
+<path d="M707 114 l10 6 -10 6" class="hyp-line"/>
+<path d="M490 212 V252" class="hyp-line"/>
+<path d="M482 244 l8 8 8 -8" class="hyp-line"/>
+<rect x="300" y="254" width="380" height="76" rx="8" fill="#142330" stroke="#ea9380"/>
+<text x="316" y="284" class="label">相手が離れる・死亡・切断</text>
+<text x="316" y="310" class="small">提示も一緒に消える。戻す手段は未確定</text>
+<text x="30" y="356" class="small">共有のマップ状態は書き換えない。模式図であり受け渡しの画面構成ではない。</text>
+</svg>
+</div>
+<p>個人が個人へだけ情報を渡す。相手の手持ちは動かない。</p>
+</section>
+
+<footer>
+<p><a href="index.html">← B候補一覧</a> ／ 詳細データ <a href="ROLE-B-006.json">ROLE-B-006.json</a> ／ connection_tags: Item, Interface ／ requires_code: true ／ 試作コスト: 中</p>
+</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{"at":"2026-10-04T03:19:48.044533+00:00","event":"session_start","candidate_ids":[],"note":"管理側から提示された観測開始時刻を使用。以降の時刻は観測手段がなく、実行runnerの時刻をこのセッションから取得できないためnull（Bash/日時取得は担当指示で禁止）。"}
+{"at":null,"event":"reading_start","candidate_ids":[],"note":"共通パック契約の読み込み開始。実行runnerの時刻を観測できないためnull。"}
+{"at":null,"event":"reading_end","candidate_ids":[],"note":"common-pack README/scope/invariants/source-conflicts/effect-contract/candidate-format/ownership/pilot-and-timing/review-rules/prompts(common,role-a)/candidate.schema.json/components.json/reserved-ids.json/sources.json/pack-integrity.json/templates/validate.py を読み終えた。時刻はnull。"}
+{"at":null,"event":"pack_check_manual","candidate_ids":[],"note":"pack-only検証は担当指示により実行せず管理側へ委託。代わりにpack-integrity.jsonのfilesキー一覧とcommon-packの実ファイル一覧をRead/Globで目視照合し、106件の名前が一致し増減がないことを確認。SHA-256の算出は不可のため未検証。不一致は検出されなかった。"}
+{"at":null,"event":"reading_sources","candidate_ids":[],"note":"scope.md指定の必読snapshotとA追加分の判断003/005/007/008/009/013/015/017/019/021、およびmad-stomper/README/anomalies-readme/current-implementation/quests/game-loop/world3件を確認。時刻はnull。"}
+{"at":null,"event":"batch_start","candidate_ids":["ROLE-A-001","ROLE-A-004","ROLE-A-013"],"note":"試走3件の生成開始。HTMLとJSONを同じbatch内で作成する。時刻はnull。"}
+{"at":null,"event":"batch_end","candidate_ids":["ROLE-A-001","ROLE-A-004","ROLE-A-013"],"note":"試走3件のHTML/JSON、index.html、manifest.json、board.css、progress.json、handoff.mdを自分の出力先へ保存。時刻はnull。"}
+{"at":null,"event":"validation_skipped","candidate_ids":["ROLE-A-001","ROLE-A-004","ROLE-A-013"],"note":"validate.pyのpilot実行は担当指示により自分では行わない（管理側が実施）。代わりにvalidate.pyの読解から必須section ID、SVGのviewBox/role/aria-label、source_statusとsectionの完全一致、manifest/progress/events.jsonlの形状、role_detailsのadditionalProperties制約を自習で点検した。"}
+{"at":null,"event":"visual_check","candidate_ids":["ROLE-A-001","ROLE-A-004","ROLE-A-013"],"note":"実ブラウザ表示確認は担当指示により実施せず、visual_check.status=unavailable。管理側の実表示確認に任せる。SVGの構文はvalidate.pyのXMLパース相当の自己点検のみ。"}
+{"at":null,"event":"checkpoint","candidate_ids":["ROLE-A-001","ROLE-A-004","ROLE-A-013"],"note":"PILOT_ONLYの区切り。progress.state=awaiting_pilot_review。本番12件へは移行しない。"}
+{"at":null,"event":"wait_start","candidate_ids":[],"note":"管理側が停止を指示するまで待機する。待機開始時刻はnull（観測手段なし）。session_endは未記録。"}

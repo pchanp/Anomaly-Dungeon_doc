@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ROLE-A-013 開いた通路の個体 — イベント由来の通常モブ</title>
+  <link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+  <header class="top">
+    <p class="sub">overnight-design-pilot-v1 ／ ROLE-A-013 ／ 主対象: 全マップ共通（分類: 全マップ共通）／ 区分: MobEnemy</p>
+    <h1>開いた通路の個体 — イベント由来の通常モブ</h1>
+    <p>既存のギミックイベントが「開いた」状態をServerが確定し、湧き枠に空きがあれば通常モブが湧く。個体は進行方向を1つだけ持ち、終端で自然に消える。終端や速度、上限の数値はすべて未定。</p>
+    <div class="badges"><span class="badge hyp">design_status: Idea</span><span class="badge">review_status: unreviewed</span><span class="badge unknown">数値・湧き先・終端は未定</span><span class="badge">requires_code: true</span></div>
+    <p class="sub">見出しは作業用であり、正式System IDでもゲーム内名称でもない。Anomaly EntityでもPlayer Anomalyでもない。配置、地形、部屋は提案していない。</p>
+    <nav class="nav"><a href="index.html">← 候補一覧</a><a href="ROLE-A-001.html">前: ROLE-A-001 水位を読む人 →</a><a href="ROLE-A-004.html">→ ROLE-A-004 返却待ちの一本</a></nav>
+  </header>
+
+  <section id="sources">
+    <h2>(a) 根拠文書と出典Status</h2>
+    <table><tbody>
+      <tr><th>MDと節</th><td>docs/systems/map-gimmick-ideas.md「## SEKIGAHARA」（Status: Mixed）</td></tr>
+      <tr><th>根拠の記述</th><td>NPCは有限数を常時生成せずActive NPC数の上限を設け、倒されたNPCを後方から補充する。プレイヤーは戦闘回避、戦場を利用した探索、弱ったNPCの撃破、戦闘介入、乱戦への参加を選べる。SEKIGAHARAはIdeaであり未実装である。</td></tr>
+      <tr><th>MDと節</th><td>docs/systems/game-rules.md「## 戦闘とアノマリー」（Status: Draft）</td></tr>
+      <tr><th>根拠の記述</th><td>戦闘は常時大量配置された敵だけを目的にするのではなく、探索中のイベントやアノマリー反応から発生する。戦闘イベントには敵NPCの出現、追跡、包囲、増援、防衛、巨大アノマリーとの遭遇、NPC同士の戦闘への介入などが含まれ得る。</td></tr>
+      <tr><th>MDと節</th><td>docs/systems/effect-components.md「## 作用範囲と保存境界」（Status: Designed）</td></tr>
+      <tr><th>根拠の記述</th><td>WorldChangeは出現率、同時出現数、経路、Portal、Map状態などの世界変化として扱う。個人表示だけでRun共有状態を確定しない。永続的な蓄積だけで優位を決めず、Run中のビルド、操作、判断に価値を置く方針が共有されている。</td></tr>
+      <tr><th>MDと節</th><td>docs/decisions/017-run-anomaly-spawn-components.md「### 同時出現数コンポーネント」（Status: Accepted）</td></tr>
+      <tr><th>根拠の記述</th><td>各アノマリーは同種が同時に存在できる数を表す同時出現数コンポーネントを持ち、標準値は1とする。このコンポーネントが同種アノマリー1体を原則とする制約の例外を表す。</td></tr>
+      <tr><th>MDと節</th><td>docs/systems/quests.md「## 基本思想」（Status: Draft）</td></tr>
+      <tr><th>根拠の記述</th><td>同一マップ内でアノマリーが1体発生するごとに、すべてのアノマリー候補の個別出現確率は0.90倍になる。博士Questはマップ抽選の候補や確率を変えず、選択されたマップ内の個別出現確率だけを1.40倍へ上げる。通常のモブの扱いは記載がない。</td></tr>
+      <tr><th>MDと節</th><td>docs/decisions/019-player-anomaly-runtime-pvp-and-return.md「## 未決定事項」（Status: Accepted）</td></tr>
+      <tr><th>根拠の記述</th><td>Player Anomalyの待機状態の通知、固有Portal帰還とRuntime満了におけるQuest、資産、基本報酬の扱いは未決定である。Player Anomalyへのキル時の報酬とペナルティも未決である。モブに対するHP下限の規定はない。</td></tr>
+    </tbody></table>
+    <p>既存のどこまでが根拠で、どこからが今回の提案か: 「戦闘は探索中のイベントから発生する」「Active NPC数の上限を設けて補充する」「WorldChangeは出現率や同時出現数を扱う」「アノマリーの同時出現数コンポーネントは標準値1」「博士Questの補正と発生ごとの0.90倍」は既存の記述である。通常モブ用の湧き枠をその枠と別に持つこと、一方向に通過して終端で消える個体、アノマリー発生回数への不算入は今回の提案であり、既存Anomaly出現計算の変更ではない。</p>
+  </section>
+
+  <section id="hypothesis">
+    <h2>(b) 設計仮説とプレイヤーの選択</h2>
+    <p><strong>設計仮説:</strong> 選択中のマップで、既存のギミックイベントが1つ以上「開いた」状態をServerが確定し、湧き枠に空きがあれば、通常モブの個体が湧くと仮定します。個体は進行方向を1つだけ持ち、終端へ到達すると自然に消えます。戦闘を近づけても大量配置はしません。湧きは開いたイベントが閉じると止まりますが、残った個体は消えません。上限はServerがRun単位で持ち、Anomalyの同時出現数コンポーネントとは別の枠として扱います。個体数は上限内でしか補充しません。終端や速度、湧き方向、上限の数値は未定です。地形や部屋、配置は提案しません。</p>
+    <div class="grid">
+      <div class="card"><h3>狙う体験</h3><p>出来事が起きている場所と、個体が通る場所を分けて読む。戦わずにやり過ごす選択肢を必ず成立させる。湧き元のイベント名は出さないので、場所の変化だけを材料にする。</p></div>
+      <div class="card"><h3>判断と代償</h3><p>交わらない／先読みして迂回する／戦って個体対処する／イベントを閉じて湧きを止める（可否は未定）。回避はその場所で待つ時間を失い、報酬も得ない。戦闘しても湧き枠が埋まるまでは補充が続くため、局面は終わらない。</p></div>
+    </div>
+  </section>
+
+  <section id="diagram">
+    <h2>作用図 — 開いたイベント、湧き枠、一方向の個体、四つの退場</h2>
+    <div class="board">
+      <svg viewBox="0 0 1120 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="開いたギミックイベントから湧き枠的上限内で通常モブが湧き、個体が一方向に進行して終端で消える流れと、四つの退場経路、およびAnomalyの枠とは別の枠であることを示す模式図">
+        <rect width="1120" height="500" fill="#0a1118"/>
+        <text class="label" x="24" y="28">入力（既存のギミックイベント）</text>
+        <text class="label" x="470" y="28">湧き枠（Run共有・別枠）</text>
+        <text class="label" x="24" y="368">Anomalyの枠（別系統・本候補は使わない）</text>
+
+        <rect x="24" y="52" width="330" height="90" rx="8" fill="#142330" stroke="#d3b653"/>
+        <text class="label" x="38" y="80">イベントが開いた</text>
+        <text class="small" x="38" y="104">フェーズ進行、放送、装置など</text>
+        <text class="small" x="38" y="128">採用するイベントは未確定</text>
+
+        <rect x="470" y="52" width="300" height="90" rx="8" fill="#142330" stroke="#70c9c3"/>
+        <text class="label" x="484" y="80">湧き枠に空きがある</text>
+        <text class="small" x="484" y="104">上限の数値は未定</text>
+        <text class="small" x="484" y="128">枠の粒度も未定（マップかRunか）</text>
+
+        <rect x="830" y="52" width="266" height="90" rx="8" fill="#142330" stroke="#70c9c3"/>
+        <text class="label" x="844" y="80">個体が進行方向へ出る</text>
+        <text class="small" x="844" y="104">一方向だけ（通過型）</text>
+        <text class="small" x="844" y="128">湧き元の名前は表示しない</text>
+
+        <path d="M354 97h110" class="active"/>
+        <path d="M458 91l9 6-9 6" class="active"/>
+        <path d="M770 97h54" class="active"/>
+        <path d="M818 91l9 6-9 6" class="active"/>
+
+        <path d="M963 142v40" class="active"/>
+        <path d="M957 178l6 9 6-9z" fill="#70c9c3"/>
+        <rect x="830" y="188" width="266" height="60" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text class="label" x="844" y="214">終端到達で自然に消滅</text>
+        <text class="small" x="844" y="236">枠が1つ解放される</text>
+
+        <path d="M1096 118h24v-70" class="hyp-line"/>
+        <rect x="830" y="264" width="266" height="60" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text class="label" x="844" y="290">帰還せず通過をやり過ごす</text>
+        <text class="small" x="844" y="312">回避は報酬ではなく選択である</text>
+
+        <path d="M470 172v40" class="active"/>
+        <path d="M464 208l6 9 6-9z" fill="#70c9c3"/>
+        <rect x="352" y="216" width="300" height="60" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text class="label" x="366" y="242">枠が上限に達している</text>
+        <text class="small" x="366" y="264">このときは湧かない</text>
+
+        <path d="M620 97v-24h300v184" stroke="#d3b653" stroke-width="2" stroke-dasharray="7 5" fill="none"/>
+        <rect x="352" y="292" width="418" height="46" rx="8" fill="#142330" stroke="#d3b653"/>
+        <text class="small" x="366" y="320">イベントが閉じても残存個体は消えない（湧きのみ停止）</text>
+
+        <rect x="24" y="390" width="1072" height="60" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text class="label" x="38" y="416">Anomalyの枠：同時出現数コンポーネント（判断017）、博士Questの1.40倍補正、発生ごとの0.90倍減衰</text>
+        <text class="small" x="38" y="438">本候補の通常モブはここを使わず、個体数もアノマリー発生回数にも算入しない</text>
+
+        <text class="small" x="24" y="472">この図で分かること: 入力、枠、個体、終端の順序と、四つの退場（終端、湧き停止、撃破、Run終了）が別である。</text>
+        <text class="small" x="24" y="492">この図で確定しないこと: 上限の数値、湧き方向、終端の定義、どのイベントが湧きの条件になるか、湧き先の通行。</text>
+      </svg>
+    </div>
+    <p><strong>この図で分かること:</strong> 湧きは「イベントが開いたこと」と「枠に空きがあること」の両方が必要である。イベントが閉じると湧きだけが止まり、残った個体は終端まで進む。枠はAnomalyの枠と別である。</p>
+    <p><strong>図では確定しないこと:</strong> 上限の数値、湧き方向、終端の定義、採用するイベントの種類、湧き先の通行。図は模式的であり、マップの地形や配置を確定するものではない。</p>
+  </section>
+
+  <section id="effects">
+    <h2>(c) Trigger・Condition・Effectの契約</h2>
+    <p>Effectは3件。湧き（世界変化）、接触Damage（即時）、終端での個体終了（即時）を分ける。</p>
+    <table><tbody>
+      <tr><th>Effect 1: WorldChange</th><td>持続（sustained）／保存境界: 同一マップ中／湧き枠の記録と個体出現</td></tr>
+      <tr><th>Trigger</th><td>選択中のマップで既存のギミックイベントが「開いた」状態をServerが確定し、湧き枠に空きがある。</td></tr>
+      <tr><th>Condition</th><td>開いたイベントが1つ以上存在すること。湧き枠が上限に満たないこと。対象マップが本候補の湧きを許可していること。イベントの種類、湧き周期、上限の数値は未定。</td></tr>
+      <tr><th>結果</th><td>湧き指示がRun共有の枠へ1件記録され、通常モブの個体が出現する。個人へは何も表示しない。</td></tr>
+      <tr><th>対象・作用範囲</th><td>対象: Run共有の通常モブ湧き枠と、湧いた個体。範囲: Run全体（選択中のマップ内）。個人ごとの所持や表示には作用しない。</td></tr>
+      <tr><th>保存境界・終了</th><td>終了条件: 対応する開いたイベントが閉じた（湧きのみ停止。残存個体は消えない）／Run終了／マップ終了。いずれかが成立すれば枠の受付を閉じる（any）。個体側の終了は別のEffectで扱う。</td></tr>
+      <tr><th>重ね掛け</th><td>例外ではない。1つの開いたイベントからの湧き指示はイベントごとに1件として扱い、回数で加算しない。異なるイベントが同時に開いた場合の枠の順序は未確定であり、自動合算も後勝ちもせず保留し記録する。博士Questの1.40倍補正、発生ごとの0.90倍減衰、Anomalyの同時出現数コンポーネントとは別の枠であり競合しない。</td></tr>
+      <tr><th>Server / Client</th><td>Serverがイベントの状態と湧き枠の空きを検証し、個人側のクライアント信号では湧きを起こさない。Clientは個体の出現表現のみを表し、湧き元のイベント名、枠の残数、補充の予告は表示しない。</td></tr>
+      <tr><th>Feedback</th><td>成功: 進行方向に個体が出現し通行がふさがる。失敗: 枠が上限に達している、またはイベントが閉じている場合は湧かない。判別不能: なぜこの場所で個体が出たのかは説明しない。</td></tr>
+    </tbody></table>
+    <table><tbody>
+      <tr><th>Effect 2: Damage</th><td>即時（instant）／保存境界: 一時／個体との接触</td></tr>
+      <tr><th>Trigger</th><td>個体が対象の接触範囲に入り、Serverがその接触を判定した。</td></tr>
+      <tr><th>Condition</th><td>対象が個体の進行経路上にいること、個体が移動中であること。接触の判定方式と間隔は未定。</td></tr>
+      <tr><th>結果</th><td>対象のHPを減少させる。数値は未定であり、プレイヤー間HP下限の規定を通常モブへそのまま適用しない。</td></tr>
+      <tr><th>対象・作用範囲</th><td>対象: 接触した個人。範囲: 個人。同一Runの他の個人へは伝播しない。</td></tr>
+      <tr><th>保存境界・終了</th><td>終了条件: このDamageについて適用解決した／接触が離れた（この時点で再度のDamageは発生しない）。即時効果としてイベントごとに解決する。範囲効果への拡張は定めない。</td></tr>
+      <tr><th>重ね掛け</th><td>例外ではない。接触イベントごとに解決し重複して加算しない。他のDamageや状態異常との合成規則は共通既定が未解決であり、個別規則がなければ保留する。Player AnomalyとのHP下限の扱いは判断019に記載がないため未決として記録する。</td></tr>
+      <tr><th>Server / Client</th><td>Serverが接触位置、個体状態、対象を特定して検証し、表示だけの接触はDamageを発生させない。Clientは接触の表現とHP表示のみ。個体名や種類は表示しない。</td></tr>
+      <tr><th>Feedback</th><td>成功: 接触表現が出てHPが減る。失敗: 接触しない（回避できたことは成功ではなくプレイヤーの選択）。判別不能: Damageの由来は表示せず、回避しても得られる手掛かりは無い。</td></tr>
+    </tbody></table>
+    <table><tbody>
+      <tr><th>Effect 3: StateChange</th><td>即時（instant）／保存境界: 一時／終端到達による個体終了</td></tr>
+      <tr><th>Trigger</th><td>個体が進行方向の終端へ到達した。</td></tr>
+      <tr><th>Condition</th><td>個体が存在し、移動中で、終端の判定を満たしたこと。終端の定義は既存の通行の末端を想定するが確定していない。</td></tr>
+      <tr><th>結果</th><td>個体が終了し、湧き枠が1つ解放される。枠が余る場合は以降の湧き判定で補充の余地が生まれる。</td></tr>
+      <tr><th>対象・作用範囲</th><td>対象: 終了した個体と、Run共有の湧き枠。範囲: Run共有。個体の終了はすべてのClientに表現されるが、枠の残数自体は表示しない。</td></tr>
+      <tr><th>保存境界・終了</th><td>終了条件: この終了処理について適用解決した。個体ごとに1回だけ解決する。枠の解放が重複しないよう終了済みの個体には再度適用しない。</td></tr>
+      <tr><th>重ね掛け</th><td>例外ではない。個体ごとに1件。同じ枠を別のEffectが操作する場合は共通既定が未解決であり、規則がなければ保留する。</td></tr>
+      <tr><th>Server / Client</th><td>Serverが個体の到達と終了を検証し、破棄済みや未初期化の個体には適用しない。Clientは個体モデルの消滅表現のみ。解放された枠は表示しない。</td></tr>
+      <tr><th>Feedback</th><td>成功: 個体が終端で消え通路上が静かになる。失敗: 終端へ到達できない場合は終了しない（終端の定義が未確定）。判別不能: 補充を待つことを知らせる表示は出さない。枠が空いたことによる変化は次回の湧きでだけ観測できる。</td></tr>
+    </tbody></table>
+  </section>
+
+  <section id="uncertainties">
+    <h2>(d) 未確定事項・矛盾・異化と留保</h2>
+    <table><tbody>
+      <tr><th>未確定事項</th><td>湧き上限の数値、枠の粒度（マップ単位かRun単位か）、補充の周期はすべて未定で、数値を決めていない。どのギミックイベントが湧きの条件になるか（8/31のフェーズ、TSUTAYAの放送、研究所の装置、SEKIGAHARAの戦闘イベントなど）、どれを採用するかは各マップ側の判断であり未確定。SEKIGAHARAはIdeaで勢力と戦況が未確定のため、同マップへ適用する場合の表現は別問題になる。進行方向と終端の定義は未確定。Player Anomalyとの間の個体HP下限は判断019に記載がなく未決。個体数が多い場合の性能影響は未検証。湧き方向が既存の移動経路と重なる場合の通行への影響も未検証。実装の有無はStudio未確認である。</td></tr>
+      <tr><th>既存仕様との矛盾</th><td>2件をconflictsに記録している。（1）quests.mdの「同一マップ内でアノマリーが1体発生するごとに全候補の個別出現確率が0.90倍」に対し、本候補は通常モブの個体発生をこの回数に算入しない。（2）判断017の同時出現数コンポーネントに対し、本候補は通常モブにも枠を設けるが同じ枠へ統合しない。</td></tr>
+      <tr><th>補正と理由</th><td>通常モブの発生をアノマリー出現の計算に算入しない旨を明記し、両者を別の計算として分ける。アノマリー側の減衰は通常モブの湧きに作用させない。枠はAnomalyの枠と判断017の意味をそのまま保ち、別枠としてRun共有に持つ。両方混在しても個体数の扱いは互いに影響させない。いずれも既存の意味を壊さないため補正可能と考える。</td></tr>
+      <tr><th>異化したもの</th><td>異常空間ではなく、既存の出来事が動いた結果として個体が現れるようにした点が異化である。異常の正体を示さずに、場所の変化だけを戦闘の理由にする。名前も由来も示さないまま、通過すべき道と持久戦すべき場所を分ける。</td></tr>
+      <tr><th>世界内の成立理由</th><td>舞台設定は、古い設備が現役で使われ、技術や生活習慣の更新速度が揃っていない文明を想定する。店舗が閉まる、装置が動く、時間帯が変わる、という出来事は日常的な場所でも起きる。それらが異常かどうかは答えず、個体が増えるという結果だけを見せる。世界の起源、アノマリーの正体、博士の真意には触れない。</td></tr>
+      <tr><th>曖昧に残す意味</th><td>なぜその場所で個体が生じるのか。個体は何者なのか。出来事と個体の間に説明可能な関係があるかは提示しない。SEKIGAHARAの複数勢力のNPC戦闘とも別系統として扱い、本候補は一方向に通過する個体だけを扱う。</td></tr>
+    </tbody></table>
+  </section>
+
+  <section id="connections">
+    <h2>(e) 他担当への接続</h2>
+    <p><strong>接続タグ:</strong> NPCState / WorldChange / Environment / Combat / Traversal</p>
+    <p><strong>使用するコンポーネント:</strong> catalog: NPCState、Effect.WorldChange、Effect.Damage、Effect.StateChange。proposed: GimmickEventOpenState、MobSpawnBudget。AnomalySpawnは意図的に使わない（本候補はAnomaly枠を使わないため）。catalogのIDは記述語彙であり、実装を保証しない。</p>
+    <p><strong>他候補へ提供できる性質:</strong> 既存のギミックイベントを開閉の入力として受ける出現源になる／個体数に上限と湧き枠を持つ（終端到達という戦闘以外の退場経路がある）／Anomalyの枠を使わずに探索の途中で戦闘イベントを発生させられる／湧き元のイベント名を出さずに場所の変化だけを提示できる。</p>
+    <table><tbody>
+      <tr><th>予約参照</th><td>ROLE-C-013（optional_connection、resolution: reserved_unresolved）。要求する性質: 個体との距離と方向を回避判断の材料として使える。代替: 接続がなくても成立する。回避は通常の移動と待機だけで成立し、Cの候補が無い場合も、出現、回避、通過、退場の結果は同じである。</td></tr>
+      <tr><th>予約参照</th><td>ROLE-B-013（optional_connection、resolution: reserved_unresolved）。要求する性質: 湧きの可否や個体数を、使用可能な個人状態として扱いたい場合。代替: 本候補の湧き条件は所持品を用いない。Bの候補が無い場合でも成立し、個人状態への依存が生じない。</td></tr>
+      <tr><th>未解決の理由</th><td>C-013: Cの候補は管理側から配布されておらず、Cの013が何を定義するか不明。B-013: 正式なItemStackと取得源は未実装（SRC-01）のため、湧き条件に個人状態を組み込めるかどうかも判断できない。いずれも要求する性質の語彙だけを記し、相手の内容を創作していない。</td></tr>
+      <tr><th>ID未指定の要求</th><td>イベント「開いた」をどの共通仕様として表現するか（マップ固有か、共通の状態として持つか）。湧き枠をマップ単位とするかRun単位とするか。いずれも全マップ共通の候補であるため候補IDでは特定できず、共通設計側の判断が必要（adoption_blocker: true）。</td></tr>
+    </tbody></table>
+    <div class="note">予約IDは未作成であり得ます。peer-snapshotsが配布されていないため相手の本文を読んでいません。存在しないページへのリンクは置いていません。</div>
+  </section>
+
+  <section id="cost">
+    <h2>(f) 新規ロジックと試作コスト</h2>
+    <p><code>requires_code: true</code> — 既存のゲームには通常の敵AIの実装がなく、NPCStateはUnconfirmedである。Serverの湧き枠、上限判定、補充判定、個体の移動と終端判定、Damageの判定経路はいずれも新規実装を要する。既存のAnomalySpawnは未実装であり（判断017）、Anomaly Entityのプロトタイプを通常モブの根拠に使うことはできないためtrueとする。コード生成の許可ではない。</p>
+    <p><strong>新規ロジック:</strong> Run共有の通常モブ湧き枠と上限、補充の判定／既存のギミックイベントが開いたことを表す共通状態とその入力からの湧き／個体の移動と終端到達による終了と湧き枠の解放／個体との接触Damageと、Player Anomalyを含む対象とのHP下限の判定／アノマリー発生回数と通常モブ湧きを分離する計算境界。</p>
+    <p><strong>試作コスト: 中。</strong> 1種類の個体、進行方向1通り、枠1つという最小構成に限定すれば中程度。ただし湧き先の通行の選定、既存のPromptや地形との干渉、個体数の負荷、複数イベントが同時に開いたときの枠の競合規則は試作前に決める必要がある。SEKIGAHARAは未実装であり、既存2マップのどちらかに実装する場合でも共通設計の判断を要する。実時間の見積もりは出していない。</p>
+    <p><strong>想定する既存部品:</strong> 既存のServer権威のRun状態とマップのライフサイクル／既存の通行（Trail、廊下）とマップ生成の骨格／既存のServer権威のPlayer Anomaly属性と判定（判断019）／既存のHPとDamageの受け口（HP属性は実装済み）。</p>
+  </section>
+
+  <section id="role-details">
+    <h2>(g) 担当固有（ROLE-A）の記述</h2>
+    <table><tbody>
+      <tr><th>NPCの目的</th><td>個体は通常モブであり、依頼の担い手でも、アノマリーでもNPCでもない。目的として持つのは、既定された進行方向へ移動し終端へ到達することだけで、それ以外は設計しない。会話も説明もしない。世界や出来事の意味を語る存在ではない。</td></tr>
+      <tr><th>具体的な選択</th><td>個体と交わらない位置取りで通過をやり過ごす／進行方向を先読みして迂回する／戦闘で個体対処する（枠が余る限り補充が続く）／開いたイベントを閉じる操作で湧きを止める（プレイヤー可能かはマップごとに未定）。回避を選んでも報酬は得ない。</td></tr>
+      <tr><th>Player Anomalyの扱い</th><td>判断019によりPlayer Anomalyは通常NPCとInteractionできない。個体も通常NPCの枠に属するため、提示や受け渡しは成立しない。戦闘については判断019がPlayer Anomalyと通常プレイヤーとの相互キル許容を認めており、通常モブのHP下限は判断019に記載がないため未決として記録する。Player Anomalyの専用攻撃はPlayer Anomaly側の仕様であり、湧きの条件は変えない。</td></tr>
+      <tr><th>mob_contract: 適用</th><td>spawn_condition: 選択中のマップで、既存のギミックイベント（8/31のフェーズ進行、廃TSUTAYAの放送やCRTの切替、研究所の装置の作動、SEKIGAHARAの戦闘イベントなど）のいずれかが「開いた」状態をServerが確定し、湧き枠に空きがあるとき。どのイベントが採用されるかは未確定であり未実装の機構も含む。Player Anomalyの発生や博士Questの受注、所持品は条件に含めない。／population_cap: ServerがRun単位で保持する通常モブの生存数に上限を設ける。数値、枠の粒度、補充の周期は未定で本候補では数値を決めていない。補充は個体数が減った分だけ枠内で行う案とする。Anomalyの同時出現数コンポーネントとは別の枠として扱い、同じ枠へ統合しない。博士Questの1.40倍補正、発生ごとの0.90倍減衰、アノマリー出現計算の対象にもしない。／non_combat_response: 個体は進行方向にのみ移動し終端で自然に消えるため、戦闘を避けられる。プレイヤーは交わらない、通過をやり過ごす、先読みして迂回する、イベントを閉じて湧きを止める、のいずれかを選べる。回避を選んでも報酬は得ない。回避は成功の手掛かりではなく選択である。／exit_condition: 4通り。（1）終端到達で自然消滅。（2）開いたイベントが閉じた場合は湧きのみ停止し残存個体は消えない。（3）戦闘による撃破はその個体だけを終了させ、枠が余れば補充が続く。（4）Run終了またはマップ終了で全個体を破棄する。個体の再開条件は定めない。／entity_distinction: 通常モブでありAnomaly Entityではない。特定のInteraction Kindを明示的に受理しない（受理表を持たない）。アノマリー相互作用の受理、拒否、変換、傍受のいずれも行わない。状態本体と寿命はServerの通常モブ枠で持ち、AnomalyのSystem IDを持たない。WorldChangeとして世界側の枠を操作するがAnomalySpawnの枠とは別である。SEKIGAHARAのIdeaに記載された複数勢力のNPC戦闘とは別系統である。</td></tr>
+    </tbody></table>
+  </section>
+
+  <footer>overnight-design-pilot-v1 ／ ROLE-A-013 ／ design_status: Idea ／ review_status: unreviewed ／ 実表示の確認は未実施（担当セッションではブラウザを使用していない）。</footer>
+</main>
+</body>
+</html>

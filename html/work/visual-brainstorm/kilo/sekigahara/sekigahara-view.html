@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>SEKIGAHARA — 2D 設定画</title>
+<style>
+html,body{margin:0;padding:0;overflow:hidden;background:#000}
+canvas{display:block}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+const c=document.getElementById('c'); const ctx=c.getContext('2d');
+const W=1600,H=900; c.width=W; c.height=H;
+
+// 空（夕焼け）
+const sky=ctx.createLinearGradient(0,0,0,H);
+sky.addColorStop(0,'#2E2016'); sky.addColorStop(0.45,'#5E3A24');
+sky.addColorStop(0.7,'#8A5A34'); sky.addColorStop(1,'#B87A48');
+ctx.fillStyle=sky; ctx.fillRect(0,0,W,H);
+
+// 遠景の山並み
+function hill(x0,y0,x1,y1,c){
+  ctx.fillStyle=c; ctx.beginPath(); ctx.moveTo(0,H); ctx.lineTo(x0,y0); ctx.lineTo(x1,y1); ctx.lineTo(W,H); ctx.fill();
+}
+hill(0,640,600,480,'#3E2A1E');
+hill(200,520,800,420,'#5E4230');
+hill(400,460,1300,360,'#7A5440');
+hill(700,400,1600,600,'#5E4230');
+// 霧
+ctx.fillStyle='rgba(138,90,68,0.18)';
+for(let k=0;k<5;k++){ hill(0,500+k*140,1600,620+k*6,'#4A3224'); }
+
+// 地平線附近的な炎
+function flame(x,y,r){
+  const g=ctx.createRadialGradient(x,y-20,2,x,y-40,r);
+  g.addColorStop(0,'#FFD060'); g.addColorStop(0.5,'#E07020'); g.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=g; ctx.fillRect(x-50,y-r-100,100,r*2);
+}
+for(let i=0;i<6;i++) flame(300+i*280,420,25+Math.random()*20);
+
+// 中景：戦場地面
+ctx.fillStyle='#3E3428'; ctx.fillRect(0,560,W,340);
+ctx.fillStyle='#4A3C30';
+for(let i=0;i<300;i++){
+  const x=Math.random()*W,y=570+Math.random()*320;
+  ctx.fillRect(x,y,Math.random()*6+2,Math.random()*4+2);
+}
+
+// 兵士（簡易シルエット、遠景まで多数）
+function soldier(x,y,h,axeDir){
+  ctx.fillStyle='#1A1410';
+  ctx.fillRect(x,y-h/2,6,h);
+  ctx.fillRect(x-2,y-h/2-2,10,4); // 兜
+  ctx.beginPath(); ctx.moveTo(x+3,y-h/2); ctx.lineTo(x+3+axeDir*18,y-h/2-16); ctx.stroke(); // 鉾
+  ctx.strokeStyle='#1A1410'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(x,y+h/2); ctx.lineTo(x+Math.random()*12-6,y+h/2+8); ctx.stroke(); // 足
+}
+function squad(xbase,ybase,count,hstep){
+  for(let i=0;i<count;i++){
+    const x=xbase+Math.random()*220-110; const y=ybase+Math.random()*hstep;
+    soldier(x,y,28+Math.random()*20,(i%3==0)?-1:1);
+  }
+}
+squad(200,700,24,60);   // 左翼
+squad(450,720,20,55);   // 中
+squad(700,690,26,62);   // 中右
+squad(980,730,18,58);   // 右翼
+squad(1250,710,22,60);
+squad(100,680,16,55);
+
+// 後方の兵士列（遠景）
+for(let i=0;i<120;i++){
+  const x=Math.random()*W; const y=585+Math.random()*200;
+  const s=0.5+Math.random()*0.4;
+  ctx.save(); ctx.scale(s,s); ctx.translate(x/s,y/s);
+  ctx.fillStyle='#0F0C08'; ctx.fillRect(x,y-14,4,28);
+  ctx.strokeStyle='#0F0C08'; ctx.beginPath(); ctx.moveTo(x+2,y-14); ctx.lineTo(x+2+14,y-30); ctx.stroke();
+  ctx.restore();
+}
+
+// 前景：血痕と欠片
+ctx.fillStyle='#3A2018';
+for(let i=0;i<20;i++){
+  const x=Math.random()*W,y=780+Math.random()*120;
+  ctx.beginPath(); ctx.ellipse(x,y,Math.random()*12+5,Math.random()*6+3,Math.random()*Math.PI,0,Math.PI*2); ctx.fill();
+}
+ctx.fillStyle='#2A1A12';
+for(let i=0;i<15;i++){
+  const x=Math.random()*W,y=800+Math.random()*100;
+  ctx.fillRect(x,y,Math.random()*20+8,2);
+}
+
+// ラベル
+ctx.fillStyle='rgba(255,255,255,0.8)'; ctx.font='14px sans-serif'; ctx.textAlign='left';
+ctx.fillText('戦場（遠景まで戦闘が連続）',120,550);
+ctx.fillText('左翼の兵団',180,790);
+ctx.fillText('中央突破点',800,700);
+ctx.fillText('炎と夕焼け',1200,560);
+ctx.fillText('血痕・鎧の欠片（前景）',300,850);
+</script>
+
+  <div class="n">夜明け前の薄光。霞を薄くし、兵団のシルエットと旗の輪郭を地平線まで読ませる</div>
+  <div class="chips">
+    <div class="sky"></div><div class="gnd"></div>
+    <div class="haze"></div><div class="acc"></div>
+  </div>
+  <div class="l">主案: 夕焼け（暖色・heavy haze）→ 代替: 薄明（低コントラスト・シルエット）</div>
+</div>
+
+<style>
+  .altband{
+    margin:0; padding:14px 24px 16px; background:#0d0f12;
+    border-top:2px solid #3a4149; color:#9aa6b2;
+    font-family:"Helvetica Neue",system-ui,sans-serif; box-sizing:border-box;
+  }
+  .altband .t{ font-size:17px; letter-spacing:.04em; }
+  .altband .n{ font-size:13px; color:#6f7a86; margin-top:4px; }
+  .altband .chips{ display:flex; gap:12px; margin-top:10px; align-items:center; }
+  .altband .sky{ width:470px; height:34px; background:linear-gradient(180deg,#6E7C86,#B79A78); }
+  .altband .gnd{ width:117px; height:34px; background:#4A4438; }
+  .altband .haze{ width:470px; height:34px; background:#C9BCA6; }
+  .altband .acc{ width:34px; height:34px; background:#D8D2C4; }
+  .altband .l{ font-size:12px; color:#8d99a6; margin-top:10px; }
+</style>
+<div class="altband">
+  <div class="t">ALT-SEKIGAHARA / 代替案 A</div>
+  <div class="n">夜明け前の薄光。霞を薄くし、兵団のシルエットと旗の輪郭を地平線まで読ませる</div>
+  <div class="chips">
+    <div class="sky"></div><div class="gnd"></div>
+    <div class="haze"></div><div class="acc"></div>
+  </div>
+  <div class="l">主案: 夕焼け（暖色・強い霞）→ 代替: 薄明（低コントラスト・シルエット）</div>
+</div>
+</body>

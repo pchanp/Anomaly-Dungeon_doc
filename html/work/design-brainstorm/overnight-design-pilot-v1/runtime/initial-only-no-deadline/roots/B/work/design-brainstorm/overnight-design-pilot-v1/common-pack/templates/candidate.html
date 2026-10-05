@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>設計候補HTMLの雛形 — 候補ではありません</title>
+  <link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+  <header class="top">
+    <p class="sub">overnight-design-pilot-v1 ／ TEMPLATE</p>
+    <h1>【記入】候補IDと作業用タイトル</h1>
+    <p>【記入】何をする案か、プレイヤーが何を判断するかを短く。</p>
+    <div class="badges"><span class="badge hyp">Idea / Draft</span><span class="badge">unreviewed</span><span class="badge unknown">未確定事項あり</span></div>
+    <p class="sub">これは形式説明の雛形。正式System IDや採用済み案ではありません。完成時は自分のindex.htmlへのリンクを追加してください。</p>
+  </header>
+
+  <section id="sources">
+    <h2>(a) 根拠文書と出典Status</h2>
+    <p>【記入】MDのパス、節、Status宣言、今回の根拠となる記述。文書全体と個別節の状態を取り違えない。</p>
+    <p>【記入】既存のどこまでが根拠で、どこからが今回の提案か。</p>
+  </section>
+
+  <section id="hypothesis">
+    <h2>(b) 設計仮説とプレイヤーの選択</h2>
+    <p><strong>設計仮説:</strong> 【記入】イベント／NPC／アイテム／スキルの具体的な仕組み。</p>
+    <div class="grid">
+      <div class="card"><h3>狙う体験</h3><p>【記入】観察、操作、ビルド、判断のどこに価値があるか。</p></div>
+      <div class="card"><h3>判断と代償</h3><p>【記入】選択肢と、それぞれで失うもの／引き受けるリスク。</p></div>
+    </div>
+  </section>
+
+  <section id="diagram">
+    <h2>作用図 — この雛形では個人表示と共有状態を分ける</h2>
+    <p>形式例です。候補作成時は、各案固有の作用・状態・空間関係・選択の図に描き直します。</p>
+    <div class="board">
+      <svg viewBox="0 0 980 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="形式例。個人に見えた情報だけでは共有状態は変わらず、入力とServerの条件判定を経て共有結果になる">
+        <rect width="980" height="360" fill="#0a1118"/>
+        <text x="30" y="38" class="label">個人の提示</text>
+        <text x="380" y="38" class="label">プレイヤーの選択</text>
+        <text x="730" y="38" class="label">Serverが確定する結果</text>
+        <path d="M330 58v270M690 58v270" stroke="#2a3c49" stroke-dasharray="4 5"/>
+        <circle cx="92" cy="130" r="28" fill="#172d3b" stroke="#70c9c3"/>
+        <text x="92" y="136" text-anchor="middle" class="label">本人</text>
+        <rect x="160" y="96" width="140" height="65" rx="8" fill="#142330" stroke="#d3b653"/>
+        <text x="178" y="124" class="label">差異・手掛かり</text>
+        <text x="178" y="148" class="small">意味は未確定</text>
+        <path d="M122 130h32" class="hyp-line"/>
+        <text x="34" y="219" class="small">見えたことだけで</text><text x="34" y="244" class="small">共有世界の変化を確定しない</text>
+        <path d="M302 130h55" class="active"/>
+        <path d="M348 124l9 6-9 6" class="active"/>
+        <rect x="370" y="93" width="255" height="69" rx="8" fill="#142330" stroke="#70c9c3"/>
+        <text x="391" y="122" class="label">介入する → 条件を検証</text><text x="391" y="149" class="small">対象・距離・状態・権限</text>
+        <rect x="370" y="221" width="255" height="57" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text x="391" y="255" class="label">見送る → 探索を続ける</text>
+        <path d="M360 136v108h8" stroke="#8ba2b3" fill="none"/>
+        <path d="M628 126h87" class="active"/><path d="M706 120l9 6-9 6" class="active"/>
+        <rect x="727" y="91" width="222" height="75" rx="8" fill="#142330" stroke="#70c9c3"/>
+        <text x="745" y="119" class="label">条件成立: 状態変化</text><text x="745" y="147" class="small">範囲・保存境界を明示</text>
+        <path d="M667 126v112h52" stroke="#ea9380" fill="none" stroke-width="2"/>
+        <text x="732" y="245" class="label">不成立: 変化なし</text>
+        <text x="732" y="270" class="small">不成立の手掛かりも返す</text>
+        <text x="30" y="335" class="small">形式説明の図。具体的なマップ、配置、能力、起源を提案するものではありません。</text>
+      </svg>
+    </div>
+    <p><strong>この図で分かること:</strong> 個人の提示、プレイヤーの選択、Serverが確定する共有結果は別の段階。</p>
+    <p><strong>図で確定しないこと:</strong> 【記入】配置、数値、原因等の未定事項。地図や正式レイアウトとして扱わない。</p>
+  </section>
+
+  <section id="effects">
+    <h2>(c) Trigger・Condition・Effectの契約</h2>
+    <p>【記入】複数Effectは表を分け、それぞれの終了と重ね掛けを書く。</p>
+    <table><tbody>
+      <tr><th>Trigger</th><td>【記入】起点となる行為／イベント</td></tr>
+      <tr><th>Condition</th><td>【記入】前提条件と未定数値</td></tr>
+      <tr><th>Effect種別・結果</th><td>【記入】7分類と、実際に変わる内容</td></tr>
+      <tr><th>対象・作用範囲</th><td>【記入】対象と個人／Party／Run等</td></tr>
+      <tr><th>保存境界・終了</th><td>【記入】即時／持続、終了条件、境界の破棄、切断等</td></tr>
+      <tr><th>重ね掛け</th><td>【記入】既定か例外か、異なるEffectとの競合</td></tr>
+      <tr><th>Server / Client</th><td>【記入】確定事実、検証、提示の分担</td></tr>
+      <tr><th>Feedback</th><td>【記入】成功／失敗／不明の手掛かり</td></tr>
+    </tbody></table>
+  </section>
+
+  <section id="uncertainties">
+    <h2>(d) 未確定事項・矛盾・世界観上の異化</h2>
+    <table><tbody>
+      <tr><th>未確定事項</th><td>【記入】空白を埋めず、判断が必要な部分</td></tr>
+      <tr><th>既存仕様との矛盾</th><td>【記入】衝突するMD、現行記述、提案の差</td></tr>
+      <tr><th>補正と理由</th><td>【記入】採用時に何を変更すれば成立するか</td></tr>
+      <tr><th>異化したもの</th><td>【記入】何の既視感をどうずらすか／不要なら理由</td></tr>
+      <tr><th>世界内の成立理由</th><td>【記入】正体や起源を断定せず成立し得る理由</td></tr>
+      <tr><th>曖昧に残す意味</th><td>【記入】世界設定として確定しないこと</td></tr>
+    </tbody></table>
+  </section>
+
+  <section id="connections">
+    <h2>(e) 他担当への接続</h2>
+    <p>【記入】接続タグ、使用コンポーネント、提供できる性質。</p>
+    <p>【記入】予約参照ID、必要な性質、未解決理由、相手が成立しない場合の代替。</p>
+    <div class="note">予約IDは未作成であり得ます。他担当の内容を創作したり、存在しないページへリンクしたりしません。</div>
+  </section>
+
+  <section id="cost">
+    <h2>(f) 新規ロジックと試作コスト</h2>
+    <p><code>requires_code: 【記入】true / false / unknown</code> — 【記入】その根拠。</p>
+    <p>【記入】必要な新規機能、想定する既存部品、試作コスト小／中／大／不明と理由。</p>
+  </section>
+
+  <section id="role-details">
+    <h2>(g) 担当固有の経路・制約</h2>
+    <p>【記入】AはNPCの目的・通常モブの発生と退場、Bは10経路、Cは系統・ランク・Lv1〜3・4枠・通常攻撃連携・回避／介入／代償。</p>
+  </section>
+
+  <footer>overnight-design-pilot-v1 ／ 設計候補の形式参考。雛形は候補件数に数えません。</footer>
+</main>
+</body>
+</html>

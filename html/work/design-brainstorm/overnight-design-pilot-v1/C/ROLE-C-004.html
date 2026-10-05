@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ROLE-C-004 試聴の記録 — 廃TSUTAYA 探索系スキルの設計候補</title>
+  <link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+  <header class="top">
+    <p class="sub">overnight-design-pilot-v1 ／ ROLE=C ／ 候補ID ROLE-C-004</p>
+    <h1>ROLE-C-004 試聴の記録（廃TSUTAYA・探索系）</h1>
+    <p>個人試聴は一定時間で自動終了し、開かなかった項目はその時間を越えると訪問できない。この候補は試聴中にプレイヤー自身が中断する操作を追加し、その瞬間に未閲覧の項目を1件だけ個人記録として残す。残るのは既存UIが持つ名前と選択結果だけで、映像や音声の実内容は作らない。試聴中は移動も通常攻撃も他のスキルも発動できない。</p>
+    <div class="badges">
+      <span class="badge hyp">design_status: Idea</span>
+      <span class="badge">review_status: unreviewed</span>
+      <span class="badge">primary_map: 廃TSUTAYA</span>
+      <span class="badge">classification: マップ固有</span>
+      <span class="badge">category: Skill</span>
+      <span class="badge unknown">rank: null（理由あり）</span>
+      <span class="badge unknown">requires_code: true</span>
+      <span class="badge unknown">prototype_cost: 中</span>
+      <span class="badge unknown">未確定事項あり</span>
+    </div>
+    <nav class="nav"><a href="index.html">候補一覧へ戻る</a><a href="ROLE-C-001.html">前の候補 ROLE-C-001</a><a href="ROLE-C-013.html">次の候補 ROLE-C-013</a></nav>
+    <p class="sub">作業用の見出しであり、正式System IDでもゲーム内名称でもない。既存アノマリー名の変更もしない。</p>
+  </header>
+
+  <section id="sources">
+    <h2>(a) 根拠文書と出典Status</h2>
+    <table><tbody>
+      <tr><th>docs/systems/map-gimmick-ideas.md<br>節: Abandoned TSUTAYA</th><td>Status: Prototype: Implemented（実装済みプロトタイプ）。7ルームと7通路。9スタッド高の棚スタック、柱、レジカウンター、返却ラック、放送卓が視界を分断する袋小路構造。棚は5基、CRTは4台、試聴機は3台。</td></tr>
+      <tr><th>docs/systems/map-gimmick-ideas.md<br>節: アーカイブと相互作用</th><td>Status: Prototype: Implemented（実装済みプロトタイプ）。棚を調べると検索と閲覧用のArchive Selection UIを開く。1回の検索で全項目が返ることはない。個人試聴でき、Back Roomなどで再生すると店舗のShared BGMを変えられる案。Shared BGMはServer Stateで管理する。</td></tr>
+      <tr><th>docs/systems/map-gimmick-ideas.md<br>節: 未実装の境界</th><td>Status: Mixed（案ごとに下記）。共有BGMの選択UIは未実装。個別メディアの実際の内容は未実装で、項目は名前と選択結果のみを持つ。Archive Selection UIには一覧、選択、閉じる以外の遷移がない。TSUTAYA独自の異常は未実装。</td></tr>
+      <tr><th>docs/systems/current-implementation.md<br>節: 実装済みの基盤</th><td>Status: Implemented（実装棚卸し）。棚の検索でArchive Selection UIが開く。1回の検索では全項目が返らない。試聴機で個人試聴でき、試聴は一定時間で終わり、共有BGMはSERVER Stateとしてマップモデル直下に保持され、試聴では変わらない。</td></tr>
+      <tr><th>docs/systems/skill-build.md<br>節: 探索系</th><td>Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）。探索系は解放、検知、スニーク。ランク1案は開錠、ランク2案はSHADE。SHADEの不可視がすべてのAnomaly Entityに通用するかは未決定。</td></tr>
+      <tr><th>docs/systems/skill-build.md<br>節: 通常攻撃と連携</th><td>同じStatus。素手の通常攻撃はワンツー。4枠すべてが攻撃系ならフルアタックで4連撃になる。連携の入力受付時間、キャンセル可能時点、硬直、スタミナ等のコストは未決定。</td></tr>
+      <tr><th>docs/systems/anomaly-interaction.md<br>節: Sound Interaction</th><td>ステータス: Draft。音の事実を入力にする相互作用。実際の音声波形を常時解析する意味ではない。BGMや通常の環境音が自動的に相互作用になるわけではない。伝播、遮蔽、同期の方式は未決定。</td></tr>
+      <tr><th>docs/systems/effect-components.md<br>節: 解除の既定規則</th><td>Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）。解除手段が明記されていない効果を、別のスキルが汎用的に消せるとは扱わない。</td></tr>
+    </tbody></table>
+    <p><strong>どこからが今回の提案か。</strong> 試聴機、アーカイブ棚、Archive Selection UI、PreviewDurationによる自動終了、共有BGMのServer State分離は既存の実装である。今回の提案は「試聴中に自分で中断する」「その瞬間に未閲覧1件を個人記録に残す」「試聴中は操作を受け付けない」の3点だけである。項目の中身、店内側の記録機構、棚の検索集合の規則は作らない。</p>
+  </section>
+
+  <section id="hypothesis">
+    <h2>(b) 設計仮説とプレイヤーの選択</h2>
+    <p><strong>設計仮説:</strong> 試聴の自動終了を、視聴の期限ではなく、何を1件だけ持ち帰るかを決める判断の期限として使う。店内は袋小路で視界が分断されているため、鳴っている間に周囲を確認できないことを前提にして、その時間を情報 而不是防御に振り切る。</p>
+    <div class="grid">
+      <div class="card"><h3>狙う体験</h3><p>「聴いたつもり」で店内を出ることを、「1件だけ持ち帰る」判断に変える。記録は本人にしか見えないため、Partyとの会話が新しい情報になる。記録しただけでは中身は分からないので、実際に開いて初めて得られる、という二段構えが残る。</p></div>
+      <div class="card"><h3>判断と代償</h3><p>最後まで鳴るのに待つか、自分のタイミングで中断して1件記録するか。記録できるのは未閲覧1件だけ。記録すれば同じ試聴に残ったほかの未閲覧品には到達できない。試聴中は移動も攻撃も他のスキルも発動できず、無防備になる。</p></div>
+    </div>
+  </section>
+
+  <section id="diagram">
+    <h2>作用図 — 試聴の時間軸、個人の中断の瞬間と記録の消費</h2>
+    <div class="board">
+      <svg viewBox="0 0 980 440" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="個人試聴の時間軸上で、既定の自動終了より前にプレイヤー自身が中断すると未閲覧項目1件が個人記録として残り、それを1回だけ開いて消費する流れと、その間に操作が受け付けられないこと、および共有BGMが変わらないことを示す模式図">
+        <rect width="980" height="440" fill="#0a1118"/>
+        <text x="26" y="30" class="label">個人試聴セッション（個人のみ・共有BGMとは独立）</text>
+        <rect x="40" y="48" width="820" height="46" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text x="56" y="77" class="small">再生中。PreviewDuration によって自動終了する</text>
+        <rect x="40" y="100" width="820" height="40" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text x="56" y="126" class="small">開かなかった項目は、この時間を越えると訪問できない</text>
+
+        <path d="M330 48v40" class="active"/>
+        <text x="250" y="42" class="small">自分で中断する（本候補）</text>
+        <path d="M860 68h60" stroke="#8ba2b3" fill="none" stroke-dasharray="6 4"/>
+        <text x="880" y="60" class="small">既定の</text>
+        <text x="880" y="80" class="small">自動終了</text>
+
+        <rect x="40" y="164" width="392" height="96" rx="8" fill="#142330" stroke="#70c9c3"/>
+        <text x="60" y="192" class="label">記録が残る（本人限定・1件）</text>
+        <text x="60" y="218" class="small">未閲覧の項目1件だけを再閲覧できる</text>
+        <text x="60" y="242" class="small">持つのは名前と選択結果のみ</text>
+        <rect x="456" y="164" width="392" height="96" rx="8" fill="#142330" stroke="#ea9380"/>
+        <text x="476" y="192" class="label">試聴中は操作を受け付けない</text>
+        <text x="476" y="218" class="small">移動・ワンツー・他の4枠のスキルが不成立</text>
+        <text x="476" y="242" class="small">カメラとUIを残すかは未確定</text>
+        <path d="M330 140v20" class="active"/>
+
+        <path d="M236 260v34" class="active"/>
+        <path d="M652 260v34" class="active"/>
+        <rect x="40" y="294" width="392" height="62" rx="8" fill="#142330" stroke="#70c9c3"/>
+        <text x="60" y="320" class="label">1回だけ開いて消費する</text>
+        <text x="60" y="344" class="small">開いたら記録は消える</text>
+        <rect x="456" y="294" width="392" height="62" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text x="476" y="320" class="label">操作の封じが解ける</text>
+        <text x="476" y="344" class="small">セッション終了・マップ離脱・Run終了で解除</text>
+
+        <rect x="40" y="376" width="808" height="46" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text x="60" y="404" class="label">変わらないもの：共有BGM、棚の検索集合、他プレイヤーの画面、地図と備品の配置</text>
+        <text x="26" y="436" class="small">模式図。試聴機の設置位置や部屋の構造を確定するものではない。未閲覧項目の選定規則は未確定。</text>
+      </svg>
+    </div>
+    <p><strong>この図で分かること:</strong> 中断は既定の自動終了より前にのみ成立し、中断した瞬間にだけ記録が生成される。記録は1件・単回・本人限定である。試聴中は操作が受け付けられず、セッションが終われば解除される。共有BGMも他プレイヤーの画面も変化しない。</p>
+    <p><strong>図では確定しないこと:</strong> 記録できる項目がどの項目に選ぶか、記録後に同じ棚を再検索できるか、記録した項目を再度開いたとき何を見せるか、試聴中にカメラとUI操作を残すか。図の左右は試聴機の設置位置でも部屋の並びでもない。</p>
+  </section>
+
+  <section id="effects">
+    <h2>(c) Trigger・Condition・Effectの契約</h2>
+    <p>三つのEffectを分ける。終了時刻の置換、操作の封じ、個人記録の保持は寿命も検証主体も異なる。</p>
+
+    <h3>Effect 1 — RuleOverride（即時・操作）</h3>
+    <table><tbody>
+      <tr><th>Trigger</th><td>対象がTSUTAYAの試聴機で個人試聴を開始し、そのセッションが継続中に、対象自身が中断操作を行うこと。棚の操作や外部イベントでは発動しない。</td></tr>
+      <tr><th>Condition</th><td>個人試聴セッションが継続中であること。対象が操作者であること。1セッションにつき1回だけ有効。</td></tr>
+      <tr><th>Effect種別・結果</th><td>RuleOverride。対象は個人の試聴セッションの終了時刻だけに限る。当該セッションを、PreviewDurationによる自動終了より前の時刻で終了させる。以降の再生は行わない。共有BGMの選択、配信、変更は行わない。</td></tr>
+      <tr><th>対象・作用範囲</th><td>対象プレイヤーの個人試聴セッション1件。範囲は個人。試聴機の物理的な挙動にも店内の共有BGMにも影響しない。</td></tr>
+      <tr><th>保存境界・終了</th><td>保存境界は一時、解決はinstant。終了時刻を確定した時点で適用解決は終わる。設定時刻の到達または切断でセッションは破棄。マップ離脱とRun終了でも破棄。</td></tr>
+      <tr><th>重ね掛け</th><td>例外なし。同一Effectと同一対象は非加算1件。1セッションにつき1回だけ有効で、再適用しても新しい終了時刻を作らない。/dev/nullのSkillやItemの結果傍受、および試聴サービスの自動終了以外の打ち切りとの優先順位は定義せず保留する。</td></tr>
+      <tr><th>Server / Client</th><td>Serverがセッションの存在、対象が操作者であること、1回の上限を検証する。クライアントは終了時刻を指定できない。停止演出は個人クライアントのみ。共有BGMの音量や再生状態、他プレイヤーの試聴表示は変更しない。</td></tr>
+      <tr><th>Feedback</th><td>成功: 再生が止まる事象と時刻を出さない短い個人表示。失敗: 試聴中でない場合に同じ操作をしても共有BGMや他プレイヤーの状態には影響しない。不明: なぜそこで止めたのか、試聴内容のどの位置で止めたかは表示で確定しない。</td></tr>
+    </tbody></table>
+
+    <h3>Effect 2 — StateChange（持続・代償）</h3>
+    <table><tbody>
+      <tr><th>Trigger</th><td>対象が個人試聴を開始し、そのセッションが継続している間。</td></tr>
+      <tr><th>Condition</th><td>対象が当該セッションの開始者で、セッションが継続中であること。他のプレイヤーの試聴では発生しない。</td></tr>
+      <tr><th>Effect種別・結果</th><td>StateChange。対象プレイヤーの移動入力、通常攻撃（素手のワンツー）、および装備4枠の他のスキル発動を受け付けない。硬直やStunは発生せず、入力が結果に届かないものとして扱う。カメラ操作とUI操作を残すかどうかは未確定。</td></tr>
+      <tr><th>対象・作用範囲</th><td>試聴中の通常プレイヤー1人。範囲は個人。同一マップの他の参加者と店内の共有BGMには影響しない。</td></tr>
+      <tr><th>保存境界・終了</th><td>保存境界は一時、解決はsustained。当該セッションの終了、マップ離脱、Run終了のいずれかで解除（end_mode: any）。試聴の既定時間を越えて残す理由がない。</td></tr>
+      <tr><th>重ね掛け</th><td>例外なし。試聴を複数回行っても1件を保ち、残りの時間は更新しない。Stun、Down、SHADE、バックステップ、Roll、/dev/nullの入力無効化との順序は未定のため保留する。</td></tr>
+      <tr><th>Server / Client</th><td>Serverがセッションの継続を検証し、封じ中の入力は既存経路でも例外なく不成立として扱う。クライアント側の無効化に依存しない。HUDには操作できない操作だけを表示し、理由の説明はしない。残りの時間の表し方は未確定。</td></tr>
+      <tr><th>Feedback</th><td>成功: 封じに入った直後に操作が反応しない個人表示。失敗: 封じ中の入力には短い個人表示だけを返し、ワールド状態を変えない。不明: 封じが本スキルのためか別の理由によるものかを個人表示では区別しない。</td></tr>
+    </tbody></table>
+
+    <h3>Effect 3 — InformationChange（持続・記録）</h3>
+    <table><tbody>
+      <tr><th>Trigger</th><td>上のRuleOverrideで個人試聴セッションが終了したのと同じ瞬間。</td></tr>
+      <tr><th>Condition</th><td>対象がその試聴を開始し、そのセッション中に未閲覧の項目が1件以上残っていること。残りが0件なら生成しない。</td></tr>
+      <tr><th>Effect種別・結果</th><td>InformationChange。対象プレイヤーの個人記録として未閲覧の項目1件だけを再閲覧できる状態にする。項目が持つのは名前と選択結果のみ。共有の店内状態、棚の検索状態、共有BGM、他プレイヤーの画面は変化しない。</td></tr>
+      <tr><th>対象・作用範囲</th><td>記録を行った通常プレイヤー個人のみ。Party共有には展開しない。Serverは本人の保持の有無だけを保持する。</td></tr>
+      <tr><th>保存境界・終了</th><td>保存境界は同一マップ中。1回再閲覧した時点で破棄。マップ離脱と、帰還・死亡・切断によるRun退出で破棄。マップを出て持ち越す記憶にはしない。</td></tr>
+      <tr><th>重ね掛け</th><td>例外なし。保持は最大1件で2件目は上書きしない。2件目の扱いは本案では決めていない。Archive Selection UIの既存選択結果、Memory SwapperのLastRecognizedPlayerのような未実装の認識状態、共有BGMのServer Stateとの相互作用は未定のため保留する。</td></tr>
+      <tr><th>Server / Client</th><td>Serverが記録対象の所属と、中断が本Effectによるものであることを検証し、未検証の項目指定は受け付けない。本人の個人記録にだけ項目名を表示し、座標、棚の構成、他プレイヤーの記録は表示しない。共有の店内表示にも出さない。</td></tr>
+      <tr><th>Feedback</th><td>成功: 終了の直後に一度だけ記録が1件残ったことを示す個人表示。失敗: 未閲覧0件の時は記録しないと表示だけを本人に出し、ワールドも他プレイヤーの画面も変えない。不明: 残った項目が店内側の記録なのか本人が記憶として持っているだけなのかは表示で確定しない。</td></tr>
+    </tbody></table>
+    <div class="note">本候補はHealによるAnomaly Entityの鎮静、SHADEによる検知不能、cureによるExposureの解除のように、既存のタグを全アノマリーへ一般化した処理は一切含まない。Player Anomalyの専用攻撃や固有帰還にも触れない。</div>
+  </section>
+
+  <section id="uncertainties">
+    <h2>(d) 未確定事項・矛盾・世界観上の異化</h2>
+    <table><tbody>
+      <tr><th>未確定事項</th><td>未閲覧項目のうちどの1件を候補にするか（選べる形式か規則で決まるか）。記録を残すと同じ棚の検索をもう一度開けるか。記録はセッション単位か棚単位か。記録した項目を再度開いたときに何を示すか。試聴中にカメラとUI操作を残すか。試聴機ではなく棚の検索だけで成立するか。他プレイヤーの試聴をどう扱うか。受付の封じとStun、Down、SHADE、Roll、/dev/nullの入力無効化の先後順序は未定義であり、書いていない。</td></tr>
+      <tr><th>既存仕様との矛盾</th><td>1) anomaly-interaction.md「伝播、遮蔽、同期の方式は未決定」「BGMや通常の環境音が自動的に相互作用になるわけではない」。本案は音の伝播に依存せず、Server側のセッション開始と終了だけを入力にする。2) map-gimmick-ideas.md「項目は名前と選択結果のみを持つ」。本案は内容を作らず、再閲覧という到達だけを可能にする。</td></tr>
+      <tr><th>補正と理由</th><td>1) 採用する場合、音の伝播、遮蔽、同期という未決定領域には手を入れず、試聴セッションの開始と終了という個別の文脈として記録する。共有BGMの選択UIは未実装のまま維持する。2) 採用する場合もメディアの実内容は追加せず、個人記録というUI層の事実だけを追加する。外部作品や商標の扱いは変更しない。</td></tr>
+      <tr><th>異化したもの</th><td>試聴の自動終了を、視聴の期限ではなく何を1件だけ持ち帰るかを決める判断の期限として使うこと。試聴が聴くだけで終わる場面から、店内を去る前に一つ選ぶ場面へ変える点。</td></tr>
+      <tr><th>世界内の成立理由</th><td>廃TSUTAYAのコンセプトはMediaとRealityの境界が崩れる原理を扱うとされ、媒体の実機能は未確定のまま残されている。本候補は現行の試聴機、PreviewDurationによる自動終了、Archive Selection UIという既存の手掛かりだけから成立し、店内側の記録の仕組みを新たに導入しない。既存システムの追加として成立し得る。</td></tr>
+      <tr><th>曖昧に残す意味</th><td>残った項目が店内側の記録なのか、本人が記憶として持っているだけなのか。他プレイヤーに口頭で説明しても相手の記録が増えないのか、その差の意味は何か。いずれも確定しない。</td></tr>
+    </tbody></table>
+    <p><strong>世界観の自己確認:</strong> INV-01からINV-11の11項目すべてを確認済み。操作と終了条件は具体的に書き、店内側の記録の正体は仮説として留めた。実在のTSUTAYA店舗や外部作品、既存の製品名は流用していない。新たなルーム、通路、配置は提案していない。永続的な数値蓄積で優位性を決めていない。</p>
+  </section>
+
+  <section id="connections">
+    <h2>(e) 他担当への接続</h2>
+    <p><strong>接続タグ:</strong> Skill / Archive / Information / StateChange / RuleOverride / ItemInteraction</p>
+    <p><strong>使用するコンポーネント:</strong> Effect.RuleOverride、Effect.StateChange、Effect.InformationChange、ArchiveMedia、SkillActivation（いずれも共通パックの記述語彙。実装済み保証ではない）。</p>
+    <p><strong>他の候補へ提供できる性質:</strong> 「個人試聴セッションの終了タイミングをプレイヤー自身が1回だけ決められる」「試聴中は移動、通常攻撃、他のスキル発動を受け付けない」「未閲覧の項目1件だけを個人記録として残し、単回で消費する」。</p>
+    <table><tbody>
+      <tr><th>ROLE-A-004（interaction_loop）</th><td>必要な性質: 試聴機とアーカイブ棚の操作がServer側の操作事実として記録され、共有できること、個人試聴が共有BGMを変更しないという既存の実装事実を崩さずに提示できること。解決状況: reserved_unresolved。<strong>代替:</strong> A-004が成立しない場合、試聴機とArchive Selection UIの既存の挙動だけで成立する。NPC、出現物、報酬、退場条件には依存しない。</td></tr>
+      <tr><th>ROLE-B-004（optional_connection）</th><td>必要な性質: 棚の検索や試聴の結果として残る固有品を、博士Questの直接報酬と区別して扱えること。解決状況: reserved_unresolved。<strong>代替:</strong> B-004が成立しない場合、記録から物品を生成しない。記録の対象はArchive Selection UIが既に持つ項目名と選択結果に限られる。</td></tr>
+      <tr><th>ID未指定の接続要求</th><td>個人試聴セッションの開始と終了をServerがイベントとして通知できること、PreviewDurationによる自動終了とプレイヤーによる中断を区別できること。1回の棚検索で返る項目集合をサーバー側でどう決めているかを観測できること。いずれも既存文書に記録がないため、存在を仮定しない。</td></tr>
+    </tbody></table>
+    <p><strong>接続先なしでどこまで成立するか:</strong> 本候補は他候補の完成を前提としない。試聴機とArchive Selection UIという既存実装と、個人内の記録だけで成立する。A-004のギミック、B-004のアイテム、連携系のスキルが未作成でも、プレイヤー単独で「最後まで聴くか、中断して1件残すか」を判断できる。</p>
+    <div class="note">peer-snapshotsが管理側から配布されていないため、A-004とB-004の本文は読んでおらず、実現を仮定していない。予約IDは未作成であり得ます。存在しないページへのリンクは置いていません。</div>
+  </section>
+
+  <section id="cost">
+    <h2>(f) 新規ロジックと試作コスト</h2>
+    <p><code>requires_code: true</code> — 必要な3経路（個人試聴セッションのServer側イベント通知とプレイヤーによる早期終了の許可、未閲覧項目を本人属性に保持して単回消費する記録、試聴中の操作受付の封じ）のいずれも current-implementation.md に実装記録がない。実装済みスキルは3種で、Archive Selection UIが持つのは項目名と選択結果のみであるため、この記録を追加する経路は存在しない。trueは必要性の記録であり、コード生成の許可ではない。</p>
+    <p><strong>新規ロジック:</strong> 個人試聴セッションの開始と終了のServer側通知（自動終了とプレイヤーによる中断の区別を含む）／試聴継続中の移動、通常攻撃、他のスキル発動の受付封じ状態と、その解除／未閲覧項目1件の本人限定の記録保持と、単回での消費。</p>
+    <p><strong>prototype_cost: 中</strong> — 試聴機、アーカイブ棚、Archive Selection UI、PreviewDurationによる自動終了、共有BGMのServer Stateはすべて既存実装であり、組み合わせの変更は要らない。音響の伝播や遮蔽、Anomaly Entityの相互作用には一切触れないため、調整の範囲はUIとサーバー側の個人状態に閉じる。一方で新しいスキル発動経路と本人属性の保存先が必要で、既存の3スキルと同じ形にするかSkillServiceへ追加するかが未確定なので中とした。ここはゲーム内試作の見積もりであり、候補生成にかかった時間ではない。</p>
+    <p><strong>試作工程:</strong> 1) 個人試聴の開始と終了がServer側のどこで処理されるかを確認する。2) 試聴継続中の移動と攻撃の入力を不成立にする状態を実装し、既存の移動とスキル経路と競合しないことを確認する。3) 試聴セッションの終了時に未閲覧項目を数え、1件だけ本人属性へ保存する。4) 記録された項目をArchive Selection UIから1回だけ開ける経路を追加し、消費後に消えることを確認する。5) マップ離脱、Run終了、未閲覧0件、連続した試聴のそれぞれで記録の扱いをログで確かめる。</p>
+    <p><strong>想定する既存部品:</strong> TSUTAYAの試聴機と、PreviewDurationによる自動終了／Archive Selection UIの一覧、選択、閉じるという既存の遷移／共有BGMのServer State保持と、個人試聴がこれを変更しないこと／各ルームの配置規約（Listening Station、GimmickPoints、SpecialPoints）／既存3スキルのサーバー側発動とクールダウン。</p>
+  </section>
+
+  <section id="role-details">
+    <h2>(g) 担当固有 — 系統・ランク・Lv1〜3・4枠・通常攻撃連携・回避／介入／代償</h2>
+    <table><tbody>
+      <tr><th>系統</th><td>探索（アイテムスタックの解放、検知、スニーク）</td></tr>
+      <tr><th>ランク</th><td>null。探索系のランク1は開錠の1案のみで、ランク2にSHADE案がある。どちらに置くかは系統構成が未確定であり、skill-build.mdもランクごとの候補数について確定した記述を持たないため、根拠のない数値を置かずにnullとした。1を採った場合の帰結はレベル差で示す。</td></tr>
+      <tr><th>レベル1</th><td>試聴中に自分で中断でき、中断の瞬間に未閲覧の項目が1件だけ個人記録に残る。記録は1回で消費する。試聴中は移動、通常攻撃、他のスキル発動を受け付けない。保持できる項目は未閲覧のものに限る。</td></tr>
+      <tr><th>レベル2</th><td>中断の前に残す項目を自分から選べるようにする。選べるのは未閲覧の項目1件だけである。候補を画面に出すか記憶で選ぶかは未確定。</td></tr>
+      <tr><th>レベル3</th><td>記録した項目を、TSUTAYAの別の試聴機のセッションから1回だけ開けるようにする。保存境界は同一マップ中のままで、マップを離れると失われる。試聴1回につき記録は1件しか持てないという制限は変わらない。</td></tr>
+      <tr><th>装備4枠との関係</th><td>探索系の1枠として扱う。4枠を何と組み合わせるかは本案では決めない。装備切替の場所とタイミング、および奥義、パッシブ、アノマリー専用スキルが枠を占有する条件は skill-build.md で未決定のため触れない。開錠と同一枠の競合は配置側の判断に委ねる。</td></tr>
+      <tr><th>通常攻撃との連携</th><td>本候補は攻撃ではなく試聴の操作である。試聴中は移動も通常攻撃も他のスキルも受け付けないため、試聴中にワンツーからスキルへの連携を組むことはできない。試聴の外で組む連携は通常の規則に従う。</td></tr>
+      <tr><th>何を避けるか</th><td>試聴中に無防備になることによる接近の危険を受け入れることで、無駄な戦闘を避けられる。試聴が自動終了して何も残らない結果も避けられる。ただし試聴そのものは防御手段ではない。</td></tr>
+      <tr><th>何へ介入するか</th><td>個人試聴セッションの終了時刻と、Archive Selection UIで閲覧できる項目の個人記録。共有BGM、棚の検索集合、他プレイヤーの試聴、地図と備品の配置には作用しない。</td></tr>
+      <tr><th>何を犠牲にするか</th><td>試聴中は移動、通常攻撃、他のスキルがすべて発動不能になる。記録は1件、単回、本人限定で、マップを離れると消える。残すために1件を選んだことで、同じ試聴に残っていたほかの未閲覧項目へアクセスする手段を失う。記録できる項目が0件なら何も残らない。</td></tr>
+      <tr><th>実在の身体技術</th><td>挙げていない。実在の身体技法を根拠にしておらず、確認できた一次資料もないため、<code>real_techniques</code> は空配列のままである。既存の作品から技名や演出を借りて空白を埋めることもしていない。</td></tr>
+    </tbody></table>
+  </section>
+
+  <footer>overnight-design-pilot-v1 ／ ROLE-C-004 ／ design_status: Idea ／ review_status: unreviewed ／ 本ファイルは採用記録ではなく、レビュー用の設計候補です。</footer>
+</main>
+</body>
+</html>

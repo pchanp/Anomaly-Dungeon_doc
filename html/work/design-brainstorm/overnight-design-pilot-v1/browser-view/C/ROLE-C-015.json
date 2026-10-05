@@ -1,0 +1,161 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-015",
+  "role": "C",
+  "title": "一歩ぶんの囮",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "通常攻撃と連携",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "通常スキルによる移動・ギミック介入と連携を設計する。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "設計方針",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "Run中の操作・判断を重視する。"
+    }
+  ],
+  "design_hypothesis": "自分が直前に踏んだ位置へ、一回だけ足音を返す。 直前のServer確認済み足場が射程内にあるときだけ発動する。 その位置へ足音一回をSound入力として出す。 発音後に記録を消費する。発動中は本人が立ち止まる。",
+  "experience": {
+    "goal": "自分が直前に踏んだ位置へ、一回だけ足音を返す。",
+    "player_choice": "過去の位置へ注意を向けるか、静かに通るか。音を受理しない相手には効かず、仲間にも誤った手掛かりを渡し得る。",
+    "sacrifice_or_risk": "過去の位置へ注意を向けるか、静かに通るか。音を受理しない相手には効かず、仲間にも誤った手掛かりを渡し得る。"
+  },
+  "placement_assumption": "既存マップで使用する文脈。配置・建物構造・地形・Questの結末を新設しない。対応対象が未実装なら試作用の対象で確認する。",
+  "components": [
+    {
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "自分が直前に踏んだ位置へ、一回だけ足音を返す。"
+    },
+    {
+      "component": "SoundInteraction",
+      "availability": "catalog",
+      "usage": "位置つきの音源入力を生成し、到達・遮蔽・受理は対象側の個別契約で判定。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "WorldChange",
+      "trigger": "装備中に本人が発動入力。直前のServer確認済み足場が射程内にあるときだけ発動する。",
+      "condition": "直前のServer確認済み足場が射程内にあるときだけ発動する。 ServerがRun・対象・クールダウンを検査。",
+      "result": "直前のServer確認済み足場が射程内にあるときだけ発動する。 その位置へ足音一回をSound入力として出す。 発音後に記録を消費する。発動中は本人が立ち止まる。",
+      "target": "直前の確認済み足場の音源一件",
+      "scope": "同一マップ内の対象限定。共有Quest・出現率・Exposureは変更しない。",
+      "lifetime": "同一マップ中",
+      "resolution": "instant",
+      "end_conditions": [
+        "発音後に記録を消費する。発動中は本人が立ち止まる。",
+        "マップ離脱",
+        "Run終了",
+        "対象の戦闘不能または切断"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "最初に成立した終了条件で解除し、Runを越えて状態を保存しない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effect・同一対象は非加算の1件。即時結果は一回解決し、重複要求を再適用しない。",
+        "conflict_resolution": "競合する移動・入力制限・観察の適用順は採用前の確認事項。"
+      },
+      "server_validation": "対象・距離・安全な位置・使用状態をServerで検査。個人画面を世界状態の証明にしない。",
+      "client_presentation": "音源位置に短い足音を再生。知覚できる参加者に聞こえ、受理対象は個別契約に従う。",
+      "feedback": {
+        "success": "成立・消費・終了を対象本人に表示。",
+        "failure": "不成立の理由を短く表示。効果を付与しない。",
+        "ambiguous": "原因・正体は説明しない。操作の成否は曖昧にしない。"
+      }
+    }
+  ],
+  "provides_traits": [
+    "自分が直前に踏んだ位置へ、一回だけ足音を返す。",
+    "直前のServer確認済み足場が射程内にあるときだけ発動する。",
+    "その位置へ足音一回をSound入力として出す。",
+    "発音後に記録を消費する。発動中は本人が立ち止まる。"
+  ],
+  "connection_tags": [
+    "Skill",
+    "Environment",
+    "Observation",
+    "Sound"
+  ],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": [
+    "受付時間・距離・上限・クールダウン・速度などの値は仮案段階。",
+    "レベル差は候補であり、効果量と操作負担を試作して調整する。",
+    "通常スキルとしてのみ扱い、Player Anomalyの専用能力には一般化しない。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "自分が直前に踏んだ位置へ、一回だけ足音を返す。",
+    "in_world_rationale": "既存の移動・音・観察を通常と異なる条件で操作する候補。成立理由を世界の起源や装置の正体へ結び付けない。",
+    "meaning_left_ambiguous": "なぜこの操作が成立するか。博士の意図・Entityの正体は確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "この候補の入力条件・状態・提示の専用処理は実装記録がなく、新規ロジックが必要。",
+  "new_logic": [
+    "自分が直前に踏んだ位置へ、一回だけ足音を返す。",
+    "Serverで成立条件と終了を検査する処理",
+    "本人または対象へのFeedback"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "専用入力と状態管理が必要。対象側基盤が未実装なら、その試作費用は別途見積もる。",
+    "implementation_steps": [
+      "単一対象で成立・不成立を確認",
+      "解除とRun終了時の破棄を確認",
+      "複数参加者と競合Effectを確認"
+    ],
+    "assumed_existing_parts": [
+      "既存スキル発動経路",
+      "CharacterとRun参加者の管理"
+    ]
+  },
+  "role_details": {
+    "skill_family": "補助",
+    "rank": null,
+    "rank_rationale": "系統内の候補が揃った時点で比較する。ランク解放条件自体は変更しない。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "自分が直前に踏んだ位置へ、一回だけ足音を返す。"
+      },
+      {
+        "level": 2,
+        "proposal": "射程内の直前二歩から音源を選べる。"
+      },
+      {
+        "level": 3,
+        "proposal": "発音前なら取り消せる。二音の同時発生はできない。"
+      }
+    ],
+    "equipped_slot_policy": "通常スキルの4装備枠のうち1枠。取得ランク条件は既存規則に従い、装備切替時点は未決定。",
+    "normal_attack_link": "通常攻撃からの連携候補。発動中の制限は本案に従い、受付窓・キャンセル時点は未決定。",
+    "avoids": "自分が直前に踏んだ位置へ、一回だけ足音を返す。",
+    "intervenes_in": "直前のServer確認済み足場が射程内にあるときだけ発動する。 その位置へ足音一回をSound入力として出す。 発音後に記録を消費する。発動中は本人が立ち止まる。",
+    "sacrifices": "過去の位置へ注意を向けるか、静かに通るか。音を受理しない相手には効かず、仲間にも誤った手掛かりを渡し得る。",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-015.html"
+}

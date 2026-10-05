@@ -1,0 +1,131 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-021",
+  "role": "C",
+  "title": "高みから読む",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "探索系",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "探索系はアイテムスタックの解放、検知、スニークを扱う。"
+    },
+    {
+      "path": "docs/systems/observation-and-recognition.md",
+      "section": "Server権威とRemote境界",
+      "source_status": "Status: Draft（草案）",
+      "claim": "ServerはClientの画面状態を直接確認できない。共有世界の状態変更はServerが決め、Clientは自分が観察できたことと表現を担う。"
+    }
+  ],
+  "design_hypothesis": "登れる場所へ上がり、そこから見える自分の周囲を一度だけ走査する。走査した範囲は自分だけに見える輪郭で出る。相手には自分の高みも走査も見えない。上から降りるまで、降りる位置を選べない。",
+  "experience": {
+    "goal": "高い場所から、周囲の動きを先に読む。",
+    "player_choice": "上って走査してから早く降りるか、別の足場を探すか。",
+    "sacrifice_or_risk": "降りる場所を選べない。上にいるあいだは相手にも見られる。"
+  },
+  "placement_assumption": "既存マップで使用する文脈。配置・建物構造・地形・Questの結末を新設しない。登れる足場がある場所で使用する。",
+  "components": [
+    {
+      "component": "Effect.Move",
+      "availability": "catalog",
+      "usage": "登れる足場へ移動する。"
+    },
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "自分の周囲を自分だけに見える輪郭で走査する。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "Move",
+      "trigger": "装備中に本人が登る足場へ移動入力をしたとき。",
+      "condition": "Server確認済みの登れる足場があり、射程内であること。",
+      "result": "登れる足場へ移動する。地形は壊さない。着地点はServerが検査する。",
+      "target": "発動した本人",
+      "scope": "個人。地形、NPCの思考は変えない。",
+      "lifetime": "瞬間",
+      "resolution": "instant",
+      "end_conditions": ["移動は即時に解決する", "登れない足場では移動しない", "マップ離脱", "Run終了"],
+      "end_mode": "any",
+      "end_rule_reason": "移動は即時解決であり、状態を保存しない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effectと同一対象は非加算1件。",
+        "conflict_resolution": "他の登攀や吹き飛ばしとの適用順は採用前の確認事項。"
+      },
+      "server_validation": "登れる足場と着地点をServerで検査する。",
+      "client_presentation": "登る動作を本人だけに出す。",
+      "feedback": {"success": "移動の成立を本人に表示する。", "failure": "登れない足場では移動しない。", "ambiguous": "登れた理由は説明しない。"}
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "上のMoveが解決し、その場に留まっている間。",
+      "condition": "上にいるあいだだけ。上から見える範囲に限る。",
+      "result": "自分の周囲を自分だけに見える輪郭で一度走査する。相手には何も表示しない。共有の地図表現は変えない。",
+      "target": "発動した本人の視野のみ",
+      "scope": "個人。共有ワールドと相手の認識は変えない。",
+      "lifetime": "上にいるあいだのみ",
+      "resolution": "sustained",
+      "end_conditions": ["降りたら解除される", "マップ離脱", "Run終了"],
+      "end_mode": "any",
+      "end_rule_reason": "走査は上にいるあいだに限る。降りたら消す。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effectと同一対象は非加算1件。重ねない。",
+        "conflict_resolution": "他の視野表示との適用順は採用前の確認事項。"
+      },
+      "server_validation": "現在位置と登っている状態をServerで管理する。",
+      "client_presentation": "自分だけに見える輪郭を出す。",
+      "feedback": {"success": "走査できたことを本人に示す。", "failure": "上から見えない場所では何もしない。", "ambiguous": "走査の意味は説明しない。"}
+    }
+  ],
+  "provides_traits": [
+    "登れる足場へ移動できる",
+    "上にいるあいだだけ自分の周囲を走査できる",
+    "相手には高みも走査も見えない"
+  ],
+  "connection_tags": ["Skill", "Exploration", "Observation"],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": ["走査の範囲と分解能は未決定。", "降りる位置の制限の強さは未決定。", "通常スキルのみ。Player Anomalyの専用能力に一般化しない。"],
+  "worldview": {
+    "defamiliarized_element": "上った人だけが、自分の周囲を輪郭として読む。",
+    "in_world_rationale": "既存の移動と視野提示を通常と異なる条件で組み合わせる候補。",
+    "meaning_left_ambiguous": "なぜ上にいると周囲が輪郭に見えるのか。博士の意図とEntityの正体は確定しない。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "登攀移動と、上にいるあいだだけの限定的な視野提示は実装記録がなく、新規ロジックが必要。",
+  "new_logic": ["登れる足場への移動と着地検査", "上にいるあいだだけの本人限定視野提示"],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "既存の移動と視野提示へ介入する。",
+    "implementation_steps": ["登ることを確認", "上にいるあいだだけ走査できることを確認", "降りたら走査が消えることを確認"],
+    "assumed_existing_parts": ["既存のCharacter移動とCollisionGroup", "既存の視野提示"]
+  },
+  "role_details": {
+    "skill_family": "探索",
+    "rank": null,
+    "rank_rationale": "系統内の候補が揃った時点で比較する。",
+    "levels": [
+      {"level": 1, "proposal": "登れる足場へ上がり、上にいるあいだだけ自分の周囲を走査する。"},
+      {"level": 2, "proposal": "走査の範囲を伸ばせる。"},
+      {"level": 3, "proposal": "走査した輪郭を下りたあとも短時間残せる。"}
+    ],
+    "equipped_slot_policy": "通常スキルの4装備枠のうち1枠。取得ランク条件は既存規則に従い、装備切替時点は未決定。",
+    "normal_attack_link": "攻撃入力とは独立している。降りる前なら通常攻撃を出す選択肢は残る。",
+    "avoids": "正面から間合いを取らずに周囲を読む。",
+    "intervenes_in": "自分の位置と視野のみ。",
+    "sacrifices": "降りる位置を選べない。上にいるあいだは相手にも見られる。",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-021.html"
+}

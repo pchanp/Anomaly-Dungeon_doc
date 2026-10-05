@@ -1,0 +1,250 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-014",
+  "role": "B",
+  "title": "偽の目印札（そこに無かった品が残ったように見せる）— 作業用見出し",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/anomalies/cognitive-anomalies.md",
+      "section": "認知差は便利な答えの表示ではなく、情報の不一致とトレードオフとして扱う。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "情報を得ることと失うことを対にする方針。候補は嘘を撒くことで他者の判断を誘導する。"
+    },
+    {
+      "path": "docs/world/information-design.md",
+      "section": "## 「説明」ではなく「痕跡」",
+      "source_status": "Status: Draft（草案）",
+      "claim": "説明ではなく痕跡から推測させる方針。候補は痕跡を意図的に偽装する。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| 永続 | Runをまたいで保持する。取得・解除条件は個別に定義する |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "偽の痕跡はRunをまたいで残り、解除条件を持つ。"
+    },
+    {
+      "path": "docs/systems/quests.md",
+      "section": "**Discovery**は、FILE、NPC、環境、アノマリー、関連アイテムなどを発見・認識したという記録であり、能動的な依頼ではない。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "痕跡は依頼ではない。候補の偽痕跡も依頼枠を消費しない。"
+    }
+  ],
+  "design_hypothesis": "主に探索で『そこにはまだ何かが残っている』ように見せるための札。置いた場所には実際には何も無いのに、他の探索者には未取得の品があるように見える。本人には『偽』であることが可知だが、他者には区別がつかない。次のRunの探索者にも残るため、嘘は自分にも持ち越される。痕跡を『作る』のではなく『偽造する』ことを提案する。",
+  "experience": {
+    "goal": "痕跡を武器にする。『あった場所』を他の探索者に見せ、次回の自分に都合のよい嘘を残す。",
+    "player_choice": "置いて偽の痕跡を作る。置かない。回収する（回収操作は未確定）。捨てる。",
+    "sacrifice_or_risk": "置いた札は戻せない。嘘は自分の記憶の中にも残り、次のRunで自分の記憶とも矛盾する。"
+  },
+  "placement_assumption": "新しい地形・部屋は提案しない。既存の配置pointにのみ置く前提を取る。『全部マップに配置する』ことを保証しない。偽痕跡が残る範囲は未確定であり、候補では全マップ共通の文脈としてのみ書く。",
+  "components": [
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "他の個人にだけ『そこに未取得の品がある』ように見える提示を作る。"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "置いた札は戻せない。偽痕跡はRunをまたいで残る。"
+    },
+    {
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "観察の根拠と進行の共通契約。視線だけを条件にしない。"
+    },
+    {
+      "component": "ItemLifecycle",
+      "availability": "catalog",
+      "usage": "正式な取得源とItemStackが未実装であることを前提とする。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "InformationChange",
+      "trigger": "偽痕跡の札が置かれた場所を、他の個人が観察した",
+      "condition": "実行中であること、他の個人がその場所に到達していること。偽の提示の十分条件は未確定",
+      "result": "その場所には『未取得の品がある』ように見える提示が他の個人にだけ生じる。共有世界の事実と物品は増えない。差し出した本人には『偽』である表示だけが出る",
+      "target": "他の個人（提示の相手）と本人（偽である印）",
+      "scope": "個人。共有のRun状態は書き換えない",
+      "lifetime": "永続",
+      "resolution": "sustained",
+      "end_conditions": [
+        "回収操作があればその時点で消える。操作口は未確定",
+        "解除しない限りRunをまたいで残る。他の個人からは永久には消えない"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。回収と永続の保持を別の条件として列挙する。",
+      "stacking": {
+        "exception": false,
+        "rule": "同じ場所への偽痕跡は1件。別の場所は非加算で並行しうる。固定秒数は持たない",
+        "conflict_resolution": "他のEffectがその場所の記録へ作用する場合は解決規則が未定義のため保留する"
+      },
+      "server_validation": "Serverが実行状態、対象個人がその場所にいること、既存記録の有無を検証する。個人端末の表示を根拠にしない",
+      "client_presentation": "他の個人の画面には『未取得の品がある』印だけが出る。本人には『偽』印が出る。他者向けの印と本人向けの印は形が違う",
+      "feedback": {
+        "success": "他の個人の画面に未取得の印が出る。本人には偽印が点く",
+        "failure": "何も変わらない。注意表示のみ",
+        "ambiguous": "偽物かどうかは本人だけが知る。他者向けの印には区別が出ない"
+      }
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "偽痕跡の札を置く操作が確定した瞬間",
+      "condition": "上の提示と同じ検証内で成立すること",
+      "result": "札は置いた場所に残り、Run終了まで回収できない。次のRunでも偽痕跡だけが同じ場所に残る。品が増えることはない",
+      "target": "対象の品1点と置いた個人",
+      "scope": "個人からマップの置き物へ。個人側の所有権は失われる",
+      "lifetime": "永続",
+      "resolution": "instant",
+      "end_conditions": [
+        "置く操作の解決で確定",
+        "回収操作があればそこで消える。回収操作は未確定",
+        "解除しない限りRunをまたいで残る"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。置く操作の解決と回収は別の条件とする。",
+      "stacking": {
+        "exception": false,
+        "rule": "一枚につき一つの偽痕跡。同じ札を二回置けない",
+        "conflict_resolution": "他の個人が同じ場所に置いた場合は解決規則が未定義のため保留する"
+      },
+      "server_validation": "Serverが検証後に個人側の札を除去する。個人端末の表示を根拠にしない",
+      "client_presentation": "HUDから札が消え、置いた場所には痕跡印が残る。他者の所持には影響しない",
+      "feedback": {
+        "success": "手元から消え、その場所に痕跡印が残る",
+        "failure": "札は残る。注意表示のみ",
+        "ambiguous": "痕跡印がいつ消えるかは未確定。回収操作が未実装であるため"
+      }
+    }
+  ],
+  "provides_traits": [
+    "痕跡を意図的に偽装するアイテムの例",
+    "同じ表示を本人と他者で別の意味に分ける提示"
+  ],
+  "connection_tags": [
+    "Item",
+    "Observation"
+  ],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": [
+        "Runをまたいで残る痕跡の保存形式と、それを他者へ提示する経路"
+      ],
+      "reason": "quests.mdはDiscoveryの保存形式を未決とし、effect-components.mdは永続をRunをまたぐ保持と定義する。偽痕跡を永続させるにはその形式が要るが、候補側で決めると実装仕様を創作するため採用判断として残す。",
+      "adoption_blocker": true
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "偽痕跡を何個まで置けるかは未確定。上限がないと探索が無意味になる。",
+    "回収操作を設けるかどうかは未確定。作れば嘘の寿命が操作に依存する。",
+    "他者向けの印を本人にも同じ形で見せるべきかは未決。候補は分ける。",
+    "全マップ共通の枠だが、特定のマップに適用されることは保証しない。",
+    "照合範囲：認知アノマリーの個人差と共有事実の分離、情報提示方針の痕跡、効果の永続境界、Discoveryと依頼の分離。矛盾は見つからず conflicts は空配列"
+  ],
+  "worldview": {
+    "defamiliarized_element": "痕跡を『見つける』だけでなく『偽装する』効果にした。嘘が残ることを前提にして、他者を誘導する設計にした。",
+    "in_world_rationale": "既に探索では痕跡が推測の手掛かりとして存在し、世界は痕跡を管理しない。偽の痕跡を一つ残せるなら、その痕跡を残した者に関する証拠として扱われる。世界は説明しない。",
+    "meaning_left_ambiguous": "偽痕跡を残す者が本当にその場所にいたのか、別の誰かが同じ罠を仕掛けたのか、推測を誘った区別がつかない。確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "永続の痕跡記録とその他者への提示経路が未実装であり、正式な取得源もItemStackも無い（current-implementation.md / quests.md）。永続記録と提示の分岐が要るため true とする。",
+  "new_logic": [
+    "永続の痕跡記録と、それを他者へ提示する経路",
+    "本人用と他者用の別の印を分ける表示"
+  ],
+  "prototype_cost": {
+    "band": "不明",
+    "rationale": "永続の痕跡記録という層が存在しない。上限と回収操作が未決で規模を測る基準が無く、小とも大とも決められない。",
+    "implementation_steps": [
+      "デバッグ床に小物を一つ置く",
+      "個人ごとに永続の痕跡記録を一つ持たせる",
+      "置くと他の個人に未取得印が出るようにし、本人には偽印が出ることを確認する",
+      "Run終了後に痕跡が残るかは記録だけ残す"
+    ],
+    "assumed_existing_parts": [
+      "枠境界を持つInventoryService",
+      "クライアントの個人表示",
+      "観察の共通契約（視認の評価は個人側）"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Undecided",
+        "detail": "配る主体は未確定。全マップ共通の枠だが、入手経路は未実装であり創作しない。試作のみデバッグ付与。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "1枠を消費するが、置かない限り意味がない。偽痕跡の生成数と上限は未確定。"
+      },
+      {
+        "route": "Use",
+        "status": "Proposed",
+        "detail": "『置く』に使って偽痕跡を一つ作る。置く地点が成立条件になる。"
+      },
+      {
+        "route": "Present",
+        "status": "Undecided",
+        "detail": "誰に渡すと偽痕跡が本人之物になるかは未確定。効果の帰属が個人かマップかで変わるため保留。"
+      },
+      {
+        "route": "Place",
+        "status": "Proposed",
+        "detail": "中核。任意の探索点に置き、他者向けの未取得印を作る。地形は増やさない。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "確保枠の外なら死亡時に失う。失っても既に置いた偽痕跡は残るため、『撒いた嘘』は本人より長生きする。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "確保枠に入れて撒く機会を守れる。失っても偽痕跡は残るため、完全な保険にはならない。"
+      },
+      {
+        "route": "Sell",
+        "status": "NotApplicable",
+        "detail": "換金しない。売ると『嘘を撒く』ではなく『物』として扱われ、性格が崩れる。"
+      },
+      {
+        "route": "Quest",
+        "status": "Undecided",
+        "detail": "依頼主は未確定。痕跡は依頼枠を消費しないため、依頼報酬とは明確に分ける。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "NotApplicable",
+        "detail": "既存の異常の作用には繋がない。候補は観測ではなく偽装であり、異常の挙動は作らない。"
+      }
+    ],
+    "ownership_state": "札はplayer単位の個人所持。置くと個人からマップの置き物へ移り、回収はできない。偽痕跡の提示は他の個人にだけ届き、本人には偽印が出る。切断と再接続時の扱いは未決。",
+    "server_run_state": "永続の痕跡記録を個人ごとに保持し、Run共有のマップ状態は書き換えない。出現率と同時出現数は変更しないためWorldChangeのEffectは発生しない。Run終了でも痕跡記録は残る。"
+  },
+  "html_file": "ROLE-B-014.html"
+}

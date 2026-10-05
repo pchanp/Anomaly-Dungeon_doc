@@ -1,0 +1,233 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-007",
+  "role": "C",
+  "title": "弱みの印",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "SEKIGAHARA",
+  "classification": "マップ固有",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "SEKIGAHARA",
+      "source_status": "Status: Mixed（案ごとに下記）",
+      "claim": "歴史的な関ヶ原そのものを再現せず、なぜか延々と続く巨大な戦場として扱う案。複数勢力のNPCが常時戦闘し、プレイヤーは戦闘回避、戦場を利用した探索、弱ったNPCの撃破、戦闘介入、乱戦への参加を選べる。NPCは有限数を常時生成せず上限を設け、倒されたNPCを後方から補充する。勢力、戦況ロジック、敵対・協力関係は未決。"
+    },
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "ServerとClientの責務",
+      "source_status": "Status: Draft（草案）",
+      "claim": "ゲーム進行上の事実はServerが決定し、Clientは主に表現を担う。NPC StateはServerが担う列に含まれ、Clientの担当はUI、音響、カメラ、エフェクトである。"
+    },
+    {
+      "path": "docs/systems/observation-and-recognition.md",
+      "section": "Server権威とRemote境界",
+      "source_status": "Status: Draft（草案）",
+      "claim": "ServerはClientの画面状態を直接確認できない。Clientからの報告は要求であり世界状態の証明ではない。経路開放、報酬、Exposure、共有State TransitionはServerだけが確定する。"
+    }
+  ],
+  "design_hypothesis": "戦闘中のNPCのうち、弱った個体だけを読み取る。 視界と距離が通る通常NPCをServerが検査する。 体力が候補閾値以下の個体へ本人専用の印を出す。 読み取りを終えると印は消える。壁越しやEntityの正体は読めない。",
+  "experience": {
+    "goal": "戦闘中のNPCのうち、弱った個体だけを読み取る。",
+    "player_choice": "立ち止まって介入先を探すか、戦場を通過するか。読む間は攻撃できない。",
+    "sacrifice_or_risk": "立ち止まって介入先を探すか、戦場を通過するか。読む間は攻撃できない。"
+  },
+  "placement_assumption": "既存マップで使用する文脈。配置・建物構造・地形・Questの結末を新設しない。対応対象が未実装なら試作用の対象で確認する。",
+  "components": [
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "戦闘中のNPCのうち、弱った個体だけを読み取る。"
+    },
+    {
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "戦闘中のNPCのうち、弱った個体だけを読み取る。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "InformationChange",
+      "trigger": "装備中に本人が発動入力。視界と距離が通る通常NPCをServerが検査する。",
+      "condition": "視界と距離が通る通常NPCをServerが検査する。 ServerがRun・対象・クールダウンを検査。",
+      "result": "視界と距離が通る通常NPCをServerが検査する。 体力が候補閾値以下の個体へ本人専用の印を出す。 読み取りを終えると印は消える。壁越しやEntityの正体は読めない。",
+      "target": "本人",
+      "scope": "同一マップ内の対象限定。共有Quest・出現率・Exposureは変更しない。",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "読み取りを終えると印は消える。壁越しやEntityの正体は読めない。",
+        "マップ離脱",
+        "Run終了",
+        "対象の戦闘不能または切断"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "最初に成立した終了条件で解除し、Runを越えて状態を保存しない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effect・同一対象は非加算の1件。即時結果は一回解決し、重複要求を再適用しない。",
+        "conflict_resolution": "競合する移動・入力制限・観察の適用順は採用前の確認事項。"
+      },
+      "server_validation": "対象・距離・安全な位置・使用状態をServerで検査。個人画面を世界状態の証明にしない。",
+      "client_presentation": "戦闘中のNPCのうち、弱った個体だけを読み取る。",
+      "feedback": {
+        "success": "成立・消費・終了を対象本人に表示。",
+        "failure": "不成立の理由を短く表示。効果を付与しない。",
+        "ambiguous": "原因・正体は説明しない。操作の成否は曖昧にしない。"
+      }
+    },
+    {
+      "kind": "RuleOverride",
+      "trigger": "装備中に本人が発動入力。視界と距離が通る通常NPCをServerが検査する。",
+      "condition": "視界と距離が通る通常NPCをServerが検査する。 ServerがRun・対象・クールダウンを検査。",
+      "result": "視界と距離が通る通常NPCをServerが検査する。 体力が候補閾値以下の個体へ本人専用の印を出す。 読み取りを終えると印は消える。壁越しやEntityの正体は読めない。",
+      "target": "本人",
+      "scope": "同一マップ内の対象限定。共有Quest・出現率・Exposureは変更しない。",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "読み取りを終えると印は消える。壁越しやEntityの正体は読めない。",
+        "マップ離脱",
+        "Run終了",
+        "対象の戦闘不能または切断"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "最初に成立した終了条件で解除し、Runを越えて状態を保存しない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effect・同一対象は非加算の1件。即時結果は一回解決し、重複要求を再適用しない。",
+        "conflict_resolution": "競合する移動・入力制限・観察の適用順は採用前の確認事項。"
+      },
+      "server_validation": "対象・距離・安全な位置・使用状態をServerで検査。個人画面を世界状態の証明にしない。",
+      "client_presentation": "戦闘中のNPCのうち、弱った個体だけを読み取る。",
+      "feedback": {
+        "success": "成立・消費・終了を対象本人に表示。",
+        "failure": "不成立の理由を短く表示。効果を付与しない。",
+        "ambiguous": "原因・正体は説明しない。操作の成否は曖昧にしない。"
+      }
+    }
+  ],
+  "provides_traits": [
+    "戦闘中のNPCのうち、弱った個体だけを読み取る。",
+    "視界と距離が通る通常NPCをServerが検査する。",
+    "体力が候補閾値以下の個体へ本人専用の印を出す。",
+    "読み取りを終えると印は消える。壁越しやEntityの正体は読めない。"
+  ],
+  "connection_tags": [
+    "Skill",
+    "Environment",
+    "Observation"
+  ],
+  "refs": [
+    {
+      "target_id": "ROLE-A-007",
+      "kind": "optional_connection",
+      "required_traits": [
+        "SEKIGAHARAの戦闘状態をServer確定の共有事実として扱えること"
+      ],
+      "fallback": "A-007が成立しない場合、本候補はServer側のNPCの状態だけから成立する。勢力関係や戦況の進行には依存しない。",
+      "resolution": "reserved_unresolved"
+    }
+  ],
+  "unresolved_refs": [
+    {
+      "target_id": "ROLE-A-007",
+      "required_traits": [
+        "SEKIGAHARAの戦闘状態をServer確定の共有事実として扱えること"
+      ],
+      "reason": "peer-snapshotsが配布されておらず、A-007は予約枠のままで本文を確認できない。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": null,
+      "required_traits": [
+        "ServerがNPCの体力と戦闘中かどうかを個人へ渡せること",
+        "SEKIGAHARAのNPCの最大数と補充の規則を、勢力の設計とは独立に決められること"
+      ],
+      "reason": "current-implementation.mdにSEKIGAHARAの実装記録がなく、勢力と戦況ロジックは未決と記されている。どの値を個人提示へ出せるかは判断できない。",
+      "adoption_blocker": false
+    }
+  ],
+  "conflicts": [
+    {
+      "source_path": "docs/systems/map-gimmick-ideas.md",
+      "existing_rule": "SEKIGAHARAはIdeaで、NPCの勢力、戦況ロジック、敵対・協力関係は未決として記されている。弱ったNPCの撃破はプレイヤーの選択肢の候補として書かれている。",
+      "proposal_difference": "本候補は戦況のロジックに踏み込まず、Serverが保持する体力という単独の値を個人に読み取らせる。",
+      "correction": "採用する場合は勢力設計を先行させず、個人提示だけを先に試す。勢力の未決事項はそのまま残す。",
+      "reason_correctable": "コンセプトの記述を変更せず、地形、配置、NPCの思考にも触れない。",
+      "decision_needed": "個人提示をNPC実装より先に置くか、NPCの仕様が決まった後に置くか。"
+    }
+  ],
+  "uncertainties": [
+    "受付時間・距離・上限・クールダウン・速度などの値は仮案段階。",
+    "レベル差は候補であり、効果量と操作負担を試作して調整する。",
+    "通常スキルとしてのみ扱い、Player Anomalyの専用能力には一般化しない。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "戦闘中のNPCのうち、弱った個体だけを読み取る。",
+    "in_world_rationale": "既存の移動・音・観察を通常と異なる条件で操作する候補。成立理由を世界の起源や装置の正体へ結び付けない。",
+    "meaning_left_ambiguous": "なぜこの操作が成立するか。博士の意図・Entityの正体は確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "この候補の入力条件・状態・提示の専用処理は実装記録がなく、新規ロジックが必要。",
+  "new_logic": [
+    "戦闘中のNPCのうち、弱った個体だけを読み取る。",
+    "Serverで成立条件と終了を検査する処理",
+    "本人または対象へのFeedback"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "専用入力と状態管理が必要。対象側基盤が未実装なら、その試作費用は別途見積もる。",
+    "implementation_steps": [
+      "単一対象で成立・不成立を確認",
+      "解除とRun終了時の破棄を確認",
+      "複数参加者と競合Effectを確認"
+    ],
+    "assumed_existing_parts": [
+      "既存スキル発動経路",
+      "CharacterとRun参加者の管理"
+    ]
+  },
+  "role_details": {
+    "skill_family": "探索",
+    "rank": null,
+    "rank_rationale": "系統内の候補が揃った時点で比較する。ランク解放条件自体は変更しない。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "戦闘中のNPCのうち、弱った個体だけを読み取る。"
+      },
+      {
+        "level": 2,
+        "proposal": "一個体の印を短時間だけ保持できる。"
+      },
+      {
+        "level": 3,
+        "proposal": "保持先を一度だけ別の見えている個体へ切り替えられる。"
+      }
+    ],
+    "equipped_slot_policy": "通常スキルの4装備枠のうち1枠。取得ランク条件は既存規則に従い、装備切替時点は未決定。",
+    "normal_attack_link": "通常攻撃からの連携候補。発動中の制限は本案に従い、受付窓・キャンセル時点は未決定。",
+    "avoids": "戦闘中のNPCのうち、弱った個体だけを読み取る。",
+    "intervenes_in": "視界と距離が通る通常NPCをServerが検査する。 体力が候補閾値以下の個体へ本人専用の印を出す。 読み取りを終えると印は消える。壁越しやEntityの正体は読めない。",
+    "sacrifices": "立ち止まって介入先を探すか、戦場を通過するか。読む間は攻撃できない。",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-007.html"
+}

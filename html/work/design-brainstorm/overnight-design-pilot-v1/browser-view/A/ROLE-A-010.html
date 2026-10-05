@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-A-010 補佐の者の巡回 — 研究所の廊下</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+<p class="sub">overnight-design-pilot-v1 ／ ROLE-A-010 ／ 研究所（マップ固有）／ NPC</p>
+<h1>補佐の者の巡回 — 研究所の廊下</h1>
+<p>機材の作業状態を記すだけの人が、廊下を1周している。</p>
+<div class="badges"><span class="badge hyp">Idea</span><span class="badge">unreviewed</span><span class="badge unknown">巡回経路は未定</span></div>
+<nav class="nav"><a href="index.html">← 一覧</a><a href="ROLE-A-010.json">同IDのJSON</a></nav>
+</header>
+
+<section id="hypothesis">
+<h2>何の案か</h2>
+<p>既存の連鎖に、説明を足さずに通常NPCを1人だけ置く。</p>
+<ul>
+<li>廊下を巡回して、機材の作業状態を記している。</li>
+<li>近くで見ると「どの機材が作業中か」が1行で出る。記録の内容は出さない。</li>
+<li>攻撃を受けると作業を止める。博士の理論やアノマリーの意味は話さない。</li>
+</ul>
+<p><strong>選択と代償:</strong> 黙って作業を見る／短い会話だけ試す／触らず 지나る。得られるのは機材名と所作だけで、博士の処分には影響しない。</p>
+<p class="sub">接続タグ: NPCState / WhisperTransfer / InformationSharing ／ requires_code: true ／ conflicts 0件・未解決2件（JSONに記載）</p>
+</section>
+
+<section id="diagram">
+<h2>仕組みの図</h2>
+<div class="board">
+<svg viewBox="0 0 1000 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="廊下を巡回して機材名だけを個人提示する補佐の者と、攻撃で作業が止まることを示す図">
+<rect width="1000" height="320" fill="#0a1118"/>
+<text class="label" x="24" y="28">巡回（構造は未確定）</text>
+<text class="label" x="620" y="28">個人に返るもの</text>
+<rect x="24" y="56" width="140" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="small" x="38" y="96">機材A</text>
+<rect x="204" y="56" width="140" height="72" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="small" x="218" y="96">機材B</text>
+<rect x="384" y="56" width="140" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="small" x="398" y="96">機材C</text>
+<path d="M164 92h34M344 92h34" class="hyp-line"/>
+<path d="M192 86l9 6-9 6M372 86l9 6-9 6" class="hyp-line"/>
+<circle cx="274" cy="188" r="16" fill="#172d3b" stroke="#70c9c3"/>
+<text class="small" x="298" y="194">巡回NPC</text>
+<path d="M274 128v54" class="active"/>
+<path d="M274 188l-6-9h12z" fill="#70c9c3"/>
+<text class="small" x="24" y="252">巡回周期と順番は未定。既存資料へ追記するかは判断が必要</text>
+
+<rect x="620" y="56" width="356" height="72" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="small" x="634" y="90">機材名の1行だけ（記録の内容は出さない）</text>
+<rect x="620" y="156" width="356" height="72" rx="8" fill="#142330" stroke="#ea9380"/>
+<text class="small" x="634" y="190">攻撃で作業を止める</text>
+<path d="M524 84h90" class="active"/>
+<path d="M608 78l9 6-9 6" class="active"/>
+<path d="M620 192h-90" stroke="#ea9380" stroke-width="2" fill="none"/>
+<path d="M536 186l-9 6 9 6" stroke="#ea9380" stroke-width="2" fill="none"/>
+<text class="small" x="24" y="292">この図で分かること：記録だけをする存在を追加できる。</text>
+<text class="small" x="24" y="312">whisperの連鎖、装置の正体、博士の処分は確定しない。</text>
+</svg>
+</div>
+<p>図注：存在するが_eventsExplainしない、という存在として足すだけ。</p>
+</section>
+
+<footer>overnight-design-pilot-v1 ／ ROLE-A-010 ／ 実表示は未確認（担当セッションでブラウザを使用していない）。</footer>
+</main>
+</body>
+</html>

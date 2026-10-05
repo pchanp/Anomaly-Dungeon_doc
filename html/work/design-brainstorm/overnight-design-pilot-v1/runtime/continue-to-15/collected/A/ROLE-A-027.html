@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-A-027 群の寄せ — 近くにいる個体が短時間だけ集まる</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+<p class="sub">overnight-design-pilot-v1 ／ ROLE-A-027 ／ 全マップ共通 ／ MobEnemy</p>
+<h1>群の寄せ — 近くにいる個体が短時間だけ集まる</h1>
+<p>近くの複数が一か所へ集まるが、力は落ちない。</p>
+<div class="badges"><span class="badge hyp">Idea</span><span class="badge">unreviewed</span><span class="badge unknown">距離と滞在時間は未定</span></div>
+<nav class="nav"><a href="index.html">← 一覧</a><a href="ROLE-A-027.json">同IDのJSON</a></nav>
+</header>
+
+<section id="hypothesis">
+<h2>何の案か</h2>
+<p>一度に複数を受ける状況を作り、間合いを選ぶ。</p>
+<ul>
+<li>近くの複数の通常モブが、同じ地点へ短時間だけ集まる。</li>
+<li>集まった状態は時間切れか戦闘終了で必ず解ける。個体の体力は下がらない。</li>
+<li>集まる距離と滞在時間、個体数の上限は未定。何がそこで集まっているかは説明しない。</li>
+</ul>
+<p><strong>選択と代償:</strong> 短い間にまとめて対処する／崩れる前に引く／待ち伏せの場所を作る。集まっても倒せるが一度に複数を受ける。滞在時間が不定なので、どこで崩すかの判断は遅くなる。</p>
+<p class="sub">接続タグ: NPCState / StateChange / WorldChange / Combat ／ requires_code: true ／ conflicts 0件・未解決1件（JSONに記載）</p>
+</section>
+
+<section id="diagram">
+<h2>仕組みの図</h2>
+<div class="board">
+<svg viewBox="0 0 1000 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="近くの複数の通常モブが一か所へ短時間だけ集まり、時間が切れると必ず解散することを示す図">
+<rect width="1000" height="360" fill="#0a1118"/>
+<text class="label" x="24" y="28">指示から集合まで</text>
+<text class="label" x="560" y="28">解散する条件</text>
+
+<rect x="24" y="52" width="220" height="72" rx="8" fill="#142330" stroke="#d3b653"/>
+<text class="label" x="38" y="82">近くの複数へ指示</text>
+<text class="small" x="38" y="106">出所は不明のまま</text>
+
+<rect x="24" y="142" width="220" height="76" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="label" x="38" y="172">一か所へ集まる</text>
+<text class="small" x="38" y="198">StateChange。体力は不変</text>
+<path d="M134 124v14" stroke="#70c9c3" stroke-width="2" fill="none"/>
+<path d="M128 136l6 8 6-8z" fill="#70c9c3"/>
+
+<rect x="300" y="142" width="220" height="76" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="314" y="172">一度に複数を受ける</text>
+<text class="small" x="314" y="198">間合いと位置取りが要る</text>
+<path d="M244 180h52" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M288 174l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+
+<rect x="580" y="52" width="396" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="594" y="82">時間が尽きる</text>
+<text class="small" x="594" y="106">必ず解ける。延長しない</text>
+<rect x="580" y="142" width="396" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="594" y="172">戦闘が終了する</text>
+<text class="small" x="594" y="198">記録ごと破棄。残らない</text>
+<path d="M520 88h54" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M566 82l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M520 178h54" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M566 172l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+
+<rect x="24" y="240" width="220" height="64" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="small" x="38" y="268">個体数は増えない</text>
+<text class="small" x="38" y="290">枠の上限に従う</text>
+
+<text class="small" x="24" y="338">この図で分かること：集合は解ける。体力は落ちないので、個体を弱めるのではなく間合いの選択になる。</text>
+</svg>
+</div>
+<p>図注：弱めるのではなく、一度に複数を受ける状況を作る。集合の理由も指示の出所も説明しない。</p>
+</section>
+
+<footer>overnight-design-pilot-v1 ／ ROLE-A-027 ／ 実表示は未確認（担当セッションでブラウザを使用していない）。</footer>
+</main>
+</body>
+</html>

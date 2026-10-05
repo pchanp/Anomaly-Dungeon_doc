@@ -1,0 +1,117 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-011",
+  "role": "A",
+  "title": "装置の音 — 研究所の稼動音",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "研究所",
+  "classification": "マップ固有",
+  "category": "GimmickEvent",
+  "source_evidence": [
+    {"path": "docs/anomalies/whisper.md", "section": "## 博士の元同僚Quest", "source_status": "Status: Draft（草案）", "claim": "元同僚は研究機材へ閉じこもり、機材を開くと二者だけが消えて装置だけが残る。装置の正体と人物の行方は不明のままとされる。"},
+    {"path": "docs/systems/anomaly-interaction.md", "section": "### Sound Interaction", "source_status": "ステータス: Draft", "claim": "音を聞いたという事実や音源の位置や強さを認識した事実を入力として扱う。実装できる文脈だけを使う。"},
+    {"path": "docs/systems/game-rules.md", "section": "## ServerとClientの責務", "source_status": "Status: Draft（草案）", "claim": "ゲーム進行上の事実はServerが決定し、Clientは主に表現を担う。"}
+  ],
+  "design_hypothesis": "残った装置の稼動音が廊下に届き、音のする側だけで所在が読める状態を仮定します。音は人の声ではなく機械音で、内容は出しません。装置を開けずに推測することが狙いです。正体も結末も確定しません。",
+  "experience": {
+    "goal": "開けずに、装置がどちら側で動いているかを耳で判断する。",
+    "player_choice": "耳を澄ます（時間を使う）／そのまま進む／遮る（音が止まる）。",
+    "sacrifice_or_risk": "方向の手掛かりは人の有無を意味しない。止めた音は戻らない（再始動は未定）。"
+  },
+  "placement_assumption": "研究所の建物構造は未確定であり、部屋と配置は提案しない。音の到達範囲は各マップ側の判断に委ねる。",
+  "components": [
+    {"component": "Effect.InformationChange", "availability": "catalog", "usage": "音のする側を個人提示として返す。"},
+    {"component": "Effect.RuleOverride", "availability": "catalog", "usage": "遮る操作で提示の入力を無効化する。対象と優先順位を明示する。"},
+    {"component": "SoundInteraction", "availability": "catalog", "usage": "音源の位置と到達を入力として使う。"}
+  ],
+  "effects": [
+    {
+      "kind": "InformationChange",
+      "trigger": "対象の近くで装置の稼動音が聞こえる。",
+      "condition": "装置が稼動中であること。対象が通常のプレイヤーであること。到達条件は未定。",
+      "result": "音のする側だけを個人提示として返す。連続の長さや基準は出さない。",
+      "target": "聞いた個人",
+      "scope": "個人",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": ["音が止む", "到達範囲外へ出る", "Run終了"],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかで閉じる",
+      "stacking": {"exception": false, "rule": "同一対象は非加算1件。残秒は更新する", "conflict_resolution": "他の音響提示との競合は保留"},
+      "server_validation": "Serverが稼動状態と到達を検証する",
+      "client_presentation": "方向を教える短い1行",
+      "feedback": {"success": "側だけが更新される", "failure": "止まれば更新されない", "ambiguous": "人の有無は表示しない"}
+    },
+    {
+      "kind": "RuleOverride",
+      "trigger": "対象の行動で装置の音が止まる。",
+      "condition": "Serverが対象の行動と対象物体の位置を検証した場合",
+      "result": "提示の入力（音）が成立しなくなる。装置の状態自体は変えない（案）。",
+      "target": "対象個人の音響提示の入力",
+      "scope": "個人",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": ["装置が再始動する（条件未定）", "Run終了"],
+      "end_mode": "any",
+      "end_rule_reason": "解除条件は装置側に委ねる",
+      "stacking": {"exception": false, "rule": "同一対象は1件", "conflict_resolution": "他Effectとの順序は未確定のため保留"},
+      "server_validation": "Serverが位置と対象を検証する",
+      "client_presentation": "音が止まる表現のみ",
+      "feedback": {"success": "音が止まる", "failure": "止まらない場合は何も変わらない", "ambiguous": "何を止める方式かは出さない"}
+    }
+  ],
+  "provides_traits": ["開けずに所在の手掛かりを音で提示できる", "提示の入力を無効化する選択肢を一つ用意できる"],
+  "connection_tags": ["Sound", "InformationChange", "WhisperTransfer", "Environment"],
+  "refs": [
+    {"target_id": "ROLE-C-011", "kind": "optional_connection", "required_traits": ["音の入力を探索判断に使える"], "fallback": "接続なしでも成立する。耳を澄ます・遮るは待機と行動で完結する。", "resolution": "reserved_unresolved"}
+  ],
+  "unresolved_refs": [
+    {"target_id": "ROLE-C-011", "required_traits": ["音の入力を探索判断に使える"], "reason": "Cの候補が配布されておらず内容が不明。語彙のみ記録する。", "adoption_blocker": false},
+    {"target_id": null, "required_traits": ["音の到達と提示の閾値を決める方針"], "reason": "ID未指定の要求。音響の最小仕様は未決定とされ、共通設計側の判断が必要。", "adoption_blocker": true}
+  ],
+  "conflicts": [
+    {
+      "source_path": "docs/anomalies/whisper.md",
+      "existing_rule": "装置の正体、人物の行方、博士が実際に処分するかは不明のままとされる。",
+      "proposal_difference": "本候補は装置の稼動音を提示の入力にする。",
+      "correction": "音は人の状態を示さない。所在も正体も判断できる形にはしない。",
+      "reason_correctable": "未確定のまま残す既存方針を守ったまま、提示の入力を足せる。",
+      "decision_needed": "音を人の有無の手掛かりとして使わないという制約を明文化するか。"
+    }
+  ],
+  "uncertainties": [
+    "音の周期、到達範囲、提示の更新間隔は未定",
+    "装置が再始動する条件は未定",
+    "研究所マップは未実装であり、実装の有無は未確認"
+  ],
+  "worldview": {
+    "defamiliarized_element": "恐怖や正体に触れず、機械音だけで場所を推測させる点。音は人の声ではない。",
+    "in_world_rationale": "古い設備が残る文明では、稼働音は設備の一部として自然に発生し、古いほど説明が薄い。誰が動かしたのかは説明しない。",
+    "meaning_left_ambiguous": "何が動いているのか。誰が動かしたのか。再始動は起きるのか。装置は何なのか。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "研究所マップが未実装で、音源の配置と提示経路が存在しないため。コード生成の許可ではない。",
+  "new_logic": ["装置の稼動音と提示の入力判定", "提示を無効化する操作の経路"],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "音1種と提示1行で試せる。音響の最小仕様が未決定のため、到達と遮蔽の検証が要る。実時間の見積もりは出していない。",
+    "implementation_steps": ["装置を1つ置き稼動音を出す", "到達範囲から提示を返す", "遮る操作で提示を止める", "地図全体での聞きやすさを確認する"],
+    "assumed_existing_parts": ["既存のwhisperの連鎖と装置の概念", "通常のHPとDamageの受け口"]
+  },
+  "role_details": {
+    "npc_purpose": "NPCを含まない。装置という物体と音だけの候補である。人の目的は登場しない。",
+    "player_anomaly_handling": "物体と音なので成立する。NPCとのInteractionではない。",
+    "mob_contract": {
+      "applicable": false,
+      "spawn_condition": "対象外。モブ敵の発生を含まない。",
+      "population_cap": "対象外。個体数の枠を持たない。",
+      "non_combat_response": "対象外。戦闘がない。",
+      "exit_condition": "対象外。湧きや自然消滅の機構がない。",
+      "entity_distinction": "物体でありAnomaly EntityでもNPCでもない。whisperの追従先にもならない。"
+    }
+  },
+  "html_file": "ROLE-A-011.html"
+}

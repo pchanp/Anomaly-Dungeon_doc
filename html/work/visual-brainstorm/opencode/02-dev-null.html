@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>02 /dev/null ／ 視覚仮説</title>
+<link rel="stylesheet" href="vis.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <h1>02 ／ /dev/null — 入力と結果の断絶</h1>
+  <div class="sub">
+    Anomaly Entity。入力されたものを「存在しなかったこと」にする。
+    ゴミ箱・廃棄物のオブジェクトとしては描かない。本質は <b>入力 → 処理 → 結果</b> の因果対応が失われること。
+  </div>
+  <div class="badges">
+    <span class="badge">Type: Anomaly Entity</span>
+    <span class="badge">Prototype: Partially Implemented</span>
+    <span class="badge hyp">外見は本質ではない（仮説）</span>
+    <span class="badge unconf">null化範囲・優先順位は未確定</span>
+  </div>
+  <div class="nav"><a href="index.html">← ボードトップ</a><a href="01-miw.html">← MiW</a><a href="03-memory-swapper.html">次: Memory Swapper →</a></div>
+</header>
+
+<div class="doc">
+  <h2>(a) 根拠文書</h2>
+  <p>
+    <code>docs/anomalies/dev-null.md</code>（Status: Draft）:
+    入力されたものを「存在しなかったこと」にするアノマリー。
+    <b>ゴミ箱や廃棄物を象徴するオブジェクトではない。</b>
+    移動も攻撃もしない。近傍では攻撃、スキル、ダッシュ、ジャンプ、アイテム使用、インベントリ操作など、
+    プレイヤーが当然と考えるゲームシステムそのものの結果が到達しなくなる。
+    UI上では名前や画像が正常に認識できない、または欠損する表現を検討している。
+    通常の敵より強い警告を行うが、すべての結果を明示的に説明しない。
+    「何でも消す能力」ではなく因果関係の破壊が本質。
+    実装済みは距離判定、Tool無効化、結果無効化用Attributeとフィードバックまで（ダッシュ、ジャンプ、インベントリ操作、特殊スロットは未実装のDraft候補）。
+  </p>
+  <p>
+    <code>docs/world/information-design.md</code> / <code>docs/anomalies/cognitive-anomalies.md</code>:
+    実在の警告と誤認させるUIは使わない。详细を全部表示しない。
+  </p>
+</div>
+
+<div class="doc">
+  <h2>(b) 描画上の仮説</h2>
+  <ol style="max-width:78ch;color:#9fb6c4">
+    <li><b>「物体」ではなく「欠落」で描く。</b>この案では、/dev/null の存在自体を柱や玉のように描かず、<b>結果が届かない輪郭</b>だけで示す。中心には何も置かない。</li>
+    <li><b>破線は「切断された因果」。</b>入力と結果の間の線を実線 → 破線 → 消えの3段階で描き、途中の受け皿は、結果がそこへ落ち続ける図として描く。</li>
+    <li><b>UI欠損は「枠は残す」。</b>アイコン枠・名前欄・数値欄の枠線だけを表示し、中身だけを空にする。枠ごと失わせると本質（入出力の断絶）と外れるため、枠は消さない案を仮置く。</li>
+    <li><b>警告は「近さ」で出す。</b>文中どおり通常の敵より強い警告が必要なので、距離に応じて破線の数と円の濃さが増える表現を仮置き。警告テキスト自体は決めない。</li>
+    <li><b>特殊スロットは未実装のDraft候補として隔離。</b>通常のインベントリ枠とは別枠・別色で「ここまでは壊さない」線引きを残す。</li>
+  </ol>
+  <div class="note">
+    <b>描かなかったもの:</b> null化の範囲と優先順位（攻撃かスキルかアイテムか）、攻撃が通らない場合の正確な結果。
+    画面外のOS・実在の警告に似たものは一切描いていません。
+  </div>
+</div>
+
+<!-- 図1: 因果の断絶 -->
+<h2 style="font-size:13px;color:#e2f0f7;letter-spacing:.1em;font-weight:400;border-left:2px solid #2d3f4c;padding-left:8px;">図1 ／ 因果の断絶 — 中心には何も置かない</h2>
+<div class="board">
+<svg viewBox="0 0 1120 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="/dev/null 因果の断絶">
+  <rect width="1120" height="320" fill="#07090b"/>
+  <g stroke="#121a20" stroke-width="1"><path d="M0 90H1120M0 230H1120"/></g>
+
+  <!-- 左: 入力 -->
+  <g transform="translate(60,50)">
+    <text class="lbl-h" x="0" y="0">入力 / INPUT</text>
+    <g fill="#111a20" stroke="#3d5464" stroke-width="1.2">
+      <rect x="0" y="16" width="52" height="34" rx="3"/><text class="lbl-s" x="12" y="37">攻撃</text>
+      <rect x="0" y="58" width="52" height="34" rx="3"/><text class="lbl-s" x="12" y="79">スキル</text>
+      <rect x="0" y="100" width="52" height="34" rx="3"/><text class="lbl-s" x="12" y="121">アイテム</text>
+      <rect x="0" y="142" width="52" height="34" rx="3"/><text class="lbl-s" x="12" y="163">移動</text>
+    </g>
+    <g stroke="#3d5464" stroke-width="1" fill="none">
+      <path d="M52 33h34M52 75h34M52 117h34M52 159h34"/>
+    </g>
+  </g>
+
+  <!-- 中央: 断絶領域 -->
+  <g transform="translate(300,20)">
+    <text class="lbl-h" x="0" y="0">断絶領域 / 半径未確定</text>
+    <!-- 濃淡の3層のhalo -->
+    <ellipse cx="200" cy="140" rx="180" ry="120" class="hz"/>
+    <ellipse cx="200" cy="140" rx="130" ry="86" class="hz2" opacity=".6"/>
+    <ellipse cx="200" cy="140" rx="80" ry="52" class="hz2"/>
+    <!-- 断裂の表現 -->
+    <g stroke="#b8452f" stroke-width="1.6" fill="none">
+      <path d="M140 128l10 8M150 128l-10 8"/>
+      <path d="M200 108l10 8M210 108l-10 8"/>
+      <path d="M258 128l10 8M268 128l-10 8"/>
+      <path d="M168 168l10 8M178 168l-10 8"/>
+      <path d="M238 168l10 8M248 168l-10 8"/>
+    </g>
+    <!-- 結果の落ち先 -->
+    <g fill="none" stroke="#2d3f4c" stroke-width="1" stroke-dasharray="2 4">
+      <path d="M200 100v78"/>
+      <path d="M164 112v66M236 112v66"/>
+      <path d="M200 178v10M200 196v10M200 214v10"/>
+    </g>
+    <path d="M194 232l6-10 6 10z" fill="none" stroke="#b8452f"/>
+    <text class="unc-t" x="230" y="238">結果が届かない</text>
+    <text class="lbl-s" x="0" y="272">物体ではなく「到達しないこと」だけを描く（仮説）</text>
+    <text class="lbl-s" x="0" y="288">ここに実体・玉・箱は置かない</text>
+  </g>
+
+  <!-- 右: 結果 -->
+  <g transform="translate(760,50)">
+    <text class="lbl-h" x="0" y="0">結果 / RESULT</text>
+    <g fill="none" stroke="#2d3f4c" stroke-width="1" stroke-dasharray="4 4">
+      <rect x="0" y="16" width="70" height="34" rx="3"/>
+      <rect x="0" y="58" width="70" height="34" rx="3"/>
+      <rect x="0" y="100" width="70" height="34" rx="3"/>
+      <rect x="0" y="142" width="70" height="34" rx="3"/>
+    </g>
+    <g class="lbl-s">
+      <text x="16" y="37">発生しない</text>
+      <text x="16" y="79">発生しない</text>
+      <text x="16" y="121">結果がない</text>
+      <text x="16" y="163">移動しない</text>
+    </g>
+    <path class="hz" d="M70 33h40M70 75h40M70 117h40M70 159h40"/>
+    <text class="lbl-s" x="120" y="200">結末は無い</text>
+    <text class="lbl-s" x="120" y="216">（何もしないでは</text>
+    <text class="lbl-s" x="120" y="232">ない）</text>
+  </g>
+
+  <text class="lbl-s" x="60" y="312">STATUS: Draft ／ 図は概念図。null化の範囲・優先順位・実装は確定していない。</text>
+</svg>
+</div>
+
+<!-- 図2: UI欠損 -->
+<h2 style="font-size:13px;color:#e2f0f7;letter-spacing:.1em;font-weight:400;border-left:2px solid #2d3f4c;padding-left:8px;">図2 ／ UI欠損 — 枠だけが残る</h2>
+<div class="board">
+<svg viewBox="0 0 1120 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="/dev/null UI欠損">
+  <rect width="1120" height="300" fill="#07090b"/>
+
+  <!-- 通常時 -->
+  <g transform="translate(40,40)">
+    <text class="lbl-h" x="0" y="0">通常時</text>
+    <g transform="translate(0,16)">
+      <g fill="#111a20" stroke="#3d5464" stroke-width="1">
+        <rect x="0" y="0" width="46" height="46" rx="4"/>
+        <rect x="54" y="0" width="46" height="46" rx="4"/>
+        <rect x="108" y="0" width="46" height="46" rx="4"/>
+      </g>
+      <g fill="#4f6c7d">
+        <path d="M14 26l9-12 9 12-9 12z"/>
+        <circle cx="77" cy="23" r="10"/>
+        <path d="M120 30l8-14 8 14 8-14 8 14z"/>
+      </g>
+      <g stroke="#3d5464" stroke-width="1">
+        <rect x="0" y="56" width="154" height="14"/>
+        <rect x="0" y="76" width="120" height="14"/>
+      </g>
+      <g fill="#3d5464"><rect x="5" y="60" width="60" height="6"/><rect x="5" y="80" width="34" height="6"/></g>
+      <text class="lbl-s" x="0" y="96">名前・画像・数値が揃っている</text>
+    </g>
+  </g>
+
+  <!-- 近接時 -->
+  <g transform="translate(270,40)">
+    <text class="lbl-h" x="0" y="0">近接時</text>
+    <g transform="translate(0,16)">
+      <g fill="#0e1418" stroke="#2d3f4c" stroke-width="1">
+        <rect x="0" y="0" width="46" height="46" rx="4"/>
+        <rect x="54" y="0" width="46" height="46" rx="4"/>
+        <rect x="108" y="0" width="46" height="46" rx="4"/>
+      </g>
+      <g stroke="#2d3f4c" stroke-width="1" stroke-dasharray="2 3">
+        <rect x="0" y="56" width="154" height="14"/>
+        <rect x="0" y="76" width="120" height="14"/>
+      </g>
+      <g fill="#c9a227" opacity=".5">
+        <rect x="6" y="6" width="34" height="2"/>
+      </g>
+      <text class="lbl-s" x="0" y="96">枠は残る。中身だけが読めない</text>
+      <text class="lbl-s" x="0" y="112">（本稿の仮説）</text>
+    </g>
+  </g>
+
+  <!-- 特殊スロット（隔離） -->
+  <g transform="translate(500,40)">
+    <text class="lbl-h" x="0" y="0">特殊スロット（未実装のDraft候補）</text>
+    <g transform="translate(0,16)">
+      <rect x="0" y="0" width="230" height="120" fill="none" stroke="#8a4fbf" stroke-dasharray="6 4"/>
+      <text class="unc-t" x="8" y="-4">ここでは壊さない、線引きのみ仮置き</text>
+      <g fill="#0e1418" stroke="#2d3f4c" stroke-width="1">
+        <rect x="12" y="14" width="40" height="40" rx="4"/>
+        <rect x="60" y="14" width="40" height="40" rx="4"/>
+        <rect x="108" y="14" width="40" height="40" rx="4"/>
+      </g>
+      <text class="lbl-s" x="156" y="30">作用する／しない</text>
+      <text class="lbl-s" x="156" y="46">未確定</text>
+      <g stroke="#2d3f4c" stroke-width="1"><rect x="12" y="66" width="196" height="12"/></g>
+      <text class="lbl-s" x="12" y="96">捨てられないアイテム等の扱い</text>
+      <text class="lbl-s" x="12" y="110">も未確定（削除ではない）</text>
+    </g>
+  </g>
+
+  <!-- 警告 -->
+  <g transform="translate(800,40)">
+    <text class="lbl-h" x="0" y="0">警告（近さで濃く）</text>
+    <g transform="translate(0,16)">
+      <g fill="none" stroke="#b8452f" stroke-width="1">
+        <circle cx="70" cy="50" r="70" opacity=".25"/>
+        <circle cx="70" cy="50" r="46" opacity=".45"/>
+        <circle cx="70" cy="50" r="24" opacity=".75"/>
+      </g>
+      <g class="lbl-s">
+        <text x="150" y="34">警告文の文面は</text>
+        <text x="150" y="50">確定していない</text>
+        <text x="150" y="72">実在の警告・OS表示</text>
+        <text x="150" y="88">に似たものは描かない</text>
+      </g>
+      <text class="lbl-s" x="0" y="120">「何かがおかしくなる」事前察知のみ</text>
+    </g>
+  </g>
+
+  <text class="lbl-s" x="40" y="272">枠そのものを消す案ではない。枠の保持が、「中身だけが失われた」ことを見せるという仮説。</text>
+</svg>
+</div>
+
+<div class="doc">
+  <h2>(c) 未確定要素</h2>
+</div>
+<table>
+  <tr><th>要素</th><th>本ボードでの扱い</th><th>確定に必要な判断</th></tr>
+  <tr><td class="k">外見</td><td>描かない（欠落としてのみ示す）</td><td>現像・モデル・空間のどれで存在を示すか</td></tr>
+  <tr><td class="k">null化範囲</td><td>Attack/Skill/Item/Move のみ仮置き</td><td>Dash・Jump・インベントリ操作の採否</td></tr>
+  <tr><td class="k">null化の優先順位</td><td>並列に描く（順序なし）</td><td>どの入力を先に落とすか</td></tr>
+  <tr><td class="k">特殊スロット</td><td>隔離枠のみ（Draft候補）</td><td>作用するか否か</td></tr>
+  <tr><td class="k">警告表現</td><td>近さで密度を変えるのみ</td><td>警告UIの文面・直接通知の可否</td></tr>
+  <tr><td class="k">Player Anomalyとの相互作用</td><td>対象外</td><td>dev-null.md「未決事項」のまま</td></tr>
+</table>
+
+<footer class="top">
+  OpenCode 分／ work/visual-brainstorm/opencode/ 所有。Draft資料に基づく視覚仮説であり、実装指示ではない。
+</footer>
+</div>
+</body>
+</html>

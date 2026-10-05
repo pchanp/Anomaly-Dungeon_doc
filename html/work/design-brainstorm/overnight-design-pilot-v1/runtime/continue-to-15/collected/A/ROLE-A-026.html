@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-A-026 残った反応 — NPCの動きが痕跡として残る</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+<p class="sub">overnight-design-pilot-v1 ／ ROLE-A-026 ／ 全マップ共通 ／ NPC</p>
+<h1>残った反応 — NPCの動きが痕跡として残る</h1>
+<p>通常NPCの反応が、Run共有でしばらく残り続ける。</p>
+<div class="badges"><span class="badge hyp">Idea</span><span class="badge">unreviewed</span><span class="badge unknown">残る時間は未定</span></div>
+<nav class="nav"><a href="index.html">← 一覧</a><a href="ROLE-A-026.json">同IDのJSON</a></nav>
+</header>
+
+<section id="hypothesis">
+<h2>何の案か</h2>
+<p>会話ではなく、反応の残りから次の場所を推測する。</p>
+<ul>
+<li>通常NPCが反応を示し、その反応だけが一定時間、Run共有で残る。</li>
+<li>NPCの行動は戻らない。戻るのは「ここを誰かが通った」という事実だけ。</li>
+<li>反応の区分だけが個人提示として返る。時刻も相手も表示されない。</li>
+</ul>
+<p><strong>選択と代償:</strong> 反応が残っている間にたどる／反応が切れるのを待つ／反応を無視して計画どおり進む。残る時間は未定なので、たどった先に何も無い可能性がある。</p>
+<p class="sub">接続タグ: NPCState / StateChange / InformationChange / Residue ／ requires_code: true ／ conflicts 0件・未解決1件（JSONに記載）</p>
+</section>
+
+<section id="diagram">
+<h2>仕組みの図</h2>
+<div class="board">
+<svg viewBox="0 0 1000 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="通常NPCの反応がRun共有の残留として残り、区分だけが個人提示として返ることを示す図">
+<rect width="1000" height="360" fill="#0a1118"/>
+<text class="label" x="24" y="28">反応の発生</text>
+<text class="label" x="500" y="28">共有で残るもの</text>
+
+<rect x="24" y="52" width="240" height="76" rx="8" fill="#142330" stroke="#d3b653"/>
+<text class="label" x="38" y="82">通常NPCが反応する</text>
+<text class="small" x="38" y="108">種類は1種。行動は戻らない</text>
+
+<rect x="300" y="52" width="240" height="76" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="label" x="314" y="82">残留として共有される</text>
+<text class="small" x="314" y="108">StateChange 一時。個人記録とは別</text>
+<path d="M264 90h32" stroke="#70c9c3" stroke-width="2" fill="none"/>
+<path d="M290 84l9 6-9 6" stroke="#70c9c3" stroke-width="2" fill="none"/>
+
+<rect x="300" y="146" width="240" height="76" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="314" y="176">区分だけ表示する</text>
+<text class="small" x="314" y="202">時刻も相手も返さない</text>
+<path d="M264 184h32" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M290 178l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+
+<rect x="600" y="52" width="376" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="614" y="82">（a）反応が残る間にたどる</text>
+<text class="small" x="614" y="106">痕跡をたどる。先は不明</text>
+<rect x="600" y="142" width="356" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="614" y="172">（b）反応が切れるのを待つ</text>
+<text class="small" x="614" y="198">時間を賭ける。内容の入れ替わりあり</text>
+<rect x="600" y="232" width="376" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="614" y="262">（c）反応を無視する</text>
+<text class="small" x="614" y="288">痕跡を捨てて計画どおり進む</text>
+<path d="M540 88h54" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M586 82l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M540 178h54" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M586 172l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M540 268h54" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M586 262l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+
+<text class="small" x="24" y="290">別系統：個人記録（共有しない数値）。残留は共有事実として扱うが、内容は区分に限る。</text>
+<text class="small" x="24" y="338">この図で分かること：反応は共有で残り、区分だけが返る。いつ誰が起きたかは分からない。</text>
+</svg>
+</div>
+<p>図注：残るのは反応そのものではなく、区分の事実だけ。中身が失われることで、推測の手がかりになるか曖昧になるかが変わる。</p>
+</section>
+
+<footer>overnight-design-pilot-v1 ／ ROLE-A-026 ／ 実表示は未確認（担当セッションでブラウザを使用していない）。</footer>
+</main>
+</body>
+</html>

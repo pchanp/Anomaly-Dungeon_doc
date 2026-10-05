@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-B-018 引き索（対象を自分の側へ一歩寄せる）</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<p class="sub">overnight-design-pilot-v1 ／ ROLE=B ／ 全マップ共通 ／ Idea</p>
+<h1>ROLE-B-018 引き索（対象を自分の側へ一歩寄せる）— 作業用見出し</h1>
+</header>
+
+<section id="hypothesis">
+<h2>何の案？</h2>
+<p>射程内の対象1体だけ、自分の方向へ一歩ぶん引き寄せる索。</p>
+<h2>仕組み</h2>
+<ul>
+<li>対象を選んで使うと、その1体が一歩ぶんこっちへ来る。</li>
+<li>対象の体力・状態異常・進行は変わらない。引き寄せの後は通常のまま続く。</li>
+<li>同じ対象へ重ねても距離は足さない。索は使うたびに消費される。</li>
+</ul>
+<h2>選択と代償</h2>
+<p>距離を詰めてから殴るか、遠时间去処理するか。索は1回きり。使えば相手が横に来る。</p>
+</section>
+
+<section id="diagram">
+<h2>作用図</h2>
+<div class="board">
+<svg viewBox="0 0 980 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="射程の外の敵に対して索を使うと、敵が一歩ぶん自分側へ移動し、距離だけが短くなり、体力と状態は変わらない図">
+<rect width="980" height="340" fill="#0a1118"/>
+<text x="30" y="26" class="small">射程と一歩の長さは未確定。位置関係の模式図であり地図ではない。</text>
+<rect x="40" y="120" width="150" height="90" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="58" y="152" class="label">自分</text>
+<text x="58" y="178" class="small">索を構える</text>
+<circle cx="330" cy="165" r="46" fill="none" stroke="#d3b653" stroke-dasharray="6 6"/>
+<text x="292" y="238" class="small">射程</text>
+<rect x="640" y="120" width="200" height="90" rx="8" fill="#142330" stroke="#ea9380"/>
+<text x="658" y="152" class="label">対象（敵）</text>
+<text x="658" y="178" class="small">こちらへ寄ってくる</text>
+<path d="M192 165 H282" class="active"/>
+<path d="M282 159 l10 6 -10 6" class="active"/>
+<path d="M636 165 H546" class="hyp-line"/>
+<path d="M546 159 l10 6 -10 6" class="hyp-line"/>
+<text x="400" y="152" class="small">一歩ぶん移動</text>
+<text x="400" y="180" class="small">対象の状態は不変</text>
+<rect x="40" y="262" width="800" height="52" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text x="58" y="292" class="label">残る選択：2本あれば別の対象へ。重ねても距離は足さない。</text>
+<text x="30" y="332" class="small">経路に別の対象がいる場合の解決規則は未確定。候補では埋めない。</text>
+</svg>
+</div>
+<p>中央の印が自分、右が敵。破線が距離の移動。</p>
+</section>
+
+<footer>
+<p><a href="index.html">← B候補一覧</a> ／ 詳細データ <a href="ROLE-B-018.json">ROLE-B-018.json</a> ／ connection_tags: Item, Combat, Environment ／ requires_code: true ／ 試作コスト: 中</p>
+</footer>
+</main>
+</body>
+</html>

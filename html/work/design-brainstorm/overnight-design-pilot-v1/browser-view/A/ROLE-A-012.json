@@ -1,0 +1,108 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-012",
+  "role": "A",
+  "title": "置かれた記録 — 研究所の痕跡",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "研究所",
+  "classification": "マップ固有",
+  "category": "GimmickEvent",
+  "source_evidence": [
+    {"path": "docs/anomalies/whisper.md", "section": "## 未決定事項", "source_status": "Status: Draft（草案）", "claim": "元同僚Questの正確な解放条件、Quest目標UI、失敗と再挑戦の扱い、装置と人物の行方は未決定である。"},
+    {"path": "docs/world/information-design.md", "section": "## 「説明」ではなく「痕跡」", "source_status": "Status: Draft（草案）", "claim": "長い設定説明を基本手段にせず、痕跡から推測できるようにする。"},
+    {"path": "docs/systems/game-rules.md", "section": "## ServerとClientの責務", "source_status": "Status: Draft（草案）", "claim": "ゲーム進行上の事実はServerが決定し、Clientは主に表現を担う。"}
+  ],
+  "design_hypothesis": "作業の記録が廊下に置かれ、その並び順だけが読み取れる状態を仮定します。記録の内容や人物は表示しません。誰かの仕事が残っている痕跡として扱います。持ち去る操作は扱いません（アイテム基盤が未実装のため）。",
+  "experience": {
+    "goal": "人の声ではなく、置かれ方の順で直近で何が動いたかを推測させる。",
+    "player_choice": "順だけ読む／次の人が置くのを待つ／無視する。",
+    "sacrifice_or_risk": "順は他の人の行動でも変わるため誤読が起きうる。待つほど古くなる。"
+  },
+  "placement_assumption": "研究所の建物構造は未確定であり、部屋と配置は提案しない。置き場所は各マップ側の判断に委ねる。",
+  "components": [
+    {"component": "Effect.WorldChange", "availability": "catalog", "usage": "廊下の記録の並びをRun共有で更新する。"},
+    {"component": "Effect.InformationChange", "availability": "catalog", "usage": "置かれた順序だけを個人提示として返す。"},
+    {"component": "PaperTraceState", "availability": "proposed", "usage": "紙の置き順をRun共有で保持する。間隔と上限は未定。"}
+  ],
+  "effects": [
+    {
+      "kind": "WorldChange",
+      "trigger": "誰かが廊下へ記録を置く。",
+      "condition": "置き場所と対象の権限をServerが検証すること。周期と上限は未定。",
+      "result": "置き順が1件増える。順序だけが世界変化として残る。",
+      "target": "Run共有の記録の並び",
+      "scope": "Run全体",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": ["記録が片づかる（条件未定）", "Run終了", "マップ終了"],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかで並びを閉じる",
+      "stacking": {"exception": false, "rule": "置き操作はイベントごと。古い並びは上書きしない。", "conflict_resolution": "複数人の同時置きは規則が未確定のため保留"},
+      "server_validation": "Serverが置き処理と権限を検証する",
+      "client_presentation": "紙の並びの表現のみ",
+      "feedback": {"success": "並びが増える", "failure": "上限で置けない場合は変わらない", "ambiguous": "誰が置いたかは表示しない"}
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "対象の近くで記録の並びを読む。",
+      "condition": "対象が通常のプレイヤーであること。読み取り条件は未定。",
+      "result": "直近の順序だけを個人提示として返す。内容と人物は出さない。",
+      "target": "読んだ個人",
+      "scope": "個人",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": ["提示の取得だけなので適用解決"],
+      "end_mode": "any",
+      "end_rule_reason": "即時。取得ごとに解決する",
+      "stacking": {"exception": false, "rule": "取得ごとに解決する", "conflict_resolution": "他の記録提示との競合は保留"},
+      "server_validation": "Serverが並びの状態を検証する",
+      "client_presentation": "順序の短い1行",
+      "feedback": {"success": "順序が出る", "failure": "読めなければ出ない", "ambiguous": "内容が誰のものかは示さない"}
+    }
+  ],
+  "provides_traits": ["置かれ方の順で痕跡を提示できる", "人の声なしで作業の履歴が読める"],
+  "connection_tags": ["WorldChange", "InformationChange", "Environment"],
+  "refs": [
+    {"target_id": "ROLE-C-012", "kind": "optional_connection", "required_traits": ["順序や痕跡を探索判断に使える"], "fallback": "接続なしでも成立する。読む・待つ・無視は待機と移動で完結する。", "resolution": "reserved_unresolved"}
+  ],
+  "unresolved_refs": [
+    {"target_id": "ROLE-C-012", "required_traits": ["順序や痕跡を探索判断に使える"], "reason": "Cの候補が配布されておらず内容が不明。語彙のみ記録する。", "adoption_blocker": false},
+    {"target_id": null, "required_traits": ["置き場所と上限を決める方針"], "reason": "ID未指定の要求。研究所の建物構造が未確定のため共通設計側の判断が必要。", "adoption_blocker": true}
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "置き周期、置き場所、上限、片づける条件は未定",
+    "他の人の行動でも並びが変わるため誤読が起きうる（未検証）",
+    "研究所マップは未実装であり、実装の有無は未確認"
+  ],
+  "worldview": {
+    "defamiliarized_element": "記録の内容ではなく、置かれ方の順だけを読み取らせる点。声ではなく痕跡で語る。",
+    "in_world_rationale": "紙と古い設備が混在する文明では、書き終えた紙をその場に置くことが自然である。誰が置いたかは説明しない。",
+    "meaning_left_ambiguous": "誰が置いているのか。何を記録しているのか。どの機材が動いたのか。博士は装置をどう扱うのか。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "研究所マップが未実装で、記録の並びを保持する層も個人提示の経路も存在しないため。コード生成の許可ではない。",
+  "new_logic": ["記録の並びをRun共有で保持する層", "順序だけを返す個人提示"],
+  "prototype_cost": {
+    "band": "小",
+    "rationale": "並びの保持と1行の提示で試せる。ただし010の巡回NPCとの重複を避けた設計が要る。実時間の見積もりは出していない。",
+    "implementation_steps": ["記録を置く処理を用意する", "並びをRun共有で保持する", "順序だけを個人提示する", "他の人の行動による変化を確認する"],
+    "assumed_existing_parts": ["既存のwhisperの連鎖の概念", "通常のHPとDamageの受け口"]
+  },
+  "role_details": {
+    "npc_purpose": "NPCを含まない。紙の置き方の痕跡だけを扱う。人物の名前は出さない。",
+    "player_anomaly_handling": "物体と並びなので成立する。NPCとのInteractionではない。",
+    "mob_contract": {
+      "applicable": false,
+      "spawn_condition": "対象外。モブ敵の発生を含まない。",
+      "population_cap": "対象外。個体数の枠を持たない。",
+      "non_combat_response": "対象外。戦闘がない。",
+      "exit_condition": "対象外。湧きや自然消滅の機構がない。",
+      "entity_distinction": "物体の痕跡でありAnomaly EntityでもNPCでもない。追従先の移送は発生させない。"
+    }
+  },
+  "html_file": "ROLE-A-012.html"
+}

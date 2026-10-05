@@ -1,0 +1,248 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-011",
+  "role": "B",
+  "title": "置き忘れの品（差し出すと見えるものが入れ替わる）— 作業用見出し",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "研究所",
+  "classification": "マップ固有",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/anomalies/cognitive-anomalies.md",
+      "section": "認知差は便利な答えの表示ではなく、情報の不一致とトレードオフとして扱う。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "情報を得ることと失うことを対にする方針。候補は視認の移動をこのトレードオフとして扱う。"
+    },
+    {
+      "path": "docs/anomalies/whisper.md",
+      "section": "研究所マップには、博士と過去に共同研究をしていた元同僚がいる。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "元同僚が存在する場所。候補はその置き leftovers を新しい人物に読ませない。"
+    },
+    {
+      "path": "docs/anomalies/player-anomalies/visible-invisible-inversion.md",
+      "section": "内部ComponentをInteractで参照して情報を取得できるが、ダミー情報が混在する案とする。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "情報取得に偽の情報が混じる既存案。候補は『得るために失う』形に置く。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "`InformationChange` | Detect・Recognition、可視性差、情報の信頼性 | Serverの共有事実とClientごとの提示・認識を分ける",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "情報の信頼性の変化は個人ごとの提示として書く。"
+    }
+  ],
+  "design_hypothesis": "元同僚がそのまま残した小物を、『他人に見せるもの』として使う案。差し出した相手には視認が1つ増えるが、同時に相手のもともとの視認が1つ減る。増えるのは差し出した側の記憶で、減るのは相手の記憶。情報を渡すことで、相手の世界から何かが消える設計。",
+  "experience": {
+    "goal": "知らせることを、渡すと何かが消えることに変える。物の受け渡しではなくする。",
+    "player_choice": "差し出して相手に見せる。持ち歩く（何もしない）。捨てる。誰にも差さない。",
+    "sacrifice_or_risk": "相手が何を失ったかは教えてくれない。渡した品も自分の手元に残るだけだ。"
+  },
+  "placement_assumption": "新しい部屋・設備は提案しない。既存の小物にのみ置く前提を取る。目録や配置は未確定であり、図は添えない。既存のwhisperの装置には重ねない。",
+  "components": [
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "受け手の個人にだけ視認を1つ加え、同時に既存を1つ失わせる。"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "差し出し済みの印を個人に持たせ、同じ品を再使用できないようにする。"
+    },
+    {
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "観察の根拠と進行の共通契約。視線だけを条件にしない。"
+    },
+    {
+      "component": "ItemLifecycle",
+      "availability": "catalog",
+      "usage": "正式な取得源とItemStackが未実装であることを前提とする。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "InformationChange",
+      "trigger": "個人が置き忘れの品を、同じRunの別の個人に差し出す",
+      "condition": "両者が実行中であること、受け手が個人であること、差し出す個人が所有者であること",
+      "result": "受け手の個人にだけ視認が1つ増え、同時に受け手がもともと持っていた視認が1つ消える。相手以外の世界は変わらない。受け手のHPや所持は動かない",
+      "target": "受け手の個人（視認という個人の認識）",
+      "scope": "個人。Run共有のマップ状態も相手の視認の正誤も書き換えない",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "受け手がマップを離れた時点で提示は消える",
+        "受け手の死亡または切断で提示も消える。再接続時の復元は未決"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。視認の入れ替わりはマップ内に閉じる設計で、Run共有とは別境界に置く。",
+      "stacking": {
+        "exception": false,
+        "rule": "一品につき一回の差し出し。別の相手には何も残らない。固定秒数は持たない",
+        "conflict_resolution": "他の情報提示と競合する場合は優先順位が未決定のため強制作業しない"
+      },
+      "server_validation": "Serverが両者の参加、所有者、受け手の個人性を検証する。視認の生成はServerが管理し、Client表示だけで他者の視認を作れないようにする",
+      "client_presentation": "受け手の個人表示にだけ出る。差し出した本人にも内容は出ない",
+      "feedback": {
+        "success": "受け手の個人表示が一度だけ変わる",
+        "failure": "何も変わらない。注意表示のみ",
+        "ambiguous": "増えるものと失うものを区別する表示は出さない"
+      }
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "差し出しが確定した瞬間",
+      "condition": "上の提示と同じ検証内で成立すること",
+      "result": "置き忘れの品は差し出した個人の手元から消え、同じ品をもう一度差し出せなくなる。中身は受け手の个人的中身は受け手の個人に留まる",
+      "target": "対象の品1点と差し出した個人",
+      "scope": "個人。相手の所持へは入らない",
+      "lifetime": "同一Run中",
+      "resolution": "instant",
+      "end_conditions": [
+        "差し出しの解決で確定",
+        "Run終了で残りは消える。受け手の視認への変化は戻らない"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。差し出しが不成立なら本人の手元に残る。",
+      "stacking": {
+        "exception": false,
+        "rule": "一品につき一件。同じ品を二人には渡せない",
+        "conflict_resolution": "二人の個人が同時に差し出した場合は解決規則が未定義のため保留する"
+      },
+      "server_validation": "Serverが検証後に差し出した側の品を除去する。個人端末の表示を根拠にしない",
+      "client_presentation": "差し出した側の所持表示から消える。受け手の所持は変わらない",
+      "feedback": {
+        "success": "手元から消え、受け手の表示が一度だけ変わる",
+        "failure": "品が残る。注意表示のみ",
+        "ambiguous": "受け手が何を失ったかは、差し出した側にも伝わらない"
+      }
+    }
+  ],
+  "provides_traits": [
+    "情報の受け渡しを『得るために失う』形に組み替える例",
+    "受け手の個人の認識だけを変える提示で、共有状態は動かさない設計"
+  ],
+  "connection_tags": [
+    "Item",
+    "Observation"
+  ],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": [
+        "個人の視認記録が複数比較・入替・消失を扱えるデータ形式"
+      ],
+      "reason": "observation-and-recognition.mdはCandidateの仕様とRemoteの受理だけを記し、記録の入替や消失の形式を定めていない。候補は方向だけを示し、形式は決めない。",
+      "adoption_blocker": true
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "増える視認と失う視認が何かは未確定。HUDで答えを出さない。",
+    "本人にも『相手が何を失ったか』を伝えるべきかは未決。候補は伝えない。",
+    "元同僚が置いたという前提は判断018から読み取ったもので、確定した設定ではない。",
+    "照合範囲：whisperの元同僚、認知アノマリーのトレードオフ方針、Visible/Invisibleの混合情報案、効果の個人提示。矛盾は見つからず conflicts は空配列"
+  ],
+  "worldview": {
+    "defamiliarized_element": "情報を渡すと相手の世界から何かが消える、という一方通行の視認変化にした。差し出しは所有の移動ではなく、相手側の記録の入替として扱った。",
+    "in_world_rationale": "研究中心を離れた人所関係する場所には、置き去りにされた品と残った認識がある。渡した分だけ相手の理解が欠けるという関係は、記録が残るが所有が動かない状況として自然に生じる。",
+    "meaning_left_ambiguous": "置き忘れの品が誰のためのもので、何を意味していたのか、相手には何が見えるのかは確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "個人の視認記録の入替と消失が未実装であり、正式な取得源もItemStackも無い（current-implementation.md / observation-and-recognition.md）。記録層と検証経路が要るため true とする。",
+  "new_logic": [
+    "個人の視認記録を1件 入替・消失として扱う処理",
+    "差し出しの成否と、視認の入替を同一の検証で行う経路"
+  ],
+  "prototype_cost": {
+    "band": "不明",
+    "rationale": "研究所マップが未実装で、視認記録の入替という操作自体が存在しない。視認の最小形を一つだけ作って試す段階であり、規模を測れない。",
+    "implementation_steps": [
+      "デバッグ床に小物を一つ置く",
+      "個人ごとに視認記録を一つだけ持たせる",
+      "差し出しで記録が入替わるようにし、相手側だけが変わることを確認する",
+      "記録の消失は規則を作らず、記録だけを残す"
+    ],
+    "assumed_existing_parts": [
+      "枠境界を持つInventoryService",
+      "クライアントの個人表示",
+      "観察の共通契約（視認の評価は個人側）"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Undecided",
+        "detail": "配る主体は未確定。元同僚の置き去りという前提はあるが、入手経路は未実装であり創作しない。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "1枠を消費する。差し出さない限り意味がない。差し出す相手を選ぶ Bim实施になる。"
+      },
+      {
+        "route": "Use",
+        "status": "NotApplicable",
+        "detail": "使う操作は持たない。差し出すか持ち歩くかの二択にする。"
+      },
+      {
+        "route": "Present",
+        "status": "Proposed",
+        "detail": "中核。相手の個人にだけ視認を1つ与え、1つ失わせる。相手の所持は動かない。"
+      },
+      {
+        "route": "Place",
+        "status": "NotApplicable",
+        "detail": "置き直す操作は持たない。置くと『残す』意味がPlaceと二重になる。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "確保枠の外なら死亡時に失う。渡さなかった場合、受け手の視認は変わらない。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "確保枠に入れて渡せなくできる。守るか知らせるかを一択にする。"
+      },
+      {
+        "route": "Sell",
+        "status": "NotApplicable",
+        "detail": "換金しない。売ると相手の記録を削る意味が失われる。"
+      },
+      {
+        "route": "Quest",
+        "status": "Undecided",
+        "detail": "依頼主は未確定。既存の博士の依頼が定める固有品の交換とは別の物品として扱う必要がある。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "NotApplicable",
+        "detail": "既存のwhisperの装置とその相互作用には繋がない。候補は物品の差し出しのみ。"
+      }
+    ],
+    "ownership_state": "置き忘れの品はplayer単位の個人所持。差し出すと消費され、受け手の所持には入らない。視認の入替は受け手の個人だけに効く。切断と再接続時の復元は未決。",
+    "server_run_state": "個人の認識だけを変え、Run共有のマップ状態は書き換えない。出現率と同時出現数は変更しないためWorldChangeのEffectは発生しない。Run終了で残りは消える。"
+  },
+  "html_file": "ROLE-B-011.html"
+}

@@ -1,0 +1,151 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-002",
+  "role": "A",
+  "title": "先 Lone の一枚 — 8/31の日付板2枚",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "8/31",
+  "classification": "マップ固有",
+  "category": "GimmickEvent",
+  "source_evidence": [
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "### 実装済みの範囲",
+      "source_status": "Status: Prototype: Implemented（実装済みプロトタイプ）",
+      "claim": "日付板がマップ内に2枚あり、日付変更に合わせて表示が更新される。"
+    },
+    {
+      "path": "docs/decisions/003-august-31-time-and-phase-design.md",
+      "section": "## 未決事項",
+      "source_status": "Status: Prototype: Implemented（実装済みプロトタイプ）",
+      "claim": "フェーズごとの日付板の時刻は未確定で、現在はDateBoardClockの値のみを全フェーズで使い回している。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "## 作用範囲と保存境界",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "InformationChangeはServerの共有事実とClientごとの提示を分け、世界変化は個人表示だけで確定しない。"
+    }
+  ],
+  "design_hypothesis": "既存の2枚の日期板のうち、1枚だけが先に更新される状態を仮定します。2枚を別に読むと、それぞれの値が個人へ提示され、どちらが先に進んだかを読み取れます。残り時間・基準時刻・意味は出しません。板の数を増やしません。",
+  "experience": {
+    "goal": "同じマップに2つある同じ情報の「ereau」を、進行の順序の手掛かりとして読む。",
+    "player_choice": "2枚とも読む（进行比较する。帰還判断の余裕を少し使う）、1枚だけ読む（早く進む、片方の差に気づかない）、読まず帰還面只看る。",
+    "sacrifice_or_risk": "差を読んでも意味は説明されない。残り時間を推測する材料にしかならず、推測が当たっても保証にはならない。"
+  },
+  "placement_assumption": "既存の2枚の日期板だけを使う。新規の板、看板、配置は提案しない。どの板が先行するかはRun開始時に決めてよい（固定値は未定）。",
+  "components": [
+    {"component": "Effect.InformationChange", "availability": "catalog", "usage": "板の値を個人提示として返す。Serverの値をClient表示へ落とす。"},
+    {"component": "Effect.StateChange", "availability": "catalog", "usage": "先行した板の表示更新を、既存の日付変更に続く別イベントとして扱う。"},
+    {"component": "AugustPhase", "availability": "catalog", "usage": "既存のフェーズ進行を入力として使う。残秒計算には参照しない。"}
+  ],
+  "effects": [
+    {
+      "kind": "InformationChange",
+      "trigger": "対象の近くで日付板を1枚読む。",
+      "condition": "板が存在し、対象の権限が通常のプレイヤーであること。数値・単位・基準は未定。",
+      "result": "その板の値を個人提示として返す。2枚を別々に読むと差が読める。",
+      "target": "読んだ個人",
+      "scope": "個人。共有表示にはしない。",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": ["提示の取得だけなので適用解決"],
+      "end_mode": "any",
+      "end_rule_reason": "即時。取得ごとに解決する。",
+      "stacking": {"exception": false, "rule": "取得ごとに解決し、値を累計しない。", "conflict_resolution": "別の表示要求との競合規則は未定義のため保留。"},
+      "server_validation": "Serverが板の識別と権限を検証し、不成立なら値を返さない。",
+      "client_presentation": "板の nearby の1行。単位、基準、残り時間、意味は出さない。",
+      "feedback": {"success": "板の値が1行出る。", "failure": "読めない場合は何も返さない。", "ambiguous": "どちらが正しいかは示さない。"}
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "8/31の進行で帰還面の開放など、日付以外の表示更新が起きた時。",
+      "condition": "対象のいずれかが既存のイベントで更新される状態にあること。先行する板はRun開始時に決定する。",
+      "result": "2枚のうち1枚が先に表示を切り替え、もう1枚は遅れて切り替わる。この遅れが進行の順序の手掛かりになる。",
+      "target": "既存の板2枚の表示",
+      "scope": "Run共有（全員に見える）。値の解釈は個人。",
+      "lifetime": "同一マップ中",
+      "resolution": "instant",
+      "end_conditions": ["更新の適用解決"],
+      "end_mode": "any",
+      "end_rule_reason": "即時。既存の更新処理の一部として解決する。",
+      "stacking": {"exception": false, "rule": "更新ごとに1回だけ。", "conflict_resolution": "日付変更の更新との順序は未確定のため保留し記録する。"},
+      "server_validation": "Serverが更新的主体を検証する。個人操作では表示を変えない。",
+      "client_presentation": "板の表示の切り替えのみ。切り替わりを強調する演出は出さない。",
+      "feedback": {"success": "1枚だけが先に変わる。", "failure": "両方同時に変わる（差が出ない）。", "ambiguous": "なぜ片方だけ先かは説明しない。"}
+    }
+  ],
+  "provides_traits": [
+    "既存の看板2つを進行の手掛かりとして個人提示できる",
+    "同じ情報源が2つあり、差を読むと順序を読める"
+  ],
+  "connection_tags": ["Observation", "Environment", "AugustPhase", "InformationSharing"],
+  "refs": [
+    {
+      "target_id": "ROLE-C-002",
+      "kind": "optional_connection",
+      "required_traits": ["2箇所の比較を探索判断に使える"],
+      "fallback": "接続なしでも成立する。読む・読まない・片方だけ、という選択は移動と観察だけで完結する。",
+      "resolution": "reserved_unresolved"
+    }
+  ],
+  "unresolved_refs": [
+    {
+      "target_id": "ROLE-C-002",
+      "required_traits": ["2箇所の比較を探索判断に使える"],
+      "reason": "Cの候補は配布されておらず、Cの002が何を定義するか不明。相手のLandscapeは創作していない。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": null,
+      "required_traits": ["先行する板を固定するかRun開始時に選ぶかを決める方針"],
+      "reason": "ID未指定の要求。判断003の未決（日付板のフェーズ別時刻）と関係するため、共通設計側の判断が必要。",
+      "adoption_blocker": true
+    }
+  ],
+  "conflicts": [
+    {
+      "source_path": "docs/systems/map-gimmick-ideas.md",
+      "existing_rule": "日付板は日付変更に合わせて表示が更新される、と記されている。フェーズごとの時刻は未確定である。",
+      "proposal_difference": "本候補は日付変更に加えて、帰還面の開放などで片方の板だけ先に更新する状態を足す。",
+      "correction": "既存の日付更新は維持し、遅れの秒数と基準は表示しない。先行は表示の順序だけに留める。",
+      "reason_correctable": "既存の更新処理を増やしても、日付変更という主要規則は壊さない。",
+      "decision_needed": "先行する板をどちらに固定するか、Run開始時に選ぶか。"
+    }
+  ],
+  "uncertainties": [
+    "先行する板の固定方法と遅れの長さは未定。数値を決めていない。",
+    "差を読んだとき何が起こるかは未定（何も起こらない案）。",
+    "実装の有無はStudio未確認。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "日付という「同じ数字が2箇所にある」既視感を、進行の順序だけを示す差へずらした点。異常を追加せず、既存の看板2枚を使う。",
+    "in_world_rationale": "古い設備と新しい紙出力の混在する文明なら、同じ情報が複数箇所に製版されることは自然である。どの版が先に更新されるかは運用上の都合であり、説明しない。",
+    "meaning_left_ambiguous": "なぜ片方が先行するのか。何ROIDの記録なのか。8/32との関係は何か。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "既存の板は日付変更で一括更新される実装であり、板ごとの更新主体、领先の選択、個人提示の経路は未実装。コード生成の許可ではない。",
+  "new_logic": ["板ごとの更新主体と先行の選択", "板の値を個人提示として送る経路"],
+  "prototype_cost": {
+    "band": "小",
+    "rationale": "既存の板2枚の表示と個人提示1行で試せる。ただし既存のフェーズ差分との干渉は未確認。実時間の見積もりは出していない。",
+    "implementation_steps": ["板2枚に識別を与え、先行する板をRun開始時に選択する", "板を読む操作で値を個人提示する", "フェーズ差分の時刻で先行側の表示を切り替える", "2枚を別々に読んだ場合の差を検証する"],
+    "assumed_existing_parts": ["既存の板2枚の生成", "8/31のServer側フェーズ進行", "帰還面の開放と閉鎖"]
+  },
+  "role_details": {
+    "npc_purpose": "対象外。本候補は看板と進行のみ。通常NPCを含まない。",
+    "player_anomaly_handling": "Player Anomalyでも板は読める。ただし他プレイヤーと同じ読み方を強制せず、差の解釈は各自の判断とする。判断019のNPC非Interactionは関係しない。",
+    "mob_contract": {
+      "applicable": false,
+      "spawn_condition": "対象外。モブ敵の発生を含まない。",
+      "population_cap": "対象外。個体数を管理する仕組みを持たない。湧きも補充も行わない。",
+      "non_combat_response": "対象外。戦闘がない。",
+      "exit_condition": "対象外。湧きや自然消滅の機構がない。",
+      "entity_distinction": "型は区別する。既存の看板と既存の更新処理を使うだけで、Anomaly EntityやPlayer Anomalyの要素を足さない。"
+    }
+  },
+  "html_file": "ROLE-A-002.html"
+}

@@ -1,0 +1,109 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-022",
+  "role": "C",
+  "title": "灯りを落とす",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "Effectの分類",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "EffectはMove、StateChange、WorldChange、Damage、Buff、Debuff、InformationChange、ResourceChange、CustomEffect に分かれる。"
+    },
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "ServerとClientの責務",
+      "source_status": "Status: Draft（草案）",
+      "claim": "ゲーム進行上の事実はServerが決定し、Clientは主に表現を担う。"
+    }
+  ],
+  "design_hypothesis": "自分の灯りを落とす。落とし中は自分の視認と、相手から見た自分の視認が一緒に落ちる。ただし暗がりの定まった場所では何も起きない。落とすあいだ自分の音と足跡は消えない。灯りは戻せるが、戻した場所での発見は残る。",
+  "experience": {
+    "goal": "見つからないようにしつつ、自分の視界も暗がりに落とす。",
+    "player_choice": "落として暗がりに潜るか、灯りを戻して視界を確保するか。",
+    "sacrifice_or_risk": "自分の視界も落ちる。暗がりでは何も起こらない。"
+  },
+  "placement_assumption": "既存マップで使用する文脈。配置・建物構造・地形・Questの結末を新設しない。",
+  "components": [
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "灯りを落とし、自分の視認を下げる。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "装備中に本人が灯りを落とす入力をしたとき。",
+      "condition": "暗がりが成立している場所に限る。明るい場所では何も起きない。",
+      "result": "自分の灯りを落とし、自分の視認と相手から見た自分の視認を同時に下げる。音と足跡は消えない。",
+      "target": "発動した本人の視認のみ",
+      "scope": "個人。相手、地形、NPCの思考は変えない。",
+      "lifetime": "灯りを落としているあいだ",
+      "resolution": "sustained",
+      "end_conditions": ["灯りを戻すと解除される", "マップ離脱", "Run終了"],
+      "end_mode": "any",
+      "end_rule_reason": "灯りを戻せば通常どおり戻る。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effectと同一対象は非加算1件。重ねない。",
+        "conflict_resolution": "他の視認低下や発見判定との適用順は採用前の確認事項。"
+      },
+      "server_validation": "暗がりの成立と現在状態をServerで検査する。",
+      "client_presentation": "灯りが落ちる表現と視野の変化を本人だけに出す。",
+      "feedback": {
+        "success": "灯りが落ちたことを本人に表示する。",
+        "failure": "明るい場所では何も起こらない。",
+        "ambiguous": "暗がりの理由は説明しない。"
+      }
+    }
+  ],
+  "provides_traits": [
+    "灯りを落とし、自分の視認を下げられる",
+    "暗がりの場所でしか効果が出ない",
+    "音と足跡は消えない"
+  ],
+  "connection_tags": ["Skill", "Exploration", "Observation"],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": ["視認低下の程度は未決定。", "暗がりの判定方法は未決定。", "通常スキルのみ。Player Anomalyの専用能力に一般化しない。"],
+  "worldview": {
+    "defamiliarized_element": "灯りを落とすと、相手に見られる自分も同じように落ちる。",
+    "in_world_rationale": "既存の視認判定を通常と異なる条件で操作する候補。",
+    "meaning_left_ambiguous": "なぜ灯りを落とすと自分に見える範囲も落ちるのか。博士の意図とEntityの正体は確定しない。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "灯りの状態管理と、発見判定への視認 반영は実装記録がなく、新規ロジックが必要。",
+  "new_logic": ["灯りの状態と暗がりの成立判定", "自分の視認を自分と相手の両方へ反映する処理"],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "既存の視認判定へ介入する。",
+    "implementation_steps": ["暗がりで落とすと自分の視認も落ちること", "明るい場所では何も起こらないこと", "戻すと通常どおりになることを確認"],
+    "assumed_existing_parts": ["既存の視認と発見判定"]
+  },
+  "role_details": {
+    "skill_family": "探索",
+    "rank": null,
+    "rank_rationale": "系統内の候補が揃った時点で比較する。",
+    "levels": [
+      {"level": 1, "proposal": "暗がりで灯りを落とし、自分の視認を落とす。"},
+      {"level": 2, "proposal": "落としているあいだ、音を少し小さくできる。"},
+      {"level": 3, "proposal": "暗がりの外でも落とせる。"}
+    ],
+    "equipped_slot_policy": "通常スキルの4装備枠のうち1枠。取得ランク条件は既存規則に従い、装備切替時点は未決定。",
+    "normal_attack_link": "攻撃入力とは独立している。落としたまま攻撃はできる。",
+    "avoids": "暗がりに潜って見つかるのを避ける。",
+    "intervenes_in": "自分の視認のみ。",
+    "sacrifices": "自分の視界も一緒に落ちる。",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-022.html"
+}

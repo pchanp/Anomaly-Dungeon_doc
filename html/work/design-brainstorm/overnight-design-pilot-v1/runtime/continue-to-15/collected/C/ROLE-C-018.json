@@ -1,0 +1,152 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-018",
+  "role": "C",
+  "title": "追いつく一息",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "探索系",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "探索系はアイテムスタックの解放、検知、スニークを扱う。ランク2案のSHADEは直線上を瞬間移動する設計案である。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "Effectの分類",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "EffectはMove、StateChange、WorldChange、Damage、Buff、Debuff、InformationChange、ResourceChange、CustomEffect に分かれる。"
+    }
+  ],
+  "design_hypothesis": "追いつけない間、視界内の一息で距離を詰める。正面へ直線で短く瞬間移動し、移動中は攻撃を受けない。ただし invisibility は付かない。光は自分にも相手にも見える。離れた相手ほど伸びない。",
+  "experience": {
+    "goal": "逃げ切る直前の距離を、一息で詰める。",
+    "player_choice": "この瞬間にそのまま攻撃へ入るか、距離を詰めてから離れるか。",
+    "sacrifice_or_risk": "瞬間のあいだ自分の動きも不透明になり、相手の目にも通常どおり映る。"
+  },
+  "placement_assumption": "既存マップで使用する文脈。配置・建物構造・地形・Questの結末を新設しない。直線上に足場がある場所で使用する。",
+  "components": [
+    {
+      "component": "Effect.Move",
+      "availability": "catalog",
+      "usage": "正面の一点へ直線で短く瞬間移動する。"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "移動中だけ被弾を受けない。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "Move",
+      "trigger": "装備中に本人が正面へ瞬間移動の入力をしたとき。",
+      "condition": "Server確認済みの足場が直線上にあり、射程内であること。",
+      "result": "正面へ直線で短く瞬間移動する。地形は壊さない。着地点はServerが検査する。",
+      "target": "発動した本人",
+      "scope": "個人。相手、地形、NPCの思考は変えない。",
+      "lifetime": "瞬間",
+      "resolution": "instant",
+      "end_conditions": [
+        "移動は即時に解決する",
+        "足場がなければ移動しない",
+        "マップ離脱",
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "移動は即時解決であり、状態を保存しない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effectと同一対象は非加算1件。即時結果は一回解決する。",
+        "conflict_resolution": "他の瞬間移動や吹き飛ばしとの適用順は採用前の確認事項。"
+      },
+      "server_validation": "着地点の安全と射程をServerで検査する。",
+      "client_presentation": "短い移動の残像を本人だけに出す。",
+      "feedback": {
+        "success": "移動の成立を本人に表示する。",
+        "failure": "着地点が不正なら移動しない。",
+        "ambiguous": "移動の理由は説明しない。"
+      }
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "上のMoveが解決している間。",
+      "condition": "移動中だけ。被弾判定は他のEffectと同じ順序で通す。",
+      "result": "移動中だけ攻撃を受けない。硬直、TP、ダメージは入らない。",
+      "target": "発動した本人",
+      "scope": "個人。相手の状態は変えない。",
+      "lifetime": "移動中のみ",
+      "resolution": "sustained",
+      "end_conditions": [
+        "移動の終了と同時に解除される",
+        "マップ離脱",
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "被弾無効は移動中に限る。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effectと同一対象は非加算1件。",
+        "conflict_resolution": "他の被弾無効やTP耐性との適用順は採用前の確認事項。"
+      },
+      "server_validation": "移動状態をServerで管理する。",
+      "client_presentation": "移動中の描画だけ本人に出す。",
+      "feedback": {
+        "success": "被弾しないことを本人に示す。",
+        "failure": "解除後は通常どおり被弾する。",
+        "ambiguous": "無効の理由は説明しない。"
+      }
+    }
+  ],
+  "provides_traits": [
+    "正面へ直線で短く瞬間移動できる",
+    "移動中だけ攻撃を受けない",
+    "自分自身の表示は消えない"
+  ],
+  "connection_tags": ["Skill", "Movement", "Combat"],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": [
+    "移動距離と受付時間は未決定。",
+    "移動中も自分の姿が相手に見える点は採否の判断。",
+    "通常スキルのみ。Player Anomalyの専用能力に一般化しない。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "自分だけが一瞬、被弾できない。ただし姿は消えない。",
+    "in_world_rationale": "既存の移動と被弾判定を通常と異なる条件で組み合わせる候補。",
+    "meaning_left_ambiguous": "なぜ自分だけ一瞬だけ通らないのか。博士の意図とEntityの正体は確定しない。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "瞬間移動と移動中の被弾無効の専用制御は実装記録がなく、新規ロジックが必要。",
+  "new_logic": ["直線上の瞬間移動と着地検査", "移動中だけの被弾無効"],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "既存の移動と被弾判定へ介入する。着地地点の検査を含む。",
+    "implementation_steps": ["正面の足場へ移動できることを確認", "移動中に攻撃が当たらないことを確認", "着地面が不正なら移動しないことを確認"],
+    "assumed_existing_parts": ["既存のCharacter移動とCollisionGroup", "既存の被弾判定"]
+  },
+  "role_details": {
+    "skill_family": "アクション",
+    "rank": null,
+    "rank_rationale": "系統内の候補が揃った時点で比較する。",
+    "levels": [
+      {"level": 1, "proposal": "正面へ短く瞬間移動し、移動中だけ被弾を受けない。"},
+      {"level": 2, "proposal": "移動距離を伸ばせる。"},
+      {"level": 3, "proposal": "移動の直後に通常攻撃を1回だけ重ねられる。"}
+    ],
+    "equipped_slot_policy": "通常スキルの4装備枠のうち1枠。取得ランク条件は既存規則に従い、装備切替時点は未決定。",
+    "normal_attack_link": "移動の直後に通常攻撃をつなげられる。連鎖の受付窓は未決定。",
+    "avoids": "逃げ切る直前の距離を一瞬で詰める。",
+    "intervenes_in": "自分の位置と被弾判定のみ。",
+    "sacrifices": "自分の動きも一瞬だけ不透明になる。",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-018.html"
+}

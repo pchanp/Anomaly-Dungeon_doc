@@ -1,0 +1,106 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-019",
+  "role": "A",
+  "title": "開けたままの扉 — 一度きりの通り抜け",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "GimmickEvent",
+  "source_evidence": [
+    {"path": "docs/systems/game-rules.md", "section": "## クエストと探索", "source_status": "Status: Draft（草案）", "claim": "探索はアイテム収集だけでなく、構造の把握、危険予測、戦闘回避、イベントやギミックの理解を含む。"},
+    {"path": "docs/systems/anomaly-interaction.md", "section": "## 共通の Interaction Kind", "source_status": "ステータス: Draft", "claim": "以下は再利用を想定する意味上の分類である。アノマリーが必要なものだけを明示的に受理する。"},
+    {"path": "docs/systems/effect-components.md", "section": "## 作用範囲と保存境界", "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）", "claim": "作用範囲と保存境界は別の項目とする。保存境界は永続、同一Run中、同一マップ中、一時で、終了条件のいずれかが成立したら解除する。"}
+  ],
+  "design_hypothesis": "区画の扉が一度だけ開いて、Runの終わりまで開いたまま残る状態を仮定します。開いた区画は通り抜けられますが、中は危険度が高く、閉じたままでは通り抜けられません。どちらを取るかは開いた時点で確定し、あとから戻すことはできません。どの区画へ割り当てるかは各マップの判断に委ねます。扉が開く条件と時刻は未定です。",
+  "experience": {
+    "goal": "開けた場所と閉じた場所を使い分けることになると知る。",
+    "player_choice": "開いた区画を抜ける／閉じた区画を壊して強行する／外から中を観察して判断する。",
+    "sacrifice_or_risk": "開いた区画は戻ってこれない。中がどれだけ危険かは入る前に分からない。"
+  },
+  "placement_assumption": "全マップ共通のWorldChangeとして扱い、建物構造や配置は提案しません。既存の区画へ割り当てるか新建の区画を作るかは各マップ側で決める必要があり、ここではどちらも提案しません。",
+  "components": [
+    {"component": "Effect.WorldChange", "availability": "catalog", "usage": "区画の開閉状態をRun共有で管理する。"},
+    {"component": "Effect.StateChange", "availability": "catalog", "usage": "開いた区画の内で通常の個体を処理する。"},
+    {"component": "Effect.InformationChange", "availability": "catalog", "usage": "開閉済みの区画だけを個人へ返す。中の敵数は出さない。"}
+  ],
+  "effects": [
+    {
+      "kind": "WorldChange",
+      "trigger": "対象マップが本候補の区画を開ける。",
+      "condition": "対象マップが本候補を許可していること。開閉の条件と時刻は未定。",
+      "result": "区画が1回だけ開く。開いた区画はRunの終わりまで開いたまま残る。",
+      "target": "対象の区画",
+      "scope": "Run全体",
+      "lifetime": "同一Run中",
+      "resolution": "sustained",
+      "end_conditions": ["Run終了"],
+      "end_mode": "any",
+      "end_rule_reason": "Runの終わりで区画の開閉状態を破棄する。",
+      "stacking": {"exception": false, "rule": "開閉は区画につき1回。繰り返し開閉はしない。", "conflict_resolution": "他のWorldChangeが同じ区画を操作する場合は未確定のため保留。"},
+      "server_validation": "Serverが開閉と由来を管理する。",
+      "client_presentation": "扉の状態のみ。中の敵は表示しない。",
+      "feedback": {"success": "扉が開いて通り抜けられる。", "failure": "閉じたままなら通れない。", "ambiguous": "なぜ開いたのか、中に何があるかは説明しない。"}
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "開いた区画の内で通常モブとの戦闘が始まった。",
+      "condition": "枠に空きがあること。個体数の上限は未定。",
+      "result": "枠内の個体だけがこの交戦の対象になる。個体数は増えない。",
+      "target": "区画内の通常モブ個体",
+      "scope": "Run共有の個体",
+      "lifetime": "同一マップ中",
+      "resolution": "instant",
+      "end_conditions": ["個体への適用が解決する"],
+      "end_mode": "any",
+      "end_rule_reason": "即時。個体ごとに1回だけ解決する。",
+      "stacking": {"exception": false, "rule": "個体ごとに1件。終了済みの個体には再度適用しない。", "conflict_resolution": "他の戦闘イベントと競合する場合は未確定のため保留。"},
+      "server_validation": "Serverが交戦対象と区画を検証する。",
+      "client_presentation": "個体の戦闘表現のみ。",
+      "feedback": {"success": "その個体だけを対処できる。", "failure": "枠上限なら増えない。", "ambiguous": "どこから来たかは説明しない。"}
+    }
+  ],
+  "provides_traits": ["開いた場所と閉じた場所で通り方が変わる", "開けるかどうかが一度きりの判断になる"],
+  "connection_tags": ["WorldChange", "StateChange", "Environment", "Combat"],
+  "refs": [],
+  "unresolved_refs": [
+    {"target_id": null, "required_traits": ["開閉する区画を既存マップへ割り当てられるか"], "reason": "ID未指定の要求。正式な配置は提案せず、各マップ側の判断に委ねた。", "adoption_blocker": false},
+    {"target_id": null, "required_traits": ["開いた区画から戻れる範囲を決める方針"], "reason": "ID未指定の要求。Run内の進行と重なる可能性があるため、共通設計側の判断が必要。", "adoption_blocker": true}
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "扉が開く条件、時刻、閉じたまま戻せるかは未定。数値を決めていない。",
+    "開いた区画の中がどれだけ危険かは各マップの判断に委ねる。",
+    "既存の帰還閉鎖のようなマップ側の強制終端と重複しないか、優先順位は未定。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "開けることで危険になり戻れなくなる、という一方通行の形に置いた点。",
+    "in_world_rationale": "古い設備が残る文明では、開閉は人が手動で行うのが普通だった。開いたまま放置された区画が日常として成立する。誰が最後に開けたかは説明しない。",
+    "meaning_left_ambiguous": "なぜ開いたままなのか。開けることは許可だったのか。中にあるものは閉じ込められたのか、待ち伏せしているのか。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "区画の開閉と区画単位の指定が未実装で、割り当て自体は各マップ側の作業になるため。コード生成の許可ではない。",
+  "new_logic": ["区画の開閉状態", "開いた区画の指定の受け口"],
+  "prototype_cost": {
+    "band": "大",
+    "rationale": "扉の開閉そのものは小さいが、どの区画へ割り当てるか、中に何を置くかがマップごとに必要で、調整の範囲が広い。実時間の見積もりは出していない。",
+    "implementation_steps": ["開閉する扉を1か所だけ置く", "開閉状態をRun共有で保持する", "開いた区画の内で交戦が起きることを確認する", "戻れる範囲を確認する"],
+    "assumed_existing_parts": ["既存のマップ生成と区画の定義", "通常のHPとDamageの受け口", "Server権威のRun状態"]
+  },
+  "role_details": {
+    "npc_purpose": "NPCは置かない。区画の開閉と区画の内の戦闘のみを扱う。説明や会話は行わない。",
+    "player_anomaly_handling": "対象全体で成立するRun共有の変化。通常NPCとのInteractionではない。判断019の枠は変えない。",
+    "mob_contract": {
+      "applicable": false,
+      "spawn_condition": "開いた区画の内で、既存の湧き枠に従って通常モブとの交戦が成立する。どのイベントなのかは本候補では決めない。",
+      "population_cap": "枠の上限は発生側の枠に従う。本候補は個体を増やさない。",
+      "non_combat_response": "閉じた区画は通り抜けられない。開いて中を確認し、戦闘せず引き返す選び方ができる。",
+      "exit_condition": "区画内の個体は戦闘不能または終端で退場する。区画自体はRun終了まで開いたまま残る。",
+      "entity_distinction": "Anomaly Entityの枠も同時出現数も使わない。通常の戦闘NPCの交戦を区画の開閉に結びつけただけである。"
+    }
+  },
+  "html_file": "ROLE-A-019.html"
+}

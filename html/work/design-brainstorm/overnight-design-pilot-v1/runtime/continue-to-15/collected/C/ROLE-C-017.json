@@ -1,0 +1,118 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-017",
+  "role": "C",
+  "title": "空打ち窓",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "通常攻撃と連携",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "通常スキルによる移動・ギミック介入と連携を設計する。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "重ね掛けの既定規則",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "固定の秒数を持つ一時効果は残り時間を更新し、同一Effectと同一対象は非加算1件とする。"
+    }
+  ],
+  "design_hypothesis": "通常攻撃が命中した後、短いあいだだけ自分の攻撃硬直がなくなる。この窓で入力した2回目の攻撃は入力として記録され、必ず空振りになる。窓は1回の命中につき1回だけ。硬直自体は消えない。",
+  "experience": {
+    "goal": "一度の命中を、短い連打へつなげる。",
+    "player_choice": "窓を使い切って攻めるか、硬直が残るのを待って離れるか。",
+    "sacrifice_or_risk": "窓のあいだは相手から反撃の隙がない。2回目は必ず空振りになる。"
+  },
+  "placement_assumption": "既存マップで使用する文脈。配置・建物構造・地形・Questの結末を新設しない。",
+  "components": [
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "命中直後の硬直だけを短いあいだ外す。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "通常攻撃が命中し、硬直が始まったとき。",
+      "condition": "命中が成立し、1回の命中につき1回だけ。",
+      "result": "硬直の残り時間を短いあいだだけ外す。この窓で入力した攻撃は2回目として記録され、命中させない。",
+      "target": "発動した本人の硬直のみ",
+      "scope": "個人。相手、地形、NPCは変えない。",
+      "lifetime": "短い時間",
+      "resolution": "sustained",
+      "end_conditions": [
+        "窓の時間が切れると硬直が元に戻る",
+        "2回目の攻撃入力で即座に終了する",
+        "マップ離脱",
+        "Run終了"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "窓は短い時間で閉じ、2回目の入力で消費する。",
+      "stacking": {
+        "exception": false,
+        "rule": "1命中1窓。閉じている間は延長しない。",
+        "conflict_resolution": "硬直短縮や攻撃速度上昇との適用順は採用前の確認事項。"
+      },
+      "server_validation": "命中と硬直の開始をServerで検査する。",
+      "client_presentation": "硬直が消えた動きの見え方だけ本人に出し、通知は出さない。",
+      "feedback": {
+        "success": "窓の開始と消費を本人に表示する。",
+        "failure": "空振りでは窓が開かない。",
+        "ambiguous": "窓の理由は説明しない。"
+      }
+    }
+  ],
+  "provides_traits": [
+    "命中直後の硬直だけ短いあいだ外せる",
+    "窓は1回の命中につき1回だけ",
+    "2回目の攻撃は必ず空振りになる"
+  ],
+  "connection_tags": ["Skill", "Combat", "StateChange"],
+  "refs": [],
+  "unresolved_refs": [],
+  "conflicts": [],
+  "uncertainties": [
+    "窓の長さは未決定。",
+    "2回目を必ず空振りにするかは採用時の判断。",
+    "通常スキルのみ。Player Anomalyの専用能力に一般化しない。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "硬直だけが消え、2回目の攻撃だけが空振りになる。",
+    "in_world_rationale": "既存の硬直と命中判定を通常と異なる条件で操作する候補。",
+    "meaning_left_ambiguous": "なぜ硬直だけ外れるのか。博士の意図とEntityの正体は確定しない。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "命中直後の硬直制御と窓の専用管理は実装記録がなく、新規ロジックが必要。",
+  "new_logic": ["命中直後の硬直だけ外す処理", "窓の1回制限と時間管理"],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "既存の硬直と命中判定へ介入する。攻撃連鎖の受付窓の扱いを含む。",
+    "implementation_steps": ["命中後に窓が開くことを確認", "2回目の攻撃で窓が閉じることを確認", "空振りでは開かないことを確認"],
+    "assumed_existing_parts": ["既存の命中判定と硬直処理", "攻撃入力の受付"]
+  },
+  "role_details": {
+    "skill_family": "アクション",
+    "rank": null,
+    "rank_rationale": "系統内の候補が揃った時点で比較する。",
+    "levels": [
+      {"level": 1, "proposal": "命中直後の硬直だけ短いあいだ外す。"},
+      {"level": 2, "proposal": "窓の長さを伸ばせる。"},
+      {"level": 3, "proposal": "空振りでも窓が開く。"}
+    ],
+    "equipped_slot_policy": "通常スキルの4装備枠のうち1枠。取得ランク条件は既存規則に従い、装備切替時点は未決定。",
+    "normal_attack_link": "通常攻撃の命中直後に自動で窓が開く。独立した攻撃入力は要らない。",
+    "avoids": "硬直中に見える時間を減らす。",
+    "intervenes_in": "自分の硬直のみ。",
+    "sacrifices": "2回目の攻撃は必ず空振りになる。",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-017.html"
+}

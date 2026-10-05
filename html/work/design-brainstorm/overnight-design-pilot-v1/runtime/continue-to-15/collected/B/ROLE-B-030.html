@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-B-030 巻き戻し（自分の直前の操作1回だけ取り消す）</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<p class="sub">overnight-design-pilot-v1 ／ ROLE=B ／ 全マップ共通 ／ Idea</p>
+<h1>ROLE-B-030 巻き戻し（自分の直前の操作1回だけ取り消す） — 作業用見出し</h1>
+</header>
+<section id="hypothesis">
+<h2>何の案？</h2>
+<p>自分が出した直近1操作の結果だけを取り消す札。</p>
+<h2>仕組み</h2>
+<ul>
+<li>使うと、直前の1操作だけ結果が不成立になる。</li>
+<li>巻き戻すのは自分の操作だけ。他者の行動は戻らない。</li>
+<li>1回だけ。操作履歴の範囲は未確定。</li>
+</ul>
+<h2>選択と代償</h2>
+<p>そのまま進むか、その1手だけ戻すか。戻すのは自分だけ。</p>
+</section>
+<section id="diagram">
+<h2>作用図</h2>
+<div class="board">
+<svg viewBox="0 0 980 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="直近の1操作の結果が一度だけ不成立になり、他者の行動と世界の共有状態は巻き戻らず、時間切れの履歴はRunをまたいで残らない図">
+<rect width="980" height="360" fill="#0a1118"/>
+<text x="30" y="26" class="small">対象にする操作の種類と履歴の保持範囲は未確定。候補は決めない。</text>
+<rect x="30" y="60" width="250" height="120" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text x="46" y="90" class="label">そのまま進む</text>
+<text x="46" y="116" class="small">操作は残る</text>
+<text x="46" y="138" class="small">结果是確定</text>
+<text x="46" y="160" class="small">他者にも見えている</text>
+<rect x="370" y="60" width="250" height="120" rx="8" fill="#142330" stroke="#c4a0ec"/>
+<text x="386" y="90" class="label">1操作だけ戻す</text>
+<text x="386" y="116" class="small">自分の結果のみ不成立</text>
+<text x="386" y="138" class="small">場面が戻る</text>
+<text x="386" y="160" class="small">他者は戻らない</text>
+<rect x="700" y="60" width="250" height="120" rx="8" fill="#142330" stroke="#ea9380"/>
+<text x="716" y="90" class="label">残り1回</text>
+<text x="716" y="116" class="small">巻き戻しは1回</text>
+<text x="716" y="138" class="small">履歴はRun内</text>
+<text x="716" y="160" class="small">世界は書き換えない</text>
+<path d="M282 120 H355" class="active"/><path d="M355 120 l10 6 -10 6" class="active"/>
+<path d="M622 120 H685" class="active"/><path d="M685 120 l10 6 -10 6" class="active"/>
+<rect x="30" y="230" width="920" height="60" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="46" y="260" class="label">戻らないもの：他者の行動・世界の共有状態・Runをまたぐ結果</text>
+<text x="46" y="286" class="small"></text>
+<text x="46" y="308" class="small"></text>
+<text x="46" y="330" class="small"></text>
+</svg>
+</div>
+<p>左が進む、中央が巻き戻し、右に残り1回。最下段が戻らないもの。</p>
+</section>
+<footer>
+<p><a href="index.html">← B候補一覧</a> ／ 詳細データ <a href="ROLE-B-030.json">ROLE-B-030.json</a> ／ connection_tags: Item, Combat, Rule ／ requires_code: true ／ 試作コスト: 中</p>
+</footer>
+</main>
+</body>
+</html>

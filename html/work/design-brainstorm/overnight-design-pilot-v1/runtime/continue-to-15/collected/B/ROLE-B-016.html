@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-B-016 足跡消し粉（戻った道が痕跡として残らない）</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<p class="sub">overnight-design-pilot-v1 ／ ROLE=B ／ 全マップ共通 ／ Idea</p>
+<h1>ROLE-B-016 足跡消し粉（戻った道が痕跡として残らない）— 作業用見出し</h1>
+</header>
+
+<section id="hypothesis">
+<h2>何の案？</h2>
+<p>戻った直後の3歩だけ、自分の足跡を痕跡記録から消す粉。</p>
+<h2>仕組み</h2>
+<ul>
+<li>移動を終えた直後に使うと、个人の移動痕跡の末尾3歩分が削除される。</li>
+<li>移動は取り消されない。戻った事実だけが本人からも消える。</li>
+<li>次の移動から記録は再び積み上がる。一度きり。</li>
+</ul>
+<h2>選択と代償</h2>
+<p>追跡を切るか、危険予測の材料を捨てるか。戻った方向を自分は読めなくなる。</p>
+</section>
+
+<section id="diagram">
+<h2>作用図</h2>
+<div class="board">
+<svg viewBox="0 0 980 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="前進の足跡が3歩だけ残った状態で使用すると、その末尾3歩分が個人記録から削除され、他者の足跡と地形は変わらない図">
+<rect width="980" height="360" fill="#0a1118"/>
+<text x="30" y="26" class="small">痕跡の記録は個人単位。敵の追跡記録には触れない。</text>
+<rect x="30" y="60" width="240" height="120" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text x="46" y="90" class="label">使う前</text>
+<text x="46" y="116" class="small">足跡が5歩ぶんある</text>
+<text x="46" y="138" class="small">後ろ3歩が自分が戻った道</text>
+<text x="46" y="160" class="small">道を読む材料が残っている</text>
+<rect x="700" y="60" width="250" height="120" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="716" y="90" class="label">使う後</text>
+<text x="716" y="116" class="small">最初の2歩だけ残る</text>
+<text x="716" y="138" class="small">戻った道は記録に無い</text>
+<text x="716" y="160" class="small">次の移動から再び記録が始まる</text>
+<rect x="370" y="60" width="240" height="120" rx="8" fill="#142330" stroke="#c4a0ec"/>
+<text x="386" y="90" class="label">変わらないもの</text>
+<text x="386" y="116" class="small">自分の位置</text>
+<text x="386" y="138" class="small">地形と通路</text>
+<text x="386" y="160" class="small">他の個人の痕跡</text>
+<path d="M272 120 H367" class="active"/>
+<path d="M367 114 l10 6 -10 6" class="active"/>
+<path d="M612 120 H697" class="hyp-line"/>
+<path d="M697 114 l10 6 -10 6" class="hyp-line"/>
+<g class="small">
+<circle cx="120" cy="240" r="10" fill="#70c9c3"/>
+<text x="140" y="245" class="small">残す足跡1</text>
+<circle cx="230" cy="240" r="10" fill="#70c9c3"/>
+<text x="250" y="245" class="small">残す足跡2</text>
+<circle cx="340" cy="240" r="10" fill="#3b4b57"/>
+<text x="360" y="245" class="small">消えた足跡3</text>
+<circle cx="450" cy="240" r="10" fill="#3b4b57"/>
+<text x="470" y="245" class="small">消えた足跡4</text>
+<circle cx="560" cy="240" r="10" fill="#3b4b57"/>
+<text x="580" y="245" class="small">消えた足跡5</text>
+</g>
+<text x="30" y="320" class="small">歩数と痕跡の保存先は未確定。位置関係の模式図であり地図ではない。</text>
+</svg>
+</div>
+<p>左が残す記録、右が代償、中央はそのまま的部分。</p>
+</section>
+
+<footer>
+<p><a href="index.html">← B候補一覧</a> ／ 詳細データ <a href="ROLE-B-016.json">ROLE-B-016.json</a> ／ connection_tags: Item, Environment, Observation ／ requires_code: true ／ 試作コスト: 小</p>
+</footer>
+</main>
+</body>
+</html>

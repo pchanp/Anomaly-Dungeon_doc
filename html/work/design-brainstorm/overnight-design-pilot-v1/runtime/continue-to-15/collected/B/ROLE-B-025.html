@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-B-025 塩と油の瓶（現在HPを半分にして6秒だけ加速する）</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<p class="sub">overnight-design-pilot-v1 ／ ROLE=B ／ 全マップ共通 ／ Idea</p>
+<h1>ROLE-B-025 塩と油の瓶（現在HPを半分にして6秒だけ加速する） — 作業用見出し</h1>
+</header>
+<section id="hypothesis">
+<h2>何の案？</h2>
+<p>体力を半分払う代わりに、6秒だけ速くなる瓶。</p>
+<h2>仕組み</h2>
+<ul>
+<li>使うと現在HPが半分になる。最大HPは変わらない。</li>
+<li>同じ操作で6秒間、移動速度が上がる。上昇幅は未確定。</li>
+<li>減ったHPは回復でしか戻らない。加速は6秒で消える。</li>
+</ul>
+<h2>選択と代償</h2>
+<p>踏み込むか、切るか。退く直前に瓶を使うかどうか。</p>
+</section>
+<section id="diagram">
+<h2>作用図</h2>
+<div class="board">
+<svg viewBox="0 0 980 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="現在HPが半分になり、最大HPと枠数は変わらず、同時に6秒の移動速度が付き、減少分は回復でしか戻らない代償を持つ図">
+<rect width="980" height="360" fill="#0a1118"/>
+<text x="30" y="26" class="small">上昇幅と6秒は未確定。既存資料に該当する値が無い。</text>
+<rect x="30" y="60" width="250" height="120" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text x="46" y="90" class="label">使わない</text>
+<text x="46" y="116" class="small">HPをそのまま残す</text>
+<text x="46" y="138" class="small">速度は通常</text>
+<text x="46" y="160" class="small">安全に引ける</text>
+<rect x="370" y="60" width="250" height="120" rx="8" fill="#142330" stroke="#c4a0ec"/>
+<text x="386" y="90" class="label">6秒だけ加速</text>
+<text x="386" y="116" class="small">移動が速くなる</text>
+<text x="386" y="138" class="small">距離を離せる</text>
+<text x="386" y="160" class="small">上界は未確定</text>
+<rect x="700" y="60" width="250" height="120" rx="8" fill="#142330" stroke="#ea9380"/>
+<text x="716" y="90" class="label">代償</text>
+<text x="716" y="116" class="small">現在HPが半分</text>
+<text x="716" y="138" class="small">最大HPは不変</text>
+<text x="716" y="160" class="small">回復でしか戻らない</text>
+<path d="M282 120 H355" class="active"/><path d="M355 120 l10 6 -10 6" class="active"/>
+<path d="M622 120 H685" class="active"/><path d="M685 120 l10 6 -10 6" class="active"/>
+<rect x="30" y="230" width="920" height="60" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="46" y="260" class="label">変わらないもの：最大HP・枠数・他者の状態</text>
+<text x="46" y="286" class="small"></text>
+<text x="46" y="308" class="small"></text>
+<text x="46" y="330" class="small"></text>
+</svg>
+</div>
+<p>中央が加速、両端が代償と選ばない場合。枠と最大HPは動かない。</p>
+</section>
+<footer>
+<p><a href="index.html">← B候補一覧</a> ／ 詳細データ <a href="ROLE-B-025.json">ROLE-B-025.json</a> ／ connection_tags: Item, Combat ／ requires_code: true ／ 試作コスト: 中</p>
+</footer>
+</main>
+</body>
+</html>

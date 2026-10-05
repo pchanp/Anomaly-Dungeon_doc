@@ -1,0 +1,248 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-019",
+  "role": "B",
+  "title": "遮光板（暗くして、見つかりにくくする）",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/systems/observation-and-recognition.md",
+      "section": "Cameraを共有世界のServer事実として保存しない。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "見えたという個人の観察は共有世界の事実ではない。隠れるは表示側の操作として扱う。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| `RuleOverride` | 入力結果の無効化、通常攻撃の置換、通常帰還の禁止など | 「その他」の無制限な受け皿にしない。適用対象と優先順位を個別に明記する |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "追跡の入力更新を不成立にするなら、適用対象と優先順位を明示する必要がある。"
+    },
+    {
+      "path": "docs/anomalies/cognitive-anomalies.md",
+      "section": "血、死体、巨大な怪物、グリッチ、突然の音響などの分かりやすいホラー記号は必須にしない。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "隠れ方は演出ではなく操作として扱う。HUDでの説明は行わない。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| 一時 | 指定された終了条件が成立した時点で解除する |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "隠れ方の持続は一時として境界を閉じる。"
+    }
+  ],
+  "design_hypothesis": "明るい場所では常に誰かに見られている前提がある。本候補は6秒間だけ自分の表示を暗い側へ寄せ、自分の存在を索敵の入力から外す板を与える。視界は同時に狭くなる。見られている前提を捨てて暗がりへ入る選択で、6秒だけ遠くを見られなくなる。",
+  "experience": {
+    "goal": "見られていると気づかれずに、距離のある場所を通り抜ける。",
+    "player_choice": "今ここで隠れるか、明るいまま通り抜けるか。隠れる場所を選ぶか先に危険を選ぶか。",
+    "sacrifice_or_risk": "隠れている間は自分の視界が狭く、遠いREQUIREは拾えない。"
+  },
+  "placement_assumption": "新しい地形・部屋・照明器材は提案しない。操作は使うだけ。照明の配置は各マップ既存のものに依存しない。",
+  "components": [
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "対象個人の表示が暗い側へ寄る個人状態。"
+    },
+    {
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "対象個人に関する索敵・追跡の入力更新を一定時間だけ不成立にする。"
+    },
+    {
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "見えたという事実を共有世界の事実として扱わない原則に従う。"
+    },
+    {
+      "component": "ItemLifecycle",
+      "availability": "catalog",
+      "usage": "正式な取得源とItemStackが未実装であることを前提とする。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "対象個人が板を使う",
+      "condition": "実行中であること、板を個人所持にもつこと",
+      "result": "対象個人の個人表示が暗い側へ寄る。遠い表示は本人の画面から消え、手元の結果も映らなくなる。共有世界の照明は書き換えない",
+      "target": "対象個人の個人表示",
+      "scope": "個人。他者の表示と共有のMap状態は変えない",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "6秒の経過で解除",
+        "Run終了または切断で解除。再接続時の復元は未決"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。解除手段は時間だけを持ち、他に足さない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同じ個人への再適用は1件として残り時間を更新する。固定秒数は他効果と足さない",
+        "conflict_resolution": "他の視覚状態と同時に成立する場合は解決規則が未定義のため保留する"
+      },
+      "server_validation": "Serverが実行状態と所有を検証し、個人の表示条件だけを更新する",
+      "client_presentation": "画面周りが暗くなり、遠い対象が个人画面から外れる",
+      "feedback": {
+        "success": "周辺表示が暗くなり、遠い対象が見えなくなる",
+        "failure": "何も変わらない。注意表示のみ",
+        "ambiguous": "何が見えなくなったかは説明しない"
+      }
+    },
+    {
+      "kind": "RuleOverride",
+      "trigger": "同じ使用が確定し、対象個人に関する索敵・追跡の更新を処理するとき",
+      "condition": "上の個人状態が6秒間成立していること",
+      "result": "対象個人を入力とする索敵・追跡の更新が6秒間だけ不成立になる。個人へ直接届く攻撃は通常どおり通す。適用対象は対象個人に関する索敵・追跡の更新だけ",
+      "target": "対象個人を索敵・追跡の入力とする更新処理",
+      "scope": "個人。他の入力と共有の戦況判定は書き換えない",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "6秒の経過で解除",
+        "接触や被ダメージでは解除しない"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。解除条件は時間だけとし、状況による延長は足さない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同じ個人への再適用は1件として残り時間を更新する",
+        "conflict_resolution": "他のRuleOverrideと重なる場合は解決規則が未定義のため保留する"
+      },
+      "server_validation": "Serverが対象の索敵・追跡の入力だけを検証して除外し、攻撃の判定は通す",
+      "client_presentation": "敵の索敵が切れていることは本人にも表示しない",
+      "feedback": {
+        "success": "追跡が来なくなる",
+        "failure": "追跡が続く。注意表示のみ",
+        "ambiguous": "最初に追跡が途切れた原因は本人にも説明しない"
+      }
+    }
+  ],
+  "provides_traits": [
+    "視認の材料を捨てることで隠れる効果を作る例",
+    "RuleOverrideに適用対象と解除条件を書く例"
+  ],
+  "connection_tags": [
+    "Item",
+    "Observation",
+    "Environment"
+  ],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": [
+        "索敵・追跡の入力更新の評価位置と、攻撃入力から分離できるかどうか"
+      ],
+      "reason": "observation-and-recognition.mdとanomaly-interaction.mdは観察のEvidenceとCamera評価を個人側に置く一方、索敵側の更新規則は未実装である。優先順位を候補側で決めず保留する。",
+      "adoption_blocker": true
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "6秒という持続時間は未確定。既存資料に該当値が無く候補側で固定しない。",
+    "遠い表示が個人画面から外れる距離は未確定。表示距離の仕様が無いため判定基準を決めない。",
+    "照合範囲：観察を共有事実にしない原則、RuleOverrideの境界、一時効果の終了条件、認知の演出方針。矛盾は見つからず conflicts は空配列"
+  ],
+  "worldview": {
+    "defamiliarized_element": "隠れるを消灯ではなく、表示の当事者側の視点を引かせる操作にした。暗闇は資源ではなく結果として扱った。",
+    "in_world_rationale": "世界は探索者が常に見られていることを前提に組まれていないが、他者の視線という圧は自然にある。板があるなら、それは暗闇を得るためではなく、他者の視線だけを一時的に外すために使われる。",
+    "meaning_left_ambiguous": "板を作った者は誰で、隠れることが許されていたのか、隠れている間も誰かは自分を見ていたのかは確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "正式なInventoryとItemStackは未実装で、索敵・追跡の入力更新層も未実装（current-implementation.md）。適用対象の切り分けが要るため true とする。",
+  "new_logic": [
+    "個人の表示条件を一時的に暗い側へ寄せる個人状態",
+    "対象個人に関する索敵・追跡の入力だけを一時的に除外するRuleOverride"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "デバッグ床に巨人が固定配置されているため、追跡が来なくなることは1人で確認できる。ただし索敵の入力層を切り分ける必要があるため小ではない。",
+    "implementation_steps": [
+      "デバッグ付与で板を持たせる",
+      "巨人に対する索敵・追跡の入力だけを無効化する個人状態を足す",
+      "6秒後に追跡が戻ることを確認する",
+      "直接攻撃が依然として届くことを確認する"
+    ],
+    "assumed_existing_parts": [
+      "デバッグ床の巨人の移動と索敵の動作",
+      "クライアントの個人画面",
+      "InventoryServiceの枠境界"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Undecided",
+        "detail": "配る主体は未確定。正式な取得源が未実装であり創作しない。試作のみデバッグ付与。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "1枠を消費する。持つだけで視界も索敵も変わらない。"
+      },
+      {
+        "route": "Use",
+        "status": "Proposed",
+        "detail": "6秒だけ表示を暗くし、索敵の外れる。中核の操作。"
+      },
+      {
+        "route": "Present",
+        "status": "NotApplicable",
+        "detail": "渡さない。渡すと隠れる権利まで譲ることになる。"
+      },
+      {
+        "route": "Place",
+        "status": "NotApplicable",
+        "detail": "置かない。置くと『隠れられる場所を作る』設計になり、遮蔽の責務と重なる。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "確保枠の外なら死亡時に失う。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "確保枠に入れて非常時のために守れる。枠が1つ空く。"
+      },
+      {
+        "route": "Sell",
+        "status": "Undecided",
+        "detail": "換金の可否は判断010・判断011・経済と成長で未決。"
+      },
+      {
+        "route": "Quest",
+        "status": "Undecided",
+        "detail": "依頼主は未確定。既存の博士の依頼が定める固有品の交換とは別物品として扱う。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "Undecided",
+        "detail": "どの異常が隠れた個人を探索材料にするかは未決。候補は相手の挙動を一切作らない。"
+      }
+    ],
+    "ownership_state": "板と隠れる個人状態はplayer単位。Serverが個人状態を保持し、共有のMap状態は書き換えない。切断と再接続時の復元は未決。",
+    "server_run_state": "個人状態と入力の除外のみを扱い、Run共有のマップ状態は書き換えない。出現率と同時出現数は変更しないためWorldChangeのEffectは発生しない。"
+  },
+  "html_file": "ROLE-B-019.html"
+}

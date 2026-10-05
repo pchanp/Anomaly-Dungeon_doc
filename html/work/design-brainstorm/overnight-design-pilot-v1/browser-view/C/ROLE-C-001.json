@@ -1,0 +1,284 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-001",
+  "role": "C",
+  "title": "巻き戻し地点",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "8/31",
+  "classification": "マップ固有",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "系統・ランク・レベル",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "通常スキルは攻撃・探索・補助・アクションの4系統。解放でレベル1を得い、強化で最大レベル3。各系統で次ランクを解放するには直前ランクのスキルを3つ解放し、そのうち1つ以上をレベル3にする、両条件が必要。4つの装備枠を想定し、装備切替の場所とタイミング、奥義・パッシブ・アノマリー専用スキルの枠占有条件は未決定。"
+    },
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "アクション系",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "アクション系は高速移動・Teleport・Grapplingなどの移動やギミックへの介入を扱う。ランク1案は二段ジャンプと移動速度上昇、ランク2案はグラップリング、壁登り、バックステップ。バックステップは動作中が無敵でDown・Stun中でも発動できるが、無敵時間や再使用条件は未決定。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "8月31日",
+      "source_status": "Status: Mixed（案ごとに下記）",
+      "claim": "Server側がDAY、EVENING、NIGHTの順に時間を進行させる。進行するのは探索者がマップ内にいる間だけで、最初の探索者が入るまで待機のまま止まり、无人になると停止する。NIGHTが終わると日付が8月32日へ移行し、別マップへの遷移ではなく同一マップの状態変化として扱う。8/32専用Parts11個は通常は非表示かつ非衝突で、遷移時に一括で表示される。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "未実装の境界",
+      "source_status": "Status: Mixed（案ごとに下記）",
+      "claim": "Rare Lootと8/32での強制Anomaly発生は未実装であり、危険度上昇はExposureの取得速度と帰還閉鎖だけで表現している。フェーズごとの日付板の時刻も未確定。Transition PortalとParty Stateは未実装。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "作用範囲と保存境界",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "誰に作用するかといつまで残るかは別の項目で、保存境界は永続、同一Run中、同一マップ中、一時を基本とする。一時効果の終了条件を複数指定した場合は、個別に別の規則を定めない限りいずれかが成立すれば解除する。マップ終了とRun終了による破棄は一時効果にも適用する。"
+    },
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "戦闘とアノマリー",
+      "source_status": "Status: Draft（草案）",
+      "claim": "Exposureはダメージ値ではなく、アノマリー発生、Individual Anomaly、スキル、マップ状態、ポータル遷移、Run終了条件に影響し得る内部状態として扱う。マップは特定ビルドを必須にせず、特定ビルドが強く機能する状況を提供する。"
+    },
+    {
+      "path": "docs/systems/current-implementation.md",
+      "section": "実装済みの基盤",
+      "source_status": "Status: Implemented（実装棚卸し）",
+      "claim": "現在サーバー実装されているスキルはMagic Bolt、Roll、Stealthの3種で、サーバー側クールダウンと効果判定を持つ。8月31日マップのServer側時間進行、夕方以降の帰還面開放、8/32での帰還面閉鎖とRun Lifetime300秒の強制帰還は実装済み。4スキル枠を想定したUIはあるが、ビルド取得と強化システムは未実装。"
+    }
+  ],
+  "design_hypothesis": "フェーズ切替直前の自分の位置へ、一度だけ戻る。 切替直前に位置を記録し、直後の受付中だけ発動できる。 着地点をServerが検査し、塞がれていれば移動しない。 戻ると記録を消費し、そのフェーズ中は通常攻撃とスキルを使えない。",
+  "experience": {
+    "goal": "フェーズ切替直前の自分の位置へ、一度だけ戻る。",
+    "player_choice": "距離を取り戻すか、戦闘手段を残すか。時間・Exposure・地形は巻き戻らない。",
+    "sacrifice_or_risk": "距離を取り戻すか、戦闘手段を残すか。時間・Exposure・地形は巻き戻らない。"
+  },
+  "placement_assumption": "既存マップで使用する文脈。配置・建物構造・地形・Questの結末を新設しない。対応対象が未実装なら試作用の対象で確認する。",
+  "components": [
+    {
+      "component": "Effect.Move",
+      "availability": "catalog",
+      "usage": "フェーズ切替直前の自分の位置へ、一度だけ戻る。"
+    },
+    {
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "フェーズ切替直前の自分の位置へ、一度だけ戻る。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "Move",
+      "trigger": "装備中に本人が発動入力。切替直前に位置を記録し、直後の受付中だけ発動できる。",
+      "condition": "切替直前に位置を記録し、直後の受付中だけ発動できる。 ServerがRun・対象・クールダウンを検査。",
+      "result": "切替直前に位置を記録し、直後の受付中だけ発動できる。 着地点をServerが検査し、塞がれていれば移動しない。 戻ると記録を消費し、そのフェーズ中は通常攻撃とスキルを使えない。",
+      "target": "本人",
+      "scope": "同一マップ内の対象限定。共有Quest・出現率・Exposureは変更しない。",
+      "lifetime": "同一マップ中",
+      "resolution": "instant",
+      "end_conditions": [
+        "戻ると記録を消費し、そのフェーズ中は通常攻撃とスキルを使えない。",
+        "マップ離脱",
+        "Run終了",
+        "対象の戦闘不能または切断"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "最初に成立した終了条件で解除し、Runを越えて状態を保存しない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effect・同一対象は非加算の1件。即時結果は一回解決し、重複要求を再適用しない。",
+        "conflict_resolution": "競合する移動・入力制限・観察の適用順は採用前の確認事項。"
+      },
+      "server_validation": "対象・距離・安全な位置・使用状態をServerで検査。個人画面を世界状態の証明にしない。",
+      "client_presentation": "フェーズ切替直前の自分の位置へ、一度だけ戻る。",
+      "feedback": {
+        "success": "成立・消費・終了を対象本人に表示。",
+        "failure": "不成立の理由を短く表示。効果を付与しない。",
+        "ambiguous": "原因・正体は説明しない。操作の成否は曖昧にしない。"
+      }
+    },
+    {
+      "kind": "RuleOverride",
+      "trigger": "装備中に本人が発動入力。切替直前に位置を記録し、直後の受付中だけ発動できる。",
+      "condition": "切替直前に位置を記録し、直後の受付中だけ発動できる。 ServerがRun・対象・クールダウンを検査。",
+      "result": "切替直前に位置を記録し、直後の受付中だけ発動できる。 着地点をServerが検査し、塞がれていれば移動しない。 戻ると記録を消費し、そのフェーズ中は通常攻撃とスキルを使えない。",
+      "target": "本人",
+      "scope": "同一マップ内の対象限定。共有Quest・出現率・Exposureは変更しない。",
+      "lifetime": "同一マップ中",
+      "resolution": "instant",
+      "end_conditions": [
+        "戻ると記録を消費し、そのフェーズ中は通常攻撃とスキルを使えない。",
+        "マップ離脱",
+        "Run終了",
+        "対象の戦闘不能または切断"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "最初に成立した終了条件で解除し、Runを越えて状態を保存しない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effect・同一対象は非加算の1件。即時結果は一回解決し、重複要求を再適用しない。",
+        "conflict_resolution": "競合する移動・入力制限・観察の適用順は採用前の確認事項。"
+      },
+      "server_validation": "対象・距離・安全な位置・使用状態をServerで検査。個人画面を世界状態の証明にしない。",
+      "client_presentation": "フェーズ切替直前の自分の位置へ、一度だけ戻る。",
+      "feedback": {
+        "success": "成立・消費・終了を対象本人に表示。",
+        "failure": "不成立の理由を短く表示。効果を付与しない。",
+        "ambiguous": "原因・正体は説明しない。操作の成否は曖昧にしない。"
+      }
+    }
+  ],
+  "provides_traits": [
+    "フェーズ切替直前の自分の位置へ、一度だけ戻る。",
+    "切替直前に位置を記録し、直後の受付中だけ発動できる。",
+    "着地点をServerが検査し、塞がれていれば移動しない。",
+    "戻ると記録を消費し、そのフェーズ中は通常攻撃とスキルを使えない。"
+  ],
+  "connection_tags": [
+    "Skill",
+    "Environment",
+    "Observation"
+  ],
+  "refs": [
+    {
+      "target_id": "ROLE-A-002",
+      "kind": "interaction_loop",
+      "required_traits": [
+        "8/31のフェーズ遷移時刻と遷移結果をServer確定の共有事実として提示できる",
+        "遷移の前後で通行可否が変わることを、答えを直接表示せずに伝えられる"
+      ],
+      "fallback": "A-002が成立しない場合でも本候補は成立する。フェーズ確定のイベントと個人の位置記録のみに依存し、ギミックの追加脱出条件、出現物、NPC、報酬を参照しない。",
+      "resolution": "reserved_unresolved"
+    },
+    {
+      "target_id": "ROLE-C-013",
+      "kind": "optional_connection",
+      "required_traits": [
+        "個人単位の連携入力受付窓を開ける"
+      ],
+      "fallback": "C-013が成立しない場合、巻き戻し地点の後に連携窓を開く手順は持たない。移動だけの判断として成立する。",
+      "resolution": "reserved_unresolved"
+    }
+  ],
+  "unresolved_refs": [
+    {
+      "target_id": "ROLE-A-002",
+      "required_traits": [
+        "8/31のフェーズ遷移時刻と遷移結果をServer確定の共有事実として提示できる",
+        "遷移の前後で通行可否が変わることを、答えを直接表示せずに伝えられる"
+      ],
+      "reason": "本セッションでは peer-snapshots が配布されておらず、A-002は予約枠のままで本文を確認できない。必要な性質だけを要求として記載し、実現を仮定しない。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": null,
+      "required_traits": [
+        "通常のフェーズ遷移と、8/32遷移（帰還閉鎖、Exposure取得速度2.4倍、Run Lifetime300秒）をServer側で区別して購読できること",
+        "遷移確定を再入可能なイベントとして、複数方法が同時刻に成立しても1回だけ発火すること"
+      ],
+      "reason": "既存実装がフェーズ進行をどの経路で通知しているかは current-implementation.md に記録がなく、pack内のsnapshotだけでは判断できない。ID未指定の接続要求として残し、購読点の存在を仮定しない。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": "ROLE-C-013",
+      "required_traits": [
+        "個人単位の連携入力受付窓を開ける"
+      ],
+      "reason": "接続要求。個別内容との互換性をまだ確認していない。",
+      "adoption_blocker": false
+    }
+  ],
+  "conflicts": [
+    {
+      "source_path": "docs/systems/skill-build.md",
+      "existing_rule": "各系統のランク1はまだ3案に達していないため、現行案だけではランク2解放条件を満たせない。ランク2案は先行する設計案として保持する。",
+      "proposal_difference": "アクション系ランク1に3件目の候補として本案を1件提案する。",
+      "correction": "採用する場合はアクション系ランク1が3案に達した旨を反映し、本案単独では3つのうち1つ以上をレベル3という条件を満たさないことを併記する。",
+      "reason_correctable": "候補の追加のみである。二段ジャンプと移動速度上昇の作用、攻撃・探索・補助の各系の構成、4枠の扱いは変更しない。",
+      "decision_needed": "本案をアクション系ランク1の3枠目として採用するか。採用する場合、ランク1のレベル3条件をどのスキルで満たすかを別途決める必要がある。"
+    },
+    {
+      "source_path": "docs/systems/current-implementation.md",
+      "existing_rule": "4スキル枠を想定したUIはあるが、現在サーバー実装されているスキルは3つで、ビルド取得・強化システムは未実装。",
+      "proposal_difference": "本案は新しいスキル発動、個人のアンカー記録、アンカーへのテレポート、遷移後の受付封じを必要とし、既存の3スキルと同じ経路で成立するとは主張しない。",
+      "correction": "採用する場合は SkillService へ新しい発動種別を追加する必要があり、ビルド取得と強化の未実装部分と切り分けて記録する。",
+      "reason_correctable": "新規実装の必要性を記録するにとどめ、既存スキル経路や4枠UIの意味を変更しない。",
+      "decision_needed": "本案を未実装のビルド取得・強化システムに依存させるか、既存3スキルと同じ直接発動として実装するか。前者なら INV-11 が守る現行2マップの最小Run実装範囲に影響が出る可能性がある。"
+    }
+  ],
+  "uncertainties": [
+    "受付時間・距離・上限・クールダウン・速度などの値は仮案段階。",
+    "レベル差は候補であり、効果量と操作負担を試作して調整する。",
+    "通常スキルとしてのみ扱い、Player Anomalyの専用能力には一般化しない。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "フェーズ切替直前の自分の位置へ、一度だけ戻る。",
+    "in_world_rationale": "既存の移動・音・観察を通常と異なる条件で操作する候補。成立理由を世界の起源や装置の正体へ結び付けない。",
+    "meaning_left_ambiguous": "なぜこの操作が成立するか。博士の意図・Entityの正体は確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "この候補の入力条件・状態・提示の専用処理は実装記録がなく、新規ロジックが必要。",
+  "new_logic": [
+    "フェーズ切替直前の自分の位置へ、一度だけ戻る。",
+    "Serverで成立条件と終了を検査する処理",
+    "本人または対象へのFeedback"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "専用入力と状態管理が必要。対象側基盤が未実装なら、その試作費用は別途見積もる。",
+    "implementation_steps": [
+      "単一対象で成立・不成立を確認",
+      "解除とRun終了時の破棄を確認",
+      "複数参加者と競合Effectを確認"
+    ],
+    "assumed_existing_parts": [
+      "既存スキル発動経路",
+      "CharacterとRun参加者の管理"
+    ]
+  },
+  "role_details": {
+    "skill_family": "アクション",
+    "rank": null,
+    "rank_rationale": "系統内の候補が揃った時点で比較する。ランク解放条件自体は変更しない。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "フェーズ切替直前の自分の位置へ、一度だけ戻る。"
+      },
+      {
+        "level": 2,
+        "proposal": "記録を同一フェーズで一度だけ更新できる。"
+      },
+      {
+        "level": 3,
+        "proposal": "安全な着地点の向きを発動前に確認できる。"
+      }
+    ],
+    "equipped_slot_policy": "通常スキルの4装備枠のうち1枠。取得ランク条件は既存規則に従い、装備切替時点は未決定。",
+    "normal_attack_link": "通常攻撃からの連携候補。発動中の制限は本案に従い、受付窓・キャンセル時点は未決定。",
+    "avoids": "フェーズ切替直前の自分の位置へ、一度だけ戻る。",
+    "intervenes_in": "切替直前に位置を記録し、直後の受付中だけ発動できる。 着地点をServerが検査し、塞がれていれば移動しない。 戻ると記録を消費し、そのフェーズ中は通常攻撃とスキルを使えない。",
+    "sacrifices": "距離を取り戻すか、戦闘手段を残すか。時間・Exposure・地形は巻き戻らない。",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-001.html"
+}

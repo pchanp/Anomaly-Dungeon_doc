@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-A-021 刻印の擦れ — 自分の痕跡が次の動きを決める</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+<p class="sub">overnight-design-pilot-v1 ／ ROLE-A-021 ／ 全マップ共通 ／ GimmickEvent</p>
+<h1>刻印の擦れ — 自分の痕跡が次の動きを決める</h1>
+<p>通るたびに印が減り、消えた道が敵の通り道になる。</p>
+<div class="badges"><span class="badge hyp">Idea</span><span class="badge">unreviewed</span><span class="badge unknown">刻印の総数は未定</span></div>
+<nav class="nav"><a href="index.html">← 一覧</a><a href="ROLE-A-021.json">同IDのJSON</a></nav>
+</header>
+
+<section id="hypothesis">
+<h2>何の案か</h2>
+<p>自分の通った道が、いつか敵の道として共有される。</p>
+<ul>
+<li>床や壁に刻印があり、1回通るごとに1つ欠ける。残数は表示されない。</li>
+<li>刻印が残る間は通常モブは通り、全部消えた場所だけ個体が集まる。</li>
+<li>刻印は戻らない。通った順番がそのまま地形になる。</li>
+</ul>
+<p><strong>選択と代償:</strong> 同じ道を繰り返して誘い込む／別の道から回り込む／印が残る前に引き返す。印は戻らないので、通った回数だけ将来の敵の通り道が増える。</p>
+<p class="sub">接続タグ: WorldChange / StateChange / Observation / Environment ／ requires_code: true ／ conflicts 0件・未解決1件（JSONに記載）</p>
+</section>
+
+<section id="diagram">
+<h2>仕組みの図</h2>
+<div class="board">
+<svg viewBox="0 0 1000 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="通過のたびに刻印が減り、全て消えた場所を通常モブの通り道として選ぶことを示す図">
+<rect width="1000" height="360" fill="#0a1118"/>
+<text class="label" x="24" y="28">通過で減る刻印</text>
+<text class="label" x="500" y="28">消えた場所を選ぶ個体</text>
+
+<rect x="24" y="52" width="220" height="72" rx="8" fill="#142330" stroke="#d3b653"/>
+<text class="label" x="38" y="82">通る</text>
+<text class="small" x="38" y="106">印が1つ欠ける。残数は出ない</text>
+
+<rect x="24" y="142" width="220" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="38" y="172">印が残る間</text>
+<text class="small" x="38" y="198">通常モブは通らない</text>
+
+<rect x="24" y="232" width="220" height="72" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="label" x="38" y="262">印が全部消える</text>
+<text class="small" x="38" y="288">通り道として選ばれる</text>
+<path d="M134 124v14" stroke="#70c9c3" stroke-width="2" fill="none"/>
+<path d="M128 136l6 8 6-8z" fill="#70c9c3"/>
+
+<rect x="320" y="52" width="240" height="72" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="label" x="334" y="82">通り道に加わる</text>
+<text class="small" x="334" y="106">StateChange。個体数は不変</text>
+<path d="M244 180h72" stroke="#70c9c3" stroke-width="2" fill="none"/>
+<path d="M308 174l9 6-9 6" stroke="#70c9c3" stroke-width="2" fill="none"/>
+
+<rect x="620" y="52" width="356" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="634" y="82">（a）同じ道を繰り返す</text>
+<text class="small" x="634" y="106">敵を意図した場所へ誘う</text>
+<rect x="620" y="142" width="356" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="634" y="172">（b）別の道から回る</text>
+<text class="small" x="634" y="198">印を消費せずに進む</text>
+<rect x="620" y="232" width="356" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="634" y="262">（c）残する前に引く</text>
+<text class="small" x="634" y="288">地形を未来に残さない</text>
+<path d="M560 88h54" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M606 82l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M560 178h54" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M606 172l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M560 268h54" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M606 262l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+
+<text class="small" x="24" y="338">この図で分かること：通った回数だけ将来の敵の通り道が増える。残り数を見られないので、どこまで消費したかは分からない。</text>
+</svg>
+</div>
+<p>図注：残数が出ないため、いつ敵の通り道に変わるかを読み取ることはできない。先に通した場所を覚えておくしかなくなる。</p>
+</section>
+
+<footer>overnight-design-pilot-v1 ／ ROLE-A-021 ／ 実表示は未確認（担当セッションでブラウザを使用していない）。</footer>
+</main>
+</body>
+</html>

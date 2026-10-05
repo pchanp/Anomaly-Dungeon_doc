@@ -1,0 +1,146 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-006",
+  "role": "A",
+  "title": "棚の鳴り — 廃TSUTAYAの検索の副作用",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "廃TSUTAYA",
+  "classification": "マップ固有",
+  "category": "GimmickEvent",
+  "source_evidence": [
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "### 実装済みの範囲",
+      "source_status": "Status: Prototype: Implemented（実装済みプロトタイプ）",
+      "claim": "棚は5基で、調べる操作でArchive Selection UIが開く。1回の検索で全項目が返ることはない。各部屋は袋小路構造で視界が分断される。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "## 重ね掛けの既定規則",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "同じEffectが同じ対象へ再適用された場合は既定で非加算1件とする。同じ世界状態へ競合する解決規則が未定義なら、その適用を保留し記録する。"
+    },
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "## ServerとClientの責務",
+      "source_status": "Status: Draft（草案）",
+      "claim": "ゲーム進行上の事実はServerが決定し、Clientは主に表現を担う。NPC StateやMap StateはServer側が決める。"
+    }
+  ],
+  "design_hypothesis": "誰かが棚を調べると、別の部屋の棚が短く鳴る状態を仮定します。鳴りは共有される小さな世界の変化で、どこで検索が行われたかを推測できます。わざと調べない棚を探して鳴りを移すこともできます。新しい棚、部屋、設備は増やしません。",
+  "experience": {
+    "goal": "探索しながら、仲間の居場所と自分の居場所を副作用として示す。",
+    "player_choice": "必要な棚を調べる（鳴りを被る）／別の棚を調べて鳴りを移す（時間を捨てる）／調べずに回る。",
+    "sacrifice_or_risk": "調べるたびに居場所が共有される。鳴った場所だけから、誰の検索かは断定できない。"
+  },
+  "placement_assumption": "既存の5基のArchiveShelfと7ルームだけを使う。鳴りは既存の棚の表現に持たせる。新しい小部屋や音源は提案しない。",
+  "components": [
+    {"component": "ArchiveMedia", "availability": "catalog", "usage": "棚の検索結果を鳴りの引きとして参照する。実内容は未実装のまま扱う。"},
+    {"component": "Effect.WorldChange", "availability": "catalog", "usage": "他室の棚の鳴り状態をRun共有で更新する。個人表示だけで確定しない。"},
+    {"component": "Effect.InformationChange", "availability": "catalog", "usage": "自分の検索と鳴りを結びつける個人提示に使う。"}
+  ],
+  "effects": [
+    {
+      "kind": "WorldChange",
+      "trigger": "対象の個人が棚を調べて検索を実行した。",
+      "condition": "検索が成立したこと。対象項目が見つからなくても鳴る。他の個体も同じ棚で検索していないこと。周期と伝播の方式は未定。",
+      "result": "検索した棚以外の棚のうち1基が短く鳴る。鳴った棚はServerが保持し、他の個人の目にも音として届く。",
+      "target": "Run共有の棚の鳴り状態",
+      "scope": "Run全体（マップ内）。",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": ["鳴りが終わる", "Run終了", "マップ終了"],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかで鳴りが閉じる。持続時間は未確定。",
+      "stacking": {"exception": false, "rule": "同じ棚への同時検索は1件として扱う。", "conflict_resolution": "複数の検索が競合した場合の鳴り先の選択規則は未確定のため保留し記録する。"},
+      "server_validation": "Serverが検索の成立と対象棚を検証する。クライアント信号だけでは鳴らさない。",
+      "client_presentation": "鳴る棚の音と微細な動きのみ。誰が検索したかは表示しない。",
+      "feedback": {"success": "別の部屋の棚が鳴る。", "failure": "上書きで鳴らない場合は何も起きない。", "ambiguous": "なぜそこで鳴るかは説明しない。"}
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "対象の検索に伴う鳴りが本人的にも届いた。",
+      "condition": "対象の検索が成立し、伝播が起きたこと。",
+      "result": "自分自身の検索と鳴りが結びついたことだけを、短い個人提示として返す。他者の検索位置は表示しない。",
+      "target": "検索した個人",
+      "scope": "個人。",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": ["提示の取得だけなので適用解決"],
+      "end_mode": "any",
+      "end_rule_reason": "即時。取得ごとに解決する。",
+      "stacking": {"exception": false, "rule": "取得ごとに解決し、履歴を累計しない。", "conflict_resolution": "他の鳴り手掛かりとの競合は保留。"},
+      "server_validation": "Serverが検索の成立を検証する。",
+      "client_presentation": "短い1行のみ。相手は伏せない。",
+      "feedback": {"success": "自分の検索の跡に1行が出る。", "failure": "出ない場合は他の一件に重なる。", "ambiguous": "他の誰が検索したかは示さない。"}
+    }
+  ],
+  "provides_traits": ["探索の副作用を世界の共有変化として出せる", "副作用を別の場所へ意図的に移せる"],
+  "connection_tags": ["ArchiveMedia", "WorldChange", "Sound", "InformationSharing", "Traversal"],
+  "refs": [
+    {
+      "target_id": "ROLE-C-006",
+      "kind": "optional_connection",
+      "required_traits": ["音で居場所を察知されるリスクとして扱える"],
+      "fallback": "接続なしでも成立する。調べる・移す・調べないは既存操作で完結する。",
+      "resolution": "reserved_unresolved"
+    },
+    {
+      "target_id": "ROLE-B-006",
+      "kind": "optional_connection",
+      "required_traits": ["棚の結果を個人所持として扱える場合"],
+      "fallback": "本候補は鳴りだけを共有する。Bの候補が無くても成立する。",
+      "resolution": "reserved_unresolved"
+    }
+  ],
+  "unresolved_refs": [
+    {"target_id": "ROLE-C-006", "required_traits": ["音で居場所を察知されるリスクとして扱える"], "reason": "Cの候補は配布されておらず、内容が不明。語彙のみを記録する。", "adoption_blocker": false},
+    {"target_id": "ROLE-B-006", "required_traits": ["棚の結果を個人所持として扱える場合"], "reason": "正式なItemStackは未実装（SRC-01）。所持との結びつけは判断できない。", "adoption_blocker": false},
+    {"target_id": null, "required_traits": ["鳴りをどの既存の音や表現に乗せるかを決める方針"], "reason": "ID未指定の要求。既存の放送室の暗さやCRTのノイズとの重なりは共通設計側の判断が必要。", "adoption_blocker": true}
+  ],
+  "conflicts": [
+    {
+      "source_path": "docs/systems/effect-components.md",
+      "existing_rule": "同じ世界状態へ競合する解決規則が未定義なら、その適用を保留し記録するとされている。",
+      "proposal_difference": "本候補は複数の検索が同時に起きた場合に鳴り先を選ぶ必要がある。",
+      "correction": "選択規則が定まるまでは、世界変化として確定させず保留する。数値も順番も決めない。",
+      "reason_correctable": "保留という扱い自体は既定規則と矛盾しない。",
+      "decision_needed": "複数の同時検索があったとき、どの棚を鳴らすかの規則を決めるか。"
+    }
+  ],
+  "uncertainties": [
+    "鳴りの持続時間、伝播の方式、1回の検索で鳴る基数は未定。",
+    "別室への伝播が常態化するかどうかも未定。",
+    "実装の有無はStudio未確認。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "静かな店舗で、調べるという行為そのものが建物に響いて他人に位置が伝わるという副作用を足した点。異常の正体ではなく、探索の代償として描く。",
+    "in_world_rationale": "古い設備と紙の記録が混在する文明では、棚を開く音が立つのは自然である。ただしどの棚が鳴るかは構造や運用の問題であり、説明はしない。",
+    "meaning_left_ambiguous": "なぜ伝播するのか。鳴りが何を告げているのか。閉店した店を誰が使用しているのか。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "既存の棚は検索UIを開くのみで、鳴りの状態、伝播、個人への結びつけは未実装のため。コード生成の許可ではない。",
+  "new_logic": ["棚の鳴り状態をRun共有で保持する層", "検索から他室の鳴りへ伝播させる規則", "自分の検索との結びつけの個人提示"],
+  "prototype_cost": {
+    "band": "小",
+    "rationale": "既存の棚に1音の鳴りと1層の共有状態を足すだけなので小さい。ただし7ルームの距離と音の届き方、既存音との重なりは未確認。実時間の見積もりは出していない。",
+    "implementation_steps": ["棚ごとに鳴り状態を持たせる", "検索成立時に他室1基を鳴らす", "自分の検索との結びつけを個人提示する", "同時検索と上書きの挙動を検証する"],
+    "assumed_existing_parts": ["既存の5基のArchiveShelf", "Archive Selection UIの検索成立", "マップ内の共有状態"]
+  },
+  "role_details": {
+    "npc_purpose": "対象外。本候補は棚と鳴りという環境の変化で、NPCを含まない。鳴りは誰が起きたかを説明しない。",
+    "player_anomaly_handling": "Player Anomalyでも棚の検索と鳴りは成立する。物体への操作でありNPCとのInteractionではないため。他の個体への共有も同じ扱いとする。",
+    "mob_contract": {
+      "applicable": false,
+      "spawn_condition": "対象外。モブ敵の発生を含まない。イベント由来のモブはROLE-A-013で扱う。",
+      "population_cap": "対象外。個体数を数える仕組みを持たない。",
+      "non_combat_response": "対象外。戦闘がない。",
+      "exit_condition": "対象外。湧きや自然消滅の機構がない。",
+      "entity_distinction": "型は区別する。既存の棚と既存の検索を使い、Anomaly Entityやモブの要素を足さない。"
+    }
+  },
+  "html_file": "ROLE-A-006.html"
+}

@@ -1,0 +1,246 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-028",
+  "role": "B",
+  "title": "疏散札（対象1体を10秒だけ遠ざける）",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| `StateChange` | Stun、構え、鎮静、追従先などの状態遷移 | Player Anomalyへの変化を汎用状態異常と同一視しない |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "遠ざけも状態遷移として書く。ただし倒しではない。"
+    },
+    {
+      "path": "docs/anomalies/mad-stomper.md",
+      "section": "通常のHPを削って倒す敵にはしない。攻撃の目的は撃破ではなく、一時的に動きを止める、または鎮静化することである。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "敵を倒さず時間を作る手段が既に求められている。遠ざけはその延長にある。"
+    },
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "戦闘イベントには、敵NPCの出現、追跡、包囲、増援、防衛、巨大アノマリーとの遭遇、NPC同士の戦闘への介入などが含まれ得る。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "包囲は戦闘イベントの一部。遠ざけたい対象を選ぶ判断になる。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| 一時 | 指定された終了条件が成立した時点で解除する |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "遠ざけは時間切れで閉じる。"
+    }
+  ],
+  "design_hypothesis": "包囲されたとき、退路を作る手段は限られる。本候補は『対象1体だけを10秒間、自分から離れた場所に留まらせる』札を与える。倒しても減らず、対象の体力も出現率も変わらない。逃げ道を1体分だけ作るために、その1体は戻ってくる。",
+  "experience": {
+    "goal": "包囲を1体分だけ解いて、退路を1つ作る。",
+    "player_choice": "誰を遠ざけるか選ぶ。逃げるか押し込むか。戻りを待つか。",
+    "sacrifice_or_risk": "対象の体力は減らない。10秒後には元の追跡に戻る。札は1回で消費される。"
+  },
+  "placement_assumption": "新しい地形・部屋・敵は提案しない。既存の戦闘イベントの中で退路を作る操作として使う。距離の大きさは候補側で確定しない。",
+  "components": [
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "対象1体が一定時間、個人から離れる状態に落ちる。"
+    },
+    {
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "対象側の追跡・移動の状態遷移を共有事実として扱う。"
+    },
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "遠ざかった事実を本人にだけ印で示す。"
+    },
+    {
+      "component": "ItemLifecycle",
+      "availability": "catalog",
+      "usage": "正式な取得源とItemStackが未実装であることを前提とする。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "対象個人が札を使い、対象1体を選ぶ",
+      "condition": "実行中であること、札を個人所持にもつこと、対象が射程内にいること",
+      "result": "選ばれた対象1体が10秒間、対象個人から一定距離だけ離れた場所に留まる。対象のHP・出現率・生死は変わらない。距離の大きさは候補側で確定しない",
+      "target": "選ばれた対象1体の位置",
+      "scope": "共有のMap内。ただし選択と消費は個人単位",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "10秒の経過で元の追跡へ戻る",
+        "Run終了または切断で即座に破棄する"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。時間経過で元に戻る。",
+      "stacking": {
+        "exception": false,
+        "rule": "同じ対象への再適用は1件として残り時間を更新する。別対象には別々に効く",
+        "conflict_resolution": "他のEffectが対象の状態を変える場合は解決規則が未定義のため保留する"
+      },
+      "server_validation": "Serverが対象の存在と札の所有を検証してから対象の移動先を更新する",
+      "client_presentation": "対象が離れた場所に留まり、 بعيدから見た姿になる",
+      "feedback": {
+        "success": "対象が遠ざかる",
+        "failure": "対象が動かない。注意表示のみ",
+        "ambiguous": "何に遠ざけたかは本人にも数字で出さない"
+      }
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "遠ざかりの解決直後に個人画面が再描画する",
+      "condition": "実行中であること、対象個人が該当の操作を行える状態であること",
+      "result": "『離れた対象が1体いる』印だけを個人に示す。距離と方向は出さない",
+      "target": "対象個人",
+      "scope": "個人。共有の戦況表示は書き換えない",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": [
+        "提示の解決で確定する",
+        "切断時は個人提示を破棄する"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。一時提示はその場だけで終わる。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一個人への同一提示は非加算1件",
+        "conflict_resolution": "他のHUD提示との優先順位は未決定"
+      },
+      "server_validation": "Serverは遠ざかった事実だけ返す。位置は返さない",
+      "client_presentation": "HUDに印が1つ出るだけ",
+      "feedback": {
+        "success": "印が一瞬出る",
+        "failure": "印が出ない",
+        "ambiguous": "印が距離を示さない"
+      }
+    }
+  ],
+  "provides_traits": [
+    "追手を倒さずに距離を作る状態遷移の例",
+    "戻る時間を設定した時間制限の効果の例"
+  ],
+  "connection_tags": [
+    "Item",
+    "Combat"
+  ],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": [
+        "対象の移動先を書き換える際の経路判定と、他のEffectとの競合規則"
+      ],
+      "reason": "effect-components.mdは状態遷移の既存規則を渡すが、既存の移動目標に対する上書きの優先順位は定義していない。候補は対象を1体に限定し、優先順位は保留する。",
+      "adoption_blocker": true
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "10秒と離れる距離は未確定。既存資料に該当する値が無い。",
+    "通常NPCとAnomaly Entityで移動の作り方が異なる。候補はどちらでも使える形にし、相手の挙動は作らない。",
+    "照合範囲：StateChangeの境界、撃破が目的でない戦闘、包囲を含む戦闘イベント、一時効果の終了条件。矛盾は見つからず conflicts は空配列"
+  ],
+  "worldview": {
+    "defamiliarized_element": "退避を『倒す』ではなく『遠ざける』結果にした。体力は奪わず、戻ってくる時間を作る。",
+    "in_world_rationale": "探索者は敵を倒せない相手と向き合う。札があるなら、それは間合いを一時的に作る道具として使われる。",
+    "meaning_left_ambiguous": "札を作った者は誰で、遠ざけた対象が戻るのを待っていたのかは確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "正式なInventoryとItemStackは未実装で、対象の移動先を書き換える経路も未実装（current-implementation.md）。 true とする。",
+  "new_logic": [
+    "対象1体の移動先を指定時間だけ差し替える個人用の状態遷移"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "状態遷移として既存の移動に足せる。ただし対象ごとの移動の作り方が未実装で、経路判定が要るため中とした。",
+    "implementation_steps": [
+      "デバッグ付与で札を持たせる",
+      "巨人を選んで10秒だけ離れた場所に留まらせる状態遷移を足す",
+      "対象のHPが変わらないことを確認する",
+      "10秒後に元の追跡へ戻ることを確認する"
+    ],
+    "assumed_existing_parts": [
+      "デバッグ床の巨人の移動と追跡",
+      "クライアントの個人HUD",
+      "InventoryServiceの枠境界"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Undecided",
+        "detail": "配る主体は未確定。正式な取得源が未実装であり創作しない。試作のみデバッグ付与。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "1枠を消費する。使わないなら効果はない。"
+      },
+      {
+        "route": "Use",
+        "status": "Proposed",
+        "detail": "対象を選んで10秒間遠ざける。中核の操作。"
+      },
+      {
+        "route": "Present",
+        "status": "NotApplicable",
+        "detail": "渡さない。渡すと選ぶ権利が他人へ移る。"
+      },
+      {
+        "route": "Place",
+        "status": "NotApplicable",
+        "detail": "置かない。置く操作は設置型の別設計になる。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "確保枠の外なら死亡時に失う。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "確保枠に入れて遠ざけの手段を守れる。"
+      },
+      {
+        "route": "Sell",
+        "status": "Undecided",
+        "detail": "換金の可否は判断010・判断011・経済と成長で未決。"
+      },
+      {
+        "route": "Quest",
+        "status": "Undecided",
+        "detail": "依頼主は未確定。既存の博士の依頼が定める固有品の交換とは別物品として扱う。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "Proposed",
+        "detail": "遠ざけは他の相互作用の入力になり得る。相手の内部仕様は作らない。"
+      }
+    ],
+    "ownership_state": "札はplayer単位の個人所持。遠ざかりは共有のMap内の位置として確定するが、選択と消費は個人単位。切断時の復元は未決。",
+    "server_run_state": "ServerがRun状態として対象の位置を確定し、Run終了で破棄する。出現率と同時出現数は変更しないためWorldChangeのEffectは発生しない。"
+  },
+  "html_file": "ROLE-B-028.html"
+}

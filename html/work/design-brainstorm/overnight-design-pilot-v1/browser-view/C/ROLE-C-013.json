@@ -1,0 +1,285 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-013",
+  "role": "C",
+  "title": "息を揃える窓",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "系統・ランク・レベル",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "通常スキルは攻撃、探索、補助、アクションの4系統で、補助は回復、Buff、Debuff、状態異常攻撃を扱う。効果が複数の役割を持っても所属系統は一つに定める。4つの装備枠を想定し、装備切替の場所とタイミング、および奥義、パッシブ、アノマリー専用スキルが枠を占有する条件は未決定。"
+    },
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "通常攻撃と連携",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "通常攻撃からスキルへ、スキルから別のスキルへ連携できる。入力受付時間、キャンセル可能時点、硬直、同一スキルの再連携、スタミナ等のコストは未決定。"
+    },
+    {
+      "path": "docs/systems/anomaly-interaction.md",
+      "section": "共通の Interaction Kind",
+      "source_status": "ステータス: Draft",
+      "claim": "再利用を想定する意味上の分類であり、アノマリーは必要なものだけを明示的に受理する。ここにない相互作用を禁止するものではない。Sound Interactionは音を発した、聞いた、音源の方向や強度を認識したといった音の事実を入力にする。実装するシステムが提供できる文脈だけを使い、BGMや通常の環境音が自動的に相互作用になるわけではない。"
+    },
+    {
+      "path": "docs/systems/anomaly-interaction.md",
+      "section": "受理と結果の設計",
+      "source_status": "ステータス: Draft",
+      "claim": "各アノマリーは Interaction Kind ごとに Ignore、Accept、Transform、Intercept、Reject のいずれかを採れる。何も起きないは有効な結果になり得る。"
+    },
+    {
+      "path": "docs/systems/anomaly-interaction.md",
+      "section": "クライアントとサーバーの責務",
+      "source_status": "ステータス: Draft",
+      "claim": "アノマリー状態の遷移、報酬、ラン全体への反映はサーバーが確定する。個人だけに現れる認識差と、パーティ全体へ影響する状態変化は Scope を明示して分離する。クライアントは視覚、音響、局所的な観察証拠を提示できるが、それだけで共有状態を確定しない。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "解除の既定規則",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "cureによる解除対象は解除可能な状態異常に限る。Exposure、Player Anomaly化、Quest進行、出現率変更、永続解放を包括的に解除しない。"
+    },
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "スキルビルドとマップ",
+      "source_status": "Status: Draft（草案）",
+      "claim": "1 Runにつき基本4つのスキルを装備する案とする。枠は固定ロールにしない。各マップは独立したゲームシステムを増やすためのものではなく、既存の基盤システムが、異なる状況で別の価値を持つようにする。"
+    },
+    {
+      "path": "docs/systems/current-implementation.md",
+      "section": "最小Runの実装",
+      "source_status": "Status: Implemented（実装棚卸し）",
+      "claim": "入口ロビーのパーティ受付はフィールド内在圈的参加者を先着順で最大5人まで受け付け、最初の参加者から30秒で締め切って出発する。複数人での挙動は未確認で、2026-09-30と2026-10-03の検証はいずれも1人セッションだった。パーティ上限5人、切断者を含む複数人でのRun終了順序、進行中Runへの途中参加拒否は未確認のままである。"
+    }
+  ],
+  "design_hypothesis": "音の合図を出し、仲間との連携入力を待つ。 同意した同一Runの仲間一人と、指定スキル一枠の受付窓を開く。 窓の開始・終了は位置つきのSound入力になる。 窓中は他の枠と通常攻撃を止め、時間経過・切断・戦闘不能で解除。",
+  "experience": {
+    "goal": "音の合図を出し、仲間との連携入力を待つ。",
+    "player_choice": "音を出して連携を合わせるか、自由に動くか。威力増加や全Entityへの作用は付けない。",
+    "sacrifice_or_risk": "音を出して連携を合わせるか、自由に動くか。威力増加や全Entityへの作用は付けない。"
+  },
+  "placement_assumption": "既存マップで使用する文脈。配置・建物構造・地形・Questの結末を新設しない。対応対象が未実装なら試作用の対象で確認する。",
+  "components": [
+    {
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "音の合図を出し、仲間との連携入力を待つ。"
+    },
+    {
+      "component": "SoundInteraction",
+      "availability": "catalog",
+      "usage": "位置つきの音源入力を生成し、到達・遮蔽・受理は対象側の個別契約で判定。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "RuleOverride",
+      "trigger": "装備中に本人が発動入力。同意した同一Runの仲間一人と、指定スキル一枠の受付窓を開く。",
+      "condition": "同意した同一Runの仲間一人と、指定スキル一枠の受付窓を開く。 ServerがRun・対象・クールダウンを検査。",
+      "result": "同意した同一Runの仲間一人と、指定スキル一枠の受付窓を開く。 窓の開始・終了は位置つきのSound入力になる。 窓中は他の枠と通常攻撃を止め、時間経過・切断・戦闘不能で解除。",
+      "target": "本人",
+      "scope": "同一マップ内の対象限定。共有Quest・出現率・Exposureは変更しない。",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "窓中は他の枠と通常攻撃を止め、時間経過・切断・戦闘不能で解除。",
+        "マップ離脱",
+        "Run終了",
+        "対象の戦闘不能または切断"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "最初に成立した終了条件で解除し、Runを越えて状態を保存しない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effect・同一対象は非加算の1件。即時結果は一回解決し、重複要求を再適用しない。",
+        "conflict_resolution": "競合する移動・入力制限・観察の適用順は採用前の確認事項。"
+      },
+      "server_validation": "対象・距離・安全な位置・使用状態をServerで検査。個人画面を世界状態の証明にしない。",
+      "client_presentation": "音の合図を出し、仲間との連携入力を待つ。",
+      "feedback": {
+        "success": "成立・消費・終了を対象本人に表示。",
+        "failure": "不成立の理由を短く表示。効果を付与しない。",
+        "ambiguous": "原因・正体は説明しない。操作の成否は曖昧にしない。"
+      }
+    }
+  ],
+  "provides_traits": [
+    "音の合図を出し、仲間との連携入力を待つ。",
+    "同意した同一Runの仲間一人と、指定スキル一枠の受付窓を開く。",
+    "窓の開始・終了は位置つきのSound入力になる。",
+    "窓中は他の枠と通常攻撃を止め、時間経過・切断・戦闘不能で解除。"
+  ],
+  "connection_tags": [
+    "Skill",
+    "Environment",
+    "Observation",
+    "Sound"
+  ],
+  "refs": [
+    {
+      "target_id": "ROLE-C-001",
+      "kind": "optional_connection",
+      "required_traits": [
+        "個人単位の連携入力受付窓を開ける"
+      ],
+      "fallback": "C-001が成立しない場合、本候補は単独でも成立する。指名なしの窓をどう扱うかは未確定として残す。",
+      "resolution": "reserved_unresolved"
+    },
+    {
+      "target_id": "ROLE-C-004",
+      "kind": "optional_connection",
+      "required_traits": [
+        "試聴中は移動、通常攻撃、他のスキル発動を受け付けない"
+      ],
+      "fallback": "C-004が成立しない場合、本候補は装備済みの枠に対して同じ受付の切替を行う。どの枠が対象になるかは装備側の判断による。",
+      "resolution": "reserved_unresolved"
+    },
+    {
+      "target_id": "ROLE-A-013",
+      "kind": "optional_connection",
+      "required_traits": [
+        "同時成立の条件を個人提示と共有提示に分けて示すこと",
+        "同時入力が競合したときに、どちらが成立したかを個体ごとに判別できること"
+      ],
+      "fallback": "A-013が成立しない場合、本候補は窓の記録をサーバー側の個人単位の事実としてだけ保持する。NPCやイベントからの発生は待たない。",
+      "resolution": "reserved_unresolved"
+    }
+  ],
+  "unresolved_refs": [
+    {
+      "target_id": "ROLE-A-013",
+      "required_traits": [
+        "同時成立の条件を個人提示と共有提示に分けて示すこと",
+        "同時入力が競合したときに、どちらが成立したかを個体ごとに判別できること"
+      ],
+      "reason": "peer-snapshotsが配布されておらず、A-013は予約枠のままで本文を確認できない。必要な性質だけを要求として記載する。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": null,
+      "required_traits": [
+        "Run開始後のPartyの構成変化（切断、脱落）をサーバーが検知し、その旨をスキル処理へ通知できること"
+      ],
+      "reason": "current-implementation.mdはパーティ受付の上限5人と受付時の切断除外を記すが、複数人での挙動は未確認で1人セッションの検証のみと明記している。Run中の構成変化をどの経路で通知できるかは判断できない。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": null,
+      "required_traits": [
+        "窓の開始が音による入力としてサーバー側で記録され、各アノマリーが個別に定義した受理規則へ渡せること"
+      ],
+      "reason": "anomaly-interaction.mdは現時点で共通のディスパッチを新設しないと明記しており、入力記録の受け皿と順序が未定である。受け皿の存在を仮定しない。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": "ROLE-C-001",
+      "required_traits": [
+        "個人単位の連携入力受付窓を開ける"
+      ],
+      "reason": "接続要求。個別内容との互換性をまだ確認していない。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": "ROLE-C-004",
+      "required_traits": [
+        "試聴中は移動、通常攻撃、他のスキル発動を受け付けない"
+      ],
+      "reason": "接続要求。個別内容との互換性をまだ確認していない。",
+      "adoption_blocker": false
+    }
+  ],
+  "conflicts": [
+    {
+      "source_path": "docs/systems/anomaly-interaction.md",
+      "existing_rule": "各アノマリーは Interaction Kind ごとに Ignore、Accept、Transform、Intercept、Reject のいずれかを採れる。何も起きないは有効な結果になり得る。共通ディスパッチは現時点では新設せず、二つ以上のアノマリーが同じ文脈と処理を共有することを確認してから検討する。",
+      "proposal_difference": "本候補は窓の開始をSound Interactionの入力として記録し、各アノマリーが受理しうる形にする。どのアノマリーがどの結果を返すかは本候補では確定しない。",
+      "correction": "採用する場合も、個別の受理と結果はアノマリー資料側で定義する。本候補がやるのは入力を記録することだけとし、共通ディスパッチを新設しない方針は変更しない。",
+      "reason_correctable": "個別アノマリーごとの受理と結果を先に記録する、という進め方は既存方針と矛盾しない。矛盾の可能性があるのは、記録した時点ですでに何らかの結果を示すように書いてしまう点だけである。",
+      "decision_needed": "窓の開始をどのInteractionとして記録するか。Sound以外の種別を併用するか。"
+    },
+    {
+      "source_path": "docs/systems/skill-build.md",
+      "existing_rule": "4つの装備枠を想定する。修得済みスキルの総数と装備枠数は別だが、装備切替の場所とタイミング、および奥義、パッシブ、アノマリー専用スキルが枠を占有する条件は未決定。",
+      "proposal_difference": "本候補は指定1枠を選ぶ操作を要するため、枠の選択が成立するタイミングを前提にする。",
+      "correction": "採用する場合も、装備切替のタイミングと枠の占有条件は未決定のまま維持し、本候補では指定1枠をその場での選択に限る。装備の切替そのものは本候補に含めない。",
+      "reason_correctable": "枠数と枠の扱いの方針は変更せず、選択のタイミングだけを限定する。",
+      "decision_needed": "指定1枠の選択を使用時に行うか、装備、設定に合わせるかを別途決める必要がある。"
+    }
+  ],
+  "uncertainties": [
+    "受付時間・距離・上限・クールダウン・速度などの値は仮案段階。",
+    "レベル差は候補であり、効果量と操作負担を試作して調整する。",
+    "通常スキルとしてのみ扱い、Player Anomalyの専用能力には一般化しない。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "音の合図を出し、仲間との連携入力を待つ。",
+    "in_world_rationale": "既存の移動・音・観察を通常と異なる条件で操作する候補。成立理由を世界の起源や装置の正体へ結び付けない。",
+    "meaning_left_ambiguous": "なぜこの操作が成立するか。博士の意図・Entityの正体は確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "この候補の入力条件・状態・提示の専用処理は実装記録がなく、新規ロジックが必要。",
+  "new_logic": [
+    "音の合図を出し、仲間との連携入力を待つ。",
+    "Serverで成立条件と終了を検査する処理",
+    "本人または対象へのFeedback"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "専用入力と状態管理が必要。対象側基盤が未実装なら、その試作費用は別途見積もる。",
+    "implementation_steps": [
+      "単一対象で成立・不成立を確認",
+      "解除とRun終了時の破棄を確認",
+      "複数参加者と競合Effectを確認"
+    ],
+    "assumed_existing_parts": [
+      "既存スキル発動経路",
+      "CharacterとRun参加者の管理"
+    ]
+  },
+  "role_details": {
+    "skill_family": "補助",
+    "rank": null,
+    "rank_rationale": "系統内の候補が揃った時点で比較する。ランク解放条件自体は変更しない。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "音の合図を出し、仲間との連携入力を待つ。"
+      },
+      {
+        "level": 2,
+        "proposal": "成立前に指定枠を一度変更できる。"
+      },
+      {
+        "level": 3,
+        "proposal": "受付済みの仲間全員へ同じ合図を送れる。威力や枠数は増えない。"
+      }
+    ],
+    "equipped_slot_policy": "通常スキルの4装備枠のうち1枠。取得ランク条件は既存規則に従い、装備切替時点は未決定。",
+    "normal_attack_link": "通常攻撃からの連携候補。発動中の制限は本案に従い、受付窓・キャンセル時点は未決定。",
+    "avoids": "音の合図を出し、仲間との連携入力を待つ。",
+    "intervenes_in": "同意した同一Runの仲間一人と、指定スキル一枠の受付窓を開く。 窓の開始・終了は位置つきのSound入力になる。 窓中は他の枠と通常攻撃を止め、時間経過・切断・戦闘不能で解除。",
+    "sacrifices": "音を出して連携を合わせるか、自由に動くか。威力増加や全Entityへの作用は付けない。",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-013.html"
+}

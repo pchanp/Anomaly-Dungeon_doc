@@ -1,0 +1,247 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-018",
+  "role": "B",
+  "title": "引き索（対象を自分の側へ一歩寄せる）— 作業用見出し",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| `Move` | ダッシュ、Teleport、Knockback、位置変更 | 誰を移動させるか、経路上の判定は個別に定める |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "対象を動かす結果はMove。誰を動かすか、経路上で何が起きるかを個別に定める必要がある。"
+    },
+    {
+      "path": "docs/anomalies/mad-stomper.md",
+      "section": "プレイヤーを単純に殺す敵ではなく、**通過を妨げる巨大な環境アノマリー**として設計する。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "敵は倒すより通り道を問題にする。間合いを作る手段として引き寄せは成立する。"
+    },
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "戦闘イベントには、敵NPCの出現、追跡、包囲、増援、防衛、巨大アノマリーとの遭遇、NPC同士の戦闘への介入などが含まれ得る。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "戦闘は包囲や増援を含む流れとして発生し得る。対象を自分の側へ寄せることでその流れをずらせる。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "**同じEffect IDが同じ対象に再適用された場合、既定では効果量を足さず、1件として扱う。**",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "同じ対象への二度目の引き寄せは効果量を足さない。"
+    }
+  ],
+  "design_hypothesis": "遠くに留まっている対象は、近づかないと操作できない。本候補は『射程内の対象1体を自分の方向へ一歩ぶん引き寄せる』索を与える。引く距離は一歩だけで、対象の抵抗は取り消さない。引き寄せた直後は対象が自分测算身处にあるため、次の攻撃の距離を選んでから放つことになる。距離を作るために索を1回使い、1回分の接近余地と索そのものを失う。",
+  "experience": {
+    "goal": "距離を詰めてから殴る、または引いた先に他の対象を踏ませる。",
+    "player_choice": "引くか、引かずに遠时间去处理するか。対象を選ぶ。",
+    "sacrifice_or_risk": "索は1回きり。使えば相手は自分の真横に来る。"
+  },
+  "placement_assumption": "新しい地形・部屋・装置は提案しない。操作は『使う』だけ。索は地面の形状に依存しない。",
+  "components": [
+    {
+      "component": "Effect.Move",
+      "availability": "catalog",
+      "usage": "対象1体を自分の方向へ一歩ぶん引き寄せる位置変更。"
+    },
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "対象が移動したあと、个人にだけ距離的变化を印で示す。"
+    },
+    {
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "対象の追跡・警戒の状態遷移を共有事実として扱う。"
+    },
+    {
+      "component": "ItemLifecycle",
+      "availability": "catalog",
+      "usage": "正式な取得源とItemStackが未実装であることを前提とする。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "Move",
+      "trigger": "対象個人が索を使い、射程内の対象1体を選ぶ",
+      "condition": "実行中であること、索を個人所持にもつこと、対象が射程内にいること、対象が移動できる状態であること",
+      "result": "対象が自分の方向へ一歩ぶん移動する。対象の体力・状態異常・進行は変化しない。経路に他の対象がいる場合の扱いは未確定のため候補では解決しない",
+      "target": "選ばれた対象1体",
+      "scope": "対象の位置。共有のMap内の位置として確定する",
+      "lifetime": "同一Run中",
+      "resolution": "instant",
+      "end_conditions": [
+        "移動の解決で確定する",
+        "Run終了時に索は破棄される。使用済みの索は再利用しない"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "即時解決のみ。移動は元に戻さず、索の消費だけが別事象として残る。",
+      "stacking": {
+        "exception": false,
+        "rule": "1回につき1対象1回。二本あれば別の対象か別の距離へ使えるが、同じ対象へ重ねても距離は足さない",
+        "conflict_resolution": "他のEffectが対象を移動させる場合は解決規則が未定義のため保留する"
+      },
+      "server_validation": "Serverが射程、対象の存在、対象が移動可能であることを検証してから位置を変更する",
+      "client_presentation": "対象が動く描写と、索の消費表示のみ。対象の内部状態は表示しない",
+      "feedback": {
+        "success": "対象が近づき、索が1本減る",
+        "failure": "対象が動かない。注意表示のみ",
+        "ambiguous": "対象がどう反応したかはHUDに出さない"
+      }
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "引き寄せの解決直後に個人HUDが再描画する",
+      "condition": "対象個人がRun参加中で個人HUDが有効なとき",
+      "result": "『選択した対象が1体近づいた』印だけを個人に示す。距離の数値は出さない",
+      "target": "対象個人",
+      "scope": "個人。共有の戦況表示は書き換えない",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": [
+        "表示の解決で確定する",
+        "切断時は個人提示を破棄する。再接続時の復元は未決"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。一時提示の寿命は提示の性質からその場だけとする。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一対象への印は非加算1件。連続使用しても印は増えない",
+        "conflict_resolution": "他のHUD提示との優先順位は未決定"
+      },
+      "server_validation": "Serverは接近の事実だけ返す。対象の内部状態は返さない",
+      "client_presentation": "HUDに印が1つ出るだけ",
+      "feedback": {
+        "success": "印が一瞬出る",
+        "failure": "印が出ない",
+        "ambiguous": "対象の位置は印でも数字でも出さない"
+      }
+    }
+  ],
+  "provides_traits": [
+    "対象との距離を作る結果を作るアイテム例",
+    "索の一回制限と接近の選択を組にした例"
+  ],
+  "connection_tags": [
+    "Item",
+    "Combat",
+    "Environment"
+  ],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": [
+        "対象を移動させたときの経路判定と、他の対象・地形との衝突の解決規則"
+      ],
+      "reason": "effect-components.mdはMoveの経路上の判定を個別に定めるとするだけで規則を渡していない。候補は衝突の解決を空けて自分では埋めない。",
+      "adoption_blocker": true
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "射程と一歩の長さは未確定。移動速度とCapsuleの仕様が未実装のため候補側で確定しない。",
+    "対象がAnomaly Entityか通常NPCかで選択の作り方が変わる。候補はどちらでも使える形にし、相手の挙動は作らない。",
+    "照合範囲：Moveの境界、敵が通過を妨げる存在であること、戦闘イベントの種類、重ね掛けの既定。矛盾は見つからず conflicts は空配列"
+  ],
+  "worldview": {
+    "defamiliarized_element": "距離を詰める手段を『攻撃』ではなく『対象を動かす』ことにした。敵の選択権は奪わず、居場所だけを一段変える。",
+    "in_world_rationale": "既に敵は倒すより通り道を問題にする存在として扱われている。索があるなら、それは安全に近づくための道具ではなく、自分から危険側へ誘い込む道具として使われる。",
+    "meaning_left_ambiguous": "索を作った者は誰で、引かれた対象が後にどう変わったかは確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "正式なInventoryとItemStackは未実装で、対象を任意に選んで位置を変える操作も未実装（current-implementation.md）。選択と移動の経路が要るため true とする。",
+  "new_logic": [
+    "射程内の対象1体を選んで自分側へ一歩引き寄せる操作口"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "デバッグ床に固定配置の巨人があるため移動の検証自体は1人でできる。選択UIと射程判定、衝突の扱いが要るため小よりは大きい。",
+    "implementation_steps": [
+      "デバッグ付与で索を持たせる",
+      "デバッグ床の巨人に対して『対象を選ぶ』と『一歩ぶん引く』操作を足す",
+      "引き寄せ後、対象の移動が通常どおり続くことを確認する",
+      "経路に別の対象を置いた場合の挙動は未解決として記録する"
+    ],
+    "assumed_existing_parts": [
+      "デバッグ床の巨人の固定配置と移動処理",
+      "クライアントの対象選択UIの土台",
+      "InventoryServiceの枠境界"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Undecided",
+        "detail": "配る主体は未確定。正式な取得源が未実装であり創作しない。試作のみデバッグ付与。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "1枠を消費する。残り数だけ選択の余地がある。"
+      },
+      {
+        "route": "Use",
+        "status": "Proposed",
+        "detail": "対象を選んで一歩ぶん引き寄せる。中核の操作。"
+      },
+      {
+        "route": "Present",
+        "status": "NotApplicable",
+        "detail": "渡さない。渡すと対象を選ぶ権利まで渡ることになり、距離の判断が相手側に移る。"
+      },
+      {
+        "route": "Place",
+        "status": "NotApplicable",
+        "detail": "置かない。置く操作を追加すると回収経路が二重になる。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "確保枠の外なら死亡時に失う。未使用なら失っても何も起こらない。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "確保枠に入れて索を守るか，索を使わず身軽で出るかを選べる。"
+      },
+      {
+        "route": "Sell",
+        "status": "Undecided",
+        "detail": "換金の可否は判断010・判断011・経済と成長で未決。"
+      },
+      {
+        "route": "Quest",
+        "status": "Undecided",
+        "detail": "依頼主は未確定。既存の博士の依頼が定める固有品の交換とは別物品として扱う。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "Proposed",
+        "detail": "移動は他の相互作用の入力になり得る。ただし候補は相手の内部状態を一切変更しない。"
+      }
+    ],
+    "ownership_state": "索はplayer単位の個人所持。使用すると対象の位置だけがServer側で変わる。切断と再接続時の復元は未決。",
+    "server_run_state": "対象の位置を共有のMap状態として書き換えるが、出現率と同時出現数は変更しないためWorldChangeのEffectは発生しない。"
+  },
+  "html_file": "ROLE-B-018.html"
+}

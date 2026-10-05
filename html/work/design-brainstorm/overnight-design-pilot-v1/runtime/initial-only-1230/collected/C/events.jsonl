@@ -1,0 +1,6 @@
+{"at":null,"event":"session_start","candidate_ids":[],"note":"ROLE=C 開始。RUN_ID=overnight-design-pilot-v1、MODE=PILOT_ONLY。今回の管理側上書き指示によりBash/date/MCP/外部ディレクトリ/外部調査/Git/Studioを一切使用しない。時刻取得手段がないためatはnull。モデル・費用・セッションIDも未観測のためnull。"}
+{"at":null,"event":"reading_start","candidate_ids":[],"note":"共通パック契約の読み込みを開始。読む順序はREADME.md指定的順。"}
+{"at":null,"event":"reading_end","candidate_ids":[],"note":"共通パック（README/scope/invariants/source-conflicts/effect-contract/components/candidate-format/ownership/pilot-and-timing/review-rules/prompts common+role-c/reserved-ids/candidate.schema/sources.json/pack-integrity/run-config/templates/scripts/validate.py）とsnapshot必読MDを読み終えた。時刻は観測できないためnull。"}
+{"at":null,"event":"validation_start","candidate_ids":[],"note":"pack-only検証をCppythonで実行する段取りへ進もうとしたが、今回の管理側上書き指示により実行图片来自い。検証は管理側の担当。"}
+{"at":null,"event":"validation_end","candidate_ids":[],"note":"pack-only検証はROLE=Cでは未実行（管理側の担当）。sources.jsonの行番号とstatus_declarationsはpack内copyと一致することだけReadで確認した。"}
+{"at":null,"event":"batch_start","candidate_ids":["ROLE-C-001","ROLE-C-004","ROLE-C-013"],"note":"試走3件の保存を開始。HTMLとJSONを各1組ずつ作る。"}

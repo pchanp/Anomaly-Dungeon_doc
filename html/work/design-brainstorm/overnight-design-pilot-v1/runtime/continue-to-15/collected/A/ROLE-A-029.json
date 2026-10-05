@@ -1,0 +1,106 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-029",
+  "role": "A",
+  "title": "曲がった道標 — 通ると一度だけ向きが変わる",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "GimmickEvent",
+  "source_evidence": [
+    {"path": "docs/world/information-design.md", "section": "### 意図的に曖昧にするもの", "source_status": "Status: Draft（草案）", "claim": "NPCがアノマリーをどこまで認識、理解しているかは意図的に曖昧にする。"},
+    {"path": "docs/systems/observation-and-recognition.md", "section": "## 役割と境界", "source_status": "Status: Draft（草案）", "claim": "共通システムは候補の観察根拠と進行を扱い、個別MapとAnomalyは何を観察対象にするかを決める。"},
+    {"path": "docs/systems/effect-components.md", "section": "## 記述時の最小項目", "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）", "claim": "個別資料では必要に応じてEffect種別、発動条件、対象、作用範囲、保存境界、終了条件、重ね掛けの例外、Serverが確定する状態、Clientの提示を記録する。"}
+  ],
+  "design_hypothesis": "道標が、ときどき逆方向を向く状態を仮定します。向きが変わるのは、その道標をRun中に一度だけ通りかかった後です。通るまでは通常の向きで、通ったあとは別の方向を向きます。理由は表示されません。向きを戻す方法はありません。向きが変わる道標は一つだけで、地形そのものは変更しません。",
+  "experience": {
+    "goal": "道標を信じ続けるか、信じないかを決めることになる。",
+    "player_choice": "道標に従って進む／逆へ曲がって自分で見る／別の目印を探す。",
+    "sacrifice_or_risk": "なぜ曲がったかは説明されない。従った場合だけ先に進めない可能性がある。戻就是了戻れない。"
+  },
+  "placement_assumption": "全マップ共通のWorldChangeとして扱い、道標の形と置き場は各マップの判断に委ねます。地形や通路の構造は提案しません。正解を提示する仕組みにはしません。",
+  "components": [
+    {"component": "Effect.WorldChange", "availability": "catalog", "usage": "道標の向きを共有で管理する。"},
+    {"component": "Effect.StateChange", "availability": "catalog", "usage": "通りかかると向きを書き換える。"},
+    {"component": "Effect.InformationChange", "availability": "catalog", "usage": "向きだけを個人へ返す。理由は返さない。"}
+  ],
+  "effects": [
+    {
+      "kind": "WorldChange",
+      "trigger": "対象マップが道標を置く。",
+      "condition": "対象マップが本候補を許可していること。",
+      "result": "道標が通常の向きでRun中に残る。数は1つ。",
+      "target": "対象の道標",
+      "scope": "Run全体",
+      "lifetime": "同一Run中",
+      "resolution": "sustained",
+      "end_conditions": ["Run終了"],
+      "end_mode": "any",
+      "end_rule_reason": "Runの終わりで道標の状態を破棄する。",
+      "stacking": {"exception": false, "rule": "道標は1つ。複数置かない。", "conflict_resolution": "他のWorldChangeが同じ道標を操作する場合は未確定のため保留。"},
+      "server_validation": "Serverが向きを管理する。",
+      "client_presentation": "道標の見た目のみ。",
+      "feedback": {"success": "道標が存在する。", "failure": "置く数は固定されている。", "ambiguous": "なぜそこにあるかは説明しない。"}
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "個人が道標を一度通る。",
+      "condition": "その道標がまだ変化していないこと。",
+      "result": "道標の向きが別の方向へ変わる。戻す手段は持たない。",
+      "target": "対象の道標",
+      "scope": "Run全体",
+      "lifetime": "同一Run中",
+      "resolution": "sustained",
+      "end_conditions": ["Run終了"],
+      "end_mode": "any",
+      "end_rule_reason": "Runの終わりまで向きを保つ。",
+      "stacking": {"exception": false, "rule": "一度だけ書き換える。二度目はない。", "conflict_resolution": "同じ道標への他の操作は未定のため保留。"},
+      "server_validation": "Serverが通過と向きの書き換えを確定する。",
+      "client_presentation": "道標の見た目のみ。変化の通知はしない。",
+      "feedback": {"success": "向きが変わる。", "failure": "変化後は書き換わらない。", "ambiguous": "なぜ変わったかは説明しない。"}
+    }
+  ],
+  "provides_traits": ["道標がRun中に一度だけ裏返る", "表示されない変化を自分で読む必要がある"],
+  "connection_tags": ["WorldChange", "StateChange", "Environment", "Guidance"],
+  "refs": [],
+  "unresolved_refs": [
+    {"target_id": null, "required_traits": ["道標を全マップへ割り当てるかを決める方針"], "reason": "ID未指定の要求。どのマップでも使えるとは確定できず、置き場は各マップの判断に委ねた。", "adoption_blocker": false},
+    {"target_id": null, "required_traits": ["向きが変わる条件を統一するか、各マップに委ねるか"], "reason": "ID未指定の要求。既存の案内NPC（ROLE-A-003）と役割が重なる可能性があるため、共通設計側の判断が必要。", "adoption_blocker": true}
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "向きが変わる条件と、変化後の向きは未定。数値を決めていない。",
+    "変化を通知すべきかは未定。",
+    "別の目印を追加して提示を構成するかは未定。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "道標が一度だけ嘘をつく、という案内への信頼の外形を置いた点。",
+    "in_world_rationale": "古い設備が残る文明では、道標が「この先へ”而だけだったことに変わりはない。誰が向きを書き換えたかは説明しない。",
+    "meaning_left_ambiguous": "なぜ道標は変わるのか。書き換えたのは人か、それとも設備か。嘘は人を遠ざけるためか、別の目的か。従った先では何が見えるのか。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "道標の向きの共有管理と書き換えが未実装で、既存の案内NPCとも別の経路が必要になるため。コード生成の許可ではない。",
+  "new_logic": ["道標の向きを共有で保持する", "一度限りの書き換え"],
+  "prototype_cost": {
+    "band": "小",
+    "rationale": "道標1つと一度限りの書き換えなら小さい。ただし既存の案内表示と混ぜると混乱するため、別の提示として分ける必要がある。実時間の見積もりは出していない。",
+    "implementation_steps": ["道標を1つだけ置く", "一度通ると向きが変わることを確認する", "二度目は変わらないことを確認する", "地形が変更されていないことを確認する"],
+    "assumed_existing_parts": ["既存の案内UIの受け口", "Server権威のRun状態", "既存の個人提示の経路"]
+  },
+  "role_details": {
+    "npc_purpose": "NPCは置かない。案内は物の向きだけで行い、言葉で説明しない。",
+    "player_anomaly_handling": "Run共有の変化なので対象全体で成立する。通常NPCとのInteractionではない。判断019の枠は変えない。",
+    "mob_contract": {
+      "applicable": false,
+      "spawn_condition": "対象は発生しない。既存のイベント由来モブの通行も想定も変えない。",
+      "population_cap": "対象は増やさない。個体数の上限は発生側の枠に従う。",
+      "non_combat_response": "道標は通行を妨げない。向きを無視して進めば交戦なしで通れる。",
+      "exit_condition": "Run終了まで向きは残る。Run終了で破棄する。",
+      "entity_distinction": "Anomaly Entityの枠も同時出現数も使わない。通路の目印の向きだけを変える案である。"
+    }
+  },
+  "html_file": "ROLE-A-029.html"
+}

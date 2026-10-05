@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-B-015 空の持出（身軽になる代わりに、失ったものだけが残る）</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<p class="sub">overnight-design-pilot-v1 ／ ROLE=B ／ 全マップ共通 ／ Idea</p>
+<h1>ROLE-B-015 空の持出（身軽になる代わりに、失ったものだけが残る）— 作業用見出し</h1>
+</header>
+
+<section id="hypothesis">
+<h2>何の案？</h2>
+<p>持ち物を一度すべて捨てて、「何を失ったか」だけを手元に残す帳簿。</p>
+<h2>仕組み</h2>
+<ul>
+<li>使うと通常スロットの所持が全部消える。確保枠の物だけは残る。</li>
+<li>帰還が成功でも通常分は消えたまま。獲得物には入らない。</li>
+<li>失った品の一覧だけが個人記録として次のRunへ持ち越される。</li>
+</ul>
+<h2>選択と代償</h2>
+<p>成功時にも全部捨てる。持ち越されるのは名簿であって物ではない。</p>
+</section>
+
+<section id="diagram">
+<h2>作用図</h2>
+<div class="board">
+<svg viewBox="0 0 980 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="帳簿を使うと通常スロットの所持がすべて消え、確保枠だけが残り、失った品の一覧だけが個人記録としてRunをまたいで残る図">
+<rect width="980" height="380" fill="#0a1118"/>
+<text x="30" y="26" class="small">全マップ共通の文脈。特定のマップへの配置は保証しない。</text>
+<rect x="30" y="56" width="220" height="110" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text x="46" y="86" class="label">使う前</text>
+<text x="46" y="112" class="small">通常スロットに品がある</text>
+<text x="46" y="134" class="small">確保枠に別の品</text>
+<text x="46" y="156" class="small">総枠数は20のまま</text>
+<rect x="365" y="56" width="220" height="110" rx="8" fill="#142330" stroke="#c4a0ec"/>
+<text x="381" y="86" class="label">帳簿を使う</text>
+<text x="381" y="112" class="small">一度きり</text>
+<text x="381" y="134" class="small">成功か否かは関係ない</text>
+<text x="381" y="156" class="small">記録が一つ増える</text>
+<rect x="700" y="56" width="250" height="110" rx="8" fill="#142330" stroke="#ea9380"/>
+<text x="716" y="86" class="label">使う後</text>
+<text x="716" y="112" class="small">通常スロットは空</text>
+<text x="716" y="134" class="small">確保枠だけ残る</text>
+<text x="716" y="156" class="small">獲得物には入らない</text>
+<path d="M252 111 H362" class="active"/>
+<path d="M362 105 l10 6 -10 6" class="active"/>
+<path d="M587 111 H697" class="hyp-line"/>
+<path d="M697 105 l10 6 -10 6" class="hyp-line"/>
+<path d="M475 168 V210" class="hyp-line"/>
+<path d="M467 202 l8 8 8 -8" class="hyp-line"/>
+<rect x="320" y="212" width="310" height="90" rx="8" fill="#142330" stroke="#d3b653"/>
+<text x="336" y="242" class="label">名簿だけが残る</text>
+<text x="336" y="268" class="small">内容は本人にだけ見える</text>
+<text x="336" y="290" class="small">次のRunへ持ち越される</text>
+<path d="M825 168 V252" class="active"/>
+<path d="M817 244 l8 8 8 -8" class="active"/>
+<text x="30" y="336" class="small">記録の表示場所と保存期間の上限は未確定。模式図であり地図ではない。</text>
+</svg>
+</div>
+<p>上が全捨て、下が名簿。成功でも通常分は戻らない。</p>
+</section>
+
+<footer>
+<p><a href="index.html">← B候補一覧</a> ／ 詳細データ <a href="ROLE-B-015.json">ROLE-B-015.json</a> ／ connection_tags: Item, Interface ／ requires_code: true ／ 試作コスト: 中</p>
+</footer>
+</main>
+</body>
+</html>

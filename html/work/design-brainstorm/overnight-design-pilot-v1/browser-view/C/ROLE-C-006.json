@@ -1,0 +1,200 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-006",
+  "role": "C",
+  "title": "停波の隙間",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "廃TSUTAYA",
+  "classification": "マップ固有",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/current-implementation.md",
+      "section": "実装済みの基盤",
+      "source_status": "Status: Implemented（実装棚卸し）",
+      "claim": "TSUTAYAのCRTでチャンネルを変更できる。停波ノイズを挟んで切り替わり、チャンネルごとに音が変わる。試聴機で個人試聴でき、試聴は一定時間で終わり、共有BGMはSERVER Stateとしてマップモデル直下に保持され、試聴では変わらない。"
+    },
+    {
+      "path": "docs/systems/observation-and-recognition.md",
+      "section": "既存案への適用",
+      "source_status": "Status: Draft（草案）",
+      "claim": "MiWの現在のProximityPromptによる観測は明示Interactionであり、視野観察の実装ではない。既存Observerは近接によるExposure取得であり、視野観察の実装ではない。既存の近接判定やPromptを、名前だけを理由に観察システムへ置き換えない。"
+    },
+    {
+      "path": "docs/systems/observation-and-recognition.md",
+      "section": "Server権威とRemote境界",
+      "source_status": "Status: Draft（草案）",
+      "claim": "ServerはClientのカメラ方向、画面内状態、UI被覆状態を直接確認できない。Clientからの観察進行は要求であり、世界状態の証明ではない。経路開放、報酬、Exposure、共有State TransitionはServerだけが確定する。"
+    },
+    {
+      "path": "docs/systems/anomaly-interaction.md",
+      "section": "Observation Interaction",
+      "source_status": "ステータス: Draft",
+      "claim": "個別アノマリー側では、どの認識段階で何が起きるか、観察がExposureや相手側の反応を伴うかを定義する。視界内に入っただけで結果を確定してはならない。"
+    },
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "探索系",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "SHADEの「検知されない」がすべてのAnomaly Entityに通用するか、どのタイミングまで不可視かは未決定。認知アノマリーの観察や認識、個別アノマリーの検知ルールを一律に上書きしない。"
+    }
+  ],
+  "design_hypothesis": "CRTの停波中だけ、自分の視覚Observe進行を止める。 対応するCRTの停波区間で発動する。 本人の視覚Observeだけを一時停止し、終了後は通常判定に戻す。 区間終了・再入力・戦闘不能で解除する。近接Exposureは続く。",
+  "experience": {
+    "goal": "CRTの停波中だけ、自分の視覚Observe進行を止める。",
+    "player_choice": "見ることによる進行を避けるか、観察を進めるか。停止中は視覚観察による発見も得られない。",
+    "sacrifice_or_risk": "見ることによる進行を避けるか、観察を進めるか。停止中は視覚観察による発見も得られない。"
+  },
+  "placement_assumption": "既存マップで使用する文脈。配置・建物構造・地形・Questの結末を新設しない。対応対象が未実装なら試作用の対象で確認する。",
+  "components": [
+    {
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "CRTの停波中だけ、自分の視覚Observe進行を止める。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "RuleOverride",
+      "trigger": "装備中に本人が発動入力。対応するCRTの停波区間で発動する。",
+      "condition": "対応するCRTの停波区間で発動する。 ServerがRun・対象・クールダウンを検査。",
+      "result": "対応するCRTの停波区間で発動する。 本人の視覚Observeだけを一時停止し、終了後は通常判定に戻す。 区間終了・再入力・戦闘不能で解除する。近接Exposureは続く。",
+      "target": "本人",
+      "scope": "同一マップ内の対象限定。共有Quest・出現率・Exposureは変更しない。",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "区間終了・再入力・戦闘不能で解除する。近接Exposureは続く。",
+        "マップ離脱",
+        "Run終了",
+        "対象の戦闘不能または切断"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "最初に成立した終了条件で解除し、Runを越えて状態を保存しない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effect・同一対象は非加算の1件。即時結果は一回解決し、重複要求を再適用しない。",
+        "conflict_resolution": "競合する移動・入力制限・観察の適用順は採用前の確認事項。"
+      },
+      "server_validation": "対象・距離・安全な位置・使用状態をServerで検査。個人画面を世界状態の証明にしない。",
+      "client_presentation": "CRTの停波中だけ、自分の視覚Observe進行を止める。",
+      "feedback": {
+        "success": "成立・消費・終了を対象本人に表示。",
+        "failure": "不成立の理由を短く表示。効果を付与しない。",
+        "ambiguous": "原因・正体は説明しない。操作の成否は曖昧にしない。"
+      }
+    }
+  ],
+  "provides_traits": [
+    "CRTの停波中だけ、自分の視覚Observe進行を止める。",
+    "対応するCRTの停波区間で発動する。",
+    "本人の視覚Observeだけを一時停止し、終了後は通常判定に戻す。",
+    "区間終了・再入力・戦闘不能で解除する。近接Exposureは続く。"
+  ],
+  "connection_tags": [
+    "Skill",
+    "Environment",
+    "Observation"
+  ],
+  "refs": [
+    {
+      "target_id": "ROLE-A-004",
+      "kind": "optional_connection",
+      "required_traits": [
+        "CRTと試聴機の操作がServer側の操作事実として記録され、共有できること"
+      ],
+      "fallback": "A-004が成立しない場合、本候補は既存のCRTとチャンネル切替だけから成立する。NPC、出現物、報酬、退場条件には依存しない。",
+      "resolution": "reserved_unresolved"
+    }
+  ],
+  "unresolved_refs": [
+    {
+      "target_id": "ROLE-A-004",
+      "required_traits": [
+        "CRTと試聴機の操作がServer側の操作事実として記録され、共有できること"
+      ],
+      "reason": "peer-snapshotsが配布されておらず、A-004は予約枠のままで本文を確認できない。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": null,
+      "required_traits": [
+        "CRTのチャンネル変更時に停波ノイズの開始と終了を、Server側のイベントとして通知できること"
+      ],
+      "reason": "current-implementation.mdは停波ノイズを挟んで切り替わると記すが、その時間区間を他のシステムから使える 형태로通知するかの記録がない。",
+      "adoption_blocker": false
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "受付時間・距離・上限・クールダウン・速度などの値は仮案段階。",
+    "レベル差は候補であり、効果量と操作負担を試作して調整する。",
+    "通常スキルとしてのみ扱い、Player Anomalyの専用能力には一般化しない。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "CRTの停波中だけ、自分の視覚Observe進行を止める。",
+    "in_world_rationale": "既存の移動・音・観察を通常と異なる条件で操作する候補。成立理由を世界の起源や装置の正体へ結び付けない。",
+    "meaning_left_ambiguous": "なぜこの操作が成立するか。博士の意図・Entityの正体は確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "この候補の入力条件・状態・提示の専用処理は実装記録がなく、新規ロジックが必要。",
+  "new_logic": [
+    "CRTの停波中だけ、自分の視覚Observe進行を止める。",
+    "Serverで成立条件と終了を検査する処理",
+    "本人または対象へのFeedback"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "専用入力と状態管理が必要。対象側基盤が未実装なら、その試作費用は別途見積もる。",
+    "implementation_steps": [
+      "単一対象で成立・不成立を確認",
+      "解除とRun終了時の破棄を確認",
+      "複数参加者と競合Effectを確認"
+    ],
+    "assumed_existing_parts": [
+      "既存スキル発動経路",
+      "CharacterとRun参加者の管理"
+    ]
+  },
+  "role_details": {
+    "skill_family": "アクション",
+    "rank": null,
+    "rank_rationale": "系統内の候補が揃った時点で比較する。ランク解放条件自体は変更しない。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "CRTの停波中だけ、自分の視覚Observe進行を止める。"
+      },
+      {
+        "level": 2,
+        "proposal": "再入力で区間途中に解除できる。"
+      },
+      {
+        "level": 3,
+        "proposal": "発動前に受付可能かだけ確認できる。"
+      }
+    ],
+    "equipped_slot_policy": "通常スキルの4装備枠のうち1枠。取得ランク条件は既存規則に従い、装備切替時点は未決定。",
+    "normal_attack_link": "通常攻撃からの連携候補。発動中の制限は本案に従い、受付窓・キャンセル時点は未決定。",
+    "avoids": "CRTの停波中だけ、自分の視覚Observe進行を止める。",
+    "intervenes_in": "対応するCRTの停波区間で発動する。 本人の視覚Observeだけを一時停止し、終了後は通常判定に戻す。 区間終了・再入力・戦闘不能で解除する。近接Exposureは続く。",
+    "sacrifices": "見ることによる進行を避けるか、観察を進めるか。停止中は視覚観察による発見も得られない。",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-006.html"
+}

@@ -1,0 +1,197 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-002",
+  "role": "B",
+  "title": "帰還点の目印（置き直すと前の場所は忘れる）— 作業用見出し",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "8/31",
+  "classification": "マップ固有",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "ReturnとTransition",
+      "source_status": "Status: Draft（草案）",
+      "claim": "Return Portalはマップ攻略完了ではなく現在のRunから帰還できる状態を意味し、原則としてサーバー共有状態とする。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "夕方になるとReturn Portalが出現し、プレイヤーは帰還または探索継続を選べる",
+      "source_status": "Status: Prototype: Implemented（実装済みプロトタイプ）",
+      "claim": "帰還面が開くのは夕方以降。候補の主対象文脈であり、記憶が効く時間帯の境界を作る。"
+    },
+    {
+      "path": "docs/systems/current-implementation.md",
+      "section": "にはアイテムの所在情報がない",
+      "source_status": "Status: Implemented（実装棚卸し）",
+      "claim": "InventoryServiceは枠数と保持・喪失の判定だけを持ち、配置や所有者の規則は未実装。目印の記録そのものも未実装。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| 同一Run中 | 当該Runの終了で破棄する。マップ遷移では原則保持する |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "目印の記録は同一Run中の保存境界に置き、次のRunへは持ち越さない。"
+    }
+  ],
+  "design_hypothesis": "帰還面は1か所しかなく、そこへ戻れるかどうかで夜が決まる。候補は『帰る場所を自分で1つだけ指定できる』ことを追加する。記録は1件しか持えず、置き直すと前の場所は上書きされて記録から消える。地図の構造ではなく記憶の容量を制限する案。",
+  "experience": {
+    "goal": "1か所の帰還面之外に、自分だけの目印を1つだけ持たせる。場所を覚えることを強制しつつ、覚えても地形は変わらないという事実を前面に出させる。",
+    "player_choice": "目印を置いて、この地点を帰還先候補にする。置き直して記録を移す（前の場所はもう戻れない）。持ち歩きだけで置かない。捨てる。",
+    "sacrifice_or_risk": "置き直すたびに前の場所は記憶から落ちる。記録は1件なので、2つの場所を同時に覚えてはいない。"
+  },
+  "placement_assumption": "新しい地形・部屋は提案しない。既存の帰還面と既存の配置point周辺のみを使う。目印を置く場所の具体座標・当たり判定・記録の表示は未確定。取得源となる人物は8/31に未実装であり創作しない。",
+  "components": [
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "個人記録として『帰還点1件』を置き、上書きし、取消する状態遷移。同一Run中。"
+    },
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "本人にだけ『記録が1件ある』印を出す。位置も地形も個人にも出さない。"
+    },
+    {
+      "component": "InventoryBoundary",
+      "availability": "catalog",
+      "usage": "20枠と初期Secure Slot 4枠の境界を前提に参照するが、目印自体は枠を1つ消費する。"
+    },
+    {
+      "component": "ItemLifecycle",
+      "availability": "catalog",
+      "usage": "正式な取得源とItemStackが未実装であることを前提とする。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "目印を所持した個人が、任意の探索点で『帰還点として残す』操作を行う",
+      "condition": "RunがACTIVE、対象個人がその座標に到達済み、既存の記録が1件以下。所在地の記録は個人単位",
+      "result": "その座標が個人の帰還点記録1件になる。既に記録がある場合は上書きされ、古い方の座標は記録から消える",
+      "target": "操作した個人（記録は個人単位）",
+      "scope": "個人。マップの帰還面やWorldの状態は書き換えない",
+      "lifetime": "同一Run中",
+      "resolution": "instant",
+      "end_conditions": [
+        "Run終了で個人記録は破棄される",
+        "記録の取消操作で即時に失われる。上書きによる失効も同じ境界"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。記録は同一Run中のみ。上書きは破棄条件ではなく記録の入替。",
+      "stacking": {
+        "exception": false,
+        "rule": "記録は常に1件。上書きは加算ではなく置換。固定秒数は持たない",
+        "conflict_resolution": "別のEffectが同じ個人の帰還点記録へ触る場合は解決規則未定義のため保留する"
+      },
+      "server_validation": "ServerがRun状態、到達済み座標、既存記録の有無を検証する。クライアントの表示を根拠にしない",
+      "client_presentation": "クライアントは操作可否のみ。記録の確定はServerが行う",
+      "feedback": {
+        "success": "印が1つ点き、前の記録があればそちらが消える",
+        "failure": "印が変化しない。注意表示のみ",
+        "ambiguous": "上の記録が消えた時に、何が失われたかは文章で説明しない"
+      }
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "記録を置く・上書き・取消のいずれかが成立したあと、個人HUDが再描画する",
+      "condition": "対象個人がRun参加中で個人HUDが有効なとき",
+      "result": "『帰還点の記録が1件ある』ことを示す印のみを更新する。座標は個人にも他者にも出さない",
+      "target": "対象個人",
+      "scope": "個人。共有のRun状態は書き換えない",
+      "lifetime": "同一Run中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "Run終了またはHUD非表示で解除",
+        "切断で個人提示は破棄する。再接続時の復元は未決"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。表示と個人状態の寿命を分ける理由がない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一個人への同一提示は非加算1件。状態を上書きする",
+        "conflict_resolution": "他のHUD表示との優先順位は未決定なので強制作業しない"
+      },
+      "server_validation": "Serverは記録の有無だけを返す。座標は返さない",
+      "client_presentation": "HUDは小さな印1つだけ。他者のHUDには出さない",
+      "feedback": {
+        "success": "印の再描画のみ",
+        "failure": "印が変化しない",
+        "ambiguous": "印の説明文は出さない。本人だけが判断する"
+      }
+    }
+  ],
+  "provides_traits": [
+    "Runをまたがない個人の位置記録を持ち、上書きで失効させる設計例",
+    "容量1件という制限で『覚える場所』を取捨させる型"
+  ],
+  "connection_tags": [
+    "Item",
+    "Observation"
+  ],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": [
+        "Discovery（記録）の保存期間とUI、およびQuest枠との境界を定義する資料"
+      ],
+      "reason": "quests.mdはDiscoveryの保存期間とUIを未決としている。目印の記録がDiscovery相当になるか、Run内の設置に留まるかで扱いが変わるため、採用判断として残す。",
+      "adoption_blocker": false
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "座標の記録方法、表示は未定。地形は持ち越されないため次のRunでは意味を失う前提で書く",
+    "他の探索者に目印を見せられるかは未確定。依頼主となる人物が未実装のため保留する。",
+    "記録は帰還そのものには使わない。帰還は既存のReturn Portalの規則のまま",
+    "取得源は未確定（8/31に通常NPC・施設が未実装）",
+    "照合範囲：効果7分類・保存境界・博士Quest補正と0.90倍減衰・8/32の帰還閉鎖とExposure2.4倍・Secure Slot枠数・判断005のRun範囲。矛盾は見つからず conflicts は空配列"
+  ],
+  "worldview": {
+    "defamiliarized_element": "地図やマーカーを増やすのではなく、覚えた場所を1つだけ持てるという記憶の容量を制限した。場所を増やすのではなく、増やさずに一つ選ばせる構造にした。",
+    "in_world_rationale": "既に帰還面が1か所で、Run中に帰れる場所が限られている。探索者が自分で帰る先を持てない状況下の不足として成立する。世界側はアノマリーを完全に理解していないため、目印が何を指すかは説明しない。",
+    "meaning_left_ambiguous": "目印が誰のための道具か、誰が同じものを配ったのか、置き直しの最初に何を置いていたかは確定しない。",
+    "invariants_checked": ["INV-01","INV-02","INV-03","INV-04","INV-05","INV-06","INV-07","INV-08","INV-09","INV-10","INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "InventoryServiceは枠数と保持・喪失の判定だけを持ち、アイテムの所在情報が未実装（current-implementation.md）。個人の位置記録と上書き・取消の経路が要るため true とする。",
+  "new_logic": [
+    "個人単位の位置記録を1件保持し、上書きで失効させるデータ",
+    "記録を置く・取消する操作口。地形や配置pointは増やさない"
+  ],
+  "prototype_cost": {
+    "band": "小",
+    "rationale": "既存の枠境界とRun結果表示に足すだけ。ワールドの生成や帰還判定には触らない。",
+    "implementation_steps": [
+      "デバッグ付与で目印を持たせる（正式な取得源は未実装）",
+      "個人に記録1件を持たせ、置く・上書き・取消の操作を1つずつ足す",
+      "HUDに印だけを出す",
+      "Play Soloで上書き時に前の記録が消えることを確認する"
+    ],
+    "assumed_existing_parts": [
+      "InventoryServiceの枠境界",
+      "クライアントRunControllerの個人HUD",
+      "既存の配置point規約"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {"route":"Acquire","status":"Undecided","detail":"誰が配るかは未確定。8/31には通常NPC・施設が未実装であり、人物を創作しない。試作のみデバッグ付与。"},
+      {"route":"Hold","status":"Proposed","detail":"1枠を消費する。持ち歩くか現地に残すかの二択になり、Secure Slotの枠を取り合う形になる。スタック規則は未確定。"},
+      {"route":"Use","status":"Proposed","detail":"『取消』に使う。置いた目印の記録だけが消え、品自体は手元に残る。"},
+      {"route":"Present","status":"Undecided","detail":"他の探索者に渡すと記録が移るかは未確定。Presentの受け手となる人物が未実装。"},
+      {"route":"Place","status":"Proposed","detail":"中核。任意の探索点に置いて帰還点記録1件を作る。置き直すと前の記録が上書きされる。地形は増やさない。"},
+      {"route":"Lose","status":"Proposed","detail":"Run終了で記録は消える。品がSecure Slot外なら目印自体も喪失物。記録は取り戻せない。"},
+      {"route":"SecureSlot","status":"Proposed","detail":"Secure Slotに入れても記録は個人運用で、枠を1つ恒久消費するだけ。死亡には耐えるが記録は消える。"},
+      {"route":"Sell","status":"NotApplicable","detail":"換金しない。『帰る場所』を知る品を高値で売る筋を作ると他人の帰還判断を操作するため、対象外とする。"},
+      {"route":"Quest","status":"Undecided","detail":"依頼主・依頼種別とも未確定。博士Questに載せると相互作用の固有品と経路が重なる。"},
+      {"route":"AnomalyInteraction","status":"NotApplicable","detail":"8/31は共通Anomaly Systemが未実装で、判断017のAnomalySpawnもNotImplemented。受理先が無くItem Interactionとして作らない。"}
+    ],
+    "ownership_state": "目印と記録はplayer単位の個人状態。記録1件は操作した個人にのみ属し、Serverが保持する。HUDは本人だけの印。切断・再接続時の復元は未決。",
+    "server_run_state": "記録はServer権威の個人Run状態を書き換えるが、Run共有のマップ状態は変えない。出現率・同時出現数というアノマリー出現コンポーネントは変更しないためWorldChangeのEffectは発生しない。Run終了で破棄する。"
+  },
+  "html_file": "ROLE-B-002.html"
+}

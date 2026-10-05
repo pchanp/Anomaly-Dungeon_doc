@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-A-006 棚の鳴り — 廃TSUTAYAの検索の副作用</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+<p class="sub">overnight-design-pilot-v1 ／ ROLE-A-006 ／ 廃TSUTAYA（マップ固有）／ GimmickEvent</p>
+<h1>棚の鳴り — 廃TSUTAYAの検索の副作用</h1>
+<p>誰かが棚を調べると、別の部屋の棚が鳴る。</p>
+<div class="badges"><span class="badge hyp">Idea</span><span class="badge">unreviewed</span><span class="badge unknown">伝播と周期は未定</span></div>
+<nav class="nav"><a href="index.html">← 一覧</a><a href="ROLE-A-006.json">同IDのJSON</a></nav>
+</header>
+
+<section id="hypothesis">
+<h2>何の案か</h2>
+<p>探索の副作用を、共有される小さな世界の変化にする。</p>
+<ul>
+<li>棚を調べて検索すると、別の部屋の棚が1基だけ短く鳴る。</li>
+<li>鳴りは他の individual's 耳にも届く。誰が検索したかは表示されない。</li>
+<li>わざと別の棚を調べれば、鳴りを別の場所へ移せる。</li>
+</ul>
+<p><strong>選択と代償:</strong> 必要な棚を調べる（居場所が晒される）／鳴りを移す（時間を捨てる）／調べずに回る。鳴った場所だけでは誰の検索かは分からない。</p>
+<p class="sub">接続タグ: ArchiveMedia / WorldChange / Sound ／ requires_code: true ／ conflicts 1件・未解決3件（JSONに記載）</p>
+</section>
+
+<section id="diagram">
+<h2>仕組みの図</h2>
+<div class="board">
+<svg viewBox="0 0 1000 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="棚の検索が別の部屋の棚を鳴らし、共有変化として届き、意図的に移せることを示す図">
+<rect width="1000" height="340" fill="#0a1118"/>
+<text class="label" x="24" y="28">既存の7ルーム・5棚（増やさない）</text>
+<text class="label" x="600" y="28">共有される変化</text>
+<rect x="24" y="52" width="200" height="64" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="small" x="38" y="90">部屋A：ここで検索</text>
+<rect x="264" y="52" width="200" height="64" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="small" x="278" y="90">部屋B：棚が鳴る</text>
+<rect x="24" y="156" width="200" height="64" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="small" x="38" y="194">部屋C：静か</text>
+<path d="M224 84h34" class="active"/>
+<path d="M252 78l9 6-9 6" class="active"/>
+<text class="small" x="38" y="256">壁と棚で視界が分断される既存構造</text>
+
+<rect x="600" y="52" width="376" height="64" rx="8" fill="#142330" stroke="#d3b653"/>
+<text class="small" x="614" y="90">他の個体にも音として届く（誰がかは伏せる）</text>
+<rect x="600" y="156" width="376" height="64" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="small" x="614" y="194">自分には、自分の検索との結びつきだけ1行で出る</text>
+<rect x="600" y="252" width="376" height="64" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="small" x="614" y="290">別の棚を調べれば鳴りを移せる（時間を捨てる）</text>
+<path d="M466 84h128" class="active"/>
+<path d="M588 78l9 6-9 6" class="active"/>
+<path d="M600 188h-128" class="hyp-line"/>
+<path d="M478 188l-9 6 9 6" class="hyp-line"/>
+<path d="M224 188h370v100" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M588 288l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<text class="small" x="24" y="322">この図で分かること：副作用が共有され、意図的に別の場所へ動かせる。数値は未確定。</text>
+</svg>
+</div>
+<p>図注：調べるたびに位置が知られ、他所へ移すには自分の時間を捨てる。</p>
+</section>
+
+<footer>overnight-design-pilot-v1 ／ ROLE-A-006 ／ 実表示は未確認（担当セッションでブラウザを使用していない）。</footer>
+</main>
+</body>
+</html>

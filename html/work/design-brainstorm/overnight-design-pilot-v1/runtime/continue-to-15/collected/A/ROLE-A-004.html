@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-A-004 返却待ちの一本 — 廃TSUTAYAの店頭</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+<p class="sub">overnight-design-pilot-v1 ／ ROLE-A-004 ／ 廃TSUTAYA（マップ固有）／ NPC</p>
+<h1>返却待ちの一本 — 廃TSUTAYAの店頭</h1>
+<p>誰も来ない廃店舗で、返却を待つ人が1人だけいて、棚の中にその1本が印付きで残る。</p>
+<div class="badges"><span class="badge hyp">Draft</span><span class="badge">unreviewed</span><span class="badge unknown">対象棚と所持は未定</span></div>
+<nav class="nav"><a href="index.html">← 一覧</a><a href="ROLE-A-004.json">同IDのJSON</a></nav>
+</header>
+
+<section id="hypothesis">
+<h2>何の案か</h2>
+<p>棚を調べて得られる選択結果の中に、依頼の対象が1本だけ印付きで残る。</p>
+<ul>
+<li>印は「依頼対象である」ことだけを示す。理由や正体は説明しない。</li>
+<li>渡すと、その項目は当該個人の個人試聴の候補から外れる。</li>
+<li>NPCは店内を往復し、依頼を成立させると退場する。放置しても成立する。</li>
+</ul>
+<p><strong>選択と代償:</strong> 先に自分で試聴する／NPCへ渡す／印を考えず別の棚へ回る。渡すと自分の確認手段を1つ失う。放置すれば印はRun中残り、NPCは帰還まで待つ。</p>
+<p class="sub">接続タグ: NPCState / Item / Present / ArchiveMedia ／ requires_code: true ／ conflicts 2件・未解決3件（JSONに記載）</p>
+</section>
+
+<section id="diagram">
+<h2>仕組みの図</h2>
+<div class="board">
+<svg viewBox="0 0 1000 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="棚の選択結果に印が付き、渡すと個人試聴の候補から外れNPCが退場し、放置なら印が残る三つの結果を示す図">
+<rect width="1000" height="340" fill="#0a1118"/>
+<text class="label" x="24" y="28">既存の要素（増やさない）</text>
+<text class="label" x="600" y="28">印の成立と三つの結果</text>
+<rect x="24" y="52" width="230" height="76" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="38" y="82">棚を調べる（5基）</text>
+<text class="small" x="38" y="108">選択結果を開くだけ</text>
+<rect x="24" y="220" width="230" height="76" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="38" y="250">試聴機3台</text>
+<text class="small" x="38" y="276">自動終了。共有BGMは不変</text>
+<path d="M254 90h60v60h96" class="active"/>
+<path d="M404 150l9 6-9 6" class="active"/>
+<rect x="416" y="118" width="176" height="76" rx="8" fill="#142330" stroke="#d3b653"/>
+<text class="label" x="430" y="148">印が付く</text>
+<text class="small" x="430" y="174">依頼対象であるとだけ</text>
+
+<rect x="620" y="52" width="356" height="76" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="label" x="634" y="82">（1）渡す</text>
+<text class="small" x="634" y="108">印が消え、退場し、試聴候補から外れる</text>
+<rect x="620" y="142" width="356" height="76" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="634" y="172">（2）自分で試聴する</text>
+<text class="small" x="634" y="198">先に確かめられる。印は残る</text>
+<rect x="620" y="232" width="356" height="76" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="634" y="262">（3）触れない</text>
+<text class="small" x="634" y="288">印はRun中残り、NPCは待つ</text>
+<path d="M594 156h20" class="active"/>
+<path d="M608 150l9 6-9 6" class="active"/>
+<path d="M234 258h180v-90h200" class="hyp-line"/>
+<path d="M608 168l9 6-9 6" class="hyp-line"/>
+<path d="M596 270h18" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<path d="M608 264l9 6-9 6" stroke="#8ba2b3" stroke-width="2" fill="none"/>
+<text class="small" x="24" y="322">この図で分かること：印は情報提示、渡しは入力の無効化、退場は個体状態として分かれる。</text>
+</svg>
+</div>
+<p>図注：意味ではなく「渡すと自分の手掛かりが1つ消える」ことが、この案の交換になる。</p>
+</section>
+
+<footer>overnight-design-pilot-v1 ／ ROLE-A-004 ／ 実表示は未確認（担当セッションでブラウザを使用していない）。</footer>
+</main>
+</body>
+</html>

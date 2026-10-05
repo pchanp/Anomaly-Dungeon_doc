@@ -1,0 +1,105 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-023",
+  "role": "A",
+  "title": "消えない数 — 倒しても記録が残る",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "MobEnemy",
+  "source_evidence": [
+    {"path": "docs/systems/game-rules.md", "section": "## 戦闘とアノマリー", "source_status": "Status: Draft（草案）", "claim": "戦闘イベントには、敵NPCの出現、追跡、包囲、増援などが含まれ得る。"},
+    {"path": "docs/decisions/017-run-anomaly-spawn-components.md", "section": "### 同時出現数コンポーネント", "source_status": "Status: Accepted（採用）", "claim": "同時出現数コンポーネントはアノマリーごとの枠で、標準値は1とする。解決・消滅後に枠を再利用できるかは今回決めない。"},
+    {"path": "docs/systems/effect-components.md", "section": "## 重ね掛けの既定規則", "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）", "claim": "同じEffect IDが同じ対象に再適用された場合は既定では効果量を足さず1件として扱う。解決規則が未定義なら、その競合適用は保留し記録する。"}
+  ],
+  "design_hypothesis": "同じ枠の通常の戦闘個体について、倒した個体数が個人の記録として残る状態を仮定します。枠の個体数が戻っても、記録された数は減りません。同じ場所で何度倒しても、記録は積み上がります。ただし記録は共有ではなく、自分で見た数しか分かりません。表示は1行、保持はRun内のみです。",
+  "experience": {
+    "goal": "倒した回数が消えないと知ると、片付ける順番が変わる。",
+    "player_choice": "回数を重ねてから動く／数ではなく別の順番で片付ける／最初から引き返す。",
+    "sacrifice_or_risk": "記録は個人提示だけで共有ではない。自分で見た数しか分からない。記録が敵の状態に効くかは未定。"
+  },
+  "placement_assumption": "全マップ共通の枠として扱い、配置や地形には依存しません。枠の定義は各マップの判断に委ねます。記録を既存HUDへ載せるか専用表示にするかは未確定です。",
+  "components": [
+    {"component": "NPCState", "availability": "catalog", "usage": "個体の戦闘不能を通常どおり処理する。"},
+    {"component": "Effect.InformationChange", "availability": "catalog", "usage": "倒した個体数を個人へ返す。共有しない。"},
+    {"component": "Effect.WorldChange", "availability": "catalog", "usage": "枠の個体数と記録を別の値として管理する。"}
+  ],
+  "effects": [
+    {
+      "kind": "WorldChange",
+      "trigger": "枠内の通常モブが戦闘不能になる。",
+      "condition": "対象マップが本候補を許可していること。上限は未定。",
+      "result": "枠の個体数が1減る。枠が埋まっている場合の補充は発生側の規則に従う。",
+      "target": "Run共有の戦闘枠",
+      "scope": "Run全体",
+      "lifetime": "同一マップ中",
+      "resolution": "instant",
+      "end_conditions": ["個体への適用が解決する"],
+      "end_mode": "any",
+      "end_rule_reason": "即時。個体ごと1回。",
+      "stacking": {"exception": false, "rule": "個体ごとに1件。終了済みの個体には再度適用しない。", "conflict_resolution": "他の枠操作と競合する場合は未確定のため保留。"},
+      "server_validation": "Serverが枠を管理する。",
+      "client_presentation": "個体の退場表現のみ。補充は表示しない。",
+      "feedback": {"success": "その個体がいなくなる。", "failure": "枠上限なら補充しない。", "ambiguous": "補充の条件は説明しない。"}
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "枠内の個体を戦闘不能にした。",
+      "condition": "対象が通常のプレイヤーであること。",
+      "result": "記録された倒した数を個人提示として返す。共有の値ではない。",
+      "target": "倒した側の個人",
+      "scope": "個人",
+      "lifetime": "同一Run中",
+      "resolution": "sustained",
+      "end_conditions": ["Run終了", "記録の破棄"],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかで記録を閉じる。",
+      "stacking": {"exception": false, "rule": "1回につき1件。前の表示を置き換える。", "conflict_resolution": "他の数値提示と重なる場合は未確定のため保留。"},
+      "server_validation": "Serverが個人ごとに数えて送る。共有しない。",
+      "client_presentation": "短い1行のみ。",
+      "feedback": {"success": "数が残る。", "failure": "倒していなければ増えない。", "ambiguous": "その数が何を意味するかは説明しない。"}
+    }
+  ],
+  "provides_traits": ["倒した回数が個人ごとに記録として残る", "枠の個体数と記録の数が別の値になる"],
+  "connection_tags": ["NPCState", "WorldChange", "InformationChange", "Combat"],
+  "refs": [],
+  "unresolved_refs": [
+    {"target_id": null, "required_traits": ["記録を個人提示としてどこへ表示するかを決める方針"], "reason": "ID未指定の要求。既存HUDへ載せるか専用表示にするかは共通設計側の判断が必要。", "adoption_blocker": true}
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "枠の上限と補充の条件は未定。数値を決めていない。",
+    "記録が敵の状態や発生に効くかは未定。",
+    "記録は個人単位か、それとも枠で共有するかは未定。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "倒した数を共有の事実ではなく個人の記録として置いた点。",
+    "in_world_rationale": "古い設備が残る文明では、誰が何题为扱ったかを個人が控えることが業務でもあった。記録が残るのはありふれた運用の帰結であり、誰がそれを読むかは説明しない。",
+    "meaning_left_ambiguous": "なぜこの数が残るのか。他人はこの数を見ているのか。繰り返しの数には何があるのか。この記録は、その先に何を示すのか。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "戦闘枠の補充と個人記録の保持が未実装で、記録の表示先も決まっていないため。コード生成の許可ではない。",
+  "new_logic": ["枠の個体数と記録の数の分離", "個人単位の記録提示"],
+  "prototype_cost": {
+    "band": "小",
+    "rationale": "枠1つと個人記録1つなら小さい。ただし補充を既存規則と分ける必要があるため、枠の定義を先に決める必要がある。実時間の見積もりは出していない。",
+    "implementation_steps": ["枠を1つだけ用意する", "戦闘不能で個体数が減ることを確認する", "個人記録が1増えることを確認する", "枠の上限で補充が止まることを確認する"],
+    "assumed_existing_parts": ["通常のHPとDamageの受け口", "Server権威のRun状態", "既存の個人提示の経路"]
+  },
+  "role_details": {
+    "npc_purpose": "通常の戦闘NPCであり、目的を持たない。記録は本人ではなくServer側の持ち物として扱う。",
+    "player_anomaly_handling": "判断019によりPlayer Anomalyは通常NPCとInteractionできない。枠と記録の規則は変わらない。HP下限は判断019に規定がなく未決。",
+    "mob_contract": {
+      "applicable": true,
+      "spawn_condition": "既存のイベント由来モブ、または枠を1つだけ置く案。どちらとするかは未定。",
+      "population_cap": "枠に上限を持ち、補充の判断は発生側の規則に従う。数値は未定。Anomalyの同時出現数とは別の枠。",
+      "non_combat_response": "戦わずに枠の外を回れば、交戦なしで通過できる。記録は減らない。",
+      "exit_condition": "戦闘不能になった個体は退場する。枠が埋まっている場合の補充は発生側の規則に従うが、記録は減らない。Run終了で記録ごと破棄する。",
+      "entity_distinction": "通常NPCの戦闘個体でありAnomaly Entityではない。アノマリー相互作用は受理しない。判断017の枠とは別のNPC枠として扱う。"
+    }
+  },
+  "html_file": "ROLE-A-023.html"
+}

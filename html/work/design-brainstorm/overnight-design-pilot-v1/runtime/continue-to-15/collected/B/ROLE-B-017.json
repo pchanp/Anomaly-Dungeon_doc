@@ -1,0 +1,248 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-017",
+  "role": "B",
+  "title": "音の箱（自分の歩みを、遠くで鳴らす）— 作業用見出し",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/systems/anomaly-interaction.md",
+      "section": "音を発した、聞いた、音源の方向や強度を認識した、といった音に関するゲーム上の事実を入力にする相互作用。",
+      "source_status": "ステータス: Draft",
+      "claim": "音がゲーム上の事実として入力になり得る。蓄えて別の場所で鳴らすのも同じ入力の作り直しとして扱う。"
+    },
+    {
+      "path": "docs/systems/anomaly-interaction.md",
+      "section": "音源の種別、位置、到達範囲、方向、遮蔽、強度など、実装するシステムが提供できる文脈だけを使う。",
+      "source_status": "ステータス: Draft",
+      "claim": "候補は音を完全に再現せず、到達範囲という最小限の文脈だけを必要とする。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| `WorldChange` | 出現率・同時出現数、経路・Portal・Map状態などの世界変化 | 個人表示だけでRun共有状態を確定しない |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "場所で鳴る音は共有世界の変化として扱い、ServerがRun状態として確定する。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "- 音は`Ambience`としてマップモデル直下に1つだけ保持する。",
+      "source_status": "Status: Prototype: Implemented（実装済みプロトタイプ）",
+      "claim": "マップが音を持つ既存の実装がある。その上に短期の生成音を重ねる設計にした。"
+    }
+  ],
+  "design_hypothesis": "自分の足音は探索中の最大の情報漏えいだ。本候補は『10秒間に出た自分の音を蓄えて切り離し、任意の地点で1度だけ鳴らす』箱を与える。蓄えた間だけ自分の足は静かになり、再生した地点だけ音が出る。音を出さずに遠くまで移動し、戻ったふりをして追手を反対へ向ける。",
+  "experience": {
+    "goal": "足音を敵に知られずに遠くまで行き、戻ったふりをする。",
+    "player_choice": "蓄えてから離れるか、そのまま歩くか。鳴らす点を近距離にするか遠方にするか。",
+    "sacrifice_or_risk": "蓄えてる間の自分の音は全部消えるため、次の接近に気づけない。"
+  },
+  "placement_assumption": "新しい地形・部屋・音響器材は提案しない。操作は『使う』と『鳴らす位置を置く』だけ。特定の音響装置を前提にしない。",
+  "components": [
+    {
+      "component": "WorldChange",
+      "availability": "proposed",
+      "usage": "指定地点で短時間だけ鳴る生成音。共通パックのcomponents.jsonに未掲載の案で、実装もカタログ追加も行わない。"
+    },
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "蓄え中と再生中を本人にだけ印で示す。"
+    },
+    {
+      "component": "SoundInteraction",
+      "availability": "catalog",
+      "usage": "生成音が他の入力として扱える口を受け持つ。"
+    },
+    {
+      "component": "ItemLifecycle",
+      "availability": "catalog",
+      "usage": "正式な取得源とItemStackが未実装であることを前提とする。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "WorldChange",
+      "trigger": "個人が『蓄える』操作を行う",
+      "condition": "実行中であること、箱を個人所持にもつこと。蓄え中のものは重ねない",
+      "result": "対象個人の移動音と攻撃音が10秒間だけ記録され、この期間その個人は足音を出さない。記録は個人以外には聞こえない",
+      "target": "対象個人の音響出力と、生成音の記録",
+      "scope": "個人。共有のAmbience音源や他の個人の音は書き換えない",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "10秒の経過、または個人が蓄え直し操作を行うことで終了する",
+        "記録は蓄え直しで上書きされる",
+        "Run終了で破棄する"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。蓄えは時間か操作のどちらかで終わり、Map状態は持ち越さない。",
+      "stacking": {
+        "exception": false,
+        "rule": "蓄えは1回につき1回。二つ続けて蓄えても合計は10秒を超えない。固定秒数は個別のEffectとして定義する",
+        "conflict_resolution": "他のEffectが音響出力を操作する場合は解決規則が未定義のため保留する"
+      },
+      "server_validation": "Serverが実行状態と所有を確認し、生成音の記録を個人Run状態にだけ保存する",
+      "client_presentation": "自分の足音だけが消える。地図や共有音は変化しない",
+      "feedback": {
+        "success": "足音が止まる。蓄え開始の印だけが出る",
+        "failure": "音が鳴り止まらない。注意表示のみ",
+        "ambiguous": "蓄えた音の具体的な音色は本人にも出さない"
+      }
+    },
+    {
+      "kind": "WorldChange",
+      "trigger": "個人が指定地点で『鳴らす』操作を行う",
+      "condition": "実行中であること、記録された音が1件以上あること。消費して1回だけ鳴らす",
+      "result": "指定地点で記録された音が1回だけ鳴る。到達範囲は案者が決めた範囲に限られ、発生源は対象の個人ではない。鳴らし終えると記録は消費される",
+      "target": "指定地点と、そこでの生成音",
+      "scope": "共有のMap内。個人だけの表示としては確定しない",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": [
+        "1回の鳴らしの解決で確定する",
+        "Run終了で残った生成音は破棄する"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "即時解決のみ。鳴らした後の共有状態は残さない。",
+      "stacking": {
+        "exception": false,
+        "rule": "記録は1回分。再使用はできない。異なる記録を同時に鳴らす操作は持たない",
+        "conflict_resolution": "他の生成音との競合は解決規則が未定義のため保留する"
+      },
+      "server_validation": "Serverが記録の存在と指定地点の有効性を検証してから音を鳴らす",
+      "client_presentation": "指定地点から音が鳴る。個人のHUDには鳴らした事実だけが印で出る",
+      "feedback": {
+        "success": "指定地点で音が鳴る",
+        "failure": "音が鳴らない。注意表示のみ",
+        "ambiguous": "音が他の誰かにどう解釈されたかは表示しない"
+      }
+    }
+  ],
+  "provides_traits": [
+    "自分の入力を後から別の場所で再現する結果を作るアイテム例",
+    "静かな移動と偽の所在を一つの操作にまとめる例"
+  ],
+  "connection_tags": [
+    "Item",
+    "Sound",
+    "Environment"
+  ],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": [
+        "音の伝播・遮蔽・同期の最小仕様と、生成音を入力として扱う際の到達範囲の決め方"
+      ],
+      "reason": "anomaly-interaction.mdは伝播・遮蔽・同期方式が未決定で、必要になったアノマリーから検証すると記す。候補は到達範囲を最小の文脈に留めた。",
+      "adoption_blocker": true
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "10秒という蓄え時間は未確定。既存の音源資料に該当値が無いため候補側で固定しない。",
+    "生成音が実際に他の入力へ届くかは未実装であり、到達しない場合は効果の中核が成立しない。",
+    "照合範囲：音の入力としての扱い、音の文脈の最小範囲、WorldChangeの境界、既存のAmbience保持。矛盾は見つからず conflicts は空配列"
+  ],
+  "worldview": {
+    "defamiliarized_element": "音を手元に貯蔵できることにした。鳴らす行為と移動の行為を分離し、出た音をどこで使ったかを所有者の判断にした。",
+    "in_world_rationale": "探索者は常に自分の音を気にしながら歩き、世界はその音を記録しない。音を溜める道具があるなら、それは隠れるためではなく自分を別の場所にいるように見せるために使われる。",
+    "meaning_left_ambiguous": "箱を作った者は誰で、音を溜めることが禁止だったのか、鳴らした音を誰がどう解釈したかは確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "生成音と個人Run状態の両方が未実装であり、正式なInventoryとItemStackも無い（current-implementation.md / anomaly-interaction.md）。記録と再生の経路が要るため true とする。",
+  "new_logic": [
+    "個人音響出力の記録と、指定地点での1回限りの再生"
+  ],
+  "prototype_cost": {
+    "band": "大",
+    "rationale": "音の生成・伝播・遮蔽の層が未実装で、デバッグ床でも到達範囲の確認手順が無い。既存部品の寄せでは成立しない。",
+    "implementation_steps": [
+      "デバッグ付与で箱を持たせる",
+      "個人足音を無効化するデバッグ用操作と、記録された音を1回再生する操作を足す",
+      "デバッグ床で2地点を置き、音が 指定地点で鳴ることを確認する",
+      "他の入力が届かない場合は伝播層の実装を優先課題として記録する"
+    ],
+    "assumed_existing_parts": [
+      "マップモデル直下に保持されるAmbienceのSound",
+      "クライアントの個人HUD",
+      "InventoryServiceの枠境界"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Undecided",
+        "detail": "配る主体は未確定。正式な取得源が未実装であり創作しない。試作のみデバッグ付与。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "1枠を消費し、10秒の蓄え中はさらに動作を選ぶ余地が減る。"
+      },
+      {
+        "route": "Use",
+        "status": "Proposed",
+        "detail": "2回使う。『蓄える』と『鳴らす位置を置く』に分ける。中核の操作。"
+      },
+      {
+        "route": "Present",
+        "status": "NotApplicable",
+        "detail": "渡さない。渡すと音の由来を巡る話になり、候補の意図から外れる。"
+      },
+      {
+        "route": "Place",
+        "status": "Proposed",
+        "detail": "鳴らす位置を置く操作だけをWorld側の場所として扱う。地形は増やさない。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "確保枠の外なら死亡時に失う。失っても鳴らした音は消えない。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "確保枠に入れて守れば、鳴らす機会を残して死んでも持てる。"
+      },
+      {
+        "route": "Sell",
+        "status": "Undecided",
+        "detail": "換金の可否は判断010・判断011・経済と成長で未決。"
+      },
+      {
+        "route": "Quest",
+        "status": "Undecided",
+        "detail": "依頼主は未確定。既存の博士の依頼が定める固有品の交換とは別物品として扱う。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "Proposed",
+        "detail": "生成音が他の相互作用の入力になり得る。どの異常が音を取るかは未決で、相手の挙動は作らない。"
+      }
+    ],
+    "ownership_state": "箱と記録された音はplayer単位の個人状態。鳴らすと音は共有のMap内へ出るが、記録は消費される。切断と再接続時の復元は未決。",
+    "server_run_state": "ServerがRun状態として生成音を確定し、Run終了で破棄する。出現率と同時出現数は変更しないためWorldChangeは音響のみに限定する。"
+  },
+  "html_file": "ROLE-B-017.html"
+}

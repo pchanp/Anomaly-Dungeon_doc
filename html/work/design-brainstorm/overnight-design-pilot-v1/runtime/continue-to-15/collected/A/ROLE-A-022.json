@@ -1,0 +1,105 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-022",
+  "role": "A",
+  "title": "低温の通行帯 — 追うほど速く逃げられる",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "GimmickEvent",
+  "source_evidence": [
+    {"path": "docs/systems/game-rules.md", "section": "## 戦闘とアノマリー", "source_status": "Status: Draft（草案）", "claim": "戦闘は、常時大量配置された敵だけを目的にするのではなく、探索中のイベントやアノマリー反応から発生する。"},
+    {"path": "docs/systems/effect-components.md", "section": "## 作用範囲と保存境界", "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）", "claim": "作用範囲と保存境界は別の項目とする。保存境界は永続、同一Run中、同一マップ中、一時で、終了条件のいずれかが成立したら解除する。"},
+    {"path": "docs/systems/current-implementation.md", "section": "## 未実装", "source_status": "Status: Implemented（実装棚卸し）", "claim": "8月31日マップの共通Anomaly System適用、8/32での強制Anomaly発生、Rare Loot、フェーズごとの日付板の時刻、実音源への差し替えは未実装である。"}
+  ],
+  "design_hypothesis": "マップ内に、一方的に通り抜けられる低温の帯が1本ある状態を仮定します。帯の中にいる通常モブの移動速度は遅くなり、プレイヤーの速度は変わりません。結果として、帯の中で追跡を続ければ距離が開き、帯の外では間合いが詰まります。帯は常設で消せず、狭さも長さも決めていません。低温によって敵が弱くなるわけではありません。",
+  "experience": {
+    "goal": "走れば逃げる、止まれば詰められる、という局面を自分で選ぶ。",
+    "player_choice": "帯の中で引き離す／帯の外で加速して切る／逆に帯の外へ誘い込む。",
+    "sacrifice_or_risk": "帯は常設で消せない。幅が狭いため、並走できる個体の数によっては通り抜けられない。"
+  },
+  "placement_assumption": "全マップ共通のWorldChangeとして扱い、帯の位置・長さ・幅は決めません。正式な配置は各マップの判断に委ねます。帯が地形に依存するか、温度変化の演出が実装されるかは未実装であり、ここでは地形に依存しない前提です。",
+  "components": [
+    {"component": "Effect.StateChange", "availability": "catalog", "usage": "帯の中の通常の個体へ移動の遅化を与える。"},
+    {"component": "Effect.InformationChange", "availability": "catalog", "usage": "今いる場所が帯の中か外かを個人へ返す。敵の状態は返さない。"},
+    {"component": "ColdLaneField", "availability": "proposed", "usage": "常設の帯と内外判定。幅、長さ、遅化の値は未定。"}
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "対象の通常モブが低温の帯へ入った。",
+      "condition": "対象マップが本候補を許可していること。帯の幅は未定。",
+      "result": "対象の移動速度が下がる。攻撃の威力もHPも変わらない。",
+      "target": "帯の中の通常モブ個体",
+      "scope": "Run共有の個体",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": ["対象が帯の外へ出る", "対象が戦闘不能になる", "Run終了"],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかで遅化を戻す。",
+      "stacking": {"exception": false, "rule": "1個体への遅化は非加算1件。帯が重なる場合も足さない。", "conflict_resolution": "他の遅化と競合する場合は未確定のため保留。"},
+      "server_validation": "Serverが帯の位置と内外を確定する。",
+      "client_presentation": "個体の動きのみ。遅化の理由は表示しない。",
+      "feedback": {"success": "帯の中の敵が遅くなる。", "failure": "帯の外では何も起きない。", "ambiguous": "なぜ遅く、帯は何なのかは説明しない。"}
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "個人が低温の帯へ入った、または出た。",
+      "condition": "対象が通常のプレイヤーであること。",
+      "result": "帯の内外だけを個人提示として返す。敵の数や位置は返さない。",
+      "target": "対象個人",
+      "scope": "個人",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": ["提示の表示"],
+      "end_mode": "any",
+      "end_rule_reason": "即時。内外の表示のみ。",
+      "stacking": {"exception": false, "rule": "1回の入退出につき1件。前の表示を置き換える。", "conflict_resolution": "他の内外表示と重なる場合は未確定のため保留。"},
+      "server_validation": "Serverが内外判定だけを送る。",
+      "client_presentation": "帯の境界を1表示で示す。",
+      "feedback": {"success": "内外が分かる。", "failure": "判定できない地形では出ない。", "ambiguous": "帯の長さは明示しない。"}
+    }
+  ],
+  "provides_traits": ["帯の中で逃げ切れる確率が上がる", "常設の環境なので地形がそのまま攻略要素になる"],
+  "connection_tags": ["StateChange", "Environment", "Combat", "Movement"],
+  "refs": [],
+  "unresolved_refs": [
+    {"target_id": null, "required_traits": ["常設の帯をマップと切り離して定義する方針"], "reason": "ID未指定の要求。どのマップにも存在するとは確定できず、配置と寿命は共通設計側の判断が必要。", "adoption_blocker": true}
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "帯の幅、長さ、遅化の度合いは未定。数値を決めていない。",
+    "帯が何に由来するかは未確定。",
+    "遅化を同じEffectとして扱うか、別の効果として扱うかは未定。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "常温の場所がそのまま戦場になり、温度が間合いを作る、という利用の転用を置いた点。",
+    "in_world_rationale": "古い設備が残る文明では、冷える場所と冷えない場所の差は日常的な知識だった。敵が冷えた場所で遅くなることを、手間の問題と取る風潮があった。誰が決めたかは説明しない。",
+    "meaning_left_ambiguous": "なぜあの場所だけ冷たいのか。敵は寒さに弱いのか、それとも単に歩きにくいのか。帯は意図的に作られたのか。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "帯の領域判定と個体の移動変更が未実装で、演出も未実装のため。コード生成の許可ではない。",
+  "new_logic": ["常設の帯と内外判定", "帯の中の個体の移動遅化"],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "直線的な帯1本と移動の遅化なら中程度。ただし地形を貫かない実装にすると接地や滑りの調整が要る。実時間の見積もりは出していない。",
+    "implementation_steps": ["細い帯を1本だけ置く", "帯の中の個体だけ遅らせる", "帯の外へ出ると元へ戻ることを確認する", "攻撃の威力が変わっていないことを確認する"],
+    "assumed_existing_parts": ["通常の移動と攻撃の受け口", "既存の地面と壁の判定", "Server権威のRun状態"]
+  },
+  "role_details": {
+    "npc_purpose": "NPCは置かない。既存の通常モブの移動速度だけを場所によって変える。",
+    "player_anomaly_handling": "Run共有の変化なので対象全体で成立する。通常NPCとのInteractionではない。判断019の枠は変えない。",
+    "mob_contract": {
+      "applicable": false,
+      "spawn_condition": "対象は発生しない。既存のイベント由来モブの移動速度だけを変える。どのイベントなのかは本候補では決めない。",
+      "population_cap": "対象は増やさない。個体数の上限は発生側の枠に従う。",
+      "non_combat_response": "帯の外で間合いを切れば、交戦せずに離脱できる。この遅化は攻撃を弱めない。",
+      "exit_condition": "対象の通常の退場規則を妨げない。帯の外へ出ると通常どおり動く。",
+      "entity_distinction": "モブを発生させる案ではない。Anomaly Entityの枠も同時出現数も使わず、通常の戦闘NPCの移動だけを場所条件で変える。"
+    }
+  },
+  "html_file": "ROLE-A-022.html"
+}
