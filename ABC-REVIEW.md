@@ -4,13 +4,13 @@ Status: Draft（収集記録）。採用・実装・統合は未実施。2026-10
 
 ## 状況
 
-依頼数は各15件、合計45件。HTMLは A:15 / B:15 / C:12、計42件。CにはHTMLのない012のJSONもあり、件数には含めない。Cのhandoffは11件時点の記録で、現物と一致しない。
+依頼数は各15件、合計45件。HTMLは A:15 / B:15 / C:15、計45件。CはCodexが補正・不足分を代行して完成。元OpenCode出力はコミット253e92fに保存。
 
 | 担当 | 一覧 | 作業者の報告MD | 最終機械検証 |
 | --- | --- | --- | --- |
 | A | [HTML一覧](work/design-brainstorm/overnight-design-pilot-v1/runtime/continue-to-15/collected/A/index.html) | [handoff.md](work/design-brainstorm/overnight-design-pilot-v1/runtime/continue-to-15/collected/A/handoff.md) | 要確認（2項目） |
 | B | [HTML一覧](work/design-brainstorm/overnight-design-pilot-v1/runtime/continue-to-15/collected/B/index.html) | [handoff.md](work/design-brainstorm/overnight-design-pilot-v1/runtime/continue-to-15/collected/B/handoff.md) | PASS |
-| C | [HTML一覧](work/design-brainstorm/overnight-design-pilot-v1/runtime/continue-to-15/collected/C/index.html) | [handoff.md](work/design-brainstorm/overnight-design-pilot-v1/runtime/continue-to-15/collected/C/handoff.md) | 要確認（8項目） |
+| C | [HTML一覧](work/design-brainstorm/overnight-design-pilot-v1/runtime/continue-to-15/collected/C/index.html) | [handoff.md](work/design-brainstorm/overnight-design-pilot-v1/runtime/continue-to-15/collected/C/handoff.md) | PASS（Codex補正後） |
 
 ## 残る確認事項
 
@@ -18,9 +18,9 @@ A: ROLE-A-002のHTMLとJSONでタイトル・Statusが一致しない。
 
 B: 機械検証PASS。世界観の意味、プレイ体験、ブラウザでの全件表示は別レビュー。
 
-C: 003の代償項目不足、004の未解決参照記録不足、009のJSON構文不良、010の参照見出し不一致、manifest・進捗・実ファイルの不一致。014・015は未作成、012はJSONのみ。011はhandoffの完了一覧外にあるため完了扱いは未確認。
+C: JSON・参照・効果契約・レベル差・本文を補正し、不足分を追加。15件の機械検証とブラウザ表示を確認。採用判断は未実施。
 
-原文を保持し、設計内容や完了宣言を管理側で補正していない。最終検証の詳細は以下。
+A・Bは収集原文を保持。Cの補正内容はhandoff.mdに記録。最終検証の詳細は以下。
 
 - [A検証JSON](work/design-brainstorm/overnight-design-pilot-v1/runtime/continue-to-15/collected/validation-A.json)
 - [B検証JSON](work/design-brainstorm/overnight-design-pilot-v1/runtime/continue-to-15/collected/validation-B.json)
@@ -86,6 +86,12 @@ C: 003の代償項目不足、004の未解決参照記録不足、009のJSON構�
 | ROLE-C-010 | [開く](work/design-brainstorm/overnight-design-pilot-v1/runtime/continue-to-15/collected/C/ROLE-C-010.html) | [JSON](work/design-brainstorm/overnight-design-pilot-v1/runtime/continue-to-15/collected/C/ROLE-C-010.json) |
 | ROLE-C-011 | [開く](work/design-brainstorm/overnight-design-pilot-v1/runtime/continue-to-15/collected/C/ROLE-C-011.html) | [JSON](work/design-brainstorm/overnight-design-pilot-v1/runtime/continue-to-15/collected/C/ROLE-C-011.json) |
 | ROLE-C-013 | [開く](work/design-brainstorm/overnight-design-pilot-v1/runtime/continue-to-15/collected/C/ROLE-C-013.html) | [JSON](work/design-brainstorm/overnight-design-pilot-v1/runtime/continue-to-15/collected/C/ROLE-C-013.json) |
+
+| ROLE-C-012 | [開く](work/design-brainstorm/overnight-design-pilot-v1/runtime/continue-to-15/collected/C/ROLE-C-012.html) | [JSON](work/design-brainstorm/overnight-design-pilot-v1/runtime/continue-to-15/collected/C/ROLE-C-012.json) |
+
+| ROLE-C-014 | [開く](work/design-brainstorm/overnight-design-pilot-v1/runtime/continue-to-15/collected/C/ROLE-C-014.html) | [JSON](work/design-brainstorm/overnight-design-pilot-v1/runtime/continue-to-15/collected/C/ROLE-C-014.json) |
+
+| ROLE-C-015 | [開く](work/design-brainstorm/overnight-design-pilot-v1/runtime/continue-to-15/collected/C/ROLE-C-015.html) | [JSON](work/design-brainstorm/overnight-design-pilot-v1/runtime/continue-to-15/collected/C/ROLE-C-015.json) |
 
 ## 実行条件・資料
 

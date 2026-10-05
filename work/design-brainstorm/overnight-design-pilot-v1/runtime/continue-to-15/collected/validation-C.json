@@ -1,43 +1,20 @@
 {
   "run_id": "overnight-design-pilot-v1",
-  "errors": [
-    "ROLE-C-003: $/experience: missing sacrifice_or_risk",
-    "ROLE-C-004: unresolved/incompatible ref not in unresolved_refs: ROLE-B-004",
-    "ROLE-C-009: Expecting ',' delimiter: line 249 column 23 (char 8669)",
-    "ROLE-C-010: source section not found: docs/decisions/018-whisper-colleague-quest-and-anxiety.md#博士の元同僚Quest",
-    "manifest and candidate file set differ",
-    "final requires all 15 reserved IDs",
-    "progress completed IDs differ",
-    "final progress state must be completed"
-  ],
+  "errors": [],
   "review_items": [
     {
       "type": "component_implementation_review",
       "candidate_id": "ROLE-C-001",
       "component": "Effect.Move",
       "availability": "catalog",
-      "usage": "記録位置への自己テレポート。対象は発動した通常プレイヤー1人で、共有マップ状態は変更しない。"
+      "usage": "フェーズ切替直前の自分の位置へ、一度だけ戻る。"
     },
     {
       "type": "component_implementation_review",
       "candidate_id": "ROLE-C-001",
-      "component": "Effect.StateChange",
+      "component": "Effect.RuleOverride",
       "availability": "catalog",
-      "usage": "遷移解決後、そのフェーズ内のスキル発動と通常攻撃の受付を封じること。硬直ではなく入力の拒否として扱う。"
-    },
-    {
-      "type": "component_implementation_review",
-      "candidate_id": "ROLE-C-001",
-      "component": "Effect.InformationChange",
-      "availability": "catalog",
-      "usage": "個人のアンカー記録を保持すること。共有世界は変化せず、Serverは各参加者の記録の有無だけを保持する。"
-    },
-    {
-      "type": "component_implementation_review",
-      "candidate_id": "ROLE-C-001",
-      "component": "SkillActivation",
-      "availability": "catalog",
-      "usage": "既存の3スキル（Magic Bolt、Roll、Stealth）と同じ発動経路を持つ必要がある。実装はPartialで、本候補の窓、アンカー、受付封じが含まれる保証はない。"
+      "usage": "フェーズ切替直前の自分の位置へ、一度だけ戻る。"
     },
     {
       "type": "spec_conflict",
@@ -62,63 +39,31 @@
     {
       "type": "uncertainty",
       "candidate_id": "ROLE-C-001",
-      "note": "窓の長さと、窓の起点（遷移確定の瞬間か、遷移後の準備完了か）を決める論点。秒数は未確定。"
+      "note": "受付時間・距離・上限・クールダウン・速度などの値は仮案段階。"
     },
     {
       "type": "uncertainty",
       "candidate_id": "ROLE-C-001",
-      "note": "アンカーに記録する座標が遷移確定の瞬間の座標か、その直前の座標かで着地点が変わる。"
+      "note": "レベル差は候補であり、効果量と操作負担を試作して調整する。"
     },
     {
       "type": "uncertainty",
       "candidate_id": "ROLE-C-001",
-      "note": "8/32遷移後に Parts が衝突するようになったとき、アンカー位置が通行不能になる場合の着地処理（発動拒否、押し出し、落下ダメージ）が未定。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-001",
-      "note": "受付封じと、Stun、Down、Roll、/dev/nullのSkillとAttackの無効化、Mad StomperのHeal Fieldなど別系統の状態異常の順序が未定義。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-001",
-      "note": "個人記録をPartyへ見せるか、個人限りのままにするか。個人限りの設計として書いたが、共有版は未検討。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-001",
-      "note": "ワンツーからの連携の入力受付時間、キャンセル可能点、硬直は skill-build.md で未確定であり、封じと組み合わさった場合の挙動は記述していない。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-001",
-      "note": "4枠すべてがアクション系の場合のフルアタック動作（未決定）との干渉。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-001",
-      "note": "8/31は正式Runの抽選候補の1つだが、この案を8/31以外でも成立させる版は作らず、マップ固有の候補として扱う。"
+      "note": "通常スキルとしてのみ扱い、Player Anomalyの専用能力には一般化しない。"
     },
     {
       "type": "component_implementation_review",
       "candidate_id": "ROLE-C-002",
       "component": "Effect.InformationChange",
       "availability": "catalog",
-      "usage": "現在のフェーズ名、残りの秒数、Exposure取得倍率を本人にだけ提示する。共有ワールドの状態は変えない。"
+      "usage": "立ち止まり、現在フェーズの残り時間を一度だけ読む。"
     },
     {
       "type": "component_implementation_review",
       "candidate_id": "ROLE-C-002",
-      "component": "Effect.StateChange",
+      "component": "Effect.RuleOverride",
       "availability": "catalog",
-      "usage": "読み取りのあいだだけ、移動と通常攻撃の受付を封じる。硬直ではなく操作の受付拒否として扱う。"
-    },
-    {
-      "type": "component_implementation_review",
-      "candidate_id": "ROLE-C-002",
-      "component": "SkillActivation",
-      "availability": "catalog",
-      "usage": "既存の3スキルと同じ発動経路を持つ必要がある。実装はPartialで、読み取りの経路は含まれない。"
+      "usage": "立ち止まり、現在フェーズの残り時間を一度だけ読む。"
     },
     {
       "type": "spec_conflict",
@@ -133,198 +78,168 @@
     {
       "type": "uncertainty",
       "candidate_id": "ROLE-C-002",
-      "note": "残りの秒数を丸めるか、整数で出すかの指定がない。"
+      "note": "受付時間・距離・上限・クールダウン・速度などの値は仮案段階。"
     },
     {
       "type": "uncertainty",
       "candidate_id": "ROLE-C-002",
-      "note": "AUG_32で「読めない」の表示を出すか、何も出さないか。"
+      "note": "レベル差は候補であり、効果量と操作負担を試作して調整する。"
     },
     {
       "type": "uncertainty",
       "candidate_id": "ROLE-C-002",
-      "note": "同じ数字を他のスキルやHUDにも出す場合の重なり順序が未定。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-002",
-      "note": "この読み取りでは異常の位置も種類も分からない。分かるとしたら別の仕組みとして扱う。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-002",
-      "note": "フェーズが同時に成立しうる場合の不成立表示の扱い。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-002",
-      "note": "表示を既存HUDへ足すか専用表示にするかが未確定。"
+      "note": "通常スキルとしてのみ扱い、Player Anomalyの専用能力には一般化しない。"
     },
     {
       "type": "component_implementation_review",
-      "candidate_id": "ROLE-C-005",
-      "component": "Effect.Damage",
+      "candidate_id": "ROLE-C-003",
+      "component": "Effect.Move",
       "availability": "catalog",
-      "usage": "直後の一打を通常どおり解決する。距離、ダメージ、硬直の数値は本候補では変更しない。"
+      "usage": "岸から湖面を直進し、対岸への迂回を省く。"
     },
     {
       "type": "component_implementation_review",
-      "candidate_id": "ROLE-C-005",
+      "candidate_id": "ROLE-C-003",
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "岸から湖面を直進し、対岸への迂回を省く。"
+    },
+    {
+      "type": "spec_conflict",
+      "candidate_id": "ROLE-C-003",
+      "source_path": "docs/systems/map-gimmick-ideas.md",
+      "existing_rule": "湖とAPARTMENTを結ぶTrailが未実装として列挙されている。マップの作り直しも未実装で、旧生成物を流用している。",
+      "proposal_difference": "本候補はTrailを足すのではなく、既存の湖面をスキルで渡れるようにする。",
+      "correction": "採用する場合は、Trailを追加する判断と水面を渡る判断のどちらを採るかを先に決め、両方を同時に提供しない。既存の未実装リストは変更しない。",
+      "reason_correctable": "地形の造営やTrailの追加には踏み込まず、既存Partsの扱いだけで成立する。",
+      "decision_needed": "湖の横断をTrailの造営で解くか、スキルで解くか。どちらを先にするか。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-003",
+      "note": "受付時間・距離・上限・クールダウン・速度などの値は仮案段階。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-003",
+      "note": "レベル差は候補であり、効果量と操作負担を試作して調整する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-003",
+      "note": "通常スキルとしてのみ扱い、Player Anomalyの専用能力には一般化しない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-004",
       "component": "Effect.InformationChange",
       "availability": "catalog",
-      "usage": "その1回だけ店内へ音と衝撃の入力を送らない。記録と提示を分ける。"
+      "usage": "個人試聴を途中で止め、未閲覧の項目を一件だけ控える。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-004",
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "個人試聴を途中で止め、未閲覧の項目を一件だけ控える。"
+    },
+    {
+      "type": "spec_conflict",
+      "candidate_id": "ROLE-C-004",
+      "source_path": "docs/systems/anomaly-interaction.md",
+      "existing_rule": "Sound Interactionは音源の種別、位置、到達範囲、方向、遮蔽、強度など実装するシステムが提供できる文脈だけを使い、BGMや通常の環境音が自動的に相互作用にはならない。伝播、遮蔽、同期の方式は未決定。",
+      "proposal_difference": "本候補は音の伝播や遮蔽に依存せず、個人試聴セッションの開始と終了というServer側の事実だけを入力にする。",
+      "correction": "採用する場合、音の伝播、遮蔽、同期という未決定の領域に手を入れず、試聴セッションの開始と終了という個別の文脈として記録する。共有BGMの選択UIは未実装のまま維持する。",
+      "reason_correctable": "共有BGMと個人試聴の分離、およびArchive Selection UIの未実装境界を変更しない。候補が作るのは個人記録というUI層の事実だけである。",
+      "decision_needed": "個人試聴をSound Interactionとして記録するか。記録する場合、最小の文脈をどこで定義するか。"
+    },
+    {
+      "type": "spec_conflict",
+      "candidate_id": "ROLE-C-004",
+      "source_path": "docs/systems/map-gimmick-ideas.md",
+      "existing_rule": "個別メディアの実際の内容（映像、音声）は未実装であり、項目は名前と選択結果のみを持つ。",
+      "proposal_difference": "本候補は項目の内容を一切作らず、名前と選択結果だけを扱ったまま、再閲覧という到達だけを可能にする。",
+      "correction": "採用する場合もメディアの実内容は追加しない。追加するのは個人記録というUI層の事実だけで、外部作品や商標の扱いは変更しない。",
+      "reason_correctable": "メディアの内容が未実装という境界と、外部作品および商標に関する未決の扱いを変えない。",
+      "decision_needed": "記録した項目を再度開いたとき、何を見せるか（選択結果の再提示か別の表現か）を未実装のまま扱うか、別途決めるか。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-004",
+      "note": "受付時間・距離・上限・クールダウン・速度などの値は仮案段階。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-004",
+      "note": "レベル差は候補であり、効果量と操作負担を試作して調整する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-004",
+      "note": "通常スキルとしてのみ扱い、Player Anomalyの専用能力には一般化しない。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-004",
+      "note": "試聴中に未閲覧項目を選ぶUIは既存の確定仕様ではない。B-004などとの接続時に対象契約が必要。"
     },
     {
       "type": "component_implementation_review",
       "candidate_id": "ROLE-C-005",
-      "component": "SoundInteraction",
+      "component": "Effect.RuleOverride",
       "availability": "catalog",
-      "usage": "一打が作る音の入力を1回だけ作らない。音の伝播や遮蔽の仕様には依存しない。"
-    },
-    {
-      "type": "component_implementation_review",
-      "candidate_id": "ROLE-C-005",
-      "component": "SkillActivation",
-      "availability": "catalog",
-      "usage": "既存の3スキルと同じ発動経路を持つ必要がある。実装はPartialで、攻撃結果の差し替えは含まれない。"
+      "usage": "次の通常攻撃一打だけ、発音を抑える。"
     },
     {
       "type": "uncertainty",
       "candidate_id": "ROLE-C-005",
-      "note": "矛盾は確認していない。既存の即時Damageの既定規則、攻撃系の内容、音の相互作用の未決定範囲のいずれとも矛盾しない。"
+      "note": "受付時間・距離・上限・クールダウン・速度などの値は仮案段階。"
     },
     {
       "type": "uncertainty",
       "candidate_id": "ROLE-C-005",
-      "note": "発動したが命中しなかったとき、使用回数が戻るかは未確定。"
+      "note": "レベル差は候補であり、効果量と操作負担を試作して調整する。"
     },
     {
       "type": "uncertainty",
       "candidate_id": "ROLE-C-005",
-      "note": "回数を補充できる案も考えうるが、痕跡が乏しくなって露出時間が長くなるため採用しない。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-005",
-      "note": "命中時に差が出ないため、仲間に使われたことが分からない。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-005",
-      "note": "他の攻撃スキルとの重なりと遅延ダメージの順序は未定。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-005",
-      "note": "音の遮蔽と音量の仕様が未決定なので、音がどこまで届くかは書かない。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-005",
-      "note": "飛び出すものの表現は未実装。扱うかどうかは未確定。"
-    },
-    {
-      "type": "component_implementation_review",
-      "candidate_id": "ROLE-C-006",
-      "component": "Observation",
-      "availability": "catalog",
-      "usage": "対象本人の視覚観察の進み方（Observe Evidenceの蓄積）の進み方を窓のあいだ止める。近接のExposureとは別の経路として扱う。"
+      "note": "通常スキルとしてのみ扱い、Player Anomalyの専用能力には一般化しない。"
     },
     {
       "type": "component_implementation_review",
       "candidate_id": "ROLE-C-006",
       "component": "Effect.RuleOverride",
       "availability": "catalog",
-      "usage": "窓のあいだ、対象本人の観察進行の進み方の評価に優先して入る。対象は本人に限る。"
-    },
-    {
-      "type": "component_implementation_review",
-      "candidate_id": "ROLE-C-006",
-      "component": "Effect.StateChange",
-      "availability": "catalog",
-      "usage": "窓のあいだ、技能発動と通常攻撃の受付を封じる。硬直ではなく操作の受付拒否として扱う。"
-    },
-    {
-      "type": "component_implementation_review",
-      "candidate_id": "ROLE-C-006",
-      "component": "ArchiveMedia",
-      "availability": "catalog",
-      "usage": "既存のCRTと停波ノイズの実装済みプロトタイプを利用する。共有BGMは変更しない。実装はPartialで、窓の識別は含まれない。"
-    },
-    {
-      "type": "component_implementation_review",
-      "candidate_id": "ROLE-C-006",
-      "component": "SkillActivation",
-      "availability": "catalog",
-      "usage": "既存の3スキルと同じ発動経路を持つ必要がある。実装はPartialで、観察進行の差し替えは含まれない。"
+      "usage": "CRTの停波中だけ、自分の視覚Observe進行を止める。"
     },
     {
       "type": "uncertainty",
       "candidate_id": "ROLE-C-006",
-      "note": "停波ノイズの長さ。CRTごとやチャンネルごとに差があるかは未定。"
+      "note": "受付時間・距離・上限・クールダウン・速度などの値は仮案段階。"
     },
     {
       "type": "uncertainty",
       "candidate_id": "ROLE-C-006",
-      "note": "進まなくなる対象は「観察の進み」だけか、Visibleの段階も含むかは未確定。ここでは進みだけに限定して書いた。"
+      "note": "レベル差は候補であり、効果量と操作負担を試作して調整する。"
     },
     {
       "type": "uncertainty",
       "candidate_id": "ROLE-C-006",
-      "note": "既に積み上がった観察の値は残る。窓のあいだに減るかどうかは決めていない。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-006",
-      "note": "他の可視性を変える効果との適用順が未定。SHADEの不可視とは別の効果として扱う。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-006",
-      "note": "音量や遮蔽の仕様が未決定であるため、停波ノイズが他プレイヤーにどこまで届くかは書かない。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-006",
-      "note": "窓のあいだのスキル封じは、本スキルの副作用として入れたもので、必要かは判断対象。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-006",
-      "note": "複数人での見え方は未確認。1人セッションの検証のみ。"
-    },
-    {
-      "type": "requires_code_unknown",
-      "candidate_id": "ROLE-C-007",
-      "reason": "SEKIGAHARAはIdeaで未実装であり、ServerがNPCの状態を個人へ渡す経路が存在するかを判断できない。必要性が確認できないためunknownとし、調査対象としてServer側のNPC状態の公開方法を挙げる。"
+      "note": "通常スキルとしてのみ扱い、Player Anomalyの専用能力には一般化しない。"
     },
     {
       "type": "component_implementation_review",
       "candidate_id": "ROLE-C-007",
       "component": "Effect.InformationChange",
       "availability": "catalog",
-      "usage": "本人にだけ、弱い個体への印を出す。共有ワールドとNPCの状態は変えない。"
+      "usage": "戦闘中のNPCのうち、弱った個体だけを読み取る。"
     },
     {
       "type": "component_implementation_review",
       "candidate_id": "ROLE-C-007",
-      "component": "Effect.StateChange",
+      "component": "Effect.RuleOverride",
       "availability": "catalog",
-      "usage": "読み取りのあいだ、移動と攻撃の受付を封じる。硬直ではなく操作の受付拒否として扱う。"
-    },
-    {
-      "type": "component_implementation_review",
-      "candidate_id": "ROLE-C-007",
-      "component": "NPCState",
-      "availability": "catalog",
-      "usage": "Serverが保持するNPCの状態を読む。実装は未確認で、勢力の関係には触れない。"
-    },
-    {
-      "type": "component_implementation_review",
-      "candidate_id": "ROLE-C-007",
-      "component": "SkillActivation",
-      "availability": "catalog",
-      "usage": "既存の3スキルと同じ発動経路を持つ必要がある。実装はPartialで、読み取りの経路は含まれない。"
+      "usage": "戦闘中のNPCのうち、弱った個体だけを読み取る。"
     },
     {
       "type": "spec_conflict",
@@ -339,138 +254,187 @@
     {
       "type": "uncertainty",
       "candidate_id": "ROLE-C-007",
-      "note": "矛盾は確認していない。ServerとClientの責務分離、およびSEKIGAHARAが未実装であることに反しない。"
+      "note": "受付時間・距離・上限・クールダウン・速度などの値は仮案段階。"
     },
     {
       "type": "uncertainty",
       "candidate_id": "ROLE-C-007",
-      "note": "何をもって弱いとするかの閾値は未確定。"
+      "note": "レベル差は候補であり、効果量と操作負担を試作して調整する。"
     },
     {
       "type": "uncertainty",
       "candidate_id": "ROLE-C-007",
-      "note": "戦闘中でない個体に印を出すか。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-007",
-      "note": "印は即時に作り直す。保持はしない。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-007",
-      "note": "印を出した瞬間にその個体が倒れた場合の扱い。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-007",
-      "note": "既存の個人表示との重なり。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-007",
-      "note": "SEKIGAHARAは未実装なので、NPCの状態そのものが存在するかを前提にできるか。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-007",
-      "note": "複数人での見え方は未確認。"
-    },
-    {
-      "type": "requires_code_unknown",
-      "candidate_id": "ROLE-C-008",
-      "reason": "ダメージの解決後に硬直を発生させる箇所がどこなのか、current-implementation.md に記録がない。差し替え先が特定できないため必要性をunknownとした。調査対象は被ダメージ処理の順序と硬直の追加箇所。"
-    },
-    {
-      "type": "component_implementation_review",
-      "candidate_id": "ROLE-C-008",
-      "component": "Effect.StateChange",
-      "availability": "catalog",
-      "usage": "次の1回の被ダメージについて硬直を発生させない。ダメージ量自体は変えない。"
+      "note": "通常スキルとしてのみ扱い、Player Anomalyの専用能力には一般化しない。"
     },
     {
       "type": "component_implementation_review",
       "candidate_id": "ROLE-C-008",
       "component": "Effect.RuleOverride",
       "availability": "catalog",
-      "usage": "受け流しを消費したあと、次の通常攻撃の受付を1回だけ拒否する。対象は本人の通常攻撃に限る。"
+      "usage": "次の被弾一回の硬直を抑え、足場を保つ。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-008",
+      "note": "受付時間・距離・上限・クールダウン・速度などの値は仮案段階。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-008",
+      "note": "レベル差は候補であり、効果量と操作負担を試作して調整する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-008",
+      "note": "通常スキルとしてのみ扱い、Player Anomalyの専用能力には一般化しない。"
     },
     {
       "type": "component_implementation_review",
-      "candidate_id": "ROLE-C-008",
-      "component": "SkillActivation",
-      "availability": "catalog",
-      "usage": "既存の3スキルと同じ発動経路を持つ必要がある。実装はPartialで、被弾時の硬直の差し替えは含まれない。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-008",
-      "note": "矛盾は確認していない。PvPのHP下限は本候補が変更しない。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-008",
-      "note": "被弾から発動までの失効時間。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-008",
-      "note": "Down中など、もともと硬直が発生しない対象との重なり。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-008",
-      "note": "他の攻撃スキルとの連鎖において、次の通常攻撃を1回だけ閉じることの影響。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-008",
-      "note": "無敵と硬直回避は別の効果として扱う。バックステップとの重なりは未定。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-008",
-      "note": "Player Anomalyとの干渉は本候補では扱わない。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-008",
-      "note": "SEKIGAHARAは未実装のため、実地検証は別のマップで先に試す必要がある。"
-    },
-    {
-      "type": "component_implementation_review",
-      "candidate_id": "ROLE-C-013",
+      "candidate_id": "ROLE-C-009",
       "component": "Effect.StateChange",
       "availability": "catalog",
-      "usage": "連携入力の受付窓を開く。対象は発動した本人と指名した相手。生命、装備、共有ワールドの状態は変更しない。"
+      "usage": "遮蔽物に接して静止し、対応モブの再捕捉を遅らせる。"
     },
     {
       "type": "component_implementation_review",
-      "candidate_id": "ROLE-C-013",
+      "candidate_id": "ROLE-C-009",
       "component": "Effect.RuleOverride",
       "availability": "catalog",
-      "usage": "窓の開通中、指定1枠のスキル発動以外と連鎖としての通常攻撃の受付を拒否する。対象は対象プレイヤーの入力受付のみに限る。"
+      "usage": "遮蔽物に接して静止し、対応モブの再捕捉を遅らせる。"
+    },
+    {
+      "type": "spec_conflict",
+      "candidate_id": "ROLE-C-009",
+      "source_path": "docs/systems/map-gimmick-ideas.md",
+      "existing_rule": "SEKIGAHARAの地形、勢力配置、戦況ロジック、敵対・協力関係は未決として記されている。",
+      "proposal_difference": "本候補は地形に接触している individual's 提示だけを切り替え、勢力と戦況の設計には踏み込まない。",
+      "correction": "採用する場合は地形設計を先行させず、个人提示だけを先に試す。AI側の再標定が必要になった時点で個別設計に戻す。",
+      "reason_correctable": "コンセプトの記述を変更せず、地形の造営や配置の提案も行わない。",
+      "decision_needed": "個人提示だけの変更で成立するか、AI側の再標定まで必要とするか。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-009",
+      "note": "受付時間・距離・上限・クールダウン・速度などの値は仮案段階。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-009",
+      "note": "レベル差は候補であり、効果量と操作負担を試作して調整する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-009",
+      "note": "通常スキルとしてのみ扱い、Player Anomalyの専用能力には一般化しない。"
     },
     {
       "type": "component_implementation_review",
-      "candidate_id": "ROLE-C-013",
+      "candidate_id": "ROLE-C-010",
       "component": "Effect.InformationChange",
       "availability": "catalog",
-      "usage": "窓の開始と終了をサーバー側のInteraction入力として記録し、個人提示とサーバー記録を分離する。クライアント表示だけの結果にはしない。"
+      "usage": "器材に手を添え、自分の視点の揺れを一時的に整える。"
+    },
+    {
+      "type": "spec_conflict",
+      "candidate_id": "ROLE-C-010",
+      "source_path": "docs/decisions/018-whisper-colleague-quest-and-anxiety.md",
+      "existing_rule": "元同僚は研究機材へ閉じこもり、研究機材を開くと器材と装置が残る。装置の正体と処分の真偽は未確定である。",
+      "proposal_difference": "本候補は器材の状態やQuestの進行には手を加えず、個人が触れているあいだだけ作用する。",
+      "correction": "採用する場合は判断018の進行条件を変更せず、個人状態という別系統として扱う。研究機材を開いたときの扱いは変更しない。",
+      "reason_correctable": "判断018の内容と装置の扱いを変えず、個人側の状態にのみ追加する。",
+      "decision_needed": "本候補の対象器材が、判断018で定義された研究機材と同じものかどうか。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-010",
+      "note": "受付時間・距離・上限・クールダウン・速度などの値は仮案段階。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-010",
+      "note": "レベル差は候補であり、効果量と操作負担を試作して調整する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-010",
+      "note": "通常スキルとしてのみ扱い、Player Anomalyの専用能力には一般化しない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-011",
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "歩いた位置に、自分だけ見える帰路の印を残す。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-011",
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "歩いた位置に、自分だけ見える帰路の印を残す。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-011",
+      "note": "受付時間・距離・上限・クールダウン・速度などの値は仮案段階。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-011",
+      "note": "レベル差は候補であり、効果量と操作負担を試作して調整する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-011",
+      "note": "通常スキルとしてのみ扱い、Player Anomalyの専用能力には一般化しない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-012",
+      "component": "Effect.Move",
+      "availability": "catalog",
+      "usage": "同意した仲間と位置を交換し、互いの帰路の印も受け渡す。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-012",
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "同意した仲間と位置を交換し、互いの帰路の印も受け渡す。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-012",
+      "note": "受付時間・距離・上限・クールダウン・速度などの値は仮案段階。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-012",
+      "note": "レベル差は候補であり、効果量と操作負担を試作して調整する。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-012",
+      "note": "通常スキルとしてのみ扱い、Player Anomalyの専用能力には一般化しない。"
+    },
+    {
+      "type": "uncertainty",
+      "candidate_id": "ROLE-C-012",
+      "note": "記録交換は011のRun内印のみ。Quest・Discovery・Exposure・観察実績・whisperの追従先を交換しない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-013",
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "音の合図を出し、仲間との連携入力を待つ。"
     },
     {
       "type": "component_implementation_review",
       "candidate_id": "ROLE-C-013",
       "component": "SoundInteraction",
       "availability": "catalog",
-      "usage": "窓の開始を音による入力として記録する。音の伝播、遮蔽、同期の方式は未決定であり、本候補はその仕様に依存しない。"
-    },
-    {
-      "type": "component_implementation_review",
-      "candidate_id": "ROLE-C-013",
-      "component": "SkillActivation",
-      "availability": "catalog",
-      "usage": "既存の3スキルと同じ発動経路を持つ必要がある。実装はPartialで、窓の開通と入力受付の切替は含まれない。"
+      "usage": "位置つきの音源入力を生成し、到達・遮蔽・受理は対象側の個別契約で判定。"
     },
     {
       "type": "spec_conflict",
@@ -495,76 +459,75 @@
     {
       "type": "uncertainty",
       "candidate_id": "ROLE-C-013",
-      "note": "窓の長さ（秒数）。全マップ共通で同じ数値を使うかどうかも未確定。"
+      "note": "受付時間・距離・上限・クールダウン・速度などの値は仮案段階。"
     },
     {
       "type": "uncertainty",
       "candidate_id": "ROLE-C-013",
-      "note": "指名できる相手は1人までか、同一Runの参加者全員か。"
+      "note": "レベル差は候補であり、効果量と操作負担を試作して調整する。"
     },
     {
       "type": "uncertainty",
       "candidate_id": "ROLE-C-013",
-      "note": "連携として受け付ける入力の種類。通常攻撃の連鎖、スキルへの遷移、中断の可否のどれまでを含めるか。"
+      "note": "通常スキルとしてのみ扱い、Player Anomalyの専用能力には一般化しない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-014",
+      "component": "Effect.Move",
+      "availability": "catalog",
+      "usage": "吹き飛ばされた後、着地面に沿って滑り、落下を避ける。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-014",
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "吹き飛ばされた後、着地面に沿って滑り、落下を避ける。"
     },
     {
       "type": "uncertainty",
-      "candidate_id": "ROLE-C-013",
-      "note": "窓を開いた音の種類と、伝播、遮蔽、同期。音の伝播などの領域は未決定であり、本候補はその仕様に依存しない。"
+      "candidate_id": "ROLE-C-014",
+      "note": "受付時間・距離・上限・クールダウン・速度などの値は仮案段階。"
     },
     {
       "type": "uncertainty",
-      "candidate_id": "ROLE-C-013",
-      "note": "同時成立の競合。同じ2人が別々に窓を開いた場合、どちらが優先されるか。"
+      "candidate_id": "ROLE-C-014",
+      "note": "レベル差は候補であり、効果量と操作負担を試作して調整する。"
     },
     {
       "type": "uncertainty",
-      "candidate_id": "ROLE-C-013",
-      "note": "受付の拒否と、/dev/nullの無効化、Stun、Down、Mad StomperのHeal Fieldとの適用順。両者が同時に成立した場合の扱いは未定。"
+      "candidate_id": "ROLE-C-014",
+      "note": "通常スキルとしてのみ扱い、Player Anomalyの専用能力には一般化しない。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-015",
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "自分が直前に踏んだ位置へ、一回だけ足音を返す。"
+    },
+    {
+      "type": "component_implementation_review",
+      "candidate_id": "ROLE-C-015",
+      "component": "SoundInteraction",
+      "availability": "catalog",
+      "usage": "位置つきの音源入力を生成し、到達・遮蔽・受理は対象側の個別契約で判定。"
     },
     {
       "type": "uncertainty",
-      "candidate_id": "ROLE-C-013",
-      "note": "Exposureは本候補では増減しない。窓を開いたことが近接判定や観察の材料になるかは、アノマリー側の受理規則に依存する。"
+      "candidate_id": "ROLE-C-015",
+      "note": "受付時間・距離・上限・クールダウン・速度などの値は仮案段階。"
     },
     {
       "type": "uncertainty",
-      "candidate_id": "ROLE-C-013",
-      "note": "切断と脱落。対象または指名先がRunから外れた場合、窓の記録を残すかどうか。"
+      "candidate_id": "ROLE-C-015",
+      "note": "レベル差は候補であり、効果量と操作負担を試作して調整する。"
     },
     {
       "type": "uncertainty",
-      "candidate_id": "ROLE-C-013",
-      "note": "複数人での検証。現時点の検証は1人セッションのみで、複数人での挙動は未確認。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-013",
-      "note": "Sound Interactionの記録の保持期間と、マップやRunを越えた参照の可否。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-013",
-      "note": "奥義、パッシブ、専用スキルが枠を占有する条件が未決定であるため、本候補の指定1枠の扱いはそれらにとって未定義である。"
-    },
-    {
-      "type": "uncertainty",
-      "candidate_id": "ROLE-C-013",
-      "note": "指名する2人目がいない場合、窓を開けない設計とするか、単独の待機時間として成立させるか。"
-    },
-    {
-      "type": "visual_check_pending_or_unavailable",
-      "role": "C",
-      "note": "ブラウザを使用禁止とする担当指示のため、実ブラウザでのHTMLとSVGの表示確認は実施できていない。目視確認は管理側に依頼する。",
-      "missing_ids": [
-        "ROLE-C-001",
-        "ROLE-C-002",
-        "ROLE-C-005",
-        "ROLE-C-006",
-        "ROLE-C-007",
-        "ROLE-C-008",
-        "ROLE-C-013"
-      ]
+      "candidate_id": "ROLE-C-015",
+      "note": "通常スキルとしてのみ扱い、Player Anomalyの専用能力には一般化しない。"
     },
     {
       "type": "reserved_not_created_or_not_loaded",
@@ -574,6 +537,20 @@
         "8/31のフェーズ遷移時刻と遷移結果をServer確定の共有事実として提示できる",
         "遷移の前後で通行可否が変わることを、答えを直接表示せずに伝えられる"
       ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "required_traits_mismatch",
+      "candidate_id": "ROLE-C-001",
+      "target_id": "ROLE-C-013",
+      "missing_traits": [
+        "個人単位の連携入力受付窓を開ける"
+      ]
+    },
+    {
+      "type": "reference_resolution_needs_review",
+      "candidate_id": "ROLE-C-001",
+      "target_id": "ROLE-C-013",
       "claimed_resolution": "reserved_unresolved"
     },
     {
@@ -596,6 +573,16 @@
         "遷移確定を再入可能なイベントとして、複数方法が同時刻に成立しても1回だけ発火すること"
       ],
       "reason": "既存実装がフェーズ進行をどの経路で通知しているかは current-implementation.md に記録がなく、pack内のsnapshotだけでは判断できない。ID未指定の接続要求として残し、購読点の存在を仮定しない。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-C-001",
+      "target_id": "ROLE-C-013",
+      "required_traits": [
+        "個人単位の連携入力受付窓を開ける"
+      ],
+      "reason": "接続要求。個別内容との互換性をまだ確認していない。",
       "adoption_blocker": false
     },
     {
@@ -626,6 +613,96 @@
         "AUG_32では提示を成立させない分岐をサーバー側で判定できること"
       ],
       "reason": "current-implementation.mdはフェーズ進行と倍率・Run Lifetimeの存在を記すが、その数値を個人表示へ渡す経路の記録がない。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-C-003",
+      "target_id": "ROLE-A-001",
+      "required_traits": [
+        "8/31の湖岸と湖面で起きる出来事をServer確定の共有事実として提示できること"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-C-003",
+      "target_id": "ROLE-A-001",
+      "required_traits": [
+        "8/31の湖岸と湖面で起きる出来事をServer確定の共有事実として提示できること"
+      ],
+      "reason": "peer-snapshotsが配布されておらず、A-001は予約枠のままで本文を確認できない。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-C-003",
+      "target_id": null,
+      "required_traits": [
+        "既存の湖面Partsを歩行可能として扱えるかどうかと、水面上を移動できる高さをServer側が決めているかを確認できること"
+      ],
+      "reason": "current-implementation.mdは湖面が円盤で水面が地形より高いと記すだけで、歩行判定と移動可能範囲の記録がない。水位や当たり判定を改造するかは判断できない。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-C-004",
+      "target_id": "ROLE-A-004",
+      "required_traits": [
+        "試聴機とアーカイブ棚の操作がServer側の操作事実として記録され、共有できる",
+        "個人試聴が共有BGMを変更しないという既存の実装事実を崩さずに提示できる"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-C-004",
+      "target_id": "ROLE-B-004",
+      "required_traits": [
+        "棚の検索や試聴の結果として残る固有品を、博士Questの直接報酬と区別して扱える"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-C-004",
+      "target_id": "ROLE-A-004",
+      "required_traits": [
+        "試聴機とアーカイブ棚の操作がServer側の操作事実として記録され、共有できる",
+        "個人試聴が共有BGMを変更しないという既存の実装事実を崩さずに提示できる"
+      ],
+      "reason": "peer-snapshotsが配布されておらず、A-004は予約枠のままで本文を確認できない。要求だけを記載する。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-C-004",
+      "target_id": null,
+      "required_traits": [
+        "個人試聴セッションの開始と終了をServerがイベントとして通知できること",
+        "PreviewDurationによる自動終了とプレイヤーによる中断を区別できること"
+      ],
+      "reason": "current-implementation.mdは個人試聴の存在と一定時間で終わること、共有BGMが変わらないことを記すが、開始と終了をどの経路で通知しているかの記録がない。ID未指定の接続要求として残す。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-C-004",
+      "target_id": null,
+      "required_traits": [
+        "1回の棚検索で返る項目集合を、サーバー側でどう決めているかを観測できること"
+      ],
+      "reason": "1回の検索で全項目は返らないとの記述はあるが、返る集合を決める規則が文書にない。記録できる項目の選定基準を既存の仕様から導けないため、未確定の接続要求として残す。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-C-004",
+      "target_id": "ROLE-B-004",
+      "required_traits": [
+        "棚の検索や試聴の結果として残る固有品を、博士Questの直接報酬と区別して扱える"
+      ],
+      "reason": "接続要求。個別内容との互換性をまだ確認していない。",
       "adoption_blocker": false
     },
     {
@@ -728,6 +805,65 @@
       "adoption_blocker": false
     },
     {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-C-009",
+      "target_id": "ROLE-A-008",
+      "required_traits": [
+        "SEKIGAHARAの地形と掩体の配置をServer確定の事実として扱えること"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-C-009",
+      "target_id": "ROLE-A-008",
+      "required_traits": [
+        "SEKIGAHARAの地形と掩体の配置をServer確定の事実として扱えること"
+      ],
+      "reason": "peer-snapshotsが配布されておらず、A-008は予約枠のままで本文を確認できない。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-C-009",
+      "target_id": null,
+      "required_traits": [
+        "相手側が対象，重新標定をServer側で行えること",
+        "地形Partsへの接触判定を、遮蔽Raycastとは別に持てること"
+      ],
+      "reason": "SEKIGAHARAの敵AIは未実装であり、視線判定と再標定の経路が文書にない。個人提示だけの変更で足りるかは判断できない。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "reserved_not_created_or_not_loaded",
+      "candidate_id": "ROLE-C-010",
+      "target_id": "ROLE-A-011",
+      "required_traits": [
+        "研究所の既存の器材が、接触可能な対象としてServer側で扱えること"
+      ],
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-C-010",
+      "target_id": "ROLE-A-011",
+      "required_traits": [
+        "研究所の既存の器材が、接触可能な対象としてServer側で扱えること"
+      ],
+      "reason": "peer-snapshotsが配布されておらず、A-011は予約枠のままで本文を確認できない。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-C-010",
+      "target_id": null,
+      "required_traits": [
+        "器材との接触判定と個人状態の保持を、Server側で扱えること"
+      ],
+      "reason": "研究所は未実装で、器材の一覧、接触判定の経路、個人状態の保存先が記録されていない。",
+      "adoption_blocker": false
+    },
+    {
       "type": "required_traits_mismatch",
       "candidate_id": "ROLE-C-013",
       "target_id": "ROLE-C-001",
@@ -736,13 +872,24 @@
       ]
     },
     {
-      "type": "reserved_not_created_or_not_loaded",
+      "type": "reference_resolution_needs_review",
+      "candidate_id": "ROLE-C-013",
+      "target_id": "ROLE-C-001",
+      "claimed_resolution": "reserved_unresolved"
+    },
+    {
+      "type": "required_traits_mismatch",
       "candidate_id": "ROLE-C-013",
       "target_id": "ROLE-C-004",
-      "required_traits": [
+      "missing_traits": [
         "試聴中は移動、通常攻撃、他のスキル発動を受け付けない"
-      ],
-      "claimed_resolution": "draft_available"
+      ]
+    },
+    {
+      "type": "reference_resolution_needs_review",
+      "candidate_id": "ROLE-C-013",
+      "target_id": "ROLE-C-004",
+      "claimed_resolution": "reserved_unresolved"
     },
     {
       "type": "reserved_not_created_or_not_loaded",
@@ -784,6 +931,26 @@
       ],
       "reason": "anomaly-interaction.mdは現時点で共通のディスパッチを新設しないと明記しており、入力記録の受け皿と順序が未定である。受け皿の存在を仮定しない。",
       "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-C-013",
+      "target_id": "ROLE-C-001",
+      "required_traits": [
+        "個人単位の連携入力受付窓を開ける"
+      ],
+      "reason": "接続要求。個別内容との互換性をまだ確認していない。",
+      "adoption_blocker": false
+    },
+    {
+      "type": "unresolved_reference",
+      "candidate_id": "ROLE-C-013",
+      "target_id": "ROLE-C-004",
+      "required_traits": [
+        "試聴中は移動、通常攻撃、他のスキル発動を受け付けない"
+      ],
+      "reason": "接続要求。個別内容との互換性をまだ確認していない。",
+      "adoption_blocker": false
     }
   ],
   "candidate_summaries": [
@@ -796,32 +963,24 @@
       "requires_code": true,
       "prototype_cost": {
         "band": "中",
-        "rationale": "8/31のフェーズ進行、地形生成、Lightingの差し替え、Run Lifetime、帰還面の開閉は既存実装があるため流用できる。既存部品にないのは遷移の通知点、個人の記録、着地の安全性検証、受付封じ状態の4点である。地形は既存のまま使うため地形生成の作り直しは不要。ただし検証用のログ（記録された座標、封じ中の不成立件数）が必要で、調整には中程度の試行を要する。",
+        "rationale": "専用入力と状態管理が必要。対象側基盤が未実装なら、その試作費用は別途見積もる。",
         "implementation_steps": [
-          "デバッグフロアまたは8/31の読み込みで、既存のフェーズ進行から遷移確定の通知を受け取れる経路があるかを確認する",
-          "各参加者の個人にアンカー記録の項目を持たせ、遷移確定時に現在座標を1件だけ保存する",
-          "遷移確定後の限定窓で発動すると記録座標へテレポートする。地形衝突時は発動拒否に留める",
-          "同じ遷移で受付封じが発火し、次の遷移確定、マップ離脱、Run終了で解除されることを確認する",
-          "記録消費、マップ離脱時の破棄、封じ中の不成立、8/32での着地不能をそれぞれログで確かめる"
+          "単一対象で成立・不成立を確認",
+          "解除とRun終了時の破棄を確認",
+          "複数参加者と競合Effectを確認"
         ],
         "assumed_existing_parts": [
-          "August31Serviceのフェーズ進行とServer側の時刻進行",
-          "8/32専用Partsの非表示保持と一括表示",
-          "Run Lifetimeと帰還面の開閉処理",
-          "RollとStealthの既存スキル発動、およびサーバー側クールダウン",
-          "Exposureの取得と閾値到達処理"
+          "既存スキル発動経路",
+          "CharacterとRun参加者の管理"
         ]
       },
       "connection_tags": [
         "Skill",
         "Environment",
-        "Movement",
-        "AugustPhase",
-        "StateChange",
-        "InformationChange"
+        "Observation"
       ],
       "conflict_count": 2,
-      "unresolved_count": 2
+      "unresolved_count": 3
     },
     {
       "candidate_id": "ROLE-C-002",
@@ -832,28 +991,80 @@
       "requires_code": true,
       "prototype_cost": {
         "band": "中",
-        "rationale": "フェーズ進行、Exposure倍率、Run Lifetimeは既存実装で流用できる。新規なのは提示経路と受付封じの2点だけ。共通HUDを触らずに専用の短時間表示で試せるため、調整の範囲は狭い。ただしAUG_32で不成立にする分岐の確認が必要で、中程度の試行を要する。",
+        "rationale": "専用入力と状態管理が必要。対象側基盤が未実装なら、その試作費用は別途見積もる。",
         "implementation_steps": [
-          "デバッグフロアまたは8/31の読み込みで、フェーズ進行の現在値と残り秒数をどこから取れるかを確認する",
-          "本人用の短時間表示にフェーズ名、残り秒数、倍率を出す",
-          "AUG_32で提示が成立しないことを確認する",
-          "提示中の移動と通常攻撃が例外なく不成立になることを確認する"
+          "単一対象で成立・不成立を確認",
+          "解除とRun終了時の破棄を確認",
+          "複数参加者と競合Effectを確認"
         ],
         "assumed_existing_parts": [
-          "August31Serviceのフェーズ進行とServer側の時刻進行",
-          "Exposureの取得速度倍率と閾値到達処理",
-          "Run Lifetimeと8/32の強制帰還",
-          "既存3スキルのサーバー側発動とクールダウン"
+          "既存スキル発動経路",
+          "CharacterとRun参加者の管理"
         ]
       },
       "connection_tags": [
         "Skill",
-        "Information",
-        "AugustPhase",
-        "StateChange"
+        "Environment",
+        "Observation"
       ],
       "conflict_count": 1,
       "unresolved_count": 2
+    },
+    {
+      "candidate_id": "ROLE-C-003",
+      "title": "水面の道",
+      "primary_map": "8/31",
+      "category": "Skill",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "専用入力と状態管理が必要。対象側基盤が未実装なら、その試作費用は別途見積もる。",
+        "implementation_steps": [
+          "単一対象で成立・不成立を確認",
+          "解除とRun終了時の破棄を確認",
+          "複数参加者と競合Effectを確認"
+        ],
+        "assumed_existing_parts": [
+          "既存スキル発動経路",
+          "CharacterとRun参加者の管理"
+        ]
+      },
+      "connection_tags": [
+        "Skill",
+        "Environment",
+        "Observation"
+      ],
+      "conflict_count": 1,
+      "unresolved_count": 2
+    },
+    {
+      "candidate_id": "ROLE-C-004",
+      "title": "試聴の記録",
+      "primary_map": "廃TSUTAYA",
+      "category": "Skill",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "専用入力と状態管理が必要。対象側基盤が未実装なら、その試作費用は別途見積もる。",
+        "implementation_steps": [
+          "単一対象で成立・不成立を確認",
+          "解除とRun終了時の破棄を確認",
+          "複数参加者と競合Effectを確認"
+        ],
+        "assumed_existing_parts": [
+          "既存スキル発動経路",
+          "CharacterとRun参加者の管理"
+        ]
+      },
+      "connection_tags": [
+        "Skill",
+        "Environment",
+        "Observation"
+      ],
+      "conflict_count": 2,
+      "unresolved_count": 4
     },
     {
       "candidate_id": "ROLE-C-005",
@@ -863,25 +1074,23 @@
       "design_status": "Idea",
       "requires_code": true,
       "prototype_cost": {
-        "band": "小",
-        "rationale": "既存の攻撃判定とサーバー側の命中処理を使い、送信だけを分岐させる。床、壁、配置の改造がないため試作の範囲は狭い。ただし音の送信が共通化されていないため、どこで差し替えるかの確定に一部試行錯誤を要する。",
+        "band": "中",
+        "rationale": "専用入力と状態管理が必要。対象側基盤が未実装なら、その試作費用は別途見積もる。",
         "implementation_steps": [
-          "デバッグフロアで既存の攻撃を1回命中させ、音がどう記録されるかを確認する",
-          "発動した1回だけ送信を止める分岐を足す",
-          "命中時と空振り時の両方で回数の扱いを確認する"
+          "単一対象で成立・不成立を確認",
+          "解除とRun終了時の破棄を確認",
+          "複数参加者と競合Effectを確認"
         ],
         "assumed_existing_parts": [
-          "既存の攻撃判定とサーバー側の命中処理",
-          "既存3スキルの発動とクールダウン",
-          "PlayerのAttributeとHP",
-          "店内の配置（変更しない方針）"
+          "既存スキル発動経路",
+          "CharacterとRun参加者の管理"
         ]
       },
       "connection_tags": [
         "Skill",
-        "Attack",
-        "SoundInteraction",
-        "InformationChange"
+        "Environment",
+        "Combat",
+        "Sound"
       ],
       "conflict_count": 0,
       "unresolved_count": 2
@@ -895,26 +1104,21 @@
       "requires_code": true,
       "prototype_cost": {
         "band": "中",
-        "rationale": "CRTと停波ノイズ、既存3スキルの発動経路は流用できる。新規なのは窓の識別、観察進行への差し替え、受付封じの3点。共通観察システム自体がDraftで、既存の視界判定だけを使う前提になるため、実装位置を決めるまでの中程度の試行を要する。",
+        "rationale": "専用入力と状態管理が必要。対象側基盤が未実装なら、その試作費用は別途見積もる。",
         "implementation_steps": [
-          "デバッグフロアでCRTのチャンネル変更を操作し、停波ノイズ区間をログで特定する",
-          "その区間だけ本人HUDに窓の表示を出す",
-          "窓のあいだ本人HUDに観察の進みが出ていないことを確認する",
-          "近接のExposureが窓のあいだも通常どおり増えることを確認する"
+          "単一対象で成立・不成立を確認",
+          "解除とRun終了時の破棄を確認",
+          "複数参加者と競合Effectを確認"
         ],
         "assumed_existing_parts": [
-          "TSUTAYAのCRTとチャンネル切替、停波ノイズの演出",
-          "近接判定とExposureの取得処理（変更しない方針）",
-          "既存3スキルのサーバー側発動とクールダウン",
-          "PlayerのAttributeとHP"
+          "既存スキル発動経路",
+          "CharacterとRun参加者の管理"
         ]
       },
       "connection_tags": [
         "Skill",
-        "Observation",
         "Environment",
-        "RuleOverride",
-        "StateChange"
+        "Observation"
       ],
       "conflict_count": 0,
       "unresolved_count": 2
@@ -925,26 +1129,24 @@
       "primary_map": "SEKIGAHARA",
       "category": "Skill",
       "design_status": "Idea",
-      "requires_code": "unknown",
+      "requires_code": true,
       "prototype_cost": {
-        "band": "不明",
-        "rationale": "SEKIGAHARAのNPCが未実装で、個別が持つデータの形が定まっていない。個人提示だけ先行させる場合の試作は小さいが、地形や勢力設計を含む見積もりは出せない。試作前にNPC実装の前提を決める必要がある。",
+        "band": "中",
+        "rationale": "専用入力と状態管理が必要。対象側基盤が未実装なら、その試作費用は別途見積もる。",
         "implementation_steps": [
-          "SEKIGAHARAのNPC実装の前提を先に決める。体力をServer側で持つのか、最大数と補充の規則はどうか",
-          "その前提の上で個人提示だけを実装し、表示を確認する",
-          "仲間には何も出ないことを1人セッションのログで確認する"
+          "単一対象で成立・不成立を確認",
+          "解除とRun終了時の破棄を確認",
+          "複数参加者と競合Effectを確認"
         ],
         "assumed_existing_parts": [
-          "Server権威のRun管理とPlayerのAttribute",
-          "既存3スキルの発動とクールダウン",
-          "各マップの生成と配置の規約"
+          "既存スキル発動経路",
+          "CharacterとRun参加者の管理"
         ]
       },
       "connection_tags": [
         "Skill",
-        "Information",
         "Environment",
-        "StateChange"
+        "Observation"
       ],
       "conflict_count": 1,
       "unresolved_count": 2
@@ -955,30 +1157,139 @@
       "primary_map": "SEKIGAHARA",
       "category": "Skill",
       "design_status": "Idea",
-      "requires_code": "unknown",
+      "requires_code": true,
       "prototype_cost": {
-        "band": "不明",
-        "rationale": "硬直を発生させる箇所と順序が文書から分からないため、コストを確定できない。デバッグフロアで1回の被ダメージを発生させて硬直の経路を探せば小さく試せるが、SEKIGAHARA側の敵は存在しない。",
+        "band": "中",
+        "rationale": "専用入力と状態管理が必要。対象側基盤が未実装なら、その試作費用は別途見積もる。",
         "implementation_steps": [
-          "デバッグフロアで自身に1回のダメージを与え、硬直が出る経路をログで特定する",
-          "その直後に1回だけ硬直を発生させない分岐を足す",
-          "通常攻撃を1回入力して拒否されることを確認する"
+          "単一対象で成立・不成立を確認",
+          "解除とRun終了時の破棄を確認",
+          "複数参加者と競合Effectを確認"
         ],
         "assumed_existing_parts": [
-          "既存のダメージ解決とHPの管理",
-          "StunやDownの状態管理（存在する場合）",
-          "既存3スキルの発動とクールダウン",
-          "PlayerのAttributeとCharacter"
+          "既存スキル発動経路",
+          "CharacterとRun参加者の管理"
         ]
       },
       "connection_tags": [
         "Skill",
-        "Combat",
-        "StateChange",
-        "RuleOverride"
+        "Environment",
+        "Combat"
       ],
       "conflict_count": 0,
       "unresolved_count": 1
+    },
+    {
+      "candidate_id": "ROLE-C-009",
+      "title": "地形に紛れる",
+      "primary_map": "SEKIGAHARA",
+      "category": "Skill",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "専用入力と状態管理が必要。対象側基盤が未実装なら、その試作費用は別途見積もる。",
+        "implementation_steps": [
+          "単一対象で成立・不成立を確認",
+          "解除とRun終了時の破棄を確認",
+          "複数参加者と競合Effectを確認"
+        ],
+        "assumed_existing_parts": [
+          "既存スキル発動経路",
+          "CharacterとRun参加者の管理"
+        ]
+      },
+      "connection_tags": [
+        "Skill",
+        "Environment",
+        "Combat"
+      ],
+      "conflict_count": 1,
+      "unresolved_count": 2
+    },
+    {
+      "candidate_id": "ROLE-C-010",
+      "title": "手を置いたまま",
+      "primary_map": "研究所",
+      "category": "Skill",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "専用入力と状態管理が必要。対象側基盤が未実装なら、その試作費用は別途見積もる。",
+        "implementation_steps": [
+          "単一対象で成立・不成立を確認",
+          "解除とRun終了時の破棄を確認",
+          "複数参加者と競合Effectを確認"
+        ],
+        "assumed_existing_parts": [
+          "既存スキル発動経路",
+          "CharacterとRun参加者の管理"
+        ]
+      },
+      "connection_tags": [
+        "Skill",
+        "Environment",
+        "Observation"
+      ],
+      "conflict_count": 1,
+      "unresolved_count": 2
+    },
+    {
+      "candidate_id": "ROLE-C-011",
+      "title": "帰り道の印",
+      "primary_map": "研究所",
+      "category": "Skill",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "専用入力と状態管理が必要。対象側基盤が未実装なら、その試作費用は別途見積もる。",
+        "implementation_steps": [
+          "単一対象で成立・不成立を確認",
+          "解除とRun終了時の破棄を確認",
+          "複数参加者と競合Effectを確認"
+        ],
+        "assumed_existing_parts": [
+          "既存スキル発動経路",
+          "CharacterとRun参加者の管理"
+        ]
+      },
+      "connection_tags": [
+        "Skill",
+        "Environment",
+        "Observation"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-C-012",
+      "title": "位置を預ける",
+      "primary_map": "研究所",
+      "category": "Skill",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "専用入力と状態管理が必要。対象側基盤が未実装なら、その試作費用は別途見積もる。",
+        "implementation_steps": [
+          "単一対象で成立・不成立を確認",
+          "解除とRun終了時の破棄を確認",
+          "複数参加者と競合Effectを確認"
+        ],
+        "assumed_existing_parts": [
+          "既存スキル発動経路",
+          "CharacterとRun参加者の管理"
+        ]
+      },
+      "connection_tags": [
+        "Skill",
+        "Environment",
+        "Observation"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
     },
     {
       "candidate_id": "ROLE-C-013",
@@ -989,41 +1300,92 @@
       "requires_code": true,
       "prototype_cost": {
         "band": "中",
-        "rationale": "サーバー権威のRun状態、PlayerのAttribute、既存3スキルの発動経路は既存実装があるため流用できる。ただし連携窓の状態、入力受付の切替、入力記録の3点は新規である。音の伝播や遮蔽、アノマリー側の受理規則には依存しないため、Effectの検証はサーバー側のログと個人画面の確認で足りる。複数人同時での競合確認は1人セッションでは検証できず、未確認の部分をを含むため中とした。",
+        "rationale": "専用入力と状態管理が必要。対象側基盤が未実装なら、その試作費用は別途見積もる。",
         "implementation_steps": [
-          "デバッグフロアで同一Runの参加者を2人用意し、片方が窓を発動し、他方の入力を1回受け付けるところまで実装する",
-          "窓の開通中に指定1枠以外と連鎖の通常攻撃が不成立になることをサーバー側で確認する",
-          "窓の開始と終了がSound Interactionの入力として記録され、記録の書き換えと削除が拒否されることを確認する",
-          "切断と戦闘不能で窓が破棄されることをサーバー側のログで確認する",
-          "2人が同時に窓を開いたときの競合をログで記録する。複数人セッションが使えない場合は未確認として残す"
+          "単一対象で成立・不成立を確認",
+          "解除とRun終了時の破棄を確認",
+          "複数参加者と競合Effectを確認"
         ],
         "assumed_existing_parts": [
-          "RunStateとサーバー権威のRun管理",
-          "PlayerのAttributeとHP、Run Lifetimeの状態保持",
-          "既存3スキル（Magic Bolt、Roll、Stealth）のサーバー側発動とクールダウン",
-          "既存の近接判定とExposureの取得処理（変更しない方針）",
-          "パーティ受付の上限5人と受付時の範囲判定"
+          "既存スキル発動経路",
+          "CharacterとRun参加者の管理"
         ]
       },
       "connection_tags": [
         "Skill",
-        "Party",
-        "Sound",
-        "StateChange",
-        "RuleOverride",
-        "InformationChange"
+        "Environment",
+        "Observation",
+        "Sound"
       ],
       "conflict_count": 2,
-      "unresolved_count": 3
+      "unresolved_count": 5
+    },
+    {
+      "candidate_id": "ROLE-C-014",
+      "title": "滑って止まる",
+      "primary_map": "全マップ共通",
+      "category": "Skill",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "専用入力と状態管理が必要。対象側基盤が未実装なら、その試作費用は別途見積もる。",
+        "implementation_steps": [
+          "単一対象で成立・不成立を確認",
+          "解除とRun終了時の破棄を確認",
+          "複数参加者と競合Effectを確認"
+        ],
+        "assumed_existing_parts": [
+          "既存スキル発動経路",
+          "CharacterとRun参加者の管理"
+        ]
+      },
+      "connection_tags": [
+        "Skill",
+        "Environment",
+        "Combat"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
+    },
+    {
+      "candidate_id": "ROLE-C-015",
+      "title": "一歩ぶんの囮",
+      "primary_map": "全マップ共通",
+      "category": "Skill",
+      "design_status": "Idea",
+      "requires_code": true,
+      "prototype_cost": {
+        "band": "中",
+        "rationale": "専用入力と状態管理が必要。対象側基盤が未実装なら、その試作費用は別途見積もる。",
+        "implementation_steps": [
+          "単一対象で成立・不成立を確認",
+          "解除とRun終了時の破棄を確認",
+          "複数参加者と競合Effectを確認"
+        ],
+        "assumed_existing_parts": [
+          "既存スキル発動経路",
+          "CharacterとRun参加者の管理"
+        ]
+      },
+      "connection_tags": [
+        "Skill",
+        "Environment",
+        "Observation",
+        "Sound"
+      ],
+      "conflict_count": 0,
+      "unresolved_count": 0
     }
   ],
   "counts": {
-    "C:8/31": 2,
-    "C:廃TSUTAYA": 2,
-    "C:SEKIGAHARA": 2,
-    "C:全マップ共通": 1
+    "C:8/31": 3,
+    "C:廃TSUTAYA": 3,
+    "C:SEKIGAHARA": 3,
+    "C:研究所": 3,
+    "C:全マップ共通": 3
   },
   "visual_render_verified": false,
   "worldview_content_verified": false,
-  "mechanical_validation": "failed"
+  "mechanical_validation": "passed"
 }

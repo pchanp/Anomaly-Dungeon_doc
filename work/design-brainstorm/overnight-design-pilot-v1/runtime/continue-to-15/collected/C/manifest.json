@@ -2,16 +2,80 @@
   "run_id": "overnight-design-pilot-v1",
   "role": "C",
   "candidates": [
-    { "candidate_id": "ROLE-C-001", "json_file": "ROLE-C-001.json", "html_file": "ROLE-C-001.html" },
-    { "candidate_id": "ROLE-C-002", "json_file": "ROLE-C-002.json", "html_file": "ROLE-C-002.html" },
-    { "candidate_id": "ROLE-C-003", "json_file": "ROLE-C-003.json", "html_file": "ROLE-C-003.html" },
-    { "candidate_id": "ROLE-C-004", "json_file": "ROLE-C-004.json", "html_file": "ROLE-C-004.html" },
-    { "candidate_id": "ROLE-C-005", "json_file": "ROLE-C-005.json", "html_file": "ROLE-C-005.html" },
-    { "candidate_id": "ROLE-C-006", "json_file": "ROLE-C-006.json", "html_file": "ROLE-C-006.html" },
-    { "candidate_id": "ROLE-C-007", "json_file": "ROLE-C-007.json", "html_file": "ROLE-C-007.html" },
-    { "candidate_id": "ROLE-C-008", "json_file": "ROLE-C-008.json", "html_file": "ROLE-C-008.html" },
-    { "candidate_id": "ROLE-C-009", "json_file": "ROLE-C-009.json", "html_file": "ROLE-C-009.html" },
-    { "candidate_id": "ROLE-C-010", "json_file": "ROLE-C-010.json", "html_file": "ROLE-C-010.html" },
-    { "candidate_id": "ROLE-C-013", "json_file": "ROLE-C-013.json", "html_file": "ROLE-C-013.html" }
+    {
+      "candidate_id": "ROLE-C-001",
+      "json_file": "ROLE-C-001.json",
+      "html_file": "ROLE-C-001.html"
+    },
+    {
+      "candidate_id": "ROLE-C-002",
+      "json_file": "ROLE-C-002.json",
+      "html_file": "ROLE-C-002.html"
+    },
+    {
+      "candidate_id": "ROLE-C-003",
+      "json_file": "ROLE-C-003.json",
+      "html_file": "ROLE-C-003.html"
+    },
+    {
+      "candidate_id": "ROLE-C-004",
+      "json_file": "ROLE-C-004.json",
+      "html_file": "ROLE-C-004.html"
+    },
+    {
+      "candidate_id": "ROLE-C-005",
+      "json_file": "ROLE-C-005.json",
+      "html_file": "ROLE-C-005.html"
+    },
+    {
+      "candidate_id": "ROLE-C-006",
+      "json_file": "ROLE-C-006.json",
+      "html_file": "ROLE-C-006.html"
+    },
+    {
+      "candidate_id": "ROLE-C-007",
+      "json_file": "ROLE-C-007.json",
+      "html_file": "ROLE-C-007.html"
+    },
+    {
+      "candidate_id": "ROLE-C-008",
+      "json_file": "ROLE-C-008.json",
+      "html_file": "ROLE-C-008.html"
+    },
+    {
+      "candidate_id": "ROLE-C-009",
+      "json_file": "ROLE-C-009.json",
+      "html_file": "ROLE-C-009.html"
+    },
+    {
+      "candidate_id": "ROLE-C-010",
+      "json_file": "ROLE-C-010.json",
+      "html_file": "ROLE-C-010.html"
+    },
+    {
+      "candidate_id": "ROLE-C-011",
+      "json_file": "ROLE-C-011.json",
+      "html_file": "ROLE-C-011.html"
+    },
+    {
+      "candidate_id": "ROLE-C-012",
+      "json_file": "ROLE-C-012.json",
+      "html_file": "ROLE-C-012.html"
+    },
+    {
+      "candidate_id": "ROLE-C-013",
+      "json_file": "ROLE-C-013.json",
+      "html_file": "ROLE-C-013.html"
+    },
+    {
+      "candidate_id": "ROLE-C-014",
+      "json_file": "ROLE-C-014.json",
+      "html_file": "ROLE-C-014.html"
+    },
+    {
+      "candidate_id": "ROLE-C-015",
+      "json_file": "ROLE-C-015.json",
+      "html_file": "ROLE-C-015.html"
+    }
   ]
 }

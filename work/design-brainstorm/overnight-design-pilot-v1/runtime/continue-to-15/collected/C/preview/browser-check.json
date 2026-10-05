@@ -1,0 +1,122 @@
+[
+  {
+    "id": "ROLE-C-001",
+    "title": "ROLE-C-001 巻き戻し地点",
+    "svg": 1,
+    "overflow": false,
+    "textOverflow": false,
+    "height": 1176
+  },
+  {
+    "id": "ROLE-C-002",
+    "title": "ROLE-C-002 刻みを読む",
+    "svg": 1,
+    "overflow": false,
+    "textOverflow": false,
+    "height": 1176
+  },
+  {
+    "id": "ROLE-C-003",
+    "title": "ROLE-C-003 水面の道",
+    "svg": 1,
+    "overflow": false,
+    "textOverflow": false,
+    "height": 1176
+  },
+  {
+    "id": "ROLE-C-004",
+    "title": "ROLE-C-004 試聴の記録",
+    "svg": 1,
+    "overflow": false,
+    "textOverflow": false,
+    "height": 1176
+  },
+  {
+    "id": "ROLE-C-005",
+    "title": "ROLE-C-005 一打の無音",
+    "svg": 1,
+    "overflow": false,
+    "textOverflow": false,
+    "height": 1176
+  },
+  {
+    "id": "ROLE-C-006",
+    "title": "ROLE-C-006 停波の隙間",
+    "svg": 1,
+    "overflow": false,
+    "textOverflow": false,
+    "height": 1176
+  },
+  {
+    "id": "ROLE-C-007",
+    "title": "ROLE-C-007 弱みの印",
+    "svg": 1,
+    "overflow": false,
+    "textOverflow": false,
+    "height": 1176
+  },
+  {
+    "id": "ROLE-C-008",
+    "title": "ROLE-C-008 一度だけ受け流す",
+    "svg": 1,
+    "overflow": false,
+    "textOverflow": false,
+    "height": 1176
+  },
+  {
+    "id": "ROLE-C-009",
+    "title": "ROLE-C-009 地形に紛れる",
+    "svg": 1,
+    "overflow": false,
+    "textOverflow": false,
+    "height": 1176
+  },
+  {
+    "id": "ROLE-C-010",
+    "title": "ROLE-C-010 手を置いたまま",
+    "svg": 1,
+    "overflow": false,
+    "textOverflow": false,
+    "height": 1176
+  },
+  {
+    "id": "ROLE-C-011",
+    "title": "ROLE-C-011 帰り道の印",
+    "svg": 1,
+    "overflow": false,
+    "textOverflow": false,
+    "height": 1176
+  },
+  {
+    "id": "ROLE-C-012",
+    "title": "ROLE-C-012 位置を預ける",
+    "svg": 1,
+    "overflow": false,
+    "textOverflow": false,
+    "height": 1202
+  },
+  {
+    "id": "ROLE-C-013",
+    "title": "ROLE-C-013 息を揃える窓",
+    "svg": 1,
+    "overflow": false,
+    "textOverflow": false,
+    "height": 1176
+  },
+  {
+    "id": "ROLE-C-014",
+    "title": "ROLE-C-014 滑って止まる",
+    "svg": 1,
+    "overflow": false,
+    "textOverflow": false,
+    "height": 1176
+  },
+  {
+    "id": "ROLE-C-015",
+    "title": "ROLE-C-015 一歩ぶんの囮",
+    "svg": 1,
+    "overflow": false,
+    "textOverflow": false,
+    "height": 1176
+  }
+]
