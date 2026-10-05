@@ -1,0 +1,90 @@
+{
+  "run_id": "overnight-design-pilot-v1",
+  "role": "C",
+  "state": "stopped_partial",
+  "mode": "CONTINUE_TO_15",
+  "completed_ids": [
+    "ROLE-C-001",
+    "ROLE-C-002",
+    "ROLE-C-003",
+    "ROLE-C-004",
+    "ROLE-C-005",
+    "ROLE-C-006",
+    "ROLE-C-007",
+    "ROLE-C-008",
+    "ROLE-C-009",
+    "ROLE-C-010",
+    "ROLE-C-013"
+  ],
+  "next_ids": [
+    "ROLE-C-011",
+    "ROLE-C-012",
+    "ROLE-C-014",
+    "ROLE-C-015"
+  ],
+  "started_at": null,
+  "ended_at": null,
+  "stop_reason": "15件のうち11件を保存した時点で止めた。残り4件（011、012、014、015）を安全に書き出す余裕が確保できないため。編集操作が日本語文字列を含む場合に不定に失敗し、書き出した文章の不自然な多言語断片の補正に多数回のやり直しを要したため、破損ファイルを残さないための自主的な区切り保存。予算、期限、外側の停止要求による停止ではない。",
+  "execution": {
+    "provider": null,
+    "model": "opencode/space-bunny-free",
+    "session_id": null
+  },
+  "sessions": [
+    {
+      "started_at": null,
+      "ended_at": null,
+      "note": "時刻取得手段がないため、開始と終了の時刻はnull。"
+    }
+  ],
+  "batches": [
+    {
+      "batch_index": 1,
+      "candidate_ids": ["ROLE-C-001", "ROLE-C-004", "ROLE-C-013"],
+      "started_at": null,
+      "ended_at": null,
+      "note": "試走3件。HTMLはcandidate-format v0.1の形式で作成した。"
+    },
+    {
+      "batch_index": 2,
+      "candidate_ids": ["ROLE-C-002", "ROLE-C-003", "ROLE-C-006"],
+      "started_at": null,
+      "ended_at": null,
+      "note": "既存3件のHTMLをv0.2の簡潔形式へ直しつつ、002、003、006を追加して6件時点へ更新。"
+    },
+    {
+      "batch_index": 3,
+      "candidate_ids": ["ROLE-C-005", "ROLE-C-007", "ROLE-C-008"],
+      "started_at": null,
+      "ended_at": null,
+      "note": "005、007、008を追加して9件時点へ更新。"
+    },
+    {
+      "batch_index": 4,
+      "candidate_ids": ["ROLE-C-009", "ROLE-C-010"],
+      "started_at": null,
+      "ended_at": null,
+      "note": "009と010の2件のみを保存し、11件時点で止めた。3件単位の区切りで進められなかったため。"
+    }
+  ],
+  "usage": {
+    "input_tokens": null,
+    "output_tokens": null,
+    "cost": null,
+    "currency": null,
+    "measurement_source": null
+  },
+  "visual_check": {
+    "status": "unavailable",
+    "checked_ids": [],
+    "note": "ブラウザを使用禁止とする担当指示のため、実ブラウザでのHTMLとSVGの表示確認は実施できていない。目視確認は管理側に依頼する。"
+  },
+  "measurement_notes": [
+    "Bash、task、MCP、外部ディレクトリ、外部調査、Git、Studioを使用禁止とする指示があるため、日時取得、Python検証、ブラウザでの実表示確認のいずれも担当では実行していない。",
+    "started_at、ended_at、events.jsonlのatはすべてnullで、理由ノートを各行に記した。所要時間は実測していない。",
+    "モデル名は提示された設定のみを記録し、プロバイダとセッションIDはnull。",
+    "トークン数と費用は管理サービスが実測値を返すまで不明のためnull。",
+    "prototype_costはゲーム内試作の見積もりであり、生成にかかった時間とは別の数値。",
+    "文章の書き出し後に日本語として成立しない語が混入し、該当箇所の書き直しと再確認を多数回行った。所要時間としては記録できていない。"
+  ]
+}

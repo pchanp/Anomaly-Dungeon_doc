@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ROLE-C-009 地形に紛れる</title>
+  <link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <p class="sub">ROLE-C-009 ／ SEKIGAHARA ／ マップ固有 ／ Idea</p>
+    <h1>地形に紛れる</h1>
+    <nav class="nav"><a href="index.html">一覧</a><a href="ROLE-C-009.json">この候補のJSON</a></nav>
+  </header>
+
+  <section id="hypothesis">
+    <h2>何の案か</h2>
+    <p>既存の地形や立体に接して静止すると、自分だけが視界から外れる補助系スキル。</p>
+    <h2>仕組み</h2>
+    <ul>
+      <li>接触したまま止まっているあいだ、本人への個人提示だけが見えない状態へ切り替わる。</li>
+      <li>敵の体力や思考、勢力関係は変わらない。離れると解除され、動くと切れる。</li>
+      <li>静止中は攻撃もスキルも発動できない。打たれても身じ不动でいる。</li>
+    </ul>
+    <h2>選択と代償</h2>
+    <p>戦場で戦うのか、地形に紛れて傍観者になるのかを選ぶ。動けないし攻撃もできない。場所選びを誤ると意味がない。</p>
+  </section>
+
+  <section id="diagram">
+    <h2>作用図</h2>
+    <div class="board">
+      <svg viewBox="0 0 980 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="地形に接して静止した場合に本人への個人提示だけが見えない状態に切り替わり、敵の状態は変わらず、離れると解除されることを示す図">
+        <rect width="980" height="400" fill="#0a1118"/>
+        <text x="30" y="32" class="label">変わるのは本人への提示だけ</text>
+        <rect x="40" y="52" width="250" height="54" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text x="58" y="76" class="label">戦場で戦う</text>
+        <text x="58" y="96" class="small">動ける。攻撃も技も使える</text>
+        <rect x="350" y="52" width="250" height="54" rx="8" fill="#142330" stroke="#70c9c3"/>
+        <text x="368" y="76" class="label">地形に紛れる</text>
+        <text x="368" y="96" class="small">静止。攻撃も技も不可</text>
+        <path d="M290 79h54" class="active"/><path d="M336 73l8 6-8 6" class="active"/>
+
+        <rect x="40" y="140" width="250" height="96" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text x="58" y="166" class="label">個人提示</text>
+        <text x="58" y="190" class="small">そのまま。相手は通常どおり</text>
+        <text x="58" y="214" class="small">本人にも変化はない</text>
+        <rect x="350" y="140" width="250" height="96" rx="8" fill="#142330" stroke="#70c9c3"/>
+        <text x="368" y="166" class="label">個人提示</text>
+        <text x="368" y="190" class="small">本人だけが相手から見えない</text>
+        <text x="368" y="214" class="small">仲間の画面は変わらない</text>
+        <path d="M165 106v28" class="hyp-line"/>
+        <path d="M475 106v28" class="hyp-line"/>
+
+        <rect x="660" y="140" width="280" height="96" rx="8" fill="#142330" stroke="#ea9380"/>
+        <text x="678" y="166" class="label">変わらないもの</text>
+        <text x="678" y="190" class="small">敵の体力と思考</text>
+        <text x="678" y="214" class="small">地形、勢力関係、依頼の進行</text>
+        <path d="M600 188h54" class="hyp-line"/>
+
+        <rect x="40" y="262" width="560" height="66" rx="8" fill="#142330" stroke="#ea9380"/>
+        <text x="58" y="288" class="label">離れると切れる</text>
+        <text x="58" y="312" class="small">自動では戻らない。動いた瞬間に解除される</text>
+        <rect x="660" y="262" width="280" height="66" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text x="678" y="288" class="label">回避ではない</text>
+        <text x="678" y="312" class="small">打たれても反応しない</text>
+        <path d="M475 236v20" class="active"/>
+        <text x="30" y="362" class="small">SEKIGAHARAの敵AIは未実装で、相手側が再標定しない場合は何も起きない。</text>
+        <text x="30" y="384" class="small">図は模式図。地形や掩体の形状は提案していない。</text>
+      </svg>
+    </div>
+    <p>変わるのは本人への提示1つだけ。敵の状態はそのままなので、回避ではなく隠れる操作である。</p>
+  </section>
+
+  <p class="sub">接続タグ: 補助／環境／観察／状態変化／情報変化。requires_code: unknown（敵AIが未実装で必要性を判定できない）。詳細は<a href="ROLE-C-009.json">同じIDのJSON</a>に記録。</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,220 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-008",
+  "role": "C",
+  "title": "一度だけ受け流す",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "SEKIGAHARA",
+  "classification": "マップ固有",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "アクション系",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "アクション系は高速移動、Teleport、Grapplingなどの移動やギミックへの介入を扱う。バックステップは動作中は無敵でDownやStun中でも発動できるが無敵時間や再使用条件は未決。"
+    },
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "通常攻撃と連携",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "通常攻撃からスキルへ、スキルから別のスキルへ連携できる。入力受付時間、キャンセル可能時点、硬直、同一スキルの再連携、スタミナ等のコストは未決。"
+    },
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "プレイヤー間ダメージ",
+      "source_status": "Status: Draft（草案）",
+      "claim": "通常プレイヤー同士のダメージでは対象HPが最大HPの80%未満にならない下限を常に適用する。Player Anomalyとの組み合わせでは下限を双方に適用しない。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "重ね掛けの既定規則",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "同じEffect IDが同じ対象へ再適用された場合は既定で効果量を足さず1件とする。固定の秒数を持つ一時効果は残り時間を更新する。"
+    }
+  ],
+  "design_hypothesis": "SEKIGAHARAでは常時戦闘が続き、一打ごとに硬直と体力が落ちる。提案は、直近の被弾のあとで1回だけ硬直を殺すアクション系スキルである。無敵時間ではなく硬直の回避なので、ダメージそのものは通り体が減る。消費したあとは次の通常攻撃を1回だけ発動できない。数字の上限ではなく、1回ごとに順番のコストを持たせる。",
+  "experience": {
+    "goal": "戦場で耐えるか退くかを、どちらの正解扱いにもしない判断を出す。硬い一打を1回だけ受け止める。",
+    "player_choice": "この1回で足場を保つか、次の攻撃に使うために温存するか。耐えれば体が減り、反撃は遅れる。",
+    "sacrifice_or_risk": "硬直は消えるがダメージは通るので体は減る。受け流し後は通常攻撃が1回ぶん受け付けない。続けて使うと順番が崩れる。"
+  },
+  "placement_assumption": "SEKIGAHARA（Idea）の上に置く案で、地形、战线、配置ポイント、NPCの思考は提案しない。使うのは既存の被ダメージの解決と、硬直の受付だけである。主対象はこの戦場だが、他のマップでも同じ仕組みとして成立し得る。失効時間は未確定。",
+  "components": [
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "次の1回の被ダメージについて硬直を発生させない。ダメージ量自体は変えない。"
+    },
+    {
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "受け流しを消費したあと、次の通常攻撃の受付を1回だけ拒否する。対象は本人の通常攻撃に限る。"
+    },
+    {
+      "component": "SkillActivation",
+      "availability": "catalog",
+      "usage": "既存の3スキルと同じ発動経路を持つ必要がある。実装はPartialで、被弾時の硬直の差し替えは含まれない。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "対象が直近でダメージを受けたあと、連続した入力のあいだに本スキルを発動し、その後1回の被ダメージを受けたとき。",
+      "condition": "発動時点で対象が戦闘不能でなく、残り1回が残っていること。被弾から時間が立ちすぎると失効する。時間は未確定。",
+      "result": "その1回の被ダメージについて硬直を発生させない。ダメージの数値、HPの下限判定、状態異常の付与は通常どおり行われ、本候補では変更しない。",
+      "target": "発動した本人1人",
+      "scope": "個人。他の参加者、地図、NPCの思考には影響しない。",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "1回の被ダメージに解決して消える",
+        "失効時間を超えると破棄される",
+        "対象が戦闘不能になった時点で破棄される",
+        "Run終了時に破棄される"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "受け流しは1回ぶんの受け身で、時間の経過か戦闘不能で失効する。硬直を延長する効果ではないため1回だけ残る形にする。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effectと同一対象は非加算1件。残り1回を使い切ると0に戻る。",
+        "conflict_resolution": "バックステップの無敵、Stun、Down、Mad StomperのHeal Fieldとの適用順は未定のため保留する。"
+      },
+      "server_validation": "Serverが直近の被ダメージ、戦闘不能でないこと、残り回数、連続した入力であることを検証する。クライアントは残り回数を指定できない。",
+      "client_presentation": "本人にだけ受け流しが残っていることを短く表示する。相手には何も出さない。",
+      "feedback": {
+        "success": "硬直が出なかったことを本人だけの短い表示で返す。",
+        "failure": "不成立のときは何も起こらないことを示す本人表示を出す。",
+        "ambiguous": "硬直がなかった理由や演出では区別できない。"
+      }
+    },
+    {
+      "kind": "RuleOverride",
+      "trigger": "上のStateChangeが1回の被ダメージに解決し、消費された直後。",
+      "condition": "受け流し方法が消費され、次の通常攻撃の入力があること。",
+      "result": "対象プレイヤーの通常攻撃の受付を1回だけ拒否する。ダメージも硬直も発生しない。他のスキルと移動は受け付けている。",
+      "target": "発動した本人の通常攻撃の受付のみ",
+      "scope": "個人。連鎖の入力は扱わず、スキルの入力にも影響させない。",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": [
+        "通常攻撃の入力を1回拒否した時点で解決する",
+        "対象が戦闘不能になった時点で破棄される",
+        "Run終了時に破棄される"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "拒否は1回ぶんの反動で、入力を1回拒んだ時点で解決する。残り時間を持たせない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effectと同一対象は非加算1件。残り回数は1から始まり、1回拒否すると0に戻る。",
+        "conflict_resolution": "無敵や硬直の打ち消し、/dev/nullのAttack無効化との優先順位は未定のため保留する。"
+      },
+      "server_validation": "Serverが残りの1回と入力の種類を検証する。拒否された入力は例外なく不成立として扱う。",
+      "client_presentation": "HUDには通常攻撃だけが反応しないことを示す。理由の説明はしない。",
+      "feedback": {
+        "success": "通常攻撃の入力に対して短い本人表示を返す。",
+        "failure": "不成立の入力は黙って捨てずに短い本人表示を返す。",
+        "ambiguous": "クールダウンによる不成立とは区別しない。"
+      }
+    }
+  ],
+  "provides_traits": [
+    "1回の被ダメージだけ硬直を発生させずに通過させられる",
+    "受け流しを使うと次の通常攻撃が1回だけ受け付けない"
+  ],
+  "connection_tags": [
+    "Skill",
+    "Combat",
+    "StateChange",
+    "RuleOverride"
+  ],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": [
+        "被ダメージの解決後に硬直を発生させる箇所を、サーバー側で差し替えられること",
+        "失効時間を計測する経路が既存であるか、新規に作る必要があるかを確認できること"
+      ],
+      "reason": "current-implementation.mdにはダメージと硬直の実装記録がなく、硬直を発生させる箇所がどれなのか判断できない。",
+      "adoption_blocker": false
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "矛盾は確認していない。PvPのHP下限は本候補が変更しない。",
+    "被弾から発動までの失効時間。",
+    "Down中など、もともと硬直が発生しない対象との重なり。",
+    "他の攻撃スキルとの連鎖において、次の通常攻撃を1回だけ閉じることの影響。",
+    "無敵と硬直回避は別の効果として扱う。バックステップとの重なりは未定。",
+    "Player Anomalyとの干渉は本候補では扱わない。",
+    "SEKIGAHARAは未実装のため、実地検証は別のマップで先に試す必要がある。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "被打を耐えることを無敵や上書きにせず、硬直の1回だけを殺す操作として扱う。体が減る事実は残る。",
+    "in_world_rationale": "人間が打の反動を一つにまとめるという単純な想定から逸脱し得る、という逸脱の定義の範囲内で、反動だけを逃がすという体の使い方は成立し得る。ただしなぜ硬直だけが消えるのか、誰の仕様かは説明しない。",
+    "meaning_left_ambiguous": "受け流しという体づかいがこの世界で誰に教えられたものかは説明しない。戦場の意図にも触れない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": "unknown",
+  "requires_code_reason": "ダメージの解決後に硬直を発生させる箇所がどこなのか、current-implementation.md に記録がない。差し替え先が特定できないため必要性をunknownとした。調査対象は被ダメージ処理の順序と硬直の追加箇所。",
+  "new_logic": [
+    "被ダメージ1回分の硬直の差し替え（要調査）",
+    "受け流し消費後の通常攻撃受付1回の拒否"
+  ],
+  "prototype_cost": {
+    "band": "不明",
+    "rationale": "硬直を発生させる箇所と順序が文書から分からないため、コストを確定できない。デバッグフロアで1回の被ダメージを発生させて硬直の経路を探せば小さく試せるが、SEKIGAHARA側の敵は存在しない。",
+    "implementation_steps": [
+      "デバッグフロアで自身に1回のダメージを与え、硬直が出る経路をログで特定する",
+      "その直後に1回だけ硬直を発生させない分岐を足す",
+      "通常攻撃を1回入力して拒否されることを確認する"
+    ],
+    "assumed_existing_parts": [
+      "既存のダメージ解決とHPの管理",
+      "StunやDownの状態管理（存在する場合）",
+      "既存3スキルの発動とクールダウン",
+      "PlayerのAttributeとCharacter"
+    ]
+  },
+  "role_details": {
+    "skill_family": "アクション",
+    "rank": null,
+    "rank_rationale": "アクション系のランク構成は未確定であり、バックステップが無敵を持つ前提と本候補の硬直回避が並ぶのがよいか判断できない。根拠のない数値は置かずにnullとした。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "直近の被弾のあとで1回だけ、次の被打の硬直を発生させない。ダメージは通常どおり通り、次の通常攻撃が1回受け付けない。"
+      },
+      {
+        "level": 2,
+        "proposal": "硬直を殺す対象を、直後の体勢の崩れにも広げる案。ただし時間の扱いと順序が未定義であり、上限は広げない。"
+      },
+      {
+        "level": 3,
+        "proposal": "受け流しを2回まで増やせる案。ただし反動も2回ぶんとなるため、1回の方が都合がよい。"
+      }
+    ],
+    "equipped_slot_policy": "アクション系の1枠として使う。4枠との組み合わせも切替のタイミングも決めない。装備切替と枠占有の条件は未決定のため触れない。",
+    "normal_attack_link": "受け流しを使うと次の通常攻撃が1回だけ受け付けない。連鎖の受付時間と硬直は未決であり、他の攻撃系スキルとは連携させない。",
+    "avoids": "被打による硬直1回分。ただしダメージは通り体は減る。攻撃の判断そのものは変わらない。",
+    "intervenes_in": "被ダメージの結果としての硬直と、その後の通常攻撃の入力受付。地形、NPCの思考、地図の状態、依頼の進行は変えない。",
+    "sacrifices": "体が減る。受け流し後は通常攻撃が1回ぶん沈黙する。失効時間を超えると無駄になる。",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-008.html"
+}

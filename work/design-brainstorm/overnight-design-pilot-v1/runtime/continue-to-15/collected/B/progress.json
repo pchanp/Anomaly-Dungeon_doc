@@ -1,0 +1,142 @@
+{
+  "run_id": "overnight-design-pilot-v1",
+  "role": "B",
+  "state": "completed",
+  "mode": "CONTINUE_TO_15",
+  "completed_ids": [
+    "ROLE-B-001",
+    "ROLE-B-002",
+    "ROLE-B-003",
+    "ROLE-B-004",
+    "ROLE-B-005",
+    "ROLE-B-006",
+    "ROLE-B-007",
+    "ROLE-B-008",
+    "ROLE-B-009",
+    "ROLE-B-010",
+    "ROLE-B-011",
+    "ROLE-B-012",
+    "ROLE-B-013",
+    "ROLE-B-014",
+    "ROLE-B-015"
+  ],
+  "next_ids": [],
+  "started_at": null,
+  "ended_at": null,
+  "stop_reason": "CONTINUE_TO_15 の指定どおり予約枠15件が埋まったため完了。異常による中断ではない。",
+  "execution": {
+    "provider": null,
+    "model": null,
+    "session_id": null
+  },
+  "sessions": [],
+  "batches": [
+    {
+      "batch": 1,
+      "candidate_ids": [
+        "ROLE-B-001",
+        "ROLE-B-004",
+        "ROLE-B-013"
+      ],
+      "note": "試走3件。HTMLは v0.2 の簡潔形式へ更新済み。",
+      "at": null
+    },
+    {
+      "batch": 2,
+      "candidate_ids": [
+        "ROLE-B-002",
+        "ROLE-B-003",
+        "ROLE-B-005"
+      ],
+      "note": "8/31を2件、廃TSUTAYAを1件。6件時点で一覧更新。",
+      "at": null
+    },
+    {
+      "batch": 3,
+      "candidate_ids": [
+        "ROLE-B-006",
+        "ROLE-B-007",
+        "ROLE-B-008"
+      ],
+      "note": "廃TSUTAYAを1件、SEKIGAHARAを2件。9件時点で一覧更新。",
+      "at": null
+    },
+    {
+      "batch": 4,
+      "candidate_ids": [
+        "ROLE-B-009",
+        "ROLE-B-010",
+        "ROLE-B-011"
+      ],
+      "note": "SEKIGAHARAを1件、研究所を2件。12件時点で一覧更新。",
+      "at": null
+    },
+    {
+      "batch": 5,
+      "candidate_ids": [
+        "ROLE-B-012",
+        "ROLE-B-014",
+        "ROLE-B-015"
+      ],
+      "note": "研究所を1件、全マップ共通を2件。15件で一覧とhandoffを更新。",
+      "at": null
+    }
+  ],
+  "usage": {
+    "input_tokens": null,
+    "output_tokens": null,
+    "cost": null,
+    "currency": null,
+    "measurement_source": null
+  },
+  "visual_check": {
+    "status": "unavailable",
+    "checked_ids": [],
+    "note": "ブラウザを使用できないため、実ブラウザでのHTMLおよびSVGの目視確認をしていない。SVGのviewBox・role=img・aria-label・XML構文はファイルの記述として確認したが目視確認済みとは扱わない。共通パックのvalidation-report.mdも同様にUnconfirmed。管理側での目視確認をお願いする。"
+  },
+  "validation": {
+    "pack_only": "not_run_by_this_role",
+    "stage": "final",
+    "role": "B",
+    "command": "python3 common-pack-v0.2/scripts/validate.py --role B --output B --stage final",
+    "exit_code": 0,
+    "result": "passed",
+    "errors": [],
+    "candidate_summaries": 15,
+    "counts": {
+      "B:8/31": 3,
+      "B:廃TSUTAYA": 3,
+      "B:SEKIGAHARA": 3,
+      "B:研究所": 3,
+      "B:全マップ共通": 3
+    },
+    "visual_render_verified": false,
+    "worldview_content_verified": false,
+    "note": "15件のJSON schema・source section・source Status・10経路・HTML section・indexリンク・manifest整合・重複判定を通過。ブラウザでの目視確認とIOException/ファイル実読によるworldview本文の照合は別要素として validator が false を返すため、こちらでも未実施として記録する。"
+  },
+  "measurement_notes": [
+    "すべての時刻は null。Bashや時刻取得を使わないため、観測できない時刻を推測で埋めていない。",
+    "所要時間とゲーム内試作コストは別物。prototype_cost の band は設計上の試作見積もりである。",
+    "トークン数と費用は管理サービスが実測値を提供していないため null。",
+    "読み込み時間と生成時間と待機時間の分離集計は実時刻が取れなかったため算出していない。"
+  ],
+  "deliverables": {
+    "candidate_files": 15,
+    "candidate_count": 15,
+    "supporting_files": [
+      "index.html",
+      "manifest.json",
+      "board.css",
+      "progress.json",
+      "events.jsonl",
+      "handoff.md"
+    ]
+  },
+  "classification_counts": {
+    "8/31": 3,
+    "廃TSUTAYA": 3,
+    "SEKIGAHARA": 3,
+    "研究所": 3,
+    "全マップ共通": 3
+  }
+}

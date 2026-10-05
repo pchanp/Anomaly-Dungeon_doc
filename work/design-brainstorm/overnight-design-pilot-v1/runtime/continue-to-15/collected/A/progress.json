@@ -1,0 +1,38 @@
+{
+  "run_id": "overnight-design-pilot-v1",
+  "role": "A",
+  "state": "completed",
+  "mode": "CONTINUE_TO_15",
+  "completed_ids": ["ROLE-A-001", "ROLE-A-002", "ROLE-A-003", "ROLE-A-004", "ROLE-A-005", "ROLE-A-006", "ROLE-A-007", "ROLE-A-008", "ROLE-A-009", "ROLE-A-010", "ROLE-A-011", "ROLE-A-012", "ROLE-A-013", "ROLE-A-014", "ROLE-A-015"],
+  "next_ids": [],
+  "started_at": null,
+  "ended_at": null,
+  "stop_reason": null,
+  "execution": {"provider": null, "model": "opencode/space-bunny-free", "session_id": null},
+  "sessions": [
+    {"session_index": 1, "started_at": null, "ended_at": null, "note": "PILOT_ONLYで試走3件を作成。時刻取得手段が担当へ禁止されているためnull。"},
+    {"session_index": 2, "started_at": null, "ended_at": null, "note": "同じrunnerで継続。CONTINUE_TO_15の指示を受け、既存3件のHTMLをcandidate-format v0.2の簡潔な形式へ書き直し、残り12件を3件ずつ作成。時刻はnull。"}
+  ],
+  "batches": [
+    {"batch_index": 1, "candidate_ids": ["ROLE-A-001", "ROLE-A-004", "ROLE-A-013"], "started_at": null, "ended_at": null, "note": "試走3件。"},
+    {"batch_index": 2, "candidate_ids": ["ROLE-A-002", "ROLE-A-003"], "started_at": null, "ended_at": null, "note": "8/31枠の残り2件。既存3件のHTMLをv0.2形式へ書き直し。"},
+    {"batch_index": 3, "candidate_ids": ["ROLE-A-005", "ROLE-A-006"], "started_at": null, "ended_at": null, "note": "廃TSUTAYA枠の残り2件。6件時点でmanifest/index/progressを更新。"},
+    {"batch_index": 4, "candidate_ids": ["ROLE-A-007", "ROLE-A-008", "ROLE-A-009"], "started_at": null, "ended_at": null, "note": "SEKIGAHARA枠の3件。"},
+    {"batch_index": 5, "candidate_ids": ["ROLE-A-010", "ROLE-A-011", "ROLE-A-012"], "started_at": null, "ended_at": null, "note": "研究所枠の3件。"},
+    {"batch_index": 6, "candidate_ids": ["ROLE-A-014", "ROLE-A-015"], "started_at": null, "ended_at": null, "note": "全マップ共通枠の残り2件。15件で一覧とmanifestを更新し、確認待ちへ。"}
+  ],
+  "usage": {"input_tokens": null, "output_tokens": null, "cost": null, "currency": null, "measurement_source": null},
+  "visual_check": {
+    "status": "unavailable",
+    "checked_ids": [],
+    "note": "担当セッションはBash・外部ディレクトリ・Studio・MCP禁止のためブラウザを起動できない。HTMLとSVGの実表示確認とPython検証は管理側の担当。"
+  },
+  "measurement_notes": [
+    "日時: 日時取得コマンドが担当へ禁止されているため、events.jsonlと本ファイルの時刻はすべてnull。",
+    "所要時間: 実測していない。生成時間とゲーム内試作コストは別の物であり、どちらも数字を捏造していない。",
+    "モデル: 実行環境の設定値として確認できたものだけを記入。providerとsession_idは未確認のためnull。",
+    "費用・トークン: 管理サービスが実測値を提供していないためnull。",
+    "検証と表示: どちらも本担当では実行していない。",
+    "文字混入: 作成中に生成された本文の一部に日本語以外の言語の断片が混入した。該当箇所はhandoffの要修正に列挙し、未修正のまま保存した。"
+  ]
+}

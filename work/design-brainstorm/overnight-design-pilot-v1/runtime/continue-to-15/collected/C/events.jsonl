@@ -1,0 +1,19 @@
+{"at":null,"event":"session_start","candidate_ids":[],"note":"CONTINUE_TO_15 として継続。各担当合計15件まで。Bash、task、MCP、外部調査、他root、Git、Studioは禁止。出力先は runtime/initial-only-no-deadline/roots/C/work/design-brainstorm/overnight-design-pilot-v1/C のみ。時刻取得手段がないため at は null。"}
+{"at":null,"event":"reading_start","candidate_ids":[],"note":"common-pack-v0.2 の candidate-format.md と prompts/common.md を読む。旧版のHTML全転記指示を上書きすることを確認する。"}
+{"at":null,"event":"reading_end","candidate_ids":[],"note":"v0.2 の candidate.schema.json は schema_version 0.1 のままで、role_details.c の必須項目は変更なし。scripts/validate.py の必須sectionは hypothesis と diagram のみ。既存3件のJSONは変更なしで有効なまま。"}
+{"at":null,"event":"batch_start","candidate_ids":["ROLE-C-001","ROLE-C-004","ROLE-C-013"],"note":"既存3件のHTMLをv0.2の簡潔形式へ書き直し。説明本文は250から450字を目安にし、図内文字は字数に含めない。hypothesis と diagram のsection IDとSVGを維持し、同IDのJSONへのリンクを追加。"}
+{"at":null,"event":"batch_end","candidate_ids":["ROLE-C-001","ROLE-C-004","ROLE-C-013"],"note":"既存3件のHTML簡潔化が完了。"}
+{"at":null,"event":"batch_start","candidate_ids":["ROLE-C-002","ROLE-C-003","ROLE-C-006"],"note":"002は8/31の残りの時間を読む補助、003は湖面を直進で渡る探索、006はCRTの停波ノイズで本人の観察の進みを止めるアクション。"}
+{"at":null,"event":"batch_end","candidate_ids":["ROLE-C-002","ROLE-C-003","ROLE-C-006"],"note":"3件を保存。manifest、index、progressを6件時点へ更新した。"}
+{"at":null,"event":"retry","candidate_ids":["ROLE-C-002","ROLE-C-003","ROLE-C-006"],"note":"書き出した内容に日本語として成立しない語や構造の崩れが混入したため、該当箇所を書き直した。003ではlevelsの括弧が崩れていたため補正した。"}
+{"at":null,"event":"batch_start","candidate_ids":["ROLE-C-005","ROLE-C-007","ROLE-C-008"],"note":"005は廃TSUTAYAの無音の一打、007はSEKIGAHARAの弱い個体への印、008は硬直を1回だけ殺す受け流し。"}
+{"at":null,"event":"batch_end","candidate_ids":["ROLE-C-005","ROLE-C-007","ROLE-C-008"],"note":"3件を保存。manifest、index、progressを9件時点へ更新した。"}
+{"at":null,"event":"retry","candidate_ids":["ROLE-C-005","ROLE-C-007","ROLE-C-008"],"note":"005、007、008の書き出しで不自然な語が混入し、該当箇所の書き直しを複数回行った。008ではJSONの末尾が壊れたため書き直した。"}
+{"at":null,"event":"batch_start","candidate_ids":["ROLE-C-009","ROLE-C-010"],"note":"009は地形に接して静止すると本人への提示だけが変わる補助、010は器材に触れているあいだだけ個人状態が入る探索。"}
+{"at":null,"event":"retry","candidate_ids":["ROLE-C-009","ROLE-C-010"],"note":"編集操作が日本語文字列を含む場合に不定に失敗し、誤字を同じ操作で直せない場合が複数回あった。009と010はファイル全体の書き直しで解消した。"}
+{"at":null,"event":"batch_end","candidate_ids":["ROLE-C-009","ROLE-C-010"],"note":"009と010の2件を保存。3件単位の区切りで進められなかったため、11件時点で止めた。"}
+{"at":null,"event":"validation_start","candidate_ids":[],"note":"progress または pilot の検証をすべき段階。Python検証は管理側の担当であり、ROLE=Cでは実行していない。"}
+{"at":null,"event":"visual_check","candidate_ids":["ROLE-C-001","ROLE-C-002","ROLE-C-003","ROLE-C-004","ROLE-C-005","ROLE-C-006","ROLE-C-007","ROLE-C-008","ROLE-C-009","ROLE-C-010","ROLE-C-013"],"note":"HTMLとSVGの実表示確認は実施できていない。ブラウザ使用禁止の指示による。progress.jsonのvisual_check.statusは unavailable。"}
+{"at":null,"event":"stop_requested","candidate_ids":["ROLE-C-009","ROLE-C-010"],"note":"外からの停止要求ではない。残り4件（011、012、014、015）を安全に書き出す余裕がないため、破損ファイルを残さない自主的な区切り保存を選んだ。"}
+{"at":null,"event":"checkpoint","candidate_ids":["ROLE-C-001","ROLE-C-002","ROLE-C-003","ROLE-C-004","ROLE-C-005","ROLE-C-006","ROLE-C-007","ROLE-C-008","ROLE-C-009","ROLE-C-010","ROLE-C-013"],"note":"11件時点の区切り。manifest、index、progress、handoffを11件に更新済み。"}
+{"at":null,"event":"session_end","candidate_ids":["ROLE-C-001","ROLE-C-002","ROLE-C-003","ROLE-C-004","ROLE-C-005","ROLE-C-006","ROLE-C-007","ROLE-C-008","ROLE-C-009","ROLE-C-010","ROLE-C-013"],"note":"15件に到達せず終了。管理側とrunnerの再開判断待ち。"}

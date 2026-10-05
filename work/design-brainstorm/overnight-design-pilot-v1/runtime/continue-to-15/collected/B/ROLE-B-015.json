@@ -1,0 +1,175 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-015",
+  "role": "B",
+  "title": "空の持出（身軽になる代わりに、失ったものだけが残る）— 作業用見出し",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/systems/current-implementation.md",
+      "section": "失敗時はSecure Slot内だけを獲得物・それ以外を喪失物として分類する。",
+      "source_status": "Status: Implemented（実装棚卸し）",
+      "claim": "成功時の獲得物はすべて持ち帰れる。候補はこの境界を volontairement狭める。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| 永続 | Runをまたいで保持する。取得・解除条件は個別に定義する |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "失ったものの一覧だけを永続させる。"
+    },
+    {
+      "path": "docs/systems/quests.md",
+      "section": "Discoveryの保存期間、UI、Quest解放との正確な関係は未決定である。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "記録の保存期間が未決。候補は記録を永続Effectとして書くが、Discoveryとの同一視はしない。"
+    },
+    {
+      "path": "docs/systems/economy-and-progression.md",
+      "section": "総インベントリ20枠のうち4枠がSecure Slotであり、失敗時にも同枠内の物を持ち帰れる。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "確保枠だけを持ち帰れる既存規則がある。候補はこの二つを分けて扱う。"
+    }
+  ],
+  "design_hypothesis": "Runの終わりに自分の持ち物を一度すべて捨てて、身軽了回去後になって『何を失ったか』だけを知る帳簿にする。帰還の成功・失敗にかかわらず通常スロットは空になり、確保枠だけは残る。失った事実は次のRunまで持ち越されるが、持ち越されるのは名簿であって物ではない。",
+  "experience": {
+    "goal": "死に支度の一形式。損失を物ではなく記録として持ち越す。",
+    "player_choice": "使って全捨てする。使わず持ち帰る。確保枠だけに入れて回収する。捨てる。",
+    "sacrifice_or_risk": "成功であっても通常スロットは全部失う。確保枠に入れていない物は戻らない。記録は残るが物はない。"
+  },
+  "placement_assumption": "新しい地形・部屋・施設は提案しない。使う場面は指定しない。どのマップでも成立し得るという主張にとどまり、配置は保証しない。確保枠との扱いは既存の枠境界のみを使い、成長処理には触れない。",
+  "components": [
+    {"component":"Effect.StateChange","availability":"catalog","usage":"通常スロットの所持をすべて消す。保存境界は同一Run中。"},
+    {"component":"Effect.InformationChange","availability":"catalog","usage":"失った品の一覧を個人記録として残す。保存境界は永続。"},
+    {"component":"InventoryBoundary","availability":"catalog","usage":"確保枠は消さない。枠の総数も増やさない。"},
+    {"component":"ItemLifecycle","availability":"catalog","usage":"正式な取得源とItemStackが未実装であることを前提とする。"}
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "個人が帳簿を使う",
+      "condition": "実行中であること、帳簿を個人所持にもつこと。空の所持でも成立する",
+      "result": "その個人の通常スロットの所持がすべて消える。確保枠の物は残る。総枠数は変わらない。成功であっても通常分は失われる",
+      "target": "対象の個人の通常スロット",
+      "scope": "個人。他者の所持には触れない",
+      "lifetime": "同一Run中",
+      "resolution": "instant",
+      "end_conditions": [
+        "全消去の解決で確定",
+        "次のRunで通常スロットは初期状態から始まるため、『消えた』状態はRunをまたいで残らない"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。Run終了で通常スロットの持ち場所は初期化される。",
+      "stacking": {
+        "exception": false,
+        "rule": "空の所持に適用しても1件。二回使っても同じ結果を重ねない。固定秒数は持たない",
+        "conflict_resolution": "他の効果で所持が消える場合の解決規則は未定義のため保留する"
+      },
+      "server_validation": "Serverが実行状態と帳簿の所有を検証し、対象の所持一覧をサーバー側でもつ",
+      "client_presentation": "クライアントは結果表示のみ。所持が消える確定はServerが行う",
+      "feedback": {
+        "success": "所持の表示が空になる。確認のダイアログは出さない",
+        "failure": "何も変わらない。注意表示のみ",
+        "ambiguous": "消えた品の一覧は本人にも出さない。帳簿の記録で後から知る"
+      }
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "全消去が確定した直後",
+      "condition": "対象個人が参加中で個人記録が有効なとき",
+      "result": "失った品の一覧が個人の永続記録に残る。内容と数は本人にだけ見え、他者には出さない。次のRunでも参照できる前提とする",
+      "target": "対象個人",
+      "scope": "個人。共有のRun状態は書き換えない",
+      "lifetime": "永続",
+      "resolution": "sustained",
+      "end_conditions": [
+        "記録を消す操作があればそこで消える。操作口は未確定",
+        "保持が続けば次のRunも残る。保存期間の上限は未確定"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。記録の破棄操作を未確定として残す。",
+      "stacking": {
+        "exception": false,
+        "rule": "記録は1世代。次に消すと前の世代は上書きされる。固定秒数は持たない",
+        "conflict_resolution": "他の記録との競合は保存先が未定義のため保留する"
+      },
+      "server_validation": "Serverは記録の有無だけを返し、内容は本人にだけ返す。他者へは返さない",
+      "client_presentation": "本人の個人記録にだけ残る。共有の画面にも他の individual's画面にも出さない",
+      "feedback": {
+        "success": "記録が一つ増える。内容はHUDに表示しない",
+        "failure": "記録が増えない。注意表示のみ",
+        "ambiguous": "記録がいつ消えるかは未確定。Discoveryとの同一視はしない"
+      }
+    }
+  ],
+  "provides_traits": [
+    "消費が損失ではなく記録を残す形のアイテム例",
+    "成功時の持ち帰り規則を敢えて狭める設計"
+  ],
+  "connection_tags": ["Item", "Interface"],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": ["失った品の一覧を永続個人記録として保存する形式と、Discoveryとの境界"],
+      "reason": "quests.mdはDiscoveryの保存期間を未決とし、effect-components.mdは永続をRunをまたぐ保持と定義する。記録の形式と保存期間を決めないと実装できないため、採用判断として残す。",
+      "adoption_blocker": true
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "記録の表示場所と参照タイミングは未確定。Discoveryと併存させられるかは未決。",
+    "空の所持に使った場合、記録は何も残らない。この場合の扱いは未確定。",
+    "次のRunで何を失ったかを見て、次の持ち方を変えることができるという想定は未検証。",
+    "照合範囲：成功時の獲得物分類、Discoveryの保存期間、効果の永続境界、Secure Slotの枠数と死亡時の保持。矛盾は見つからず conflicts は空配列"
+  ],
+  "worldview": {
+    "defamiliarized_element": "持ち帰りを成功時にも放棄する操作にした。帰還で失ったものを名簿としてのみ持ち越す。",
+    "in_world_rationale": "既に死んでも残る枠があり、成功すれば全部を持ち帰れる。この二つだけだと『何を失ったか』を知る手段が無い。物を捨てて記録だけ残すという操作は、記録だけが流通する社会で自然に生じる。",
+    "meaning_left_ambiguous": "帳簿が誰のためのもので、誰が最初にこれを作ったのか、失った品一覧は記録なのか懺悔なのかは確定しない。",
+    "invariants_checked": ["INV-01","INV-02","INV-03","INV-04","INV-05","INV-06","INV-07","INV-08","INV-09","INV-10","INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "正式なInventoryとItemStackが未実装で、永続の個人記録も未実装である（current-implementation.md / quests.md）。全消去と記録の保存が要るため true とする。",
+  "new_logic": [
+    "個人所持の一括消去（確保枠を除外）",
+    "失った品の一覧を永続個人記録として保存する経路"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "枠境界とRun終了時の分類は既にサーバー権威で動く。一括消去はその既存データに対する操作で済む。一方、永続の個人記録という層は未実装であり、そこが中程度の理由になる。",
+    "implementation_steps": [
+      "デバッグ付与で帳簿1冊を持たせる",
+      "個人所持のうち確保枠を除いて一括で消す操作を足す",
+      "消えた品の一覧を個人記録として保存する",
+      "Play Soloで成功帰還後も通常分が空で記録だけが残ることを確認する"
+    ],
+    "assumed_existing_parts": [
+      "枠境界と確保枠を持つInventoryService",
+      "Run終了時の獲得物と喪失物の分類",
+      "クライアントの個人表示"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {"route":"Acquire","status":"Undecided","detail":"配る主体は未確定。全マップ共通の枠だが、入手経路は未実装であり創作しない。試作のみデバッグ付与。"},
+      {"route":"Hold","status":"Proposed","detail":"1枠を消費するが、失う価値についてくる。使うタイミングが全てである。"},
+      {"route":"Use","status":"Proposed","detail":"使うと通常スロットが全消去される。中核の操作。確保枠は残る。"},
+      {"route":"Present","status":"NotApplicable","detail":"渡さない。渡すと『失ったものを他人に預ける』になり、記録の意味が崩れる。"},
+      {"route":"Place","status":"NotApplicable","detail":"置かない。置き場があると『置き捨て』ではなく『空の置き台』として別の設計になる。"},
+      {"route":"Lose","status":"Proposed","detail":"確保枠の外なら死亡時に帳簿を失う。帳簿を失うと記録への道も消える。"},
+      {"route":"SecureSlot","status":"Proposed","detail":"確保枠に入れて守れば、死んでも帳簿と記録は残る。一度しか使えない。"},
+      {"route":"Sell","status":"Undecided","detail":"換金の可否は判断010・判断011・経済と成長で未決。失った品と記録は別の存在として扱う。"},
+      {"route":"Quest","status":"Undecided","detail":"依頼主は未確定。既存の博士の依頼が定める固有品の交換とは別の物品として扱う。"},
+      {"route":"AnomalyInteraction","status":"NotApplicable","detail":"既存の異常の作用には繋がない。候補は探索者自身の自己行為であり、異常の挙動は作らない。"}
+    ],
+    "ownership_state": "帳簿はplayer単位の個人所持。使用すると通常スロットの所持が個人から消えるが、確保枠の物は残る。記録は個人の永続状態として保持される。切断と再接続時の復元は未決。",
+    "server_run_state": "個人所持と個人記録のみを扱い、Run共有のマップ状態は書き換えない。出現率と同時出現数は変更しないためWorldChangeのEffectは発生しない。"
+  },
+  "html_file": "ROLE-B-015.html"
+}

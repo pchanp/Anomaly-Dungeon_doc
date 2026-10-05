@@ -1,0 +1,108 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-014",
+  "role": "A",
+  "title": "見送り — 帰還者の跡",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "全マップ共通",
+  "classification": "全マップ共通",
+  "category": "NPC",
+  "source_evidence": [
+    {"path": "docs/systems/game-rules.md", "section": "## ReturnとTransition", "source_status": "Status: Draft（草案）", "claim": "Return Portalは現在のRunから帰還できる状態で、サーバー共有状態として有効化される。有効化後も探索は続けられる。"},
+    {"path": "docs/decisions/019-player-anomaly-runtime-pvp-and-return.md", "section": "## 決定", "source_status": "Status: Accepted（採用済み）", "claim": "Player Anomalyは専用Portalへ帰還し、Runtime満了まで生存した場合は通常のReturnと同じ処理で帰還する。"},
+    {"path": "docs/world/information-design.md", "section": "## 「説明」ではなく「痕跡」", "source_status": "Status: Draft（草案）", "claim": "NPCの所作や環境から推測できるようにする。"}
+  ],
+  "design_hypothesis": "誰かがRunを終えると、その場に残った通常NPCが同じ方向を向くだけの状態を仮定します。個人提示は『この場で誰かが帰還した』という事実だけで、誰の帰還かは出しません。説明は加えません。",
+  "experience": {
+    "goal": "Runの終わりに世界が一度だけ反応することを淡く見せる。",
+    "player_choice": "その場で見届ける／その場を離れる。",
+    "sacrifice_or_risk": "得られるのは短い演出で、報酬ではない。同時に帰還者がいても個人提示は自分の分だけ。"
+  },
+  "placement_assumption": "選択中のマップに既存の通常NPCが1体以上いることを前提とする。新たな配置、地形、部屋は提案しない。NPCが0体のマップでは成立しない。",
+  "components": [
+    {"component": "NPCState", "availability": "catalog", "usage": "通常NPCの向きを一時的に変える状態遷移として使う。"},
+    {"component": "Effect.InformationChange", "availability": "catalog", "usage": "帰還が起きた事実を個人提示として返す。"},
+    {"component": "GimmickEventOpenState", "availability": "proposed", "usage": "既存のマップイベントを参照する共通の状態として扱う。"}
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "誰かがRunを終えた（帰還、死亡、切断を含む）。",
+      "condition": "選択中のマップに通常NPCが存在すること。継続時間は未定。",
+      "result": "その場の通常NPCが同じ方向を向く。行動は変えず、向きだけが短く変わる。",
+      "target": "選択中のマップの通常NPC",
+      "scope": "Run共有",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": ["向きが元に戻る（時間は未定）", "Run終了", "マップ終了"],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかで元へ戻す",
+      "stacking": {"exception": false, "rule": "同時に複数人が終えても1件として扱う", "conflict_resolution": "他の向き制御との競合は未確定のため保留"},
+      "server_validation": "Serverが終結の事実と対象NPCを検証する",
+      "client_presentation": "NPCの向きと短い動きのみ",
+      "feedback": {"success": "向きが揃う", "failure": "NPCが居ないマップでは何も起きない", "ambiguous": "誰Friendly終えたかは表示しない"}
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "対象の周囲で帰還があった。",
+      "condition": "対象が通常のプレイヤーであること。範囲は未定。",
+      "result": "その場で帰還が起きたことを個人提示として返す。誰の帰還かは出さない。",
+      "target": "その場にいた個人",
+      "scope": "個人",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": ["提示の取得だけなので適用解決"],
+      "end_mode": "any",
+      "end_rule_reason": "即時。取得ごとに解決する",
+      "stacking": {"exception": false, "rule": "取得ごとに解決する", "conflict_resolution": "他の結果提示との競合は保留"},
+      "server_validation": "Serverが結果の事実を検証する",
+      "client_presentation": "短い1行のみ",
+      "feedback": {"success": "1行が出る", "failure": "その場にいなかったら出ない", "ambiguous": "どの結果種別かは出さない"}
+    }
+  ],
+  "provides_traits": ["Runの終わりに世界が一度だけ反応する演出を作れる", "終結を個人提示へ落とせる"],
+  "connection_tags": ["NPCState", "InformationChange", "Return"],
+  "refs": [
+    {"target_id": "ROLE-C-014", "kind": "optional_connection", "required_traits": ["終結の瞬間を観察できる"], "fallback": "接続なしでも成立する。Cの候補が無くても演出と提示は残る。", "resolution": "reserved_unresolved"}
+  ],
+  "unresolved_refs": [
+    {"target_id": "ROLE-C-014", "required_traits": ["終結の瞬間を観察できる"], "reason": "Cの候補が配布されておらず内容が不明。語彙のみ記録する。", "adoption_blocker": false},
+    {"target_id": null, "required_traits": ["向きが元へ戻るまでの時間を決める方針"], "reason": "ID未指定の要求。演出の長さは共通設計側の判断が必要。", "adoption_blocker": true}
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "向きが戻るまでの時間は未定",
+    "NPCが0体のマップでは成立しない（SEKIGAHARAはIdea段階）",
+    "接続時の挙動は未検討（Transitionは範囲外）"
+  ],
+  "worldview": {
+    "defamiliarized_element": "終結に説明を加えず、残された人の向きだけが揃う状態を足した点。",
+    "in_world_rationale": "古い設備が残る文明では、人の退場に対して周囲が少し反応することは自然な表現である。理由は説明しない。",
+    "meaning_left_ambiguous": "なぜ向きが揃うのか。何-paid regards转身なのか。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "Run終了と通常NPCの向き制御の経路が存在しないため。コード生成の許可ではない。",
+  "new_logic": ["Run終結イベントとNPCの向きを一時的に変える処理", "終結を個人提示として返す経路"],
+  "prototype_cost": {
+    "band": "小",
+    "rationale": "既存のNPC1体で演出と提示を試せる。既存NPCが存在するマップを選ぶ必要がある。実時間の見積もりは出していない。",
+    "implementation_steps": ["Run終結イベントをフックする", "既存NPCの向きを一時的に変える", "その場にいた個人へ1行を出す", "終結種別を出さないことを確認する"],
+    "assumed_existing_parts": ["Runの終了集約処理", "既存のReturnの実装"]
+  },
+  "role_details": {
+    "npc_purpose": "通常NPCの向きだけを一時的に変える演出であり、NPCの目的は増やさない。世界の説明もしない。",
+    "player_anomaly_handling": "向きの演出は物体表現なので成立する。個人提示は普通のプレイヤーとPlayer Anomalyのどちらにも同じ基準で返す。",
+    "mob_contract": {
+      "applicable": false,
+      "spawn_condition": "対象外。湧きも補充も扱わない。",
+      "population_cap": "対象外。個体数を増やさない。",
+      "non_combat_response": "対象外。戦闘がない。",
+      "exit_condition": "対象外。湧きや自然消滅の機構がない。",
+      "entity_distinction": "既存の通常NPCの向きだけを変化させる。Anomaly Entityもモブも増やさない。"
+    }
+  },
+  "html_file": "ROLE-A-014.html"
+}

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-B-014 偽の目印札（そこに無かった品が残ったように見せる）</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<p class="sub">overnight-design-pilot-v1 ／ ROLE=B ／ 全マップ共通 ／ Idea</p>
+<h1>ROLE-B-014 偽の目印札（そこに無かった品が残ったように見せる）— 作業用見出し</h1>
+</header>
+
+<section id="hypothesis">
+<h2>何の案？</h2>
+<p>置いた場所には実際には何も無いのに、他の探索者には『まだ品が残っている』ように見える札。</p>
+<h2>仕組み</h2>
+<ul>
+<li>任意の探索点に置くと、その場所に『未取得の品がある』印が他の個人に生じる。</li>
+<li>本人には『偽』であることが分かる印が出る。他者には区別が出ない。</li>
+<li>置いた札は回収できない。偽痕跡はRunをまたいで残る。</li>
+</ul>
+<h2>選択と代償</h2>
+<p>撒いた嘘は自分にも残る。次のRunで自分の記憶と矛盾する。</p>
+</section>
+
+<section id="diagram">
+<h2>作用図</h2>
+<div class="board">
+<svg viewBox="0 0 980 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="偽の目印札を探索点に置くと、他の個人には未取得の品があるように見え、本人には偽の印が見えて、その痕跡はRunをまたいで残り回収できない図">
+<rect width="980" height="380" fill="#0a1118"/>
+<text x="30" y="26" class="small">全マップ共通の文脈。特定のマップへの配置は保証しない。</text>
+<rect x="30" y="56" width="230" height="110" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="46" y="86" class="label">置いた人</text>
+<text x="46" y="112" class="small">自分には『偽』印</text>
+<text x="46" y="134" class="small">嘘だと分かっている</text>
+<text x="46" y="156" class="small">1枠は空く</text>
+<rect x="690" y="56" width="260" height="110" rx="8" fill="#142330" stroke="#d3b653"/>
+<text x="706" y="86" class="label">他の探索者</text>
+<text x="706" y="112" class="small">『未取得の品がある』印</text>
+<text x="706" y="134" class="small">偽物かどうか判らない</text>
+<text x="706" y="156" class="small">印の形は本人用と違う</text>
+<rect x="380" y="66" width="220" height="90" rx="8" fill="#142330" stroke="#c4a0ec"/>
+<text x="396" y="96" class="label">偽痕跡</text>
+<text x="396" y="122" class="small">実際に品はない</text>
+<text x="396" y="144" class="small">痕跡だけが生成される</text>
+<path d="M262 111 H377" class="active"/>
+<path d="M377 105 l10 6 -10 6" class="active"/>
+<path d="M602 111 H687" class="hyp-line"/>
+<path d="M687 105 l10 6 -10 6" class="hyp-line"/>
+<path d="M490 158 V200" class="hyp-line"/>
+<path d="M482 192 l8 8 8 -8" class="hyp-line"/>
+<rect x="330" y="202" width="320" height="90" rx="8" fill="#142330" stroke="#ea9380"/>
+<text x="346" y="232" class="label">回収できない</text>
+<text x="346" y="258" class="small">Runをまたいで残る</text>
+<text x="346" y="280" class="small">次のRunの探索者を騙す</text>
+<path d="M820 168 V244" class="active"/>
+<path d="M812 236 l8 8 8 -8" class="active"/>
+<text x="30" y="336" class="small">偽痕跡の個数上限と回収操作は未確定。模式図であり配置図ではない。</text>
+</svg>
+</div>
+<p>左が本人、右が他の探索者。下が嘘の寿命。実際の品の数は増えない。</p>
+</section>
+
+<footer>
+<p><a href="index.html">← B候補一覧</a> ／ 詳細データ <a href="ROLE-B-014.json">ROLE-B-014.json</a> ／ connection_tags: Item, Observation ／ requires_code: true ／ 試作コスト: 不明</p>
+</footer>
+</main>
+</body>
+</html>

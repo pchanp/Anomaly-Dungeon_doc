@@ -1,0 +1,283 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-003",
+  "role": "C",
+  "title": "水面の道",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "8/31",
+  "classification": "マップ固有",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/current-implementation.md",
+      "section": "実装済みの基盤",
+      "source_status": "Status: Implemented（実装棚卸し）",
+      "claim": "8月31日マップの湖面は円柱を水平に寝かせた円盤で、水面は地形より高く縁は地形で覆われる半径を取る。湖底は湖底の泥、水際は砂、それ以外は草で塗り分ける。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "未実装の境界",
+      "source_status": "Status: Mixed（案ごとに下記）",
+      "claim": "湖とAPARTMENTを結ぶTrailが未実装として列挙されている。8月31日マップの地形と追加植生の作り直しも未実装で、現状は旧生成物を流用している。"
+    },
+    {
+      "path": "docs/systems/anomaly-interaction.md",
+      "section": "Environment Interaction",
+      "source_status": "ステータス: Draft",
+      "claim": "マップ状態、ポータル、時間経過、近接、地形、他アノマリー、パーティ状態など、プレイヤーの単発操作ではない世界側の変化を入力にする相互作用。既存の近接ObserverはExposureを蓄積する環境・近接ベースの仕組みであり、視覚的Observation Interactionとは同一ではない。"
+    },
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "探索系",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "探索系はアイテムスタックの解放、検知、スニークを扱う。ランク1案はロックされたアイテムスタックを解放する開錠。ランク2案のSHADEは直線上を瞬間移動し、経路の相手へ中ダメージと中Stunを与え、不可視となる案である。"
+    }
+  ],
+  "design_hypothesis": "8/31の湖は地形より上に置かれた円盤で、湖の縁は地形で覆われ、湖はTrailのネットワークに入っていない。提案は、この水面の上を直進で渡れるようにする探索系スキルである。岸から踏み出したあとは方向を変えられず、岸に着くか、時間が尽きるか、攻撃を受けるかのいずれかで終わる。渡っているあいだは攻撃も他のスキルも発動できず、水面での足取りは他の参加者にも見え、音として記録される。湖の周りを回る部分を省く代わりに、渡っているあいだは戦えない。",
+  "experience": {
+    "goal": "水を、渡れない壁ではなく、渡れるが渡っているあいだは身軽でいない面として扱う。短距離の移動を崖や橋ではなく水そのもので選ばせる。",
+    "player_choice": "岸を回って安全に渡るか、水面を直線で渡るか。渡るとその直進のあいだだけ後戻りできず、途中で受け入れるものを自分で選ぶことになる。"
+  },
+  "placement_assumption": "既存の8/31マップにある湖と周囲の岸に置く案で、湖の形、地形、Trail、配置ポイントを追加しない。使うのは既存の湖面（円盤）と既存の地形だけである。新しい水辺の形や橋は作らず、渡れる範囲も既存の湖面のうち踏み込み可能な部分に限る。水位や当たり判定の改造は提案しない。",
+  "components": [
+    {
+      "component": "Effect.Move",
+      "availability": "catalog",
+      "usage": "湖面の上を直進移動する。対象は発動した本人1人。共有マップ状態は変更しない。"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "湖面上のあいだ、攻撃と他のスキル発動の受付を封じる。硬直ではなく操作の受付拒否として扱う。"
+    },
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "水面での足取りを他の参加者にも見え、音の入力として記録する。受理は個別資料の定義に委ねる。"
+    },
+    {
+      "component": "SkillActivation",
+      "availability": "catalog",
+      "usage": "既存の3スキルと同じ発動経路を持つ必要がある。実装はPartialで、湖面の歩行判定は含まれない。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "Move",
+      "trigger": "対象が湖の岸に立ち、本スキルを発動して水面の内側へ踏み込んだとき。",
+      "condition": "発動地点と進行方向の先が、既存の湖面のうち踏み込み可能な部分であること。空中や壁の内側からは発動しない。",
+      "result": "対象は湖面の上を直進で移動する。方向と速度は発動時に決まり、途中で変えられない。岸に着くか、時間の経過か、被打かで終わる。",
+      "target": "発動した本人",
+      "scope": "個人。地形、Trail、湖面そのものは変更しない。",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "対岸またはいずれかの岸に着いた時点で終了する",
+        "移動時間の経過で終了する。時間は未確定",
+        "被打した場合は移動が中断されるか継続されるか未確定",
+        "対象がマップを離れた時点、およびRun終了時に破棄される"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "渡行は一時効果で、到達、時間の経過、離脱のいずれかが成立すれば終わる。水面の状態は保存しないため、地図全体の変更は残さない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effectと同一対象は非加算1件。着岸で1回解決し、連続発動しても方向の上書きはしない。",
+        "conflict_resolution": "Roll、バックステップ、グラップリングなど別の位置変更Effect、および水中への落下からの復帰との競合は順序が未定のため保留する。"
+      },
+      "server_validation": "Serverが足が湖面上にあること、方向が水中を指していないことを判定で確認する。水中へ落ちた場合は水面へ戻すかは本候補では決めない。",
+      "client_presentation": "発動の成立と終了は本人だけの表示。湖面や地形の見え方は変えない。",
+      "feedback": {
+        "success": "踏み込んだ直後に本人だけの短い表示を出す。",
+        "failure": "水中や壁上から発動した場合は動かないことを示す本人表示を出す。",
+        "ambiguous": "水中から戻った場合の扱いは表示で確定しない。"
+      }
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "上のMoveで湖面上の移動が始まるとき。",
+      "condition": "湖面上の移動が進行中のあいだに限る。着岸すれば解除。",
+      "result": "対象プレイヤーの攻撃入力と、装備4枠の他のスキル発動を受け付けない。移動そのものは可能。",
+      "target": "発動した本人",
+      "scope": "個人。地図と他の参加者には影響しない。",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "湖面上の移動が終わった時点で解除される",
+        "対象がマップを離れた時点で破棄される",
+        "Run終了時に破棄される"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "封じは渡行中だけに限る。終了、マップ離脱、Run終了のいずれかで解除する。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effectと同一対象は非加算1件。渡行を往復しても1件を保つ。",
+        "conflict_resolution": "Stun、Down、Roll、/dev/nullの入力無効化との適用順は未定のため保留する。"
+      },
+      "server_validation": "Serverが渡行中であることを検証し、封じ中の攻撃とスキル入力は例外なく不成立として扱う。",
+      "client_presentation": "HUDには発動できない操作だけを示す。理由の説明はしない。",
+      "feedback": {
+        "success": "渡行中は攻撃が反応しない本人表示を出す。",
+        "failure": "押した入力には短い本人表示だけを返す。",
+        "ambiguous": "不成立が封じによるものか別の理由によるものかは区別しない。"
+      }
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "対象が湖面上を移動しているあいだ、各移動の時点。",
+      "condition": "湖面上の移動が進行中であること。水中や陸上からは記録しない。",
+      "result": "水面で踏んだ事実を、他の参加者にも提示できる形で記録し、Sound Interactionの入力として送る。どのAnomaly Entityがその音を受理し何を起こすかは、個別資料の定義に委ねる。本候補は記録を作るだけで、作用を保証しない。",
+      "target": "他の参加者とSound Interactionの記録先。発動した本人の私有記録ではない",
+      "scope": "他の参加者への提示とサーバーの記録。Runの進行、出現率、依頼の進行は変更しない",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": [
+        "記録の作成は即時解決する",
+        "記録の保持期間は未確定",
+        "対象がRunから外れた時点、およびRun終了時の扱いは未確定"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "記録の作成は即時解決であり、固定の長さを持たない。長期保存の要否は音の仕様が決まってから決める。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effectと同一対象は非加算1件。踏んだ回数だけ記録が増えるが、効果量は足さない。",
+        "conflict_resolution": "環境音や通常の足音と区別する手段、記録をwhisperや/dev/nullへ渡す際の優先順位は未定のため保留する。"
+      },
+      "server_validation": "Serverが踏んだ事実を判定して記録する。クライアントからは記録内容を書けない。",
+      "client_presentation": "他の参加者には「誰かが水面を通っている」と分かる形の提示を出す。異常の正体や種類は表示しない。",
+      "feedback": {
+        "success": "通過中の本人と nearby の参加者に短時間の提示を出す。",
+        "failure": "記録ができなかった場合は本人にだけ短い提示を出す。",
+        "ambiguous": "その音が何として受け止められたかは表示しない。"
+      }
+    }
+  ],
+  "provides_traits": [
+    "既存の水面を直進で渡れる移動を個人単位で作る",
+    "渡行中は攻撃と他のスキル発動が受け付けない",
+    "水面での移動が他の参加者にも見え、音の入力として記録される"
+  ],
+  "connection_tags": [
+    "Skill",
+    "Movement",
+    "Environment",
+    "StateChange",
+    "SoundInteraction"
+  ],
+  "refs": [
+    {
+      "target_id": "ROLE-A-001",
+      "kind": "optional_connection",
+      "required_traits": [
+        "8/31の湖岸と湖面で起きる出来事をServer確定の共有事実として提示できること"
+      ],
+      "fallback": "A-001が成立しない場合、本候補は既存の湖面と地形だけで成立する。ギミックの追加脱出条件や出現物、報酬を参照しない。",
+      "resolution": "reserved_unresolved"
+    }
+  ],
+  "unresolved_refs": [
+    {
+      "target_id": "ROLE-A-001",
+      "required_traits": [
+        "8/31の湖岸と湖面で起きる出来事をServer確定の共有事実として提示できること"
+      ],
+      "reason": "peer-snapshotsが配布されておらず、A-001は予約枠のままで本文を確認できない。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": null,
+      "required_traits": [
+        "既存の湖面Partsを歩行可能として扱えるかどうかと、水面上を移動できる高さをServer側が決めているかを確認できること"
+      ],
+      "reason": "current-implementation.mdは湖面が円盤で水面が地形より高いと記すだけで、歩行判定と移動可能範囲の記録がない。水位や当たり判定を改造するかは判断できない。",
+      "adoption_blocker": false
+    }
+  ],
+  "conflicts": [
+    {
+      "source_path": "docs/systems/map-gimmick-ideas.md",
+      "existing_rule": "湖とAPARTMENTを結ぶTrailが未実装として列挙されている。マップの作り直しも未実装で、旧生成物を流用している。",
+      "proposal_difference": "本候補はTrailを足すのではなく、既存の湖面をスキルで渡れるようにする。",
+      "correction": "採用する場合は、Trailを追加する判断と水面を渡る判断のどちらを採るかを先に決め、両方を同時に提供しない。既存の未実装リストは変更しない。",
+      "reason_correctable": "地形の造営やTrailの追加には踏み込まず、既存Partsの扱いだけで成立する。",
+      "decision_needed": "湖の横断をTrailの造営で解くか、スキルで解くか。どちらを先にするか。"
+    }
+  ],
+  "uncertainties": [
+    "渡行できる時間が未確定。短いと岸の手前で止まる。",
+    "水中から落ちた場合は未確定として残す。",
+    "湖面のPartsが歩行可能かどうかが未確認。",
+    "対岸のどの地点に戻るかは発動地点と方向に依存し、地形変更には追随しない。",
+    "渡行中の攻撃を受けた場合の扱いと硬直の順序が未定。",
+    "水上を渡ったあと、記録された足取りが他プレイヤーにどこまで見せるか。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "水を「通れない面」ではなく、渡れるが渡っているあいだは身軽でいないものにする。短距離の移動を水の性質そのもので与える。",
+    "in_world_rationale": "物体の浮き沈みや、水が人を支えるという想定が逸脱し得る、という逸脱の定義の範囲内で、水面の上を移動するという観察の挙動は成立し得る。ただし水上を歩いているのか、別の理由なのかは説明せず、実装も既存の湖面の上を移動できる、という範囲だけを書く。",
+    "meaning_left_ambiguous": "なぜ水面上を移動できるのか。水位が変わっているのか、別の理由なのかは確定しない。水底や湖の由来にも触れない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "必要な経路（湖面Partsの歩行判定と直進移動、渡行中の攻撃とスキルの受付封じ、水面移動を他の参加者とサーバー記録へ渡す提示）のいずれも current-implementation.md に実装記録がない。湖面は地形生成の一部として実装済みだが、技能としての歩行判定と入力記録は含まれない。",
+  "new_logic": [
+    "既存の湖面上を直進移動する判定と、岸・水中からの発動可否",
+    "渡行中の攻撃と他のスキル発動の受付封じ状態と解除",
+    "水面での移動を他の参加者へ提示し、Sound Interactionの入力として記録する経路"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "湖面の生成と地形は既存実装で流用できる。追加が必要なのは歩行判定、渡行の終了条件、入力記録の3点で、共有世界の状態を変える処理ではない。足元の判定を既存Partsのまま使うか厚度を足すかで作業量が変わるため、中とした。",
+    "implementation_steps": [
+      "8/31を読み込み、湖面Partsが歩行可能かどうかをStudioのログで確認する",
+      "岸から踏み込み、直進移動できる最小実装を足す",
+      "着岸と時間経過で移動が止まることを確認する",
+      "渡行中の攻撃とスキルが不成立になることを確認する",
+      "水面移動が他の参加者に提示されるかを1人セッションのログで確認する。複数人の見え方は未確認として残す"
+    ],
+    "assumed_existing_parts": [
+      "8/31マップの湖面Partsと地形生成",
+      "PlayerのCharacter移動とCollisionGroup",
+      "Rollなど既存スキーのサーバー側発動",
+      "既存3スキルの入力受付とクールダウン"
+    ]
+  },
+  "role_details": {
+    "skill_family": "探索",
+    "rank": null,
+    "rank_rationale": "探索系のランク1は開錠の1案のみで、ランク2にSHADE案がある。水面を渡る移動はアクション系に近い性質があり、どの系統のどの位置に置くかは系統構成が未確定のため、根拠のない数値を置かずにnullとした。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "岸から踏み込んで湖面を直進渡る。方向は途中で変えられない。着岸か時間経過で終わり、渡行中は攻撃と他のスキル発動が受け付けない。"
+      },
+      {
+        "level": 2,
+        "proposal": "直進のあいだに、進行方向を1回だけ直角に変える案。変更できる回数と角は未確定。着岸地点が読めなくなるため例外扱いにしたい。"
+      },
+      {
+        "level": 3,
+        "proposal": "水中から落ちた場合にも一度だけ水面へ戻れるようにする案。戻ったあとは直進移動が再開する。戻せる回数は未確定。"
+      }
+    ],
+    "equipped_slot_policy": "探索系の1枠として扱う。4枠との組み合わせも切替のタイミングも決めない。装備切替の場所とタイミング、および奥義、パッシブ、専用スキルの枠占有条件は未決定のため触れない。",
+    "normal_attack_link": "渡行中はワンツーも含めて攻撃発動を受け付けない。渡行の外では通常の連携規則に従う。",
+    "avoids": "湖のまわりを長い岸沿いに回る移動。ただし異常の種類と数、水面上的安全は読めない。",
+    "intervenes_in": "既存の湖面Partsと地形の高さ関係。共有マップ状態、Trail、出現率、依頼の進行は変えない。",
+    "sacrifices": "渡行中は攻撃も他のスキルも使えない。方向を変えられない。水中へ落ちた場合の扱いは未確定で、安全の保証はない。足取りは他の参加者とサーバーに記録される。",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-003.html"
+}

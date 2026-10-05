@@ -1,0 +1,252 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-010",
+  "role": "C",
+  "title": "手を置いたまま",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "研究所",
+  "classification": "マップ固有",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/decisions/018-whisper-colleague-quest-and-anxiety.md",
+      "section": "博士の元同僚Quest",
+      "source_status": "Status: Accepted（採用済み）",
+      "claim": "元同僚はアノマリーを制御し分析すること自体に疑問を抱き、考え方の違いから博士のもとを去った。研究所マップでこの人物とwhisperの追従先移送を扱い、元同僚が研究機材へ閉じこもると器材と装置が残る。装置の正体と処分の真偽は未確定である。"
+    },
+    {
+      "path": "docs/anomalies/whisper.md",
+      "section": "博士の元同僚Quest",
+      "source_status": "Status: Draft（草案）",
+      "claim": "研究所マップには博士と元同僚がいる。この人物がダンジョン内の研究所で研究を続けている理由は説明しない。研究機材と装置を誰にどう表示するかは未確定である。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "設計方針",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "永続的に蓄積した能力だけで優位性が決まる構造にはしない。Run中のビルド、操作、観察、判断が結果を左右することを優先する。"
+    },
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "スキルビルドとマップ",
+      "source_status": "Status: Draft（草案）",
+      "claim": "各マップは独立したゲームシステムを増やすためのものではなく、既存の基盤システムが、異なる場で別の価値を持つようにする。"
+    }
+  ],
+  "design_hypothesis": "研究所の構造は未確定で、確定しているのは元同僚、研究機材、博士という要素だけである。本候補は、既存の器材に手を置いた状態のあいだだけ、一つの個人状態を有効にする探索系スキルとする。手を離すと切れ、同じ器材に戻っても自動で再開しない。効果の中身は未確定で、装置の正体にも博士の真意にも触れない。",
+  "experience": {
+    "goal": "持ち歩くのではなく、一つの場所に留まることで得られる状態を提示する。移動の自由と引き換えに、その場所でしか効かない好处を得る。",
+    "player_choice": "その場に留まって効果を得るか、離れて移動を選ぶか。留まるあいだは操作が閉じ、手を離せば消える。再開は選べない。",
+    "sacrifice_or_risk": "器材に手を置いたままだと動けない。離れた瞬間に効果が切れる。同じ器材に触れても自動で戻らない。居場所が安全になる保証はない。"
+  },
+  "placement_assumption": "研究所（Idea）の既存の器材に置く案で、室内の構造、机の配置、装置の形状は提案しない。使うのは既存の接触できる器材と、個人状態の保持だけである。どの器材が対象になるかは未確定で、装置の改造や新しい室の提案はしない。効果の中身も未確定。",
+  "components": [
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "器材に触れているあいだだけ有効になる個人状態を作る。共有の在庫や研究記録は変えない。"
+    },
+    {
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "器材から離れたあいだ、その個人状態を中断として扱い、自動再開しない。"
+    },
+    {
+      "component": "WhisperTransfer",
+      "availability": "catalog",
+      "usage": "whisperの追従先やanxietyには触れない。判断018の内容を利用しない。"
+    },
+    {
+      "component": "SkillActivation",
+      "availability": "catalog",
+      "usage": "既存の3スキルと同じ発動経路を持つ必要がある。実装はPartialで、接触判定は含まれない。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "対象が既存の器材に触れ、本スキルを発動したとき。",
+      "condition": "対象が接触できる既存の器材のそばにいること。どこにも触れていない場合は不成立。",
+      "result": "対象個人にだけ一つの状態を与える。触れているあいだにだけ有効で、他の対象へは広げない。器材そのもの、研究記録、共有の在庫は変更しない。",
+      "target": "発動した本人1人",
+      "scope": "個人。仲間の画面にも研究記録にも出さない。",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "器材から離れた時点で中断する",
+        "同じ器材へ戻っても自動では再開しない",
+        "対象が戦闘不能になった時点で破棄される",
+        "Run終了時に破棄される"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "個人状態は留まっているあいだだけを条件にする。接触の解消、戦闘不能、Run終了のいずれかで破棄し、再接触では戻さない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effectと同一対象は非加算1件。器材を変えても1件を保ち、中断中に新しい状態を作らない。",
+        "conflict_resolution": "他の個人状態、観察の進行、Exposureの取得との重なりは未定のため保留する。"
+      },
+      "server_validation": "Serverが接触判定と対象が参加者であることを検証する。クライアントは器材や効果の種類を指定できない。",
+      "client_presentation": "本人にだけ、状態が有効か中断中かの表示を出す。研究の記録や棚の画面には出さない。",
+      "feedback": {
+        "success": "本人だけの短い表示を出す。",
+        "failure": "触れていない場合は何も起こらないことを示す本人表示を出す。",
+        "ambiguous": "効果の内容や意味は表示しない。"
+      }
+    },
+    {
+      "kind": "RuleOverride",
+      "trigger": "器材から離れた時点、または同じ器材へ戻ったとき。",
+      "condition": "個人状態が中断中であること。",
+      "result": "器材から離れたあいだ、その状態を中断として扱う。同じ器材へ戻っても自動で再開しない。",
+      "target": "対象個人のその状態のみ",
+      "scope": "個人。他の参加者と器材の状態は変更しない",
+      "lifetime": "同一Run中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "対象がRunから外れた時点で破棄される",
+        "Run終了時に破棄される"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "中断の記録はRun中に保つ。地図を離れて持ち越すことはしない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effectと同一対象は非加算1件。中断と再開は1つの状態の遷移として扱い、回数を増やさない。",
+        "conflict_resolution": "cureによる解除、Exposureの継続、Player Anomalyへの変化との先後関係は本案では扱わない。"
+      },
+      "server_validation": "Serverが接触の解消と再接触を判定し、記録の状態を更新する。",
+      "client_presentation": "本人にだけ中断中かを示す。理由の説明はしない。",
+      "feedback": {
+        "success": "本人だけの短い表示を出す。",
+        "failure": "記録がない場合は何も表示しない。",
+        "ambiguous": "なぜ戻らないのかは説明しない。"
+      }
+    }
+  ],
+  "provides_traits": [
+    "器材に触れているあいだだけ有効になる個人状態を作れる",
+    "器材から離れると状態が中断し、同じ器材へ戻っても自動で再開しない"
+  ],
+  "connection_tags": [
+    "Skill",
+    "Exploration",
+    "Environment",
+    "StateChange",
+    "RuleOverride"
+  ],
+  "refs": [
+    {
+      "target_id": "ROLE-A-011",
+      "kind": "optional_connection",
+      "required_traits": [
+        "研究所の既存の器材が、接触可能な対象としてServer側で扱えること"
+      ],
+      "fallback": "A-011が成立しない場合、本候補は既存の器材と個人状態の保持だけから成立する。研究記録や出現条件には依存しない。",
+      "resolution": "reserved_unresolved"
+    }
+  ],
+  "unresolved_refs": [
+    {
+      "target_id": "ROLE-A-011",
+      "required_traits": [
+        "研究所の既存の器材が、接触可能な対象としてServer側で扱えること"
+      ],
+      "reason": "peer-snapshotsが配布されておらず、A-011は予約枠のままで本文を確認できない。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": null,
+      "required_traits": [
+        "器材との接触判定と個人状態の保持を、Server側で扱えること"
+      ],
+      "reason": "研究所は未実装で、器材の一覧、接触判定の経路、個人状態の保存先が記録されていない。",
+      "adoption_blocker": false
+    }
+  ],
+  "conflicts": [
+    {
+      "source_path": "docs/decisions/018-whisper-colleague-quest-and-anxiety.md",
+      "existing_rule": "元同僚は研究機材へ閉じこもり、研究機材を開くと器材と装置が残る。装置の正体と処分の真偽は未確定である。",
+      "proposal_difference": "本候補は器材の状態やQuestの進行には手を加えず、個人が触れているあいだだけ作用する。",
+      "correction": "採用する場合は判断018の進行条件を変更せず、個人状態という別系統として扱う。研究機材を開いたときの扱いは変更しない。",
+      "reason_correctable": "判断018の内容と装置の扱いを変えず、個人側の状態にのみ追加する。",
+      "decision_needed": "本候補の対象器材が、判断018で定義された研究機材と同じものかどうか。"
+    }
+  ],
+  "uncertainties": [
+    "矛盾は確認していない。判断018が未確定としている装置の正体には触れていない。",
+    "どの器材が対象になるか。",
+    "留まることで得られる効果の中身が未確定。",
+    "同じ器材に触れたまま別の器材へ移動できるか。",
+    "中断の記録は器材ごとか、対象ごとか。",
+    "観察の進行やExposureとの重なり。",
+    "研究所は未実装で、器材の実在を確認する手段がない。",
+    "博士や元同僚のNPCには、この候補は触れない。",
+    "cureやPlayer Anomalyとの関係は書いていない。",
+    "同じ器材へ戻ったときの再取得の条件が未確定。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "持ち歩くのではなく、一つの場所に留まることで得られる状態を提示する。移動の自由との交換で、与えられるのはその場限りの効果。",
+    "in_world_rationale": "物体の所在や所有が逸脱し得る、という逸脱の定義の範囲内で、器材との関係が一時的にしか保たないという観察は成立し得る。ただしその関係が何を意味するか、器材が誰のためのものか、博士が何をしているかは説明しない。",
+    "meaning_left_ambiguous": "器材に触れることで何が得られるのか、効果の理由は何かは確定しない。博士の真意、組織の事情、装置の由来にも触れない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": "unknown",
+  "requires_code_reason": "研究所は未実装であり、器材の一覧、接触判定の経路、個人状態の保存先が存在するかを判断できない。必要性がunknownとし、調査対象を器材の配置と接触判定に限定した。",
+  "new_logic": [
+    "器材への接触判定と個人状態の開始、中断、自動再開しない制御（要調査）"
+  ],
+  "prototype_cost": {
+    "band": "不明",
+    "rationale": "研究所が未実装で、器材の実在が前提になる。既存のデバッグフロアで箱などを使って器材接触を試すことはできるが、研究所としての検証は構造が決まった後になる。",
+    "implementation_steps": [
+      "既存のマップで、器材として使えるPartsと接触判定の経路を特定する",
+      "接触中だけ個人状態が入る分岐を試す",
+      "離れたときと戻ったときの挙動を確認する"
+    ],
+    "assumed_existing_parts": [
+      "既存のマップPartsとCollisionGroup",
+      "PlayerのAttributeとCharacter",
+      "既存3スキルの発動とクールダウン"
+    ]
+  },
+  "role_details": {
+    "skill_family": "探索",
+    "rank": 1,
+    "rank_rationale": "探索系のランク1は開錠の1案だけである。本案を2件目として置けば、3案に達していないという記述を壊さないため、根拠のある値として1を置いた。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "器材に触れているあいだだけ個人状態が入る。離れると切れ、同じ器材へ戻っても自動で再開しない。"
+      },
+      {
+        "level": 2,
+        "proposal": "器材を複数種類から選べるようにする案。ただし器材が未実装で在否を確認できないため、採用の判断は保留する。"
+      },
+      {
+        "level": 3,
+        "proposal": "一度だけ、器材の効果を短いあいだだけ持ち運べる案。ただし留まるという前提が崩れるため採用しない理由を記録する。"
+      }
+    ],
+    "equipped_slot_policy": "探索系の1枠として使う。4枠との組み合わせも切替のタイミングも決めない。装備切替と枠占有の条件は未決定のため触れない。",
+    "normal_attack_link": "器材に触れているあいだはワンツーも含めて発動を受け付けない。外の意味はないため、通常の連携規則に従う。",
+    "avoids": "移動の自由の一部。ただし効果の中身は未確定で、居場所が安全になるとは限らない。",
+    "intervenes_in": "対象個人の状態と、器材に触れているあいだの操作受付。器材そのもの、研究記録、共有の在庫、依頼の進行は変えない。",
+    "sacrifices": "触れているあいだは動けない。離れると効果が切れ、同じ器材へ戻っても再開しない。効果の中身は未確定。",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-010.html"
+}

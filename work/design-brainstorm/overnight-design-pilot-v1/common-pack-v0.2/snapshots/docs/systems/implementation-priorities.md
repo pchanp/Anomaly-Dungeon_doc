@@ -1,0 +1,133 @@
+# 未実装機能の優先順位
+
+**Status: Draft（実装計画）**
+**更新日: 2026-09-28**
+
+この優先順位は、現在のStudio実装とDraft／Idea資料の依存関係を整理したもの。設計案を採用済みに変更するものではない。仕様確定が必要な項目は、実装より先に確認する。
+
+## 優先度の基準
+
+- 他機能が依存する基盤か。
+- サーバー権威とマルチプレイヤー整合性に影響するか。
+- 現在のプロトタイプの重複・競合を減らせるか。
+- 小さく検証してロールバックできるか。
+- 仕様が実装可能な粒度まで確定しているか。
+
+## P0: 実装前の基盤整理
+
+### 1. 状態名とIDの確定
+
+- SANは廃止し、Anomaly LevelとAnomaly Exposureの責務境界を確定する。
+- `GIANT`／`Giant Anomaly`／`Mad Stomper`は同一のAnomaly Entityとして確定した。`GIANT`をSystem IDとして維持し、最終表示名は外見・演出と合わせて決める。
+- Run、Map、Anomaly、Player AnomalyのID規約を定める。
+
+**理由:** 現在は複数の試作用Attributeが同じ概念領域を表しており、このまま新機能を接続すると互換処理が増える。
+
+### 2. Run StateとPlayer Stateの最小モデル
+
+- Runの開始、活動中、帰還、死亡、終了をサーバー状態として定義する。
+- プレイヤー個別状態を1か所から参照できるようにする。
+- 既存AttributeはAdapter経由で段階移行する。
+
+**進捗:** `RunService` が `IDLE` / `RECRUITING` / `DEPARTING` / `ACTIVE` / `RESULT` / `CLOSING` のRun状態を持ち、成功・未達帰還・死亡・切断・8/32満了・異常化後満了がすべて `RunService.Finish` を通る。プレイヤーのロビー帰属は `LobbyState` 属性で表現する。`InDungeon` / `PlayerRunState` / `QuestState` は互換のため残しており、Runの開始と終了でまとめて更新する。Attributeの一意識別やID規約の確定は残る。
+
+### 3. Remoteとフォルダ構成の整理
+
+- 機能別Remoteフォルダを定義する。
+- Debug、Runtime、Assetsの境界を明確にする。
+- プレース内バックアップを追加し続けない運用へ移行する。
+
+**進捗:** Run結果用に `ReplicatedStorage/AnomalyRunRemotes`（`Result` / `ResultRequest`）を新設した。既存の `AnomalyState` / `AnomalyNotice` / `SkillEvent` はまだフラットなままで、フォルダへの整理は未実施。Debugは `Debug/` 配下、Runtimeは `Services/` 配下に分かれているが、境界の明文化は未実施。
+
+## P1: コアループを成立させる機能
+
+### 1. Inventory／ItemStackの最小実装
+
+- アイテムID、スタック、所有者、ワールド配置のモデル。
+- Run終了時に持ち帰る／失う処理。
+- Secure Slotは仕様確定後にこの基盤へ追加する。
+
+**進捗:** `Services/InventoryService` に20枠・初期Secure Slot 4枠の枠数と、Run終了時の獲得物・喪失物への分類を実装した。`SecureSlotCapacity` 属性で拡張値を受け取る。アイテムID、スタック、所有者、ワールド配置、マップ上の取得源は未実装で、アイテムは `DebugInventoryTerminal` のデバッグ付与でしか作らない。Secure Slotはすでに境界に組み込まれているが、拡張手段と入出庫タイミングは未決定。
+
+**依存する将来機能:** Memory Swapper、Quest回収、報酬、Secure Slot。
+
+### 2. QuestとDiscoveryの分離
+
+- Run目的であるQuestと、FILE・発見・実績を別データにする。
+- まず1種類の回収Questと1種類のDiscoveryで縦に検証する。
+
+**設計済み:** 同時受注は博士Quest 1件、その他Quest 3件、合計4件とする。博士Questは対応アノマリーの個別出現確率を基礎値の1.40倍へ上げるが、マップ抽選には関与しない。対象が候補外なら補正は他候補へ移らない。Party RunではRun開始時の博士Quest対象を重複なしでサーバーが固定し、脱落後も補正を維持する。アノマリー1体の発生ごとに全候補の個別確率は0.90倍になる。同種の同時出現上限はアノマリーごとのコンポーネントで持ち、特定アイテムがRun単位で出現コンポーネントを変動させ得る。DiscoveryはQuest枠を消費しない発見・認識記録とする。対応する博士Questを受注中なら、先に得た固有品も専用スキルへ交換できる。
+
+**進捗:** `RunService` が `QuestState` / `QuestObjective` / `Credits` をプレイヤーAttributeで扱い、出口端末の達成で依頼完了、帰還時に `RunConfig.QuestRewardCredits` を支払うところまで実装済み。Discovery側のデータモデルと、Questとの分離は未実装。Questは専用Serviceでもデータモデルでもなく、単一目標としての属性表現の段階にある。
+
+### 3. Portal Service
+
+- 現在のReturn処理をService境界へ移す。
+- Transition Portalは過半数、30秒、残留プレイヤー、Party Stateの仕様確定後に追加する。
+
+**進捗:** Returnと全終了条件を `RunService.Finish` に集約し、リザルト送信までがService境界になっている。Transition Portalは未実装で、`DebugMapSwitch` はTransition Portalの代替ではない。
+
+## P2: アノマリー基盤の統合
+
+### 1. 既存3プロトタイプの共通登録
+
+- MiW、/dev/null、巨人を共通のAnomaly定義・生成・状態参照へ接続する。
+- 個別挙動は独立Moduleに維持する。
+- デバッグフロアから個別に生成・リセットできるようにする。
+
+### 2. /dev/null共通Gate
+
+- Skill、Attack、Itemの結果発生直前に共通の許可判定を置く。
+- 入力そのものを奪わず、サーバー上の結果だけをnull化する。
+- ダッシュ、ジャンプ、インベントリ操作はDraftのため、対象追加前に仕様を確定する。
+
+### 3. 正式なAnomaly Exposure
+
+- P0で確定した状態名を用いる。
+- 発生率、ポータル、Player Anomalyへ接続できるイベント境界を作る。
+- 数式と閾値は別途決定が必要。
+
+## P3: 依存基盤完成後の機能
+
+### Memory Swapper
+
+Inventory／ItemStack、`LastRecognizedPlayer`、マルチプレイヤー所有権が必要。これらより先にNPCだけを作らない。
+
+### Visible / Invisible Inversion
+
+Exposure、Player Anomaly状態、Visible／Invisible Component分類、Clientごとの表示規約が必要。
+
+### Party State Transition
+
+Run State、Portal Service、MapDefinitions、Exposure、Quest、Inventoryが必要。重み式と確定遷移条件は未決定。
+
+### Secure Slot
+
+InventoryとRun終了処理の完成後に実装する。総インベントリ20枠のうち初期4枠をSecure Slotとし、通常プレイヤーはスキル強化で拡張できる。対象、入出庫タイミング、拡張上限・コスト、Player Anomaly時の扱いは未決定。
+
+**進捗:** 枠数とRun終了時の保持／喪失の判定は `InventoryService` に実装済み。拡張手段、入出庫タイミング、Player Anomaly時の制約は未実装。
+
+## P4: アイデア段階のマップ
+
+`map-gimmick-ideas.md`の各マップは採用未確定のため、現時点では実装しない。基盤完成後、1マップずつ設計を `Designed` へ更新してから着手する。
+
+**進捗:** Abandoned TSUTAYAのみプロトタイプとして実装済み。`Shared/Definitions/MapDefinitions`へ登録し、`Debug/DebugMapSwitch`から読み込める|archive棚、CRT、試聴機の3系統を実装した。Transition PortalとParty Stateは未実装のため、マップ間の遷移は成立しない。他の4マップは未実装のまま。
+
+## 推奨する次の実装単位
+
+1. 現在の出口制御端末をマップ定義から条件差し替え可能にする。
+
+   **進捗:** `Shared/Definitions/MapDefinitions` を新設し、`MapGenerator` が生成モデルへ `MapId` / `MapDisplayName` を付与、`RunService` が `ExitCondition.PromptName` で端末Promptを参照する形まで実装済み。条件種別の追加と複数条件の判定は未実装。
+2. Run Lifetimeを操作する特殊イベントのAPIを定義する。
+3. Run StateをPortal Serviceへ接続する。
+
+   **進捗:** `RunService.Build`がMap IDを受け取るようになり、`MapGenerators`経由で実装済みのGeneratorへ委譲する。`DebugMapSwitch`から任意のMap IDへ切り替えられる。ただし遷移条件とParty Stateは未実装のため、これはTransition Portalの代替ではない。
+4. 入場・死亡・通常帰還・異常化後帰還・強制帰還をPlayテストする。
+5. その後、Inventory／ItemStackへ進む。
+
+## 関連資料
+
+- [現在の実装状況](current-implementation.md)
+- [Robloxプロジェクト構成](project-structure.md)
+- [ゲームルール](game-rules.md)
+- [ゲームループとポータル遷移](game-loop.md)

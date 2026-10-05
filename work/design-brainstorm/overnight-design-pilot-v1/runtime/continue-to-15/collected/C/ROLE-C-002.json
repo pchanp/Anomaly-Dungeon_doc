@@ -1,0 +1,252 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-002",
+  "role": "C",
+  "title": "刻みを読む",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "8/31",
+  "classification": "マップ固有",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/current-implementation.md",
+      "section": "実装済みの基盤",
+      "source_status": "Status: Implemented（実装棚卸し）",
+      "claim": "8月31日マップのServer側時間進行はDAYからEVENING、NIGHTを経てAUG_32へ進む。夕方以降の帰還面開放と8/32での帰還面閉鎖、Exposureの取得速度2.4倍、Run Lifetime300秒の強制帰還が実装済み。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "8月32日",
+      "source_status": "Status: Prototype: Implemented（実装済みプロトタイプ）",
+      "claim": "8/32ではReturn Portalが閉じる。探索者は団地前の広場へ移動し、Exposureの取得速度がExposureMultiplierで2.4倍になり、Run Lifetime300秒が残る。帰還手段はなく、期限切れは強制帰還として処理する。"
+    },
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "戦闘とアノマリー",
+      "source_status": "Status: Draft（草案）",
+      "claim": "Exposureはダメージ値ではなく、アノマリー発生、Individual Anomaly、スキル、マップ状態、ポータル遷移、Run終了条件に影響し得る内部状態として扱う。"
+    },
+    {
+      "path": "docs/anomalies/cognitive-anomalies.md",
+      "section": "実装上の注意点",
+      "source_status": "Status: Draft（草案）",
+      "claim": "HUDで正解や対象名を直接通知しない。目的や危険を明確にする必要がある場合も、対象の正体ではなく行動結果を伝える。観察対象の見た目を先に派手にしない。"
+    }
+  ],
+  "design_hypothesis": "8/31のフェーズ進行はServer側の共有事実として実装済みで、8/32ではExposureの取得速度が2.4倍になりRun Lifetime300秒が残る。提案は、この数値を地図全体の常時表示として足すのではなく、プレイヤーが自分で発動して1度だけ取りに行く補助系スキルである。現在のフェーズ名、そのフェーズ残りの秒数、その時点のExposure取得倍率を本人に提示して終わる。8/32では次のフェーズが存在しないため成立しない。",
+  "experience": {
+    "goal": "切り替えの直後に残り時間を推測で測る、という移動と読み取りの往復をなくす。「あと何が残るか」を自分で取りに行く判断にする。",
+    "player_choice": "その場で止まって1度だけ読むか、読まずに次のフェーズまで動くか。読むなら立ち止まる時間を何秒分支払うかを決める。",
+    "sacrifice_or_risk": "読み取りのあいだ動けない。フェーズごとに1回だけしか使えない。8/32では何も読めない。読んでも、何が近いかに何、誰がいるかは一切分からない。"
+  },
+  "placement_assumption": "既存の8/31マップ（Prototype: Implemented）の上で使う案で、地形や建物、配置ポイントを追加しない。読む対象は既存のフェーズ進行と8/32のRun Lifetimeという既存の数値だけである。表示の表現は未確定で、既存のHUDに要素を足すかこのスキルの専用表示にするかは決めていない。",
+  "components": [
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "現在のフェーズ名、残りの秒数、Exposure取得倍率を本人にだけ提示する。共有ワールドの状態は変えない。"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "読み取りのあいだだけ、移動と通常攻撃の受付を封じる。硬直ではなく操作の受付拒否として扱う。"
+    },
+    {
+      "component": "AugustPhase",
+      "availability": "catalog",
+      "usage": "フェーズ進行そのものは既存実装。本候補は進行の時刻を読み取るだけで、フェーズ時間、Lighting、ClockTime、帰還面の開閉には触れない。"
+    },
+    {
+      "component": "SkillActivation",
+      "availability": "catalog",
+      "usage": "既存の3スキルと同じ発動経路を持つ必要がある。実装はPartialで、読み取りの経路は含まれない。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "InformationChange",
+      "trigger": "対象が本スキルを発動したとき。",
+      "condition": "対象が8/31のマップ内にいて、現在がDAY、EVENING、NIGHTのいずれかであること。AUG_32では不成立。同じフェーズで2度目の発動はしない。",
+      "result": "対象本人にだけ、現在のフェーズ名、そのフェーズ残りの秒数、その時点のExposure取得倍率を提示して提示は終わる。地図、日付板、帰還面、出現率、依頼の進行は変化しない。",
+      "target": "発動した本人",
+      "scope": "個人。仲間の画面にも地図の表現にも出さない。",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": [
+        "提示の時点で即時解決する",
+        "AUG_32では記録も提示も作らない",
+        "次のフェーズに進むと、提示済みの内容は破棄される",
+        "Run終了時に破棄される"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "読み取りは即時解決で、保存する状態は本人に今見えている表示だけ。数字を残さないため、固定の長さも次フェーズへの持ち越しも持たない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effectと同一対象は非加算1件。フェーズごとに1回だけ提示し、再発動しても残り時間は延長しない。",
+        "conflict_resolution": "他のスキルが同じ数値を提示する場合の重なり、およびMiWの個人向けRun情報HUDとの併記は順序が未定のため保留する。"
+      },
+      "server_validation": "Serverが現在フェーズ、残り秒数、倍率を確定してから送る。クライアントは数字を指定できず、未検証の値は表示しない。",
+      "client_presentation": "本人だけの短時間表示。数字の正確さは未確定で、丸め方の指定は決めていない。",
+      "feedback": {
+        "success": "本人にだけ数字の提示が出る。仲間の画面と地図の表現は変わらない。",
+        "failure": "AUG_32では何も出ないことを示す短い本人表示を出すだけ。",
+        "ambiguous": "提示が何を根拠に得出的数字かは説明しない。数字の意味は確実だが、計測的主体は明示しない。"
+      }
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "上のInformationChangeで提示が始まるとき。",
+      "condition": "提示が成立した場合に限る。不成立なら発生しない。",
+      "result": "対象プレイヤーの移動入力と通常攻撃の受付を受け付けない。硬直やStunではなく、入力が結果に届かないものとして扱う。",
+      "target": "発動した本人",
+      "scope": "個人。仲間の操作にも地図にも影響しない。",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "提示が終わった時点で解除される",
+        "対象がマップを離れた時点で破棄される",
+        "Run終了時に破棄される"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "操作の封じは読み取りのあいだだけに限定する。提示、マップ離脱、Run終了のいずれかで解除し、止めたあとも残さない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effectと同一対象は非加算1件。繰り返し発生しても1件を保つ。",
+        "conflict_resolution": "Stun、Down、Roll、/dev/nullの入力無効化、Mad StomperのHeal Fieldとの適用順は未定のため保留する。"
+      },
+      "server_validation": "Serverが提示の成立を検証し、封じ中の入力は既存経路でも例外なく不成立として扱う。クライアント側の無効化に依存しない。",
+      "client_presentation": "操作できない旨を本人にだけ示す。理由の説明はしない。",
+      "feedback": {
+        "success": "封じに入った直後、操作が反応しない本人表示を出す。",
+        "failure": "封じ中の入力には短い本人表示だけを返す。ワールド状態は変えない。",
+        "ambiguous": "封じが本スキルのためか別の理由によるものかを表示では区別しない。"
+      }
+    }
+  ],
+  "provides_traits": [
+    "フェーズごとの残り秒数とExposure取得倍率を本人に1度だけ提示できる",
+    "その読み取りのあいだだけ自分の操作を受け付けない"
+  ],
+  "connection_tags": [
+    "Skill",
+    "Information",
+    "AugustPhase",
+    "StateChange"
+  ],
+  "refs": [
+    {
+      "target_id": "ROLE-A-002",
+      "kind": "optional_connection",
+      "required_traits": [
+        "8/31のフェーズ遷移時刻と遷移結果をServer確定の共有事実として提示できる"
+      ],
+      "fallback": "A-002が成立しない場合、本候補は既存のフェーズ進行とRun Lifetimeだけから成立する。ギミックの追加条件や出現物、報酬を参照しない。",
+      "resolution": "reserved_unresolved"
+    }
+  ],
+  "unresolved_refs": [
+    {
+      "target_id": "ROLE-A-002",
+      "required_traits": [
+        "8/31のフェーズ遷移時刻と遷移結果をServer確定の共有事実として提示できる"
+      ],
+      "reason": "peer-snapshotsが配布されておらず、A-002は予約枠のままで本文を確認できない。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": null,
+      "required_traits": [
+        "フェーズ残りの秒数とExposure取得倍率を、Serverから本人用の表示へ渡せること",
+        "AUG_32では提示を成立させない分岐をサーバー側で判定できること"
+      ],
+      "reason": "current-implementation.mdはフェーズ進行と倍率・Run Lifetimeの存在を記すが、その数値を個人表示へ渡す経路の記録がない。",
+      "adoption_blocker": false
+    }
+  ],
+  "conflicts": [
+    {
+      "source_path": "docs/anomalies/cognitive-anomalies.md",
+      "existing_rule": "HUDで正解や対象名を直接通知しない。目的や危険を明確にする必要がある場合も、対象の正体ではなく行動結果を伝える。",
+      "proposal_difference": "本候補は残りの秒数とExposure取得倍率を数字として本人に示す。",
+      "correction": "採用する場合は共通HUDに足さず、本スキルの発動時だけの表示に限る。未検証の数字をそのまま表示しない。",
+      "reason_correctable": "認知アノマリーの既存設計は変更せず、共通UIへの要素追加も行わない。",
+      "decision_needed": "Exposure倍率を数字で示すことを既定UIへ入れるかどうか。入れるなら別判断とする。"
+    }
+  ],
+  "uncertainties": [
+    "残りの秒数を丸めるか、整数で出すかの指定がない。",
+    "AUG_32で「読めない」の表示を出すか、何も出さないか。",
+    "同じ数字を他のスキルやHUDにも出す場合の重なり順序が未定。",
+    "この読み取りでは異常の位置も種類も分からない。分かるとしたら別の仕組みとして扱う。",
+    "フェーズが同時に成立しうる場合の不成立表示の扱い。",
+    "表示を既存HUDへ足すか専用表示にするかが未確定。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "残りの時間を地図全体で常時表示するのではなく、プレイヤーが自分で取りに行く一回の読み取りにする点。既存の規則表示に要素を足さない。",
+    "in_world_rationale": "操作と安全判断に必要な規則は明確にする、という方針に沿って、既存のフェーズ進行から必要な数字だけを本人に返す設計なら、規則の明確さと意味の曖昧さを両立できる。数字を誰が誰に伝えるのかという理由を説明しない。",
+    "meaning_left_ambiguous": "なぜこの数字を読めるのか。時計の正体、8/32で読めない理由は説明しない。残り時間の存在が何を意味するのかも確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "必要な2経路（フェーズ残りの秒数とExposure倍率をServerで確定して本人へ送る表示経路、提示中だけ操作を受け付けない状態）のいずれも current-implementation.md に実装記録がない。実装済みスキルは3種で、ビルド取得と強化も未実装のため、既存の発動経路をそのまま再利用できる根拠がない。",
+  "new_logic": [
+    "フェーズ残りの秒数とExposure取得倍率をServerで確定し本人へ送る経路",
+    "提示のあいだだけ移動と通常攻撃の受付を封じる状態の追加と解除"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "フェーズ進行、Exposure倍率、Run Lifetimeは既存実装で流用できる。新規なのは提示経路と受付封じの2点だけ。共通HUDを触らずに専用の短時間表示で試せるため、調整の範囲は狭い。ただしAUG_32で不成立にする分岐の確認が必要で、中程度の試行を要する。",
+    "implementation_steps": [
+      "デバッグフロアまたは8/31の読み込みで、フェーズ進行の現在値と残り秒数をどこから取れるかを確認する",
+      "本人用の短時間表示にフェーズ名、残り秒数、倍率を出す",
+      "AUG_32で提示が成立しないことを確認する",
+      "提示中の移動と通常攻撃が例外なく不成立になることを確認する"
+    ],
+    "assumed_existing_parts": [
+      "August31Serviceのフェーズ進行とServer側の時刻進行",
+      "Exposureの取得速度倍率と閾値到達処理",
+      "Run Lifetimeと8/32の強制帰還",
+      "既存3スキルのサーバー側発動とクールダウン"
+    ]
+  },
+  "role_details": {
+    "skill_family": "補助",
+    "rank": null,
+    "rank_rationale": "補助系のランク1にはヒール（仮称）とcureの2案がある。本候補を3件目にすると同系統の構成が変わるため、根拠のない数値を置かずにnullとした。順位は採否の判断に委ねる。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "発動すると現在のフェーズ名、そのフェーズ残りの秒数、Exposure取得倍率を本人に1度だけ提示する。8/32では成立しない。提示中は移動と通常攻撃を受け付けない。"
+      },
+      {
+        "level": 2,
+        "proposal": "残りの秒数を段階表示に落として提示を短くする案。情報量は減るが、数字を追う手間が減る。段階の区分は未確定。"
+      },
+      {
+        "level": 3,
+        "proposal": "8/32でも成立させ、Run Lifetimeの残り時間だけを読む案。フェーズ名は読めず、倍率も8/32の値だけを示す。"
+      }
+    ],
+    "equipped_slot_policy": "補助系の1枠として扱う。4枠を何と組み合わせるかは決めない。装備切替の場所とタイミング、および奥義、パッシブ、アノマリー専用スキルの枠占有条件は未決定のため触れない。",
+    "normal_attack_link": "読み取り中はワンツーも含めて発動を受け付けない。読み取りの外では通常の連携規則に従う。",
+    "avoids": "切り替えの直後に残り時間を推測で測るための移動と読み取りの往復。ただし異常の現在地、出現の有無、体力は一切読めない。",
+    "intervenes_in": "8/31のフェーズ進行が持つ数値と、8/32のRun Lifetimeの残り時間。共有マップ、出現率、依頼の進行は変えない。",
+    "sacrifices": "提示のあいだ動けない。フェーズごとに1回だけしか使えない。8/32では何も読めない。読んでも何が起きているかは分からない。",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-002.html"
+}

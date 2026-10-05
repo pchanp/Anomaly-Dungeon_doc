@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-A-014 見送り — 帰還者の跡</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+<p class="sub">overnight-design-pilot-v1 ／ ROLE-A-014 ／ 全マップ共通 ／ NPC</p>
+<h1>見送り — 帰還者の跡</h1>
+<p>誰かが帰還すると、その場の通常NPCが同じ方向を向く。</p>
+<div class="badges"><span class="badge hyp">Idea</span><span class="badge">unreviewed</span><span class="badge unknown">演出の長さは未定</span></div>
+<nav class="nav"><a href="index.html">← 一覧</a><a href="ROLE-A-014.json">同IDのJSON</a></nav>
+</header>
+
+<section id="hypothesis">
+<h2>何の案か</h2>
+<p>Runの終わりに、世界が一度だけ反応する。</p>
+<ul>
+<li>誰かがRunを終えると、その場の通常NPCの向きだけが揃う（共有される）。</li>
+<li>その場にいた個人には「ここで誰かが帰還した」ことが1行で出る。誰かは出さない。</li>
+<li>説明も報酬も加えない。演出だけが残る。</li>
+</ul>
+<p><strong>選択と代償:</strong> その場で見届ける／その場を離れる。得られるのは短い演出だけ。NPCが0体のマップでは成立しない。</p>
+<p class="sub">接続タグ: NPCState / InformationChange / Return ／ requires_code: true ／ conflicts 0件・未解決2件（JSONに記載）</p>
+</section>
+
+<section id="diagram">
+<h2>仕組みの図</h2>
+<div class="board">
+<svg viewBox="0 0 1000 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="誰かがRunを終えると通常NPCの向きが揃い、その場にいた個人にだけ1行の提示が届くことを示す図">
+<rect width="1000" height="300" fill="#0a1118"/>
+<text class="label" x="24" y="28">共有される変化</text>
+<text class="label" x="620" y="28">個人に返るもの</text>
+<rect x="24" y="56" width="150" height="60" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="small" x="38" y="92">NPC（従来）</text>
+<rect x="214" y="56" width="150" height="60" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="small" x="228" y="92">NPC（向き変化）</text>
+<path d="M174 86h34" class="active"/>
+<path d="M202 80l9 6-9 6" class="active"/>
+<rect x="404" y="56" width="180" height="60" rx="8" fill="#142330" stroke="#d3b653"/>
+<text class="small" x="418" y="92">誰かがRunを終えた</text>
+<path d="M364 86h34" class="active"/>
+<path d="M392 80l9 6-9 6" class="active"/>
+<rect x="620" y="56" width="356" height="60" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="small" x="634" y="92">その場にいた個人に1行だけ届く</text>
+<path d="M584 86h30" class="active"/>
+<path d="M608 80l9 6-9 6" class="active"/>
+<rect x="24" y="150" width="560" height="60" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="small" x="38" y="186">誰の帰還か、どの結果種別かは表示しない</text>
+<text class="small" x="24" y="244">演出の長さは未定。接続時の挙動は範囲外</text>
+<text class="small" x="24" y="284">この図で分かること：終結が個人提示と共有変化に分けて返る。</text>
+</svg>
+</div>
+<p>図注：説明は足さず、向きと1行だけが残る。</p>
+</section>
+
+<footer>overnight-design-pilot-v1 ／ ROLE-A-014 ／ 実表示は未確認（担当セッションでブラウザを使用していない）。</footer>
+</main>
+</body>
+</html>

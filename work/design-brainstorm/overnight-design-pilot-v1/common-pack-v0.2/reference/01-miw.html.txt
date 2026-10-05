@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>01 MiW ／ 視覚仮説</title>
+<link rel="stylesheet" href="vis.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <h1>01 ／ MiW — 棺に収まる猫型アノマリー</h1>
+  <div class="sub">Anomaly Entity。観察・発見・接触そのものにリスクがある存在。猫・古代エジプト的意匠・存在可能性の曖昧さ。</div>
+  <div class="badges">
+    <span class="badge">Type: Anomaly Entity</span>
+    <span class="badge">Prototype: Implemented（機能は実装済み／設計値は非確定）</span>
+    <span class="badge hyp">意匠は仮案</span>
+    <span class="badge unconf">表示情報・死亡確率・保存時の扱いは未確定</span>
+  </div>
+  <div class="nav"><a href="index.html">← ボードトップ</a><a href="02-dev-null.html">次: /dev/null →</a></div>
+</header>
+
+<div class="doc">
+  <h2>(a) 根拠文書</h2>
+  <p>
+    <code>docs/anomalies/miw.md</code>（Status: Draft）: 猫型。古代エジプトを想起させる意匠。棺に収まった状態で発見される。
+    発見・観察・接触にリスク。危険はMiWの直接攻撃というより<b>棺の設備全体</b>（放射性物質、毒ガス、開封時大ダメージ、一時的行動制限が候補）として表現する。
+    MiWは現在Runに関係する内部変数を一時表示し得るが、それが本質的な能力か認識の副作用かは確定していない。
+    危険なアノマリーでありながら保存・収集でマスコット的存在になり得る。
+  </p>
+  <p>
+    <code>docs/anomalies/cognitive-anomalies.md</code> / <code>docs/world/information-design.md</code>:
+    「ANOMALY DETECTED」のような直接警告を基本UIにしない。痕跡と推測で異常性を立ち上げる。
+    MiWは「遠景観察型」寄りの観察対象の候補として扱われ得る。
+  </p>
+  <p>
+    <code>docs/world/setting.md</code>: 古代設備・遗留設備が現役で使う文明。高性能な機械から紙の記録が出る。
+  </p>
+</div>
+
+<div class="doc">
+  <h2>(b) 描画上の仮説</h2>
+  <p>
+    次の4点が本ボードの仮説です。いずれも <span class="hyp-t">仮案</span> であり、確定した姿ではありません。
+  </p>
+  <ol style="max-width:78ch;color:#9fb6c4">
+    <li><b>猫の顔は完全には描かない。</b>棺の内部は暗い輪郭と耳・目の位置だけを光で拾い、顔貌・毛並み・瞳孔は闇に溶かす。猫であることはシルエットで保证する。</li>
+    <li><b>意匠は「棺外装」と「棺内壁画」の2層で分ける。</b>外装の記号は長い年月で摩耗し、内壁画だけが比較的に読み取れる、という前提。実在の宗教図像・紋章の意匠は模さない。</li>
+    <li><b>危険はMiWでなく設備で示す。</b>周囲に封印帯、遮蔽クランプ、圧力ゲージ、排気管、放射能表示の札を置き、「ここを開ける装置」であることを空間で語る。</li>
+    <li><b>Run情報HUDは「表示されている姿」だけを前提内定画。</b>何を出すかは未確定なので、実パネルの代用として、数値が飛んだだけの矩形群（読めない）を描く。</li>
+  </ol>
+  <div class="note">
+    <b>描かなかったもの:</b> MiWの正体、封印を開けた場合の死因の確定、表示情報の具体的内容、棺意匠の原典。
+    ここで描いた記号は「古代エジプト風」と形容できる抽象図形で、実在の宗教図像・文字・紋章の再現ではありません。
+  </div>
+</div>
+
+<!-- ============ 図1: 発見の距離 ============ -->
+<h2 style="font-size:13px;color:#e2f0f7;letter-spacing:.1em;font-weight:400;border-left:2px solid #2d3f4c;padding-left:8px;">図1 ／ 発見の距離 — 背景として成立するか（遠景観察型の検証用）</h2>
+<div class="board">
+<svg viewBox="0 0 1120 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MiW 発見の距離">
+  <rect width="1120" height="330" fill="#07090b"/>
+  <g stroke="#121a20" stroke-width="1">
+    <path d="M0 110H1120M0 220H1120M0 275H1120"/>
+    <path d="M280 0V330M560 0V330M840 0V330"/>
+  </g>
+
+  <!-- A: 遠景 -->
+  <g transform="translate(40,40)">
+    <rect x="0" y="0" width="240" height="250" fill="none" stroke="#1e2a33"/>
+    <text class="lbl-h" x="8" y="18">A — 遠景 / Detect</text>
+    <!-- 遠景の部屋 -->
+    <g class="mid-s">
+      <path d="M20 210h200M20 210V96l100-56 100 56v114"/>
+      <path d="M120 40v170"/>
+    </g>
+    <!-- 保税リブ -->
+    <g fill="#101a20" stroke="#2d3f4c" stroke-width="1">
+      <rect x="150" y="150" width="46" height="26"/>
+      <rect x="150" y="176" width="46" height="34"/>
+    </g>
+    <!-- 遠景の棺：ただの箱 -->
+    <rect x="154" y="180" width="38" height="28" fill="#1a242c"/>
+    <path d="M158 188h30M158 196h30" stroke="#33454f" stroke-width="1"/>
+    <!-- 床の擦れ跡 -->
+    <path class="hz" d="M170 210c-26 6-40 16-58 18"/>
+    <text class="lbl-s" x="8" y="236">「何の箱かも分からない」にしか見えない</text>
+  </g>
+
+  <!-- B: 中距離 -->
+  <g transform="translate(340,40)">
+    <rect x="0" y="0" width="240" height="250" fill="none" stroke="#1e2a33"/>
+    <text class="lbl-h" x="8" y="18">B — 中距離 / Observe</text>
+    <g class="mid-s"><path d="M20 210h200M20 210V96l100-56 100 56v114"/></g>
+    <!-- 棺、設備 -->
+    <g transform="translate(52,110)">
+      <path class="mid-s" d="M8 44h132l-8-24H16z"/>
+      <rect x="16" y="44" width="116" height="56" fill="#141d24" stroke="#33454f"/>
+      <path class="hz" d="M16 68h116M16 90h116"/>
+      <circle cx="30" cy="56" r="4" fill="#b8452f" opacity=".8"/>
+      <text class="lbl-s" x="46" y="59">封印帯</text>
+      <text class="lbl-s" x="46" y="80">圧力計（中立）</text>
+      <text class="lbl-s" x="46" y="96">排気管 → 壁へ</text>
+      <path class="dim-s" d="M132 68h30v-16"/>
+      <text class="lbl-s" x="150" y="58">遮蔽クランプ</text>
+      <!-- 磨耗した外装 -->
+      <path stroke="#4a5f6c" stroke-width="1" d="M28 20l10 6M64 14l8 8M100 18l-6 8"/>
+    </g>
+    <text class="lbl-s" x="8" y="236">「開けると何が起きるか」は設備側</text>
+  </g>
+
+  <!-- C: 開封 -->
+  <g transform="translate(640,40)">
+    <rect x="0" y="0" width="240" height="250" fill="none" stroke="#1e2a33"/>
+    <text class="lbl-h" x="8" y="18">C — 開封 / Visible</text>
+    <g transform="translate(52,96)">
+      <!-- 開いた棺 -->
+      <path class="mid-s" d="M8 58h132l-8-24H16z"/>
+      <path class="dim-s" d="M20 34l-16-30"/>
+      <rect x="16" y="58" width="116" height="42" fill="#0a1014" stroke="#33454f"/>
+      <!-- 内部：暗い猫シルエット（顔を確定しない） -->
+      <path fill="#3a5266" d="M40 96c0-10 5-16 12-16 3-5 12-5 15 0 8 0 14 6 14 16z"/>
+      <path fill="#3a5266" d="M52 80l-2-8 6 5zM74 80l2-8-6 5z"/>
+      <circle cx="63" cy="86" r="2.4" fill="#c9a227"/>
+      <!-- 罐の残光 -->
+      <path stroke="#c9a227" stroke-width="1" opacity=".5" d="M20 66h108"/>
+      <!-- 排気 -->
+      <path class="hz2" d="M148 74h34v-24h24"/>
+      <text class="lbl-s" x="152" y="60">封入?</text>
+      <text class="lbl-s" x="10" y="78">耳と眼だけが光る</text>
+    </g>
+    <text class="lbl-s" x="8" y="236">「何が起きるか」は未確定</text>
+  </g>
+
+  <!-- D: HUD断片 -->
+  <g transform="translate(940,40)">
+    <rect x="0" y="0" width="150" height="250" fill="none" stroke="#1e2a33"/>
+    <text class="lbl-h" x="8" y="18">D — Run情報</text>
+    <text class="lbl-s" x="8" y="36">表示されている姿のみ</text>
+    <g stroke="#2d3f4c" stroke-width="1">
+      <rect x="8" y="46" width="134" height="16" fill="#0d1519"/>
+      <rect x="8" y="66" width="134" height="16" fill="#0d1519"/>
+      <rect x="8" y="86" width="134" height="16" fill="#0d1519"/>
+      <rect x="8" y="106" width="134" height="16" fill="#0d1519"/>
+      <rect x="8" y="126" width="90" height="16" fill="#0d1519"/>
+    </g>
+    <g fill="#3d5464">
+      <rect x="13" y="51" width="22" height="6"/><rect x="40" y="51" width="14" height="6"/>
+      <rect x="13" y="71" width="40" height="6"/><rect x="58" y="71" width="20" height="6"/>
+      <rect x="13" y="91" width="16" height="6"/><rect x="34" y="91" width="52" height="6"/>
+      <rect x="13" y="111" width="30" height="6"/><rect x="48" y="111" width="10" height="6"/>
+      <rect x="13" y="131" width="18" height="6"/>
+    </g>
+    <text class="lbl-s" x="8" y="164">値は読めない前提</text>
+    <text class="unc-t" x="8" y="182">何を出すかは未確定</text>
+    <text class="lbl-s" x="8" y="214">名前を出さない</text>
+    <text class="lbl-s" x="8" y="228">（ cognitive-anomalies: ）</text>
+    <text class="lbl-s" x="8" y="242">直接警告にしない</text>
+  </g>
+
+  <text class="lbl-s" x="24" y="316">A→C の変化は「何が開示されたか」であって、「何か分かった」ではない。</text>
+</svg>
+</div>
+
+<!-- ============ 図2: 意匠の3案 ============ -->
+<h2 style="font-size:13px;color:#e2f0f7;letter-spacing:.1em;font-weight:400;border-left:2px solid #2d3f4c;padding-left:8px;">図2 ／ 意匠の3案 — すべて仮案。採用未定。</h2>
+<div class="board">
+<svg viewBox="0 0 1120 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MiW 意匠の3案">
+  <rect width="1120" height="300" fill="#07090b"/>
+
+  <!-- 案A: 外面意匠（摩耗） -->
+  <g transform="translate(50,44)">
+    <text class="lbl-h" x="0" y="0">案A ／ 外面意匠（摩耗している）</text>
+    <g transform="translate(0,16)">
+      <path class="mid-s" d="M0 60h150l-10-26H10z"/>
+      <rect x="10" y="60" width="130" height="70" fill="#131b21"/>
+      <g stroke="#3d5464" stroke-width="1.2" fill="none">
+        <path d="M20 74h110M20 88h110M20 102h110M20 116h110"/>
+        <!-- 図形：目・麦・波 などの抽象図形 -->
+        <path d="M34 78a7 7 0 0114 0 7 7 0 01-14 0z"/>
+        <path d="M74 76v10M70 81h8"/>
+        <path d="M108 76c4 4 8 4 12 0"/>
+        <path d="M34 106c6-6 12-6 18 0"/>
+        <path d="M78 102l6 10 6-10"/>
+        <path d="M110 102c-4 6-4 10 0 12"/>
+      </g>
+      <!-- 摩耗 -->
+      <g fill="#131b21">
+        <rect x="52" y="66" width="26" height="60"/>
+        <rect x="96" y="86" width="18" height="42"/>
+      </g>
+      <text class="hyp-t" x="0" y="150">外装は読めない。精装を捐助する謎として残す。</text>
+      <text class="lbl-s" x="0" y="166">内壁画と一致していない（不整合を許す）</text>
+    </g>
+  </g>
+
+  <!-- 案B: 内壁画 -->
+  <g transform="translate(410,44)">
+    <text class="lbl-h" x="0" y="0">案B ／ 棺内壁画（比較的に読める）</text>
+    <g transform="translate(0,16)">
+      <rect x="0" y="20" width="150" height="110" fill="#0e1519" stroke="#33454f"/>
+      <g stroke="#4d6a7c" stroke-width="1.1" fill="none">
+        <!-- 座した猫 + 天文盤 -->
+        <circle cx="75" cy="66" r="26"/>
+        <path d="M75 40v52M49 66h52M57 48l36 36M93 48L57 84"/>
+        <path d="M62 78c0-8 5-13 13-13 4-5 13-5 17 0 8 0 13 5 13 13"/>
+        <path d="M70 64l-3-7 7 4zM88 64l3-7-7 4z"/>
+        <!-- 横の帯記号 -->
+        <path d="M8 34h134M8 100h134" opacity=".6"/>
+        <path d="M14 40l8-6 8 6-8 6zM46 40l8-6 8 6-8 6zM110 40l8-6 8 6-8 6z"/>
+      </g>
+      <text class="hyp-t" x="0" y="150">占星図と神兽図の混線（仮）</text>
+      <text class="lbl-s" x="0" y="166">実在の宗教図像・文字の転写はしていない</text>
+    </g>
+  </g>
+
+  <!-- 案C: 棺の周囲に散る意匠片 -->
+  <g transform="translate(770,44)">
+    <text class="lbl-h" x="0" y="0">案C ／ 周辺に散る意匠片</text>
+    <g transform="translate(0,16)">
+      <g fill="none" stroke="#2d3f4c" stroke-width="1">
+        <rect x="10" y="30" width="34" height="44"/>
+        <rect x="110" y="26" width="28" height="30"/>
+        <rect x="96" y="86" width="40" height="36"/>
+        <rect x="24" y="94" width="30" height="26"/>
+      </g>
+      <g stroke="#42586a" stroke-width="1" fill="none">
+        <path d="M16 40h22M16 48h22M16 56h22"/>
+        <path d="M116 34h16M116 42h16"/>
+        <path d="M102 96h28M102 104h28M102 112h20"/>
+        <path d="M30 102h18M30 110h18"/>
+        <path d="M27 30c8 8 14 14 14 22"/>
+      </g>
+      <!-- 意匠片の散乱 -->
+      <path class="hz2" d="M30 74C50 66 90 66 116 56"/>
+      <text class="hyp-t" x="0" y="150">意匠は環境側の痕跡。MiWの属性ではない。</text>
+      <text class="lbl-s" x="0" y="166">収集／保存の資格を持たないまま</text>
+    </g>
+  </g>
+</svg>
+</div>
+
+<div class="doc">
+  <h2>(c) 未確定要素</h2>
+</div>
+<table>
+  <tr><th>要素</th><th>本ボードでの扱い</th><th>確定に必要な判断</th></tr>
+  <tr><td class="k">MiWの顔貌・毛・眼</td><td>描かない（闇に溶かす仮説）</td><td>設定画像の有無、外見の固定可否</td></tr>
+  <tr><td class="k">意匠の内容</td><td>抽象図形の仮案のみ</td><td>意匠の主題・特定の宗教に寄せるか</td></tr>
+  <tr><td class="k">棺の設備</td><td>候補（放射性・毒ガス等）を空間配置で示唆</td><td>採用する危険の種類と表現</td></tr>
+  <tr><td class="k">開封時の死亡確率</td><td>描かない</td><td>数値（非確定仕様）</td></tr>
+  <tr><td class="k">Run情報の内容</td><td>「表示されている姿」だけ</td><td>何の変数を出すか、個人HUDの仕様</td></tr>
+  <tr><td class="k">保存・収集時の扱い</td><td>未描画</td><td>マスコット化のゲーム上の待遇</td></tr>
+  <tr><td class="k">Player Anomalyとの関係</td><td>対象外</td><td>miw.md「未決事項」のまま</td></tr>
+</table>
+
+<footer class="top">
+  OpenCode 分／ work/visual-brainstorm/opencode/ 所有。Draft資料に基づく視覚仮説であり、実装指示ではない。
+</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,248 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-005",
+  "role": "B",
+  "title": "無音筒（置いた端末をRunのあいだ止める）— 作業用見出し",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "廃TSUTAYA",
+  "classification": "マップ固有",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "共有BGMはマップモデル直下の`Sound`として保持し、Server Stateで管理する。個人試聴がこの音を変えることはない。",
+      "source_status": "Status: Prototype: Implemented（実装済みプロトタイプ）",
+      "claim": "共有音はサーバー共有状態として管理されている。候補は同じ共有値へ別の書き込みを重ねる例にする。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "CRT 4台。チャンネル変更で停波ノイズを挟んで映像が切り替わり、放送中のチャンネルと停波中のチャンネルでは音が変わる。",
+      "source_status": "Status: Prototype: Implemented（実装済みプロトタイプ）",
+      "claim": "再生できる端末が既に複数あり、端末ごとに停止が可能。"
+    },
+    {
+      "path": "docs/systems/anomaly-interaction.md",
+      "section": "対象には個別出現確率、同時出現数などが含まれ得る。この変更はサーバーがRun状態として確定し、Run終了時に破棄する。",
+      "source_status": "ステータス: Draft",
+      "claim": "個人入力がRun共有のマップ状態を書き換えるときは、サーバーがRun状態として確定しRun終了で破棄する、という契約。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| 同一Run中 | 当該Runの終了で破棄する。マップ遷移では原則保持する |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "停止もRun終了で破棄される。"
+    }
+  ],
+  "design_hypothesis": "店内の再生端末は共有資源で、複数人で共用される。候補は端末を1台だけ黙らせる筒を置き、他者の再生をRunが終わるまで奪う。音を消すのではなく、鳴らす権利を他人に渡さない案。",
+  "experience": {
+    "goal": "自分の都合を通すために、共有の代償を払う行為にする。",
+    "player_choice": "気になる端末を止める。全部は止まらないので1台を選ぶ。止めずに持ち歩く。捨てる。",
+    "sacrifice_or_risk": "止めた端末は他の探索者にも使えなくなる。止められた側は、何が起きたかを知らされない。"
+  },
+  "placement_assumption": "新しい部屋・装置は増やさない。既存のCRTと試聴機のそばだけを置く場所とする。置く順番と判定は未確定。取得源は未実装の人物・施設であり創作しない。",
+  "components": [
+    {
+      "component": "Effect.WorldChange",
+      "availability": "catalog",
+      "usage": "対象端末の再生機能をRunの残り無効化する。マップの共有状態として扱う。"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "筒が置かれたまま残り、Run終了で消える個人Run状態。"
+    },
+    {
+      "component": "ArchiveMedia",
+      "availability": "catalog",
+      "usage": "検索UI・CRT・試聴の枠組み。媒体の実内容と共有音の選択は未実装。"
+    },
+    {
+      "component": "ItemLifecycle",
+      "availability": "catalog",
+      "usage": "正式な取得源とItemStackが未実装であることを前提とする。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "WorldChange",
+      "trigger": "筒を所持した個人が、対象の再生端末のそばで『置く』操作を行う",
+      "condition": "実行中であること、対象端末が再生可能であること、その端末が未停止であること。上限は未確定",
+      "result": "その端末の再生機能がRunの残り無効になる。個人だけが使える装置ではなく、端末そのものが止まる",
+      "target": "対象のマップ共有の端末状態",
+      "scope": "Run全体。停止中は他の参加者も使えない",
+      "lifetime": "同一Run中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "別の操作で解除できる場合はその時点で戻る。操作口は未確定",
+        "Run終了で破棄する。マップ内の移動では破棄しない"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。上書きとRun終了は別の条件として列挙する。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一端末への重複停止は1件。別の端末には非加算で並行しうる。固定秒数は持たない",
+        "conflict_resolution": "同じ共有音へ別の書き込みをする案と競合する。解決規則は候補側で決めず保留する"
+      },
+      "server_validation": "Serverが実行状態、端末の存在と再生可否、未停止であることを検証する",
+      "client_presentation": "クライアントは操作可否と結果表示のみ。停止の確定はServerが行う",
+      "feedback": {
+        "success": "端末から音が出なくなる。誰が止めたかは表示しない",
+        "failure": "何も変わらない。注意表示のみ",
+        "ambiguous": "他の参加者には『止まった』ことしか伝わらない"
+      }
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "筒を置く操作が確定した瞬間",
+      "condition": "上のEffectと同じ検証内で成立すること",
+      "result": "筒は置いた場所に残り、Run終了まで回収できない。取り消す操作は未確定",
+      "target": "筒1個と置いた個人",
+      "scope": "個人からマップの共有物へ。個人側の所有権は失われる",
+      "lifetime": "同一Run中",
+      "resolution": "instant",
+      "end_conditions": [
+        "置く操作の解決で確定",
+        "Run終了で筒も端末の停止も破棄される"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。停止が確定しなければ筒も移動しない。",
+      "stacking": {
+        "exception": false,
+        "rule": "筒一枚につき一件。同じ筒を二回置けない",
+        "conflict_resolution": "二人の個人が同じ端末へ置いた場合は解決規則が未定義のため保留する"
+      },
+      "server_validation": "Serverが検証後に個人側の筒を除去する。個人端末の表示を根拠にしない",
+      "client_presentation": "個人HUDから筒の表示が消える。消えたことのみを伝える",
+      "feedback": {
+        "success": "所持から筒が消え、端末が止まる",
+        "failure": "筒は残る",
+        "ambiguous": "止めた端末が後で戻るかどうかは未確定"
+      }
+    }
+  ],
+  "provides_traits": [
+    "個人入力でRun共有のマップ状態を減らす方向へ書き換える例",
+    "共有資源を占有することの代償を提示するアイテム"
+  ],
+  "connection_tags": [
+    "Item",
+    "Sound"
+  ],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": [
+        "同じ共有音を書き換える複数の効果の優先順位を規定する共通規則"
+      ],
+      "reason": "ROLE-B-004が同じ共有値へ書き込み、ROLE-B-005も書き込む。どちらが先に評価されるかは既存MDに規定が無いため、候補側で決めず採用判断として残す。",
+      "adoption_blocker": true
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "一度に何台まで止められるかは未確定。上限がないと店内が全部黙る。",
+    "停止の解除方法は未確定。置いたままが既定か。",
+    "端末の再生可否を試聴機とCRTで同じ扱いにしてよいかは未確定。",
+    "照合範囲：共有音のサーバー管理、CRTと試聴機の既実装、効果の保存境界、判断009の既存Prompt非改変、博士の依頼が定める補正と発生毎の減衰。矛盾は見つからず conflicts は空配列"
+  ],
+  "worldview": {
+    "defamiliarized_element": "音を消すのではなく、鳴らす権利を他人に渡さないという形にした。停止が個人への便宜ではなく、他者からの剥奪として出る。",
+    "in_world_rationale": "廃店舗化された店内には複数の再生端末があり、誰かが先に使って他の人が黙る順番が自然に生じる。管理者も整理もない状態での小さな睨み合いとして成立する。",
+    "meaning_left_ambiguous": "筒が何のために作られたのか、誰が置いたのか、止めた端末が後で戻るべきなのかは確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "個人入力からマップの共有端末状態を書き換える経路が未実装であり、正式な取得源もItemStackも無い（current-implementation.md / map-gimmick-ideas.md）。新しい消費品と新しい共有状態の書き込みが必要なため true とする。",
+  "new_logic": [
+    "端末単位の再生可否をRun共有状態として持つ",
+    "個人所持からマップ上の置き物へ移す操作。地形と部屋は増やさない"
+  ],
+  "prototype_cost": {
+    "band": "小",
+    "rationale": "端末と共有音は既に生成済み。再生可否のフラグを1つ足し、置く操作を1つ足すだけで済みのため、RPGの規則は触らない。",
+    "implementation_steps": [
+      "デバッグ付与で筒1本を持たせる",
+      "端末ごとに再生可否を持たせる",
+      "CRTのそばに『置く』操作を1つ足す",
+      "Play Soloで鳴らなくなることを確認する"
+    ],
+    "assumed_existing_parts": [
+      "CRT4台と試聴機3台",
+      "マップモデル直下の共有音の保持",
+      "枠境界を持つInventoryService"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Undecided",
+        "detail": "配る主体は未確定。店内にも都市にも該当する人物が未実装であり創作しない。試作のみデバッグ付与。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "1枠を消費するが、置けば消える。持ち歩き中はWorldへの作用がない。"
+      },
+      {
+        "route": "Use",
+        "status": "Proposed",
+        "detail": "『置く』に使って対象端末を止める。中核の操作。"
+      },
+      {
+        "route": "Present",
+        "status": "Undecided",
+        "detail": "誰に渡すかで意味が変わる。受け取る側の人物が未実装のため保留。"
+      },
+      {
+        "route": "Place",
+        "status": "Proposed",
+        "detail": "対象端末のそばに置き、Run共有の端末状態を書き換える。新たな装置は増やさない。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "Run終了で筒も停止も消える。置きっぱなしにすると回収できない。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "置かずに死に備える選択はできる。その場合は枠が1つ空く。"
+      },
+      {
+        "route": "Sell",
+        "status": "NotApplicable",
+        "detail": "換金しない。売ると他者との睨み合いという性格が崩れる。"
+      },
+      {
+        "route": "Quest",
+        "status": "Undecided",
+        "detail": "依頼主と依頼種別が未確定。博士の依頼が定める固有品交換と別系統にする必要がある。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "NotApplicable",
+        "detail": "廃TSUTAYAの異常は未実装で受理先が無く、Item Interactionとして作らない。"
+      }
+    ],
+    "ownership_state": "筒はplayer単位の個人所持。置く操作が確定した瞬間に個人からマップの置き物へ移り、個人HUDから消える。切断と再接続時の扱いは未決。",
+    "server_run_state": "端末の再生可否はServer権威のRun共有状態として保持し、個人表示では書き換えない。Run終了で破棄する。出現率と同時出現数は変更しないが、マップ状態を書き換えるためWorldChangeとして記録する。"
+  },
+  "html_file": "ROLE-B-005.html"
+}

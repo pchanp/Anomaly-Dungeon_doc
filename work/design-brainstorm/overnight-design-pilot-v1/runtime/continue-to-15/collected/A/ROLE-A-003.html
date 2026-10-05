@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-A-003 案内役の一言 — 8/31の帰還選択</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+<p class="sub">overnight-design-pilot-v1 ／ ROLE-A-003 ／ 8/31（マップ固有）／ NPC</p>
+<h1>案内役の一言 — 8/31の帰還選択</h1>
+<p>EVENINGに帰還へ向かうTrailの分岐で、帰還を知らせる通常NPCが1人だけ立つ。</p>
+<div class="badges"><span class="badge hyp">Idea</span><span class="badge">unreviewed</span><span class="badge unknown">案内内容は未定</span></div>
+<nav class="nav"><a href="index.html">← 一覧</a><a href="ROLE-A-003.json">同IDのJSON</a></nav>
+</header>
+
+<section id="hypothesis">
+<h2>何の案か</h2>
+<p>外へ出ることを知らせる人が1人いて、その情報が古い。</p>
+<ul>
+<li>案内の内容は、最後に巡回した時点の通路状態を覚えている。</li>
+<li>再巡回すると案内が更新される。更新には時間がかかる。</li>
+<li>攻撃を受けると案内が止まる。最後の案内は保持される。</li>
+</ul>
+<p><strong>選択と代償:</strong> 案内に従って進む（早い。ただし古い）、自分で確かめる（時間を使う）、攻撃して止める（案内は途切れる）。放置でも成立する。</p>
+<p class="sub">接続タグ: NPCState / Environment / AugustPhase ／ requires_code: true ／ conflicts 1件・未解決1件（JSONに記載）</p>
+</section>
+
+<section id="diagram">
+<h2>仕組みの図</h2>
+<div class="board">
+<svg viewBox="0 0 1000 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Trailの分岐に立つ案内役の案内が再巡回で更新され、攻撃で停止する3つの経路を示す図">
+<rect width="1000" height="340" fill="#0a1118"/>
+<text class="label" x="24" y="28">Trailの分岐（既存の構造）</text>
+<text class="label" x="620" y="28">案内役の個体状態</text>
+<path d="M40 150h150" stroke="#8ba2b3" stroke-width="3"/>
+<path d="M40 210h150" stroke="#8ba2b3" stroke-width="3"/>
+<path d="M190 150l60 30-60 30" stroke="#8ba2b3" stroke-width="3" fill="none"/>
+<circle cx="250" cy="180" r="16" fill="#172d3b" stroke="#70c9c3"/>
+<text class="small" x="276" y="186">案内役1体</text>
+<text class="small" x="24" y="256">分岐の位置は未確定。Trailは増やさない</text>
+
+<rect x="620" y="52" width="356" height="72" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="label" x="634" y="80">案内中</text>
+<text class="small" x="634" y="106">通路名を個人提示。理由と時刻は出さない</text>
+<rect x="620" y="148" width="356" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="634" y="176">再巡回で案内が更新</text>
+<text class="small" x="634" y="202">待つ時間が帰還判断の余裕になる</text>
+<rect x="620" y="244" width="356" height="72" rx="8" fill="#142330" stroke="#ea9380"/>
+<text class="label" x="634" y="272">攻撃で案内停止</text>
+<text class="small" x="634" y="298">最後の案内だけが残る。固定ペナルティはない</text>
+
+<path d="M266 172h180v-92h168" class="active"/>
+<path d="M608 80l9 6-9 6" class="active"/>
+<path d="M620 184h-56v-14" class="hyp-line"/>
+<path d="M564 170l9 6-9 6" class="hyp-line"/>
+<path d="M266 192h180v92h168" stroke="#ea9380" stroke-width="2" fill="none"/>
+<path d="M608 284l9 6-9 6" stroke="#ea9380" stroke-width="2" fill="none"/>
+<text class="small" x="24" y="318">この図で分かること：案内は更新でき、攻撃で止められる。情報の新しさは本人にも分からない。</text>
+</svg>
+</div>
+<p>図注：他者の情報は使えるが、その古さは示されない。信じるかどうかだけが決まる。</p>
+</section>
+
+<footer>overnight-design-pilot-v1 ／ ROLE-A-003 ／ 実表示は未確認（担当セッションでブラウザを使用していない）。</footer>
+</main>
+</body>
+</html>

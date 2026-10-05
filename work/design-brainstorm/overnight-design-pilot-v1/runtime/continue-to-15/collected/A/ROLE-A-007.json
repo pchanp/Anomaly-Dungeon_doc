@@ -1,0 +1,117 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-007",
+  "role": "A",
+  "title": "戦いは続く — SEKIGAHARAの戦闘NPC",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "SEKIGAHARA",
+  "classification": "マップ固有",
+  "category": "GimmickEvent",
+  "source_evidence": [
+    {"path": "docs/systems/map-gimmick-ideas.md", "section": "## SEKIGAHARA", "source_status": "Status: Mixed（案ごとに下記）", "claim": "複数勢力のNPCが常時戦闘する。NPCは有限数を常時生成せずActive NPC数の上限を設け、倒されたNPCを後方から補充する。SEKIGAHARAはIdeaで未実装である。"},
+    {"path": "docs/systems/game-rules.md", "section": "## 戦闘とアノマリー", "source_status": "Status: Draft（草案）", "claim": "戦闘は探索中のイベントやアノマリー反応から発生する。戦闘イベントには敵NPCの出現、追跡、包囲、増援、介入などが含まれ得る。"},
+    {"path": "docs/decisions/019-player-anomaly-runtime-pvp-and-return.md", "section": "## 決定", "source_status": "Status: Accepted（採用済み）", "claim": "Player Anomalyは通常NPCとInteractionできない。通常プレイヤー同士にHP 80%の下限が常に適用される。"}
+  ],
+  "design_hypothesis": "戦闘NPCがプレイヤーを認識しない状態を仮定します。戦闘はNPC同士で完結し、プレイヤーが介入した個体だけがプレイヤーを対象にします。勢力・地形・戦況は未確定のまま据え置き、上限と後方補充はSEKIGAHARAのIdeaに従います。",
+  "experience": {
+    "goal": "自分に関係のない戦いを、風景として横切る判断を出す。",
+    "player_choice": "戦場の外側を通り過ぎる／介入する（双方から反応される）／弱った個体だけ撃破する（補充は続く）。",
+    "sacrifice_or_risk": "介入すると敵対になるが、得られるものは定義していない。介入しなければ何も起こらないため、参加の動機は未確定。"
+  },
+  "placement_assumption": "SEKIGAHARAは未実装であり、地形・部屋・配置は提案しない。個体の座標は各マップ側の判断に委ねる。",
+  "components": [
+    {"component": "NPCState", "availability": "catalog", "usage": "戦闘NPCの状態とプレイヤー非反応をServerが保持する。"},
+    {"component": "Effect.WorldChange", "availability": "catalog", "usage": "Active NPC枠と後方補充をRun共有で扱う。"},
+    {"component": "Effect.StateChange", "availability": "catalog", "usage": "介入個体の一時的な対象化を扱う。"}
+  ],
+  "effects": [
+    {
+      "kind": "WorldChange",
+      "trigger": "SEKIGAHARAの戦闘イベントが継続している。",
+      "condition": "選択中のマップがSEKIGAHARAであること。上限と補充の数値は未定。",
+      "result": "後方補充で戦闘が続いたままになる。プレイヤーの資産や進捗には影響しない。",
+      "target": "Run共有のActive NPC枠",
+      "scope": "Run全体",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": ["マップ終了", "Run終了"],
+      "end_mode": "any",
+      "end_rule_reason": "複数条件のいずれかで補充を止める。戦いの終結は未定。",
+      "stacking": {"exception": false, "rule": "補充はイベントごと。上限は非加算1件。", "conflict_resolution": "他の出現枠との競合規則は未確定のため保留。"},
+      "server_validation": "Serverが枠を管理する。個人側の要求では補充しない。",
+      "client_presentation": "戦闘の表現のみ。枠の残数は表示しない。",
+      "feedback": {"success": "倒した個体の数がまた増える。", "failure": "上限に達すると補充が止まる場合がある（未実装）。", "ambiguous": "補充がどこから来るかは示さない。"}
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "プレイヤーが戦闘個体に攻撃を当てる。",
+      "condition": "対象の個体が戦闘中で、攻撃が成立したこと。",
+      "result": "その個体だけがプレイヤーを対象化する。戦場全体の反応は変わらない。",
+      "target": "対象の個体（Server Run共有）",
+      "scope": "Run共有の個体",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": ["個体が戦闘不能になる", "マップ終了", "Run終了"],
+      "end_mode": "any",
+      "end_rule_reason": "戦闘不能で解除する。復帰時間は定めない。",
+      "stacking": {"exception": false, "rule": "同一個体への対象化は非加算1件。", "conflict_resolution": "他Effectとの順序は共通既定に従う。"},
+      "server_validation": "Serverが攻撃の成立と対象の状態を検証する。",
+      "client_presentation": "個体の構えと攻撃方向のみ。",
+      "feedback": {"success": "その個体がプレイヤーへ向く。", "failure": "他の個体は変化しない。", "ambiguous": "なぜその個体だけかは示さない。"}
+    }
+  ],
+  "provides_traits": ["プレイヤーへ無反応の戦闘集団を配置できる", "介入した個体だけが対象化する"],
+  "connection_tags": ["NPCState", "WorldChange", "Combat", "Environment"],
+  "refs": [
+    {"target_id": "ROLE-C-007", "kind": "optional_connection", "required_traits": ["戦場の外側を通り過ぎる判断ができる"], "fallback": "接続なしでも成立する。Cの候補が無くても結果は同じ。", "resolution": "reserved_unresolved"}
+  ],
+  "unresolved_refs": [
+    {"target_id": "ROLE-C-007", "required_traits": ["戦場の外側を通り過ぎる判断ができる"], "reason": "Cの候補が配布されておらず内容が不明。語彙のみ記録する。", "adoption_blocker": false},
+    {"target_id": null, "required_traits": ["勢力数と戦闘ロジックを決める方針"], "reason": "ID未指定の要求。勢力と戦況は未確定のため共通設計側の判断が必要。", "adoption_blocker": true}
+  ],
+  "conflicts": [
+    {
+      "source_path": "docs/systems/map-gimmick-ideas.md",
+      "existing_rule": "SEKIGAHARAはIdeaで、勢力・戦況ロジックは未決と記されている。",
+      "proposal_difference": "本候補は戦闘NPCがプレイヤーを認識しないという無反応条件を明示する。",
+      "correction": "勢力・地形・戦況は決めず、無反応を個体AIの要求として扱う。",
+      "reason_correctable": "既存のIdeaの枠内で条件だけを追加する。",
+      "decision_needed": "戦闘NPCがプレイヤーを無視してよいか。"
+    }
+  ],
+  "uncertainties": [
+    "勢力数、上限、補充周期、個体の強さは未定。数値を決めていない。",
+    "Player Anomalyとの戦闘時のHP下限は判断019に記載がなく未決。",
+    "SEKIGAHARAは未実装であり、実装の有無は未確認。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "歴史的な戦場ではなく、理由を持たないまま続く戦闘が風景になっている状態として扱う点。プレイヤーは横切る側になる。",
+    "in_world_rationale": "古い設備が残る文明では、理由のない反復が常態化として成立する。ただし誰が誰と戦うかは資料に記載がなく、創作しない。",
+    "meaning_left_ambiguous": "なぜ戦いが続くのか。誰が戦っているのか。補充を送るのは誰か。終結はするのか。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "通常の敵AIが未実装で、SEKIGAHARA自体が未実装のため。コード生成の許可ではない。",
+  "new_logic": ["戦闘NPCの個体AIと非反応条件", "Active NPC枠と補充の判定", "介入個体だけの一時的な対象化"],
+  "prototype_cost": {
+    "band": "大",
+    "rationale": "戦闘AI、補充、上限、介入反応のすべてが新規で、最小限でも複数個体での試しが必要。実時間の見積もりは出していない。",
+    "implementation_steps": ["少数の個体で戦闘AIを試す", "上限と補充を入れる", "非反応と介入反応を分ける", "Player Anomaly時の挙動を記録する"],
+    "assumed_existing_parts": ["通常のHPとDamageの受け口", "Server権威のRun状態"]
+  },
+  "role_details": {
+    "npc_purpose": "戦闘だけが目的で、世界の説明はしない。無反応も攻撃も結果として帰結する。個体数は枠上限内で補充される。",
+    "player_anomaly_handling": "判断019によりPlayer Anomalyは通常NPCとInteractionできないため、無反応条件がそのまま効く。HP下限は判断019に規定がなく未決。",
+    "mob_contract": {
+      "applicable": false,
+      "spawn_condition": "SEKIGAHARA Idea枠（後方補充）を参照するが、イベント由来の湧きは扱わない。イベント由来の通常モブはROLE-A-013で扱う。",
+      "population_cap": "SEKIGAHARAのIdeaに従い上限と後方補充がある。数値は未定。枠はAnomalyの同時出現数とは別のNPC枠。",
+      "non_combat_response": "プレイヤーには無反応。介入した個体だけが対象化する。",
+      "exit_condition": "戦闘不能で枠を空け、補充で戻る。SEKIGAHARAのIdeaに従う。",
+      "entity_distinction": "通常NPCの戦闘個体でありAnomaly Entityではない。アノマリー相互作用は受理しない。"
+    }
+  },
+  "html_file": "ROLE-A-007.html"
+}

@@ -1,0 +1,250 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-012",
+  "role": "C",
+  "title": "位置を預ける",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "研究所",
+  "classification": "マップ固有",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/anomaly-interaction.md",
+      "section": "クライアントとサーバーの責務",
+      "source_status": "ステータス: Draft",
+      "claim": "個人だけに現れる認識差と、パーティ全体へ影響する状態変化はScope を明示して分離する。クライアントは視覚、音響、局所的な観察証拠を提示できるが、それだけで共有状態を確定しない。"
+    },
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "ServerとClientの責務",
+      "source_status": "Status: Draft（草案）",
+      "claim": "ゲーム進行上の事実はServerが決定し、Clientは主に表現を担う。Map State、NPC State、Combat Event、Portal State、Quest State、Run State はServerが担う。"
+    },
+    {
+      "path": "docs/anomalies/whisper.md",
+      "section": "追従先の移送",
+      "source_status": "Status: Draft（草案）",
+      "claim": "whisperは付き従っているプレイヤーが指定NPCへ接触したとき、そのNPCへ追従先を移せる。この移送がwhisperに対する主要なAnomaly Interactionである。移送後の作用の扱いは未決定である。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "重ね掛けの既定規則",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "同じEffect IDが同じ対象へ再適用された場合は既定で効果量を足さず1件とする。固定の秒数を持つ一時効果は残り時間を更新する。"
+    }
+  ],
+  "design_hypothesis": "研究所の構造は未確定だが、博士のQuestは参加者を同じRunへ集める。本候補は、同一Runの参加者を1人指名して二人の位置を一度だけ入れ替えるアクション系スキルとする。入れ替えは同時に起こり、二人とも向きと速度は保持しない。代償として、それぞれが本人だけを持つ個人記録も入れ替わる。体力と装備は変わらない。戻す手段はない。",
+  "experience": {
+    "goal": "相手を自分の傍へ入れる代わりに、自分の記録を相手に渡す判断を出す。協力の効率ではなく、記録の持ち主を交換する。",
+    "player_choice": "相手を自分の位置へ入れるか、他の協力手段を選ぶか。入れ替えると自分の記録は相手のものになり、相手は自分の記録を受け取る。",
+    "sacrifice_or_risk": "自分の個人記録が相手のものに置き換わる。戻す手段はない。二人は同時に動くため、片方だけ先に羁り出すことはできない。"
+  },
+  "placement_assumption": "研究所（Idea）の中で使う案で、室内の構造、NPC、配置ポイントは提案しない。使うのは既存のPlayerの位置と、個人記録の保持だけである。研究所以外のマップでも同じ仕組みとして成立し得る。指名できる人数と硬直の有無は未確定。",
+  "components": [
+    {
+      "component": "Effect.Move",
+      "availability": "catalog",
+      "usage": "本人と指名先の位置を入れ替える。地形は変更しない。"
+    },
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "本人と指名先の個人記録を入れ替える。共有の地図表現は変更しない。"
+    },
+    {
+      "component": "SkillActivation",
+      "availability": "catalog",
+      "usage": "既存の3スキルと同じ発動経路を持つ必要がある。実装はPartialで、名指しと記録の交換は含まれない。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "Move",
+      "trigger": "対象が本スキルを発動し、同一Runの参加者を1人指名したとき。",
+      "condition": "指名先が同一Runの参加者で、現在マップ内にいること。対象と指名先がどちらも戦闘不能でないこと。",
+      "result": "対象と指名先の位置を入れ替える。二人とも同時に移動し、向き、速度、視線は保持しない。体力と装備は変わらない。地形と配置は変更しない。",
+      "target": "発動した本人と指名した相手、合計2名",
+      "scope": "個人と個人。Runの共有フラグ、地図、NPCの思考は変えない",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": [
+        "位置の入れ替えは即時解決する",
+        "戻す手段は本案では用意しない",
+        "どちらかがRunから外れた時点で破棄される",
+        "Run終了時に破棄される"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "位置の入れ替えは即時解決であり、保存する状態は無い。戻らない設計なので、逆方向の操作は作らない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effectと同一対象は非加算1件。同じ二人で2回続けて入れ替えない。",
+        "conflict_resolution": "Roll、バックステップ、グラップリング、whisperの追従先移送、および008や014など位置や結果を変える効果との適用順は未定のため保留する。"
+      },
+      "server_validation": "Serverが指名先が同一Runの参加者であること、マップ内にいること、どちらも戦闘不能でないことを検証する。クライアントは入れ替え先を指定できない。",
+      "client_presentation": "本人と指名先の個人画面に入れ替えが起きた表示を出す。共有の地図表現は変えない。",
+      "feedback": {
+        "success": "二人にだけ入れ替えの事実を示す表示を出す。",
+        "failure": "不成立のときは二人にだけ短い表示を出す。ワールド状態は変えない。",
+        "ambiguous": "入れ替えが成立した理由や、どこから来た位置かは表示しない。"
+      }
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "上のMoveが解決し、同じ瞬間に。",
+      "condition": "位置の入れ替えが成立したこと。二人とも個人記録を保持していること。",
+      "result": "本人と指名先の個人記録を入れ替える。記録の種類は問わない。共有の地図表現、仲間の画面、依頼の進行は変更しない。",
+      "target": "発動した本人と指名した相手の個人記録のみ",
+      "scope": "個人と個人。地図表現や他の参加者には出さない",
+      "lifetime": "同一Run中",
+      "resolution": "instant",
+      "end_conditions": [
+        "記録の交換は即時解決する",
+        "どちらかがRunから外れた時点で残った記録は破棄される",
+        "Run終了時に破棄される"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "記録の交換は即時解決であり、合成しない。1回だけ入れ替え、元の組へ戻す記録は作らない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effectと同一対象は非加算1件。記録は交換されるだけで、量は増減しない。",
+        "conflict_resolution": "同じ記録を複数のスキルが作る場合の重なりは、個別Effectの保存先の問題として保留する。"
+      },
+      "server_validation": "Serverが二人の個人記録の入れ替えを同時に処理する。クライアントから記録内容を書き換えられない。",
+      "client_presentation": "本人と指名先の個人画面だけ。仲間の画面と共有の地図表現には出さない。",
+      "feedback": {
+        "success": "二人にだけ記録が入れ替わった表示を出す。",
+        "failure": "記録がない場合は何も表示しない。",
+        "ambiguous": "受け取った記録が誰のものだったかは表示で示さない。"
+      }
+    }
+  ],
+  "provides_traits": [
+    "本人と相手1人の位置を一度だけ入れ替えられる",
+    "入れ替えで互いの個人記録も入れ替わる",
+    "戻す手段は本案では用意しない"
+  ],
+  "connection_tags": [
+    "Skill",
+    "Party",
+    "Movement",
+    "InformationChange"
+  ],
+  "refs": [
+    {
+      "target_id": "ROLE-C-011",
+      "kind": "optional_connection",
+      "required_traits": [
+        "自分の後ろの位置に本人専用の印の記録を作れる"
+      ],
+      "fallback": "C-011が成立しない場合、個人記録は持ち越せないが、位置の入れ替え自体は成立する。",
+      "resolution": "reserved_unresolved"
+    }
+  ],
+  "unresolved_refs": [
+    {
+      "target_id": "ROLE-C-011",
+      "required_traits": [
+        "自分の後ろの位置に本人専用の印の記録を作れる"
+      ],
+      "reason": "同一セッションでC-011を作成したが検証前であり、成立を確認していない。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": null,
+      "required_traits": [
+        "個人単位の記録をサーバー側で交換する経路があること",
+        "位置を入れ替えても地形や配置を壊さない経路があること"
+      ],
+      "reason": "current-implementation.md には個人記録の交換や位置の入れ替えの記録がない。既存の移動系で足りるかも判断できない。",
+      "adoption_blocker": false
+    }
+  ],
+  "conflicts": [
+    {
+      "source_path": "docs/anomalies/whisper.md",
+      "existing_rule": "whisperは付き従っているプレイヤーが指定NPCへ接触すると、そのNPCへ追従先を移せる。この移送は主要なAnomaly Interactionであり、移送後の作用の扱いは未決定である。",
+      "proposal_difference": "本候補は二人の位置を入れ替え、記録がどちらへ移るかを変える。相手はNPCではなく参加者に限る。",
+      "correction": "採用する場合は両者を別のEffectとして扱い、先に発火した方を記録する。判断018の内容とwhisperの仕様は変更しない。",
+      "reason_correctable": "whisperの追従先、選択UI、anxietyのいずれも変更しない。",
+      "decision_needed": "本候補とwhisperの移送が同時に成立した場合、どちらを優先するか。未定のままにするか。"
+    }
+  ],
+  "uncertainties": [
+    "矛盾は確認していない。whisperの仕様を変更せず、個人単位の提示と共有事実を分離する方針に沿う。",
+    "指名できる人数が1人で固定か。",
+    "入れ替えの瞬間に硬直が入るかどうか。",
+    "入れ替えられたあとの向きと速度の扱い。",
+    "個人記録の種類を限定すべきか。印のように見える差があるものは別扱いにするか。",
+    "Player Anomaly状態の参加者と入れ替えた場合。本候補では扱わない。",
+    "二人とも戦闘不能でないという前提を、Server側でどう検証するか。",
+    "同じ二人で2回続けて入れ替えられるか。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "位置を入れ替えることを移動手段としてではなく、二人の記録を交換する操作として提示する。体力も装備も変わらない。",
+    "in_world_rationale": "物体が同時に二か所にないという想定が逸脱し得る、という逸脱の定義の範囲内で、二人の位置が入れ替わるという観察は成立し得る。ただしなぜ記録まで一緒に移るのか、博士や装置との関係は説明しない。",
+    "meaning_left_ambiguous": "記録が相手へ移るのが当然なのか、異常なのかは確定しない。博士の真意、組織の事情、装置の由来にも触れない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "必要な2経路（参加者を1人指名して二人を入れ替える処理、個人単位の記録を二人分交換する処理）のいずれも current-implementation.md に実装記録がない。既存3スキルには位置の入れ替えも記録の交換も含まれない。",
+  "new_logic": [
+    "参加者を1人指名し、二人の位置を同時に入れ替える経路",
+    "個人単位の記録を二人分交換する経路と、元の組へ戻さない制御"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "Characterの移動と個人属性の保持は既存の実装があるため流用できる。新規なのは指名と入れ替えの経路、記録の交換、地形を貫通しないことの確認の3点。1人セッションでは指名を試せないため、二人分の確認には別のセッションが要る。",
+    "implementation_steps": [
+      "デバッグフロアで自身を1回だけ別の地点へ入れ替え、地形を貫通しないことを確認する",
+      "個人属性を1件だけ持ち、交換後に本人と他人の値が入れ替わることを確認する",
+      "記録を戻す経路が存在しないことを確認する",
+      "2人目の指名と入れ替えは複数人セッションで試すか、未確認として残す"
+    ],
+    "assumed_existing_parts": [
+      "既存のCharacter移動とCollisionGroup",
+      "PlayerのAttributeとCharacter",
+      "RunStateと参加者の管理",
+      "既存3スキルの発動とクールダウン"
+    ]
+  },
+  "role_details": {
+    "skill_family": "アクション",
+    "rank": null,
+    "rank_rationale": "アクション系はランク1が2案、ランク2が3案あるが、参加者を指名して二人を入れ替える設計は、どの段にも明確に属さない。根拠のない数値は置かずにnullとした。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "同一Runの参加者を1人指名し、二人の位置を入れ替える。個人記録も入れ替わり、戻す手段はない。"
+      },
+      {
+        "level": 2,
+        "proposal": "指名できる相手を1人から、同一Runの参加者全員へ広げられる案。ただし同時参加者は最大5人で、全員に同じ権限を渡すとは限らない。"
+      },
+      {
+        "level": 3,
+        "proposal": "入れ替えを2回まで増やせる案。ただし記録の混乱が増すため、1回の方が都合がよい。"
+      }
+    ],
+    "equipped_slot_policy": "アクション系の1枠として使う。4枠との組み合わせも切替のタイミングも決めない。装備切替と枠占有の条件は未決定のため触れない。",
+    "normal_attack_link": "入れ替えは攻撃の入力としては扱わない。直前にワンツーの入力中であっても入れ替えは成り立たない。連鎖の入力受付は未確定。",
+    "avoids": "相手を自分の傍へ近づけるための移動の一部。ただし二人の関係は変えず、近くの異常にも触れない。",
+    "intervenes_in": "本人と指名先の位置と個人記録。地形、配置、NPCの思考、出現率、Exposure、依頼の進行は変えない。",
+    "sacrifices": "自分の個人記録が相手のものに置き換わる。戻す手段はない。向きと速度は保持しない。",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-012.html"
+}

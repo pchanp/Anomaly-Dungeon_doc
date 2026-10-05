@@ -1,0 +1,247 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-003",
+  "role": "B",
+  "title": "日付の書き残し（8/32の日付を紙に写す）— 作業用見出し",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "8/31",
+  "classification": "マップ固有",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "8/32専用Partsが11個生成され、通常は非表示・非衝突。遷移時に一括で表示する。",
+      "source_status": "Status: Prototype: Implemented（実装済みプロトタイプ）",
+      "claim": "8/32遷移時にだけ存在する表示要素があり、同じマップ内で日付が変わる事象が実装済み。"
+    },
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "8/32専用Partsが11個生成され、通常は非表示・非衝突。遷移時に一括で表示する。",
+      "source_status": "Status: Prototype: Implemented（実装済みプロトタイプ）",
+      "claim": "日付板の表示は日付変更に合わせて更新される。候補はこれを『読む場所』として使う。"
+    },
+    {
+      "path": "docs/systems/quests.md",
+      "section": "**Discovery**は、FILE、NPC、環境、アノマリー、関連アイテムなどを発見・認識したという記録であり、能動的な依頼ではない。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "記録であり依頼ではないという区別。候補の紙はこの境界上に置く。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| 永続 | Runをまたいで保持する。取得・解除条件は個別に定義する |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "永続の保存境界はRunをまたいで保持する。候補の紙だけがこれを使う。"
+    }
+  ],
+  "design_hypothesis": "8/32は現実ではない日付で、日付板の表示だけが入れ替わる。候補は日付板のそばで使うことで、その日付を紙一枚に写し、Runをまたいで本人だけが持ち越せるようにする。世界は何も変わらない。変わるのは持ち帰る紙だけ。",
+  "experience": {
+    "goal": "意味のない場所へ証人になる行為と、紙一枠の消費を同じ選択にする。",
+    "player_choice": "日付板のそばで使って紙一枚を得る。使わずに捨てる。あるいは確保枠に入れて死亡に備える。",
+    "sacrifice_or_risk": "紙は何にも使えない。8/32の日付を写すと、それは現実には存在しない日付の記録になる。"
+  },
+  "placement_assumption": "新しい地形・部屋は提案しない。既存の二枚の「日付板」のそばだけを場所とする。紙を置く棚や容器は増やさない。取得源となる人物・施設は8/31に未実装であり創作しない。",
+  "components": [
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "紙一枚が個人所持に入り、次のRunへ持ち越される。保存境界は永続。"
+    },
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "使用時に今の日付を本人だけが一度だけ読む。一時。"
+    },
+    {
+      "component": "InventoryBoundary",
+      "availability": "catalog",
+      "usage": "20枠と初期4枠の境界を前提に参照する。枠数は増やさない。"
+    },
+    {
+      "component": "ItemLifecycle",
+      "availability": "catalog",
+      "usage": "正式な取得源とItemStackが未実装であることを前提とする。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "日付板のそばで、所持個人が『書き取る』操作を行う",
+      "condition": "実行中であること、日付板が存在すること、紙が個人所持にあること。日付は現在のフェーズから読む",
+      "result": "紙一枚が個人の永続所持に追加され、次のRunの開始時に持ち越される。紙の内容が世界状態を変えることはない",
+      "target": "紙一枚と操作した個人",
+      "scope": "個人。共有のRun状態もマップも書き換えない",
+      "lifetime": "永続",
+      "resolution": "instant",
+      "end_conditions": [
+        "紙を廃棄する操作で消える。永続でも解除条件は持つ",
+        "死亡時に確保枠の外なら、そのRunで喪失物として消える。次のRunへは残らない"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。永続でも廃棄は成立する条件として個別に定義した。",
+      "stacking": {
+        "exception": false,
+        "rule": "紙は一枚ずつ持つ。複数枚は非加算で累積するが上限は未確定。固定秒数は持たない",
+        "conflict_resolution": "別のEffectが同じ紙へ作用する場合は解決規則が未定義のため保留する"
+      },
+      "server_validation": "Serverが実行状態、日付板の存在、紙の個人所有を検証する",
+      "client_presentation": "クライアントは操作可否のみ。持ち越しはServerが確定する",
+      "feedback": {
+        "success": "所持に一枚増え、画面に日付が一度だけ出る",
+        "failure": "何も起こらない。注意表示のみ",
+        "ambiguous": "8/32の日付でも同じ形式で書ける。違いを警告しない"
+      }
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "書き取る操作が成立した直後",
+      "condition": "対象個人が参加中であること",
+      "result": "今の日付を本人だけが一度だけ読む。常時表示に残るものではない",
+      "target": "対象個人",
+      "scope": "個人",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": [
+        "提示が終われば消える。後から読み返すことはできない"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。一度の提示だけを成立条件とする。",
+      "stacking": {
+        "exception": false,
+        "rule": "一操作一件。再適用しても残り時間は更新しない",
+        "conflict_resolution": "他の表示との競合は表示枠の優先順位が未決定のため強制作業しない"
+      },
+      "server_validation": "Serverが日付と紙を検証して提示を発行する。クライアントが日付を決めることはない",
+      "client_presentation": "画面端に短い表示を1回出し、他者の画面には出さない",
+      "feedback": {
+        "success": "表示が1回だけ出る",
+        "failure": "表示なし",
+        "ambiguous": "その日付が現実にあるかの説明は出さない"
+      }
+    }
+  ],
+  "provides_traits": [
+    "Runをまたぐ永続の個人所持を1件だけ作る例",
+    "世界状態を変えず証拠だけが残る記録型のアイテム"
+  ],
+  "connection_tags": [
+    "Item",
+    "Observation"
+  ],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": [
+        "Discovery（記録）の保存形式と、アイテムとしての永続所持を併存させる資料"
+      ],
+      "reason": "quests.mdはDiscoveryの保存形式を未決とし、effect-components.mdは永続をRunをまたぐ保持と定義する。両者の関係を候補側で決めると実装仕様を創作するため、採用判断として残す。",
+      "adoption_blocker": false
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "8/32の日付を写した紙をどこへ提出できるかは未確定。依頼主も交換先も未実装。",
+    "記録として数えるかアイテムとして数えるかで枠の扱いが変わる。Discoveryとの境界は未決。",
+    "複数枚の扱いは未確定。",
+    "照合範囲：日付板の表示更新と8/32専用Parts（実装済み）、効果の永続境界、Discoveryと依頼の分離、判断005のRun初期化。矛盾は見つからず conflicts は空配列"
+  ],
+  "worldview": {
+    "defamiliarized_element": "8/32という現実にはない日付を、証拠として一枚の紙に残す。日付が変わる世界ではなく、日付を持ち帰れる側だけに作用させた。",
+    "in_world_rationale": "8/32は同一マップの状態変化として既に実装済みで、出口が閉じてExposureが上がる。探索者が何が起きたかを持ち帰りたいという動機は自然に生じる。世界側は8/32を認めないため、紙は証拠ではなく出発点にしかならない。",
+    "meaning_left_ambiguous": "誰が日付を記録したのか、なぜその紙なのか、8/32は誤りか設計かは確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "Runをまたぐ個人所持の永続化と、記録データとの切り分けが未実装（current-implementation.md / quests.md）。次のRunへ持ち越す経路が要るため true とする。",
+  "new_logic": [
+    "個人所持のうちRunをまたいで保持する品目の枠",
+    "日付板のそばでのみ成立する書き取り操作。地形は増やさない"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "日付板は既に生成済み。足すのは個人所持の永続化と表示1回だけで大改造は要らない。一方、永続化そのものは未実装なので中程度とする。",
+    "implementation_steps": [
+      "デバッグ付与で紙一枚を持たせる",
+      "個人所持にRunをまたぐ保持欄を1つだけ足す",
+      "日付板のそばに書き取り操作を1つ置く",
+      "Play Soloで次の受付へ紙が残っていることを確認する"
+    ],
+    "assumed_existing_parts": [
+      "日付板2枚の生成と表示更新",
+      "枠境界を持つInventoryService",
+      "クライアントの個人表示"
+    ]
+  },
+  "role_details": {
+    "item_kind": "未確定",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Undecided",
+        "detail": "配る主体は未確定。8/31に通常NPCや施設が未実装であり創作しない。試作のみデバッグ付与。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "1枠だが永続する。持ち越す品と枠を取り合う。"
+      },
+      {
+        "route": "Use",
+        "status": "Proposed",
+        "detail": "日付板のそばで書き取る。一回だけ日付が読める。"
+      },
+      {
+        "route": "Present",
+        "status": "Undecided",
+        "detail": "誰に渡っても用途が決まっていない。依頼主や施設が未実装のため保留。"
+      },
+      {
+        "route": "Place",
+        "status": "NotApplicable",
+        "detail": "置かない。証拠は持ち歩くもので、置くと次のRunへ残らない。試作でも操作口を持たない。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "確保枠の外なら死亡時に失う。失っても8/32そのものは変わらない。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "入れれば死んでも残るが、枠を1つ恒久消費する。"
+      },
+      {
+        "route": "Sell",
+        "status": "NotApplicable",
+        "detail": "換金しない。売ると記録ではなく物になり候補の性格が崩れる。"
+      },
+      {
+        "route": "Quest",
+        "status": "Undecided",
+        "detail": "依頼主と依頼種別が未確定。博士の依頼が定める固有品交換と明確に別系統にする必要がある。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "NotApplicable",
+        "detail": "8/31は共通の異常発見仕組みが未実装で受理先が無く、Item Interactionとして作らない。"
+      }
+    ],
+    "ownership_state": "紙はplayer単位の個人所持。Run終了で消える品と異なり次のRunへ持ち越す。表示は本人だけの一度きりのもの。切断と再接続時の復元は未決。",
+    "server_run_state": "永続の個人状態を書き換えるが、Run共有のマップ状態は変えない。出現率と同時出現数は変更しないためWorldChangeのEffectは発生しない。"
+  },
+  "html_file": "ROLE-B-003.html"
+}

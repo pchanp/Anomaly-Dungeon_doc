@@ -1,0 +1,257 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-006",
+  "role": "C",
+  "title": "停波の隙間",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "廃TSUTAYA",
+  "classification": "マップ固有",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/current-implementation.md",
+      "section": "実装済みの基盤",
+      "source_status": "Status: Implemented（実装棚卸し）",
+      "claim": "TSUTAYAのCRTでチャンネルを変更できる。停波ノイズを挟んで切り替わり、チャンネルごとに音が変わる。試聴機で個人試聴でき、試聴は一定時間で終わり、共有BGMはSERVER Stateとしてマップモデル直下に保持され、試聴では変わらない。"
+    },
+    {
+      "path": "docs/systems/observation-and-recognition.md",
+      "section": "既存案への適用",
+      "source_status": "Status: Draft（草案）",
+      "claim": "MiWの現在のProximityPromptによる観測は明示Interactionであり、視野観察の実装ではない。既存Observerは近接によるExposure取得であり、視野観察の実装ではない。既存の近接判定やPromptを、名前だけを理由に観察システムへ置き換えない。"
+    },
+    {
+      "path": "docs/systems/observation-and-recognition.md",
+      "section": "Server権威とRemote境界",
+      "source_status": "Status: Draft（草案）",
+      "claim": "ServerはClientのカメラ方向、画面内状態、UI被覆状態を直接確認できない。Clientからの観察進行は要求であり、世界状態の証明ではない。経路開放、報酬、Exposure、共有State TransitionはServerだけが確定する。"
+    },
+    {
+      "path": "docs/systems/anomaly-interaction.md",
+      "section": "Observation Interaction",
+      "source_status": "ステータス: Draft",
+      "claim": "個別アノマリー側では、どの認識段階で何が起きるか、観察がExposureや相手側の反応を伴うかを定義する。視界内に入っただけで結果を確定してはならない。"
+    },
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "探索系",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "SHADEの「検知されない」がすべてのAnomaly Entityに通用するか、どのタイミングまで不可視かは未決定。認知アノマリーの観察や認識、個別アノマリーの検知ルールを一律に上書きしない。"
+    }
+  ],
+  "design_hypothesis": "廃TSUTAYAのCRTはチャンネルを変えると停波ノイズを挟んで映像と音が切り替わる。提案は、この停波ノイズの短いあいだだけ、自分自身の視覚による観察の進み方を止められるアクション系スキルである。止まるのは観察の進み方、接近によるExposureの蓄積、鳴っている停波ノイズそのものによる音の入力であり、不可視にはならない。窓のあいだは自分の観察の進みも止まるため、周りにあるものを自分で確かめられない。",
+  "experience": {
+    "goal": "視界が分断された店内を、「見られている」という感触を受け入れたまま横切れるようにする。",
+    "player_choice": "この数秒を横切りに使うか、観察の進みを使わないまま別の判断に回すかを選ぶ。",
+    "sacrifice_or_risk": "窓のあいだは自分が止まっていても、止まったままでは情報を増やせない。停波ノイズは音として店内へ届き、受理は個別資料の定義に委ねる。窓の長さは未定で、外したらそのまま通常の観察に戻る。"
+  },
+  "placement_assumption": "既存の廃TSUTAYAにある4台のCRTと、そのチャンネル切替という既存実装の上に乗せる案。新たなルーム、通路、棚、放送設備、配置ポイントは提案しない。店内側が既に持つ停波ノイズの演出そのものは変えず、本候補はその時間窓だけを扱う。窓の長さは未確定で、CRTごとに差があるかは決めていない。",
+  "components": [
+    {
+      "component": "Observation",
+      "availability": "catalog",
+      "usage": "対象本人の視覚観察の進み方（Observe Evidenceの蓄積）の進み方を窓のあいだ止める。近接のExposureとは別の経路として扱う。"
+    },
+    {
+      "component": "Effect.RuleOverride",
+      "availability": "catalog",
+      "usage": "窓のあいだ、対象本人の観察進行の進み方の評価に優先して入る。対象は本人に限る。"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "窓のあいだ、技能発動と通常攻撃の受付を封じる。硬直ではなく操作の受付拒否として扱う。"
+    },
+    {
+      "component": "ArchiveMedia",
+      "availability": "catalog",
+      "usage": "既存のCRTと停波ノイズの実装済みプロトタイプを利用する。共有BGMは変更しない。実装はPartialで、窓の識別は含まれない。"
+    },
+    {
+      "component": "SkillActivation",
+      "availability": "catalog",
+      "usage": "既存の3スキルと同じ発動経路を持つ必要がある。実装はPartialで、観察進行の差し替えは含まれない。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "RuleOverride",
+      "trigger": "対象が廃TSUTAYAのCRTでチャンネルを変更し、停波ノイズが始まっているあいだに本スキルを発動したとき。",
+      "condition": "対象が当該停波ノイズの発生源であるCRTの近くにいること。停波ノイズ外の時間では不成立。",
+      "result": "対象本人の視覚観察の進み方が、窓のあいだ進まなくなる。すでに積み上がった観察の値は残る。不可視にはならず、近接のExposureも通常どおり蓄積する。",
+      "target": "対象本人の観察進行のみ",
+      "scope": "個人。他の参加者の観察進行は止めない。地図、NPC、異常の共有状態は変更しない",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "停波ノイズの終了で解除される",
+        "窓の長さが経過した場合にも解除される。時間は未確定",
+        "対象がマップを離れた時点で破棄される",
+        "Run終了時に破棄される"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "差し替えは停波ノイズという既存elsh事象の期間に限る。窓の終了、マップ離脱、Run終了のいずれかで元に戻す。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effectと同一対象は非加算1件。停波ノイズ1回につき1件とし、残り時間の更新は行わない。",
+        "conflict_resolution": "SHADEの不可視、Memory Swapperの認識干渉、Visible / Invisible Inversionの個人表示、および他の観察速度を変える効果との適用順は未定のため保留する。"
+      },
+      "server_validation": "Serverが停波ノイズの発生中であることと、対象が当該参加者であることを検証する。クライアントは窓の長さを指定できず、観察の入力値そのものを書き換えられない。",
+      "client_presentation": "本人にだけ窓が開いていることを示す表示を出す。他プレイヤーの画面と店内の共通表示は変えない。",
+      "feedback": {
+        "success": "窓の始まりと終わりに本人だけの短い表示を出す。",
+        "failure": "停波ノイズ外で発動した場合は何も起こらないことを示す本人表示を出す。",
+        "ambiguous": "進み方が止まったのが本スキルのためか、他の理由によるものかは表示で区別しない。"
+      }
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "上のRuleOverrideで窓が開いたときから、窓が閉じるまで。",
+      "condition": "窓が開いているあいだに限る。",
+      "result": "対象プレイヤーのスキル発動と通常攻撃の受付を受け付けない。移動とカメラ操作は残る。",
+      "target": "対象本人",
+      "scope": "個人。店内と他の参加者には影響しない",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "窓が閉じた時点で解除される",
+        "対象がマップを離れた時点で破棄される",
+        "Run終了時に破棄される"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "封じは窓の期間に限る。窓の終了、マップ離脱、Run終了のいずれかで解除する。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effectと同一対象は非加算1件。チャンネルを変えない限り1件を保つ。",
+        "conflict_resolution": "Stun、Down、Roll、/dev/nullの入力無効化との適用順は未定のため保留する。"
+      },
+      "server_validation": "Serverが窓の開通中であることを検証し、封じ中の入力は例外なく不成立として扱う。",
+      "client_presentation": "HUDには発動できない操作だけを示す。理由の説明はしない。",
+      "feedback": {
+        "success": "窓のあいだ操作が反応しない本人表示を出す。",
+        "failure": "押した入力には短い本人表示だけを返す。ワールド状態は変えない。",
+        "ambiguous": "不成立が封じによるものか別の理由によるものかは区別しない。"
+      }
+    }
+  ],
+  "provides_traits": [
+    "既存のギミックの短時間だけ、自分の視覚観察の進み方を止められる",
+    "その短時間のあいだだけ自分の操作を受け付けない",
+    "近接のExposureの蓄積は止めない"
+  ],
+  "connection_tags": [
+    "Skill",
+    "Observation",
+    "Environment",
+    "RuleOverride",
+    "StateChange"
+  ],
+  "refs": [
+    {
+      "target_id": "ROLE-A-004",
+      "kind": "optional_connection",
+      "required_traits": [
+        "CRTと試聴機の操作がServer側の操作事実として記録され、共有できること"
+      ],
+      "fallback": "A-004が成立しない場合、本候補は既存のCRTとチャンネル切替だけから成立する。NPC、出現物、報酬、退場条件には依存しない。",
+      "resolution": "reserved_unresolved"
+    }
+  ],
+  "unresolved_refs": [
+    {
+      "target_id": "ROLE-A-004",
+      "required_traits": [
+        "CRTと試聴機の操作がServer側の操作事実として記録され、共有できること"
+      ],
+      "reason": "peer-snapshotsが配布されておらず、A-004は予約枠のままで本文を確認できない。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": null,
+      "required_traits": [
+        "CRTのチャンネル変更時に停波ノイズの開始と終了を、Server側のイベントとして通知できること"
+      ],
+      "reason": "current-implementation.mdは停波ノイズを挟んで切り替わると記すが、その時間区間を他のシステムから使える 형태로通知するかの記録がない。",
+      "adoption_blocker": false
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "停波ノイズの長さ。CRTごとやチャンネルごとに差があるかは未定。",
+    "進まなくなる対象は「観察の進み」だけか、Visibleの段階も含むかは未確定。ここでは進みだけに限定して書いた。",
+    "既に積み上がった観察の値は残る。窓のあいだに減るかどうかは決めていない。",
+    "他の可視性を変える効果との適用順が未定。SHADEの不可視とは別の効果として扱う。",
+    "音量や遮蔽の仕様が未決定であるため、停波ノイズが他プレイヤーにどこまで届くかは書かない。",
+    "窓のあいだのスキル封じは、本スキルの副作用として入れたもので、必要かは判断対象。",
+    "複数人での見え方は未確認。1人セッションの検証のみ。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "店内の雑音を、隠れるためではなく「見られている進み」を一時的に止めるための合図として使う点。",
+    "in_world_rationale": "音と映像が別の情報経路として存在する装置を使うため、停波という既存の事実から観察の進みだけを切り離せる。音が何のために鳴るのか、古い機器の思想や組織の都合は説明しない。",
+    "meaning_left_ambiguous": "なぜ停波のあいだだけ見えなくなるのか。装置の故障か、異常側の仕様かは確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "必要な経路（CRTの停波ノイズ区間を他のシステムから使えるServerイベントとして取る、対象本人の観察進行を差し替える、窓のあいだのスキル受付を封じる）のいずれも current-implementation.md に実装記録がない。観察の共通システムはDraftで、既存の視界判定実装の記録もない。",
+  "new_logic": [
+    "停波ノイズの開始と終了をServer側のイベントとして通知する経路",
+    "対象本人の視覚観察の進み方を窓のあいだ差し替える経路",
+    "窓のあいだだけスキル発動と通常攻撃の受付を封じる状態と解除"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "CRTと停波ノイズ、既存3スキルの発動経路は流用できる。新規なのは窓の識別、観察進行への差し替え、受付封じの3点。共通観察システム自体がDraftで、既存の視界判定だけを使う前提になるため、実装位置を決めるまでの中程度の試行を要する。",
+    "implementation_steps": [
+      "デバッグフロアでCRTのチャンネル変更を操作し、停波ノイズ区間をログで特定する",
+      "その区間だけ本人HUDに窓の表示を出す",
+      "窓のあいだ本人HUDに観察の進みが出ていないことを確認する",
+      "近接のExposureが窓のあいだも通常どおり増えることを確認する"
+    ],
+    "assumed_existing_parts": [
+      "TSUTAYAのCRTとチャンネル切替、停波ノイズの演出",
+      "近接判定とExposureの取得処理（変更しない方針）",
+      "既存3スキルのサーバー側発動とクールダウン",
+      "PlayerのAttributeとHP"
+    ]
+  },
+  "role_details": {
+    "skill_family": "アクション",
+    "rank": 2,
+    "rank_rationale": "アクション系のランク2案（グラップリング、壁登り、バックステップ）はいずれも移動、または無敵時間の移動であり、本候補の「既存のギミック区間で自身の観察を止める」性質とは異なる。そこで2を候補値として置く。ただし同系のランク1が3案に達していないため、実際の解放には前提の整理が要る。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "停波ノイズの区間だけ、本人の視覚観察の進み方を止める。近接のExposureは通常どおり増える。不可視にはならない。"
+      },
+      {
+        "level": 2,
+        "proposal": "窓のあいだ、本人のスキル発動と通常攻撃の受付を封じる案。移動とカメラ操作は残る。封じる範囲は広げるほど不便になるため、これ以上広げない。"
+      },
+      {
+        "level": 3,
+        "proposal": "CRMのチャンネル切替を誤った場合の扱い。窓の長さを本人に秒数で提示すると他者にも時間が見えるため、提示は本人に限定する案。"
+      }
+    ],
+    "equipped_slot_policy": "アクション系の1枠として扱う。4枠との組み合わせも切替のタイミングも決めない。装備切替の場所とタイミング、および奥義、パッシブ、専用スキルの枠占有条件は未決定のため触れない。",
+    "normal_attack_link": "窓のあいだはワンツーも含めて発動を受け付けない。窓の外では通常の連携規則に従う。連鎖の入力受付時間は未決定。",
+    "avoids": "店内を横切るあいだに、視覚で「見られた」分だけ進むのを避ける。ただし音は届き、Exposureは増え続けるため、完全に安全にはならない。",
+    "intervenes_in": "既存のCRTの停波ノイズ区間と、対象本人の観察進行。店内、NPC、共有BGM、依頼の進行は変えない。",
+    "sacrifices": "窓のあいだ自分が止まっても、自分では何も確かめられない。音は出る。近接のExposureは減らない。窓の外に出れば通常どおり進む。",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-006.html"
+}

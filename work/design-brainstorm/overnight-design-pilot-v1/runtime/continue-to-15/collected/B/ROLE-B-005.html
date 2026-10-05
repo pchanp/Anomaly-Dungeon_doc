@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-B-005 無音筒（置いた端末をRunのあいだ止める）</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<p class="sub">overnight-design-pilot-v1 ／ ROLE=B ／ 廃TSUTAYA ／ Idea</p>
+<h1>ROLE-B-005 無音筒（置いた端末をRunのあいだ止める）— 作業用見出し</h1>
+</header>
+
+<section id="hypothesis">
+<h2>何の案？</h2>
+<p>再生端末は複数人で共用する共有資源。筒を置いて、端末1台をRunのあいだだけ黙らせる案。</p>
+<h2>仕組み</h2>
+<ul>
+<li>対象の端末のそばに筒を置くと、その端末の再生がRunの残り止まる。</li>
+<li>止まるのは端末そのもの。止められた本人も他の参加者も使えない。</li>
+<li>Runが終われば止まりも筒も消え、端末は元に戻る。</li>
+</ul>
+<h2>選択と代償</h2>
+<p>全部は止まらないので1台を選ぶ。代償は他者の不便で、止められた側は何が起きたかを知らない。</p>
+</section>
+
+<section id="diagram">
+<h2>作用図</h2>
+<div class="board">
+<svg viewBox="0 0 980 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="再生端末4台のうち1台に無音筒を置くと、その端末の再生がRunの残り他の参加者にも使えなくなる図。放置でき、同時上限と解除方法は未確定">
+<rect width="980" height="380" fill="#0a1118"/>
+<text x="30" y="26" class="small">店内の再生端末（CRTと試聴機、既存の要素だけを使う）</text>
+<rect x="30" y="44" width="200" height="76" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="46" y="74" class="label">端末 A</text>
+<text x="46" y="98" class="small">止めない</text>
+<rect x="30" y="140" width="200" height="76" rx="8" fill="#142330" stroke="#ea9380"/>
+<text x="46" y="170" class="label">端末 B</text>
+<text x="46" y="194" class="small">筒を置いた</text>
+<text x="46" y="210" class="small">Runのあいだ再生不可</text>
+<rect x="30" y="236" width="200" height="76" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="46" y="266" class="label">端末 C</text>
+<text x="46" y="290" class="small">止めない</text>
+<rect x="360" y="130" width="240" height="96" rx="8" fill="#142330" stroke="#c4a0ec"/>
+<text x="376" y="160" class="label">筒を置く</text>
+<text x="376" y="186" class="small">操作は一度だけ</text>
+<text x="376" y="208" class="small">置いた筒は回収できない</text>
+<path d="M232 178 H357" class="hyp-line"/>
+<path d="M357 172 l10 6 -10 6" class="hyp-line"/>
+<rect x="680" y="130" width="270" height="96" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text x="696" y="160" class="label">他の参加者にも不便</text>
+<text x="696" y="186" class="small">本人も他の人も聴けない</text>
+<text x="696" y="208" class="small">誰が止めたかは表示されない</text>
+<path d="M602 178 H677" class="active"/>
+<path d="M677 172 l10 6 -10 6" class="active"/>
+<path d="M480 228 V286" class="active"/>
+<path d="M472 278 l8 8 8 -8" class="active"/>
+<text x="200" y="306" class="small">Run終了で両方消える</text>
+<text x="30" y="352" class="small">同時上限と解除方法は未確定。模式図であり、店内の配置図ではない。</text>
+</svg>
+</div>
+<p>左の3台のうち1台だけを止め、他の参加者まで巻き込む図。</p>
+</section>
+
+<footer>
+<p><a href="index.html">← B候補一覧</a> ／ 詳細データ <a href="ROLE-B-005.json">ROLE-B-005.json</a> ／ connection_tags: Item, Sound ／ requires_code: true ／ 試作コスト: 小</p>
+</footer>
+</main>
+</body>
+</html>

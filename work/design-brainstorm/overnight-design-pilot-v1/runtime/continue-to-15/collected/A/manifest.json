@@ -1,0 +1,21 @@
+{
+  "run_id": "overnight-design-pilot-v1",
+  "role": "A",
+  "candidates": [
+    {"candidate_id": "ROLE-A-001", "json_file": "ROLE-A-001.json", "html_file": "ROLE-A-001.html"},
+    {"candidate_id": "ROLE-A-002", "json_file": "ROLE-A-002.json", "html_file": "ROLE-A-002.html"},
+    {"candidate_id": "ROLE-A-003", "json_file": "ROLE-A-003.json", "html_file": "ROLE-A-003.html"},
+    {"candidate_id": "ROLE-A-004", "json_file": "ROLE-A-004.json", "html_file": "ROLE-A-004.html"},
+    {"candidate_id": "ROLE-A-005", "json_file": "ROLE-A-005.json", "html_file": "ROLE-A-005.html"},
+    {"candidate_id": "ROLE-A-006", "json_file": "ROLE-A-006.json", "html_file": "ROLE-A-006.html"},
+    {"candidate_id": "ROLE-A-007", "json_file": "ROLE-A-007.json", "html_file": "ROLE-A-007.html"},
+    {"candidate_id": "ROLE-A-008", "json_file": "ROLE-A-008.json", "html_file": "ROLE-A-008.html"},
+    {"candidate_id": "ROLE-A-009", "json_file": "ROLE-A-009.json", "html_file": "ROLE-A-009.html"},
+    {"candidate_id": "ROLE-A-010", "json_file": "ROLE-A-010.json", "html_file": "ROLE-A-010.html"},
+    {"candidate_id": "ROLE-A-011", "json_file": "ROLE-A-011.json", "html_file": "ROLE-A-011.html"},
+    {"candidate_id": "ROLE-A-012", "json_file": "ROLE-A-012.json", "html_file": "ROLE-A-012.html"},
+    {"candidate_id": "ROLE-A-013", "json_file": "ROLE-A-013.json", "html_file": "ROLE-A-013.html"},
+    {"candidate_id": "ROLE-A-014", "json_file": "ROLE-A-014.json", "html_file": "ROLE-A-014.html"},
+    {"candidate_id": "ROLE-A-015", "json_file": "ROLE-A-015.json", "html_file": "ROLE-A-015.html"}
+  ]
+}

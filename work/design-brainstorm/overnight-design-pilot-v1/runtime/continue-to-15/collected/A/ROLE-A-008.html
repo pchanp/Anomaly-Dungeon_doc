@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-A-008 補充で戻る — SEKIGAHARAの枠</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+<p class="sub">overnight-design-pilot-v1 ／ ROLE-A-008 ／ SEKIGAHARA（マップ固有）／ MobEnemy</p>
+<h1>補充で戻る — SEKIGAHARAの枠</h1>
+<p>撃破しても個体数が戻るところまで、枠の性質として扱う。</p>
+<div class="badges"><span class="badge hyp">Idea</span><span class="badge">unreviewed</span><span class="badge unknown">上限と補充の遅れは未定</span></div>
+<nav class="nav"><a href="index.html">← 一覧</a><a href="ROLE-A-008.json">同IDのJSON</a></nav>
+</header>
+
+<section id="hypothesis">
+<h2>何の案か</h2>
+<p>数で解けない戦闘を、枠の性質として示す。</p>
+<ul>
+<li>戦闘モブが戦闘不能になると、枠が後方から補充されて同じ場所に個体が出直す。</li>
+<li>補充は枠の内だけ。枠の残数と補充時刻は表示しない。</li>
+<li>終端での自然退出はない。戦闘を避けるには戦場外へ回り込む。</li>
+</ul>
+<p><strong>選択と代償:</strong> 戦わずに避ける（枠は減らない）／弱った個体から崩す（他の個体の攻撃が向く）／戦場で待つ。どれほど倒しても枠は埋まる。</p>
+<p class="sub">接続タグ: NPCState / WorldChange / Combat ／ requires_code: true ／ conflicts 1件・未解決2件（JSONに記載）</p>
+</section>
+
+<section id="diagram">
+<h2>仕組みの図</h2>
+<div class="board">
+<svg viewBox="0 0 1000 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="戦闘モブの枠が戦闘不能で空き、その枠へ後方から補充されて個体が出直す循環を示す図">
+<rect width="1000" height="320" fill="#0a1118"/>
+<text class="label" x="24" y="28">枠（上限は未定）</text>
+<text class="label" x="600" y="28">個体と補充</text>
+<rect x="24" y="52" width="240" height="88" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="label" x="38" y="84">枠1</text>
+<text class="small" x="38" y="112">個体：戦闘中</text>
+<rect x="24" y="184" width="240" height="88" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="label" x="38" y="216">枠2</text>
+<text class="small" x="38" y="244">個体：補充待ち（空）</text>
+<path d="M264 216h80" stroke="#d3b653" stroke-width="2" fill="none"/>
+<path d="M338 210l9 6-9 6" stroke="#d3b653" stroke-width="2" fill="none"/>
+<text class="small" x="272" y="200">後方から補充</text>
+<path d="M144 140v40" class="active"/>
+<path d="M144 186l-6-9h12z" fill="#70c9c3"/>
+<text class="small" x="24" y="300">枠内の減少分だけ補充する。値は個人に返さない</text>
+
+<rect x="420" y="52" width="240" height="88" rx="8" fill="#142330" stroke="#ea9380"/>
+<text class="label" x="434" y="84">戦闘不能</text>
+<text class="small" x="434" y="112">個体が終了し、枠が1つ空く</text>
+<rect x="700" y="52" width="276" height="88" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="label" x="714" y="84">補充個体が出現</text>
+<text class="small" x="714" y="112">状態は個体ごとに初期化</text>
+<path d="M660 96h34" class="active"/>
+<path d="M688 90l9 6-9 6" class="active"/>
+<path d="M838 140v52h-190v-52" class="hyp-line"/>
+<text class="small" x="470" y="176">同じ枠に戻る</text>
+<rect x="420" y="212" width="556" height="60" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="small" x="434" y="248">自然退出はない。回避は戦場外へ回り込む（通過型ではない）</text>
+<text class="small" x="24" y="322">枠はアノマリーの同時出現数とは別。0.90倍の減衰にも数えない（提案）。</text>
+</svg>
+</div>
+<p>図注：倒しても数が戻る。個体の強弱ではなく、枠の性質として見せる。</p>
+</section>
+
+<footer>overnight-design-pilot-v1 ／ ROLE-A-008 ／ 実表示は未確認（担当セッションでブラウザを使用していない）。</footer>
+</main>
+</body>
+</html>

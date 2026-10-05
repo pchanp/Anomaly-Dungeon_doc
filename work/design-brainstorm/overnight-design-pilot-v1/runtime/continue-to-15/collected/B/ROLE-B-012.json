@@ -1,0 +1,248 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-012",
+  "role": "B",
+  "title": "返し札（渡した副作用は相手へ返る）— 作業用見出し",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "研究所",
+  "classification": "マップ固有",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/anomalies/dev-null.md",
+      "section": "「何でも消す能力」にはしない。ゲームの基本的な**入力 -> 処理 -> 結果**という因果関係を壊すことを中心に置く。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "アイテム操作の結果が不成立になる候補がある。候補の返り値はどの結果層に載るかの未決に直結する。"
+    },
+    {
+      "path": "docs/anomalies/dev-null.md",
+      "section": "「何でも消す能力」にはしない。ゲームの基本的な**入力 -> 処理 -> 結果**という因果関係を壊すことを中心に置く。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "入力と結果の対応を壊すことが中心という原則。候補は逆向きの対応を作る。"
+    },
+    {
+      "path": "docs/anomalies/whisper.md",
+      "section": "NPC接触は距離・対象・Quest状態をサーバーで検証する。",
+      "source_status": "Status: Draft（草案）",
+      "claim": "提示はサーバー検証を通すという既存方針。候補の受け渡しもこれに従う。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "異なるEffectは、変更先が競合しなければ共存できる。同じ値・行動・世界状態を変更する場合は、自動合算も「最後の適用が勝つ」方式も既定にしない。",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "返る結果の種類が不明のため、競合時の解決規則は候補側で決めない。"
+    }
+  ],
+  "design_hypothesis": "候補は、誰かが受けた結果を受け手本人へ返す札にする。渡した相手がその場で被った変化が、渡した側の個人状態としてそのまま現れる。物の移動ではなく、因果の戻り道を作る案。渡しただけで両者が同時に結果を受ける。",
+  "experience": {
+    "goal": "渡すという行為を、相手一人に押しつける行為から、自分と相手の二重の負担へ変える。",
+    "player_choice": "渡して同じ結果を受ける。渡さずに持ち歩く。捨てる。誰に渡すかを選ぶ。",
+    "sacrifice_or_risk": "相手が何を被ったかは知らされるが、その分が自分にも来る。両方とも避けられない。"
+  },
+  "placement_assumption": "新しい部屋・設備は提案しない。既存の小物にのみ置く前提を取る。既存のwhisperの装置とは重ねない。戻りとして運ぶ対象の種類は未確定であり、実物の正体は決めない。",
+  "components": [
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "提示で相手が受けた状態変化を、本人の個人状態として適用する。"
+    },
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "『受け取った』印を本人にだけ出す。"
+    },
+    {
+      "component": "ItemLifecycle",
+      "availability": "catalog",
+      "usage": "正式な取得源とItemStackが未実装であることを前提とする。"
+    },
+    {
+      "component": "WhisperTransfer",
+      "availability": "catalog",
+      "usage": "既存の追跡先の移送という語彙。候補は結果の移送ではなく結果の返却として書き分ける。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "StateChange",
+      "trigger": "個人が返し札を、同じRunの別の個人に差し出す",
+      "condition": "両者が実行中であること、受け手が個人であること、差し出した側が所有していること。返される結果は適用対象を本人に限る",
+      "result": "受け手がその札の提示で受けた状態変化が、差し出した個人の状態としてそのまま適用される。持っていかれた側にも同じ変化が残る。世界の共有状態は直接書き換えない",
+      "target": "差し出した個人（適用対象は本人に限る）",
+      "scope": "個人。受け手の状態は書き換えない",
+      "lifetime": "同一Run中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "返される結果の通常の解除条件で消える",
+        "Run終了で消える。札の再使用はできない"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。返り先の解除条件を個別の効果に委ねる。",
+      "stacking": {
+        "exception": true,
+        "rule": "同じ札を二度使っても同じ結果を重ねない。返される結果が同じEffectであれば非加算1件に保つ",
+        "conflict_resolution": "結果傍受系の効果との評価順は未定義のため保留する。候補側で先に評価すると決めない"
+      },
+      "server_validation": "Serverが両者の参加と所有を検証し、返される結果の適用対象が本人であることを確認してから適用する。クライアントの指定で対象を決めない",
+      "client_presentation": "本人の個人表示にだけ出る。受け手の表示には変化の痕跡がない",
+      "feedback": {
+        "success": "本人の個人表示が相手と同じだけ動く",
+        "failure": "何も変わらない。注意表示のみ",
+        "ambiguous": "何が返ってきたかは結果を一つずつ見ないと分からない"
+      }
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "差し出しが確定したあと",
+      "condition": "対象個人が参加中で個人表示が有効なとき",
+      "result": "『受け取った』印を本人にだけ表示する。相手の名も結果の種類も出さない",
+      "target": "対象個人",
+      "scope": "個人。共有のRun状態は書き換えない",
+      "lifetime": "同一Run中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "Run終了または表示の非表示で解除",
+        "切断で個人提示は破棄する。再接続時の復元は未決"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。",
+      "stacking": {
+        "exception": false,
+        "rule": "印は非加算1件。状態を上書きする",
+        "conflict_resolution": "他の所持表示との優先順位は未決定"
+      },
+      "server_validation": "Serverは印の有無だけを返す。返された結果の内容は返さない",
+      "client_presentation": "所持リストに小さな印1つ。他者には出さない",
+      "feedback": {
+        "success": "印が点いた状態のままになる",
+        "failure": "印が変化しない",
+        "ambiguous": "印の説明文は出さない"
+      }
+    }
+  ],
+  "provides_traits": [
+    "受け渡しが結果の返却も兼ねる例",
+    "適用対象を本人に限定する効果の書き方"
+  ],
+  "connection_tags": [
+    "Item",
+    "Interface"
+  ],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": [
+        "アイテム操作の結果がどのEffectとして評価され、どの順で処理されるかの共通規則"
+      ],
+      "reason": "anomaly-interaction.mdもdev-null.mdも、傍受系と通常結果の優先順位を未決としている。返り値を置く層が決まらないため、候補側で決めず採用判断として残す。",
+      "adoption_blocker": true
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "返される結果の種類は未確定。何が返るかを決めてから実装しないと、効果の層が決められない。",
+    "一枚の札が同じ結果を返す場合の扱いも未決。",
+    "受け手が別の誰かへ結果を渡していた場合の再帰は未決。候補では再帰を認めない。",
+    "照合範囲：dev-nullの結果傍受、入力と結果の対応原則、whisperのサーバー検証、効果の競合規則。矛盾は見つからず conflicts は空配列"
+  ],
+  "worldview": {
+    "defamiliarized_element": "受け渡しを所有の移動ではなく、結果の戻り道にした。渡した副作用が片側にだけ消えず、渡した側に戻ってくる。",
+    "in_world_rationale": "研究に使われた道具が、使った側の後で別の人の手元へ戻ってくるという経験は、記録が残る場所では自然に生じる。結果を消さないまま還す存在として成立する。",
+    "meaning_left_ambiguous": "札が何のために作られたのか、返ってきた結果は本当に同じものだったのか、誰が最初にこれを作ったのかは確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "個人間の受け渡しと、結果を適用し直す経路が未実装であり、正式な取得源もItemStackも無い（current-implementation.md）。結果の移送層が要るため true とする。",
+  "new_logic": [
+    "個人間の受け渡しと所有権の移動",
+    "受け手の結果を本人個人状態へ適用し直す経路"
+  ],
+  "prototype_cost": {
+    "band": "不明",
+    "rationale": "受け渡しが未実装で、どの結果を戻すかが決まっていない。返る結果を1つだけ固定した試作でしか規模を測れず、小とも大とも決められない。",
+    "implementation_steps": [
+      "デバッグ床に小物を一つ置く",
+      "個人から個人への受け渡しを足す",
+      "受け取り側の結果（返り値を1つだけ固定）を本人へ適用する",
+      "本人と相手の両方に同じ結果が出ることを確認する"
+    ],
+    "assumed_existing_parts": [
+      "枠境界を持つInventoryService",
+      "クライアントの個人HUD",
+      "個人属性の変化経路"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Undecided",
+        "detail": "配る主体は未確定。研究所には人物の記載はあるが、該当する設備は未実装であり創作しない。試作のみデバッグ付与。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "1枠を消費するが、渡さないと機能しない。誰に渡すかが前半の判断になる。"
+      },
+      {
+        "route": "Use",
+        "status": "Proposed",
+        "detail": "差し出して結果を受け取る操作がある。適用対象は本人に限る。"
+      },
+      {
+        "route": "Present",
+        "status": "Proposed",
+        "detail": "中核。受け手の結果が本人へ返る。受け手の所持は動かない。"
+      },
+      {
+        "route": "Place",
+        "status": "NotApplicable",
+        "detail": "置かない。置き場を作ると返还の意味が『置きっぱなし』二世になる。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "確保枠の外なら死亡時に失う。返ってきた結果はその前に消えるか残るかは未決。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "確保枠に入れて渡せないようにできる。守るか渡すかを一択にする。"
+      },
+      {
+        "route": "Sell",
+        "status": "NotApplicable",
+        "detail": "換金しない。売ると受け渡しの意味が失われる。"
+      },
+      {
+        "route": "Quest",
+        "status": "Undecided",
+        "detail": "依頼主と依頼種別が未確定。既存の博士の依頼が定める固有品の交換とは別の物品として扱う。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "Undecided",
+        "detail": "結果として戻すものを既存の異常の作用に繋ぐかは未決。候補では異常の挙動を一切作らない。"
+      }
+    ],
+    "ownership_state": "札はplayer単位の個人所持。渡すと消費され、受け手の所持には入らない。返ってきた結果は本人の個人状態として入る。切断と再接続時の扱いは未決。",
+    "server_run_state": "個人状態のみを扱い、Run共有のマップ状態は直接書き換えない。出現率と同時出現数は変更しないためWorldChangeのEffectは発生しない。"
+  },
+  "html_file": "ROLE-B-012.html"
+}

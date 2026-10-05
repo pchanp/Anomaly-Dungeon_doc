@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-B-010 一度きりの解錠札（開けたままなら全員が取れる）</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<p class="sub">overnight-design-pilot-v1 ／ ROLE=B ／ 研究所 ／ Idea</p>
+<h1>ROLE-B-010 一度きりの解錠札（開けたままなら全員が取れる）— 作業用見出し</h1>
+</header>
+
+<section id="hypothesis">
+<h2>何の案？</h2>
+<p>保管容器を一度だけ開ける札。開けたままなら中身が参加者全員のものになり、閉じれば自分だけが取れる。</p>
+<h2>仕組み</h2>
+<ul>
+<li>鍵前に札を貼ると、その容器はRun共有で開いた状態になる。</li>
+<li>開いた状態なら、どの参加者でも中身を回収できる。</li>
+<li>閉じる操作を選ぶと、中身は本人だけが取れる。札を1回消費する。</li>
+</ul>
+<h2>選択と代償</h2>
+<p>独占のためには閉じる操作と時間を渡す。中身の分配はゲーム側が決めず、開けた側に委ねる。</p>
+</section>
+
+<section id="diagram">
+<h2>作用図</h2>
+<div class="board">
+<svg viewBox="0 0 980 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="解錠札で容器を一度だけ開け、開けたままなら全員が回収でき、閉じれば本人だけが取得する図">
+<rect width="980" height="380" fill="#0a1118"/>
+<text x="30" y="26" class="small">既存のwhisperの装置とは別の物品。置き換えない。</text>
+<rect x="30" y="46" width="220" height="104" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text x="46" y="76" class="label">鍵付き容器</text>
+<text x="46" y="102" class="small">閉じてある</text>
+<text x="46" y="124" class="small">中身は見えない</text>
+<rect x="380" y="46" width="220" height="104" rx="8" fill="#142330" stroke="#c4a0ec"/>
+<text x="396" y="76" class="label">鍵前に札を貼る</text>
+<text x="396" y="102" class="small">一度きり</text>
+<text x="396" y="124" class="small">Run共有で開いた状態</text>
+<rect x="730" y="46" width="220" height="104" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="746" y="76" class="label">開いたまま</text>
+<text x="746" y="102" class="small">全員が回収できる</text>
+<text x="746" y="124" class="small">配分はゲームが決めない</text>
+<path d="M252 98 H377" class="active"/>
+<path d="M377 92 l10 6 -10 6" class="active"/>
+<path d="M602 98 H727" class="hyp-line"/>
+<path d="M727 92 l10 6 -10 6" class="hyp-line"/>
+<path d="M490 152 V196" class="hyp-line"/>
+<path d="M482 188 l8 8 8 -8" class="hyp-line"/>
+<rect x="330" y="198" width="320" height="88" rx="8" fill="#142330" stroke="#ea9380"/>
+<text x="346" y="228" class="label">閉じる</text>
+<text x="346" y="254" class="small">中身は本人だけが取る</text>
+<text x="346" y="276" class="small">その代わり札を1回使う</text>
+<path d="M750 152 V196" class="hyp-line"/>
+<path d="M742 188 l8 8 8 -8" class="hyp-line"/>
+<path d="M490 288 V322" class="active"/>
+<path d="M482 314 l8 8 8 -8" class="active"/>
+<text x="30" y="356" class="small">同じ箱を複数の人で開けたときの優先は未確定。模式図であり研究室の見取り図ではない。</text>
+</svg>
+</div>
+<p>中央が解錠、左が放置（分配）、下が独占。中身が何であっても開けてから分かる。</p>
+</section>
+
+<footer>
+<p><a href="index.html">← B候補一覧</a> ／ 詳細データ <a href="ROLE-B-010.json">ROLE-B-010.json</a> ／ connection_tags: Item, Interface ／ requires_code: true ／ 試作コスト: 不明</p>
+</footer>
+</main>
+</body>
+</html>

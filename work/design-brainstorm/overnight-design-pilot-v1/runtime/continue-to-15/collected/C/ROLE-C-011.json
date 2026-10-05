@@ -1,0 +1,239 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-011",
+  "role": "C",
+  "title": "帰り道の印",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "研究所",
+  "classification": "マップ固有",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/anomalies/cognitive-anomalies.md",
+      "section": "マルチプレイヤーにおける認識差",
+      "source_status": "Status: Draft（草案）",
+      "claim": "同じ空間でも一人には見え、別の人には見えず、同じ物が別の人には別物に見える状態を許容する。これはClientごとに世界の事実が別々になることを意味しない。共有世界の状態変更はServerが決め、Clientは自分が観察できたことと表現を担う。"
+    },
+    {
+      "path": "docs/systems/observation-and-recognition.md",
+      "section": "Server権威とRemote境界",
+      "source_status": "Status: Draft（草案）",
+      "claim": "ServerはClientの画面状態を直接確認できない。Clientからの報告は要求であり世界状態の証明ではない。経路開放、報酬、Exposure、共有State TransitionはServerだけが確定する。"
+    },
+    {
+      "path": "docs/systems/skill-build.md",
+      "section": "探索系",
+      "source_status": "Status: Draft（個別スキルは設計案、取得・成長の基本則は合意済み）",
+      "claim": "探索系はアイテムスタックの解放、検知、スニークを扱う。ランク1案は開錠、ランク2案のSHADEはステルス状態で直線上を瞬間移動し、経路の相手へ中ダメージと中Stunを与え、不可視となる案である。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "設計方針",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "永続的に蓄積した能力だけで優位性が決まる構造にはしない。解放済みの選択肢や持ち帰りやすさは成長要素として残しつつ、Run中のビルド、操作、観察、判断が結果を左右することを優先する。"
+    }
+  ],
+  "design_hypothesis": "研究所の構造は未確定で、部屋と行き来过道が有多少あるか分からない。本候補は、自分の歩いた道に自分だけ見える印を置く探索系スキルとする。印は自分の後ろにしか置けず、共有の地図にも他の参加者の画面にも出ない。置き始めは歩く速さが落ちる。帰路を印で確保するか、自由に歩くかをRunのあいだだけ選ぶ設計で、印の数は有限とし、Runが終わると消える。",
+  "experience": {
+    "goal": "帰り道を事前登録する手段として提示する。地図を覚える代わりに、歩いた痕を自分だけに残し、あとで一度辿れるようにする。",
+    "player_choice": "帰路の印を置きながら進むか、置かずに自由に歩くか。置けば帰路は確保されるが、歩く速さが落ちる。置いた印は他人に見せないので、仲間に伝えるには口頭只能用。",
+    "sacrifice_or_risk": "置いているあいだは歩く速さが落ちる。印は自分の後ろにしか残らない。印の数と長さの制限は未確定であり、Runが終わると消える。"
+  },
+  "placement_assumption": "研究所（Idea）の中で使う案で、室内の構造、通路、配置ポイントは提案しない。使うのは既存のPlayerの位置と、個人記録の保持だけである。印を個人画面で��すか地形の目印にするかは未確定で、目印のPartsを追加することは提案しない。研究所以外のマップでも同じ仕組みとして成立し得る。",
+  "components": [
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "自分の後ろの位置に、印の個人記録を作る。共有の地図には出さない。"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "印を置いているあいだだけ、移動速度を落とす。硬直ではない。"
+    },
+    {
+      "component": "SkillActivation",
+      "availability": "catalog",
+      "usage": "既存の3スキルと同じ発動経路を持つ必要がある。実装はPartialで、個人記録の経路は含まれない。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "InformationChange",
+      "trigger": "対象が本スキルを発動し、その後、印を置く動作の指示が繰り返されたとき。",
+      "condition": "対象が有効なCharacterで現在のマップ内にいること。印の上限に達している場合は置かない。上限は未確定。",
+      "result": "対象本人の個人記録として、現在位置の一つ後ろに印を1件作る。印は本人だけが確認できる。共有の地図表現、他の参加者の画面、地形、配置は変更しない。",
+      "target": "対象本人の個人記録のみ",
+      "scope": "個人。地図と他の参加者には出さない。",
+      "lifetime": "同一Run中",
+      "resolution": "instant",
+      "end_conditions": [
+        "記録の作成は即時解決する",
+        "印の上限に達している場合は作らない",
+        "対象がRunから外れた時点、およびRun終了時に破棄される"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "印の記録は即時解決で、固定の長さを持たない。持ち越さないためRun終了で破棄する。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effectと同一対象は非加算1件。印は件数として増え、効果量は足さない。上限は未確定。",
+        "conflict_resolution": "他のスキルが同じ位置へ記録を作る場合の重なり、および既存の認識記録との重なりは未定のため保留する。"
+      },
+      "server_validation": "Serverが対象が参加者であること、現在位置を取得できること、上限に達していないことを検証する。クライアントからは印の位置を指定できない。",
+      "client_presentation": "本人だけの短時間表示と、個人記録の一覧。仲間の画面と共有の地図表現には出さない。",
+      "feedback": {
+        "success": "本人にだけ印を置いた表示が出る。仲間の画面は変わらない。",
+        "failure": "上限に達した場合は置けないことを示す本人表示を出す。",
+        "ambiguous": "印の意味や理由は表示しない。"
+      }
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "印を置いているあいだ、対象が移動している間。",
+      "condition": "印を置く動作が進行中のあいだに限る。",
+      "result": "対象プレイヤーの移動速度を落とす。落差量と攻撃への影響は未確定で、攻撃とスキル発動は受け付けている。硬直やStunは発生しない。",
+      "target": "発動した本人",
+      "scope": "個人。他参加者と地形には影響しない",
+      "lifetime": "同一Run中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "印を置いているあいだでなくなった時点で解除される",
+        "対象が戦闘不能になった時点で破棄される",
+        "Run終了時に破棄される"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "速度低下は印を置いている期間に限る。解除、戦闘不能、Run終了のいずれかで戻す。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effectと同一対象は非加算1件。繰り返し発生しても1件を保つ。",
+        "conflict_resolution": "移動速度上昇の装備、Stun、Down、/dev/nullの入力無効化との適用順は未定のため保留する。"
+      },
+      "server_validation": "Serverが印置きが進行中であることを検証し、速度低下を適用する。",
+      "client_presentation": "速度が落ちていることを本人に示す。理由の説明はしない。",
+      "feedback": {
+        "success": "速度低下を本人だけの短い表示で返す。",
+        "failure": "不成立のときは何も起こらないことを示す本人表示を出す。",
+        "ambiguous": "速度低下が本スキルのためか別の理由によるものかは区別しない。"
+      }
+    }
+  ],
+  "provides_traits": [
+    "自分の後ろの位置に本人専用の印の記録を作れる",
+    "印を置いているあいだだけ移動速度を落とせる",
+    "印は共有の地図にも他の参加者の画面にも出ない"
+  ],
+  "connection_tags": [
+    "Skill",
+    "Exploration",
+    "Information",
+    "StateChange"
+  ],
+  "refs": [
+    {
+      "target_id": "ROLE-C-012",
+      "kind": "optional_connection",
+      "required_traits": [
+        "本人と相手を一度だけ入れ替えると、個人記録も入れ替わる"
+      ],
+      "fallback": "C-012が成立しない場合、印は本人にだけ残り、本人の記録は入れ替わらない。帰路の確保として成立する。",
+      "resolution": "reserved_unresolved"
+    }
+  ],
+  "unresolved_refs": [
+    {
+      "target_id": "ROLE-C-012",
+      "required_traits": [
+        "本人と相手を一度だけ入れ替えると、個人記録も入れ替わる"
+      ],
+      "reason": "peer-snapshotsが配布されておらず、C-012は未作成である。必要な性質だけを要求として記載する。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": null,
+      "required_traits": [
+        "プレイヤーごとの位置を個人記録として保持し、後ろの位置をサーバー側で求められること"
+      ],
+      "reason": "current-implementation.md に個人単位の位置記録の経路の記録がない。既存の移動系にこの記録があるかも判断できない。",
+      "adoption_blocker": false
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "矛盾は確認していない。ServerとClientの責務分離、および認識差を個人に閉じる方針に反しない。",
+    "印をいくつ置けるか、どこまで置けるか。",
+    "置いた印を使うのは1回だけか、複数回か。",
+    "速度低下の落差量と、攻撃への影響。",
+    "印を個人画面だけで示すか、地形に目印を追加するか。",
+    "研究所は未実装だが、本候補自体はPlayerの位置だけで成立する。",
+    "序盤に個人記録を保存できるかが前提となる。",
+    "印が残った状態で帰還した場合の扱いは未確定。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "地図を覚える代わりに、自分の歩いた跡を自分だけが残す。帰路を持つことを自分の記録で解く。",
+    "in_world_rationale": "所有や所在が逸脱し得る、という逸脱の定義の範囲内で、自分の痕跡だけが残るという観察は成立し得る。ただし印が残る理由が場所にあるのか、記憶側にあるのかは説明しない。",
+    "meaning_left_ambiguous": "印が残る理由は何か。研究所や装置との関係には触れない。博士の真意、組織の事情にも触れない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "必要な2経路（プレイヤーごとの位置の個人記録と後ろの位置を求める処理、印を置いているあいだの速度低下）のいずれも current-implementation.md に実装記録がない。既存3スキルには位置の個人記録がなく、印を置くスキルも含まれない。",
+  "new_logic": [
+    "プレイヤーごとの位置の個人記録と、印を1件作る経路",
+    "印を置いているあいだだけの移動速度低下と解除"
+  ],
+  "prototype_cost": {
+    "band": "小",
+    "rationale": "Playerの位置と移動速度は既存の移動系で扱える。個人記録の保存先と速度低下の分岐だけを追加すれば試せる。地形や室内の造営がないため作業量は小さい。",
+    "implementation_steps": [
+      "デバッグフロアで、後ろの位置を1件だけ記録する最小実装を足す",
+      "記録した位置へ本人だけ印が出る表示を追加する",
+      "印を置いているあいだ速度が落ちることをサーバー側で確認する",
+      "上限に達したとき何も起きないことを確認する"
+    ],
+    "assumed_existing_parts": [
+      "既存のCharacter移動と移動速度の制御",
+      "PlayerのAttributeとCharacter",
+      "既存3スキルの発動とクールダウン",
+      "近接判定とExposureの取得処理（変更しない方針）"
+    ]
+  },
+  "role_details": {
+    "skill_family": "探索",
+    "rank": null,
+    "rank_rationale": "探索系は開錠とSHADE、本候補は帰路の記録である。系統構成が未確定のため、根拠のない数値は置かずにnullとした。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "自分の後ろに本人専用の印を置く。置いているあいだだけ移動速度が落ちる。印は共有の地図に出ない。"
+      },
+      {
+        "level": 2,
+        "proposal": "置いた印を一度だけ、印の並びをたどって戻る案。ただし戻りの速度と硬直が未確定であり、上限は広げない。"
+      },
+      {
+        "level": 3,
+        "proposal": "置いた印を1回のRunで最大1回しか使えないようにする案。帰路の確実性が下がり、置き忘れが怖くなる。"
+      }
+    ],
+    "equipped_slot_policy": "探索系の1枠として使う。4枠との組み合わせも切替のタイミングも決めない。装備切替と枠占有の条件は未決定のため触れない。",
+    "normal_attack_link": "印を置いているあいだも攻撃と他のスキルは受け付けている。ワンツーとの連携も通常の規則に従う。",
+    "avoids": "帰り道を見失う結果の一部。ただし印は自分しか見えず、仲間に口頭で伝えるしかない。",
+    "intervenes_in": "対象個人の位置記録と、印を置いているあいだの移動速度。地形、配置、NPCの思考、出現率、依頼の進行は変えない。",
+    "sacrifices": "置いているあいだは歩く速さが落ちる。印は自分の後ろにしか残らない。数は有限で、Runが終わると消える。",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-011.html"
+}

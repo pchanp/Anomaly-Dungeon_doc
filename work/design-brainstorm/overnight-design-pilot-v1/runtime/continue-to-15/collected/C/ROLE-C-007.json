@@ -1,0 +1,246 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-C-007",
+  "role": "C",
+  "title": "弱みの印",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "SEKIGAHARA",
+  "classification": "マップ固有",
+  "category": "Skill",
+  "source_evidence": [
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "SEKIGAHARA",
+      "source_status": "Status: Mixed（案ごとに下記）",
+      "claim": "歴史的な関ヶ原そのものを再現せず、なぜか延々と続く巨大な戦場として扱う案。複数勢力のNPCが常時戦闘し、プレイヤーは戦闘回避、戦場を利用した探索、弱ったNPCの撃破、戦闘介入、乱戦への参加を選べる。NPCは有限数を常時生成せず上限を設け、倒されたNPCを後方から補充する。勢力、戦況ロジック、敵対・協力関係は未決。"
+    },
+    {
+      "path": "docs/systems/game-rules.md",
+      "section": "ServerとClientの責務",
+      "source_status": "Status: Draft（草案）",
+      "claim": "ゲーム進行上の事実はServerが決定し、Clientは主に表現を担う。NPC StateはServerが担う列に含まれ、Clientの担当はUI、音響、カメラ、エフェクトである。"
+    },
+    {
+      "path": "docs/systems/observation-and-recognition.md",
+      "section": "Server権威とRemote境界",
+      "source_status": "Status: Draft（草案）",
+      "claim": "ServerはClientの画面状態を直接確認できない。Clientからの報告は要求であり世界状態の証明ではない。経路開放、報酬、Exposure、共有State TransitionはServerだけが確定する。"
+    }
+  ],
+  "design_hypothesis": "SEKIGAHARAはIdeaで、勢力と戦況のロジックは未決である。本候補はNPCの考えや勢力には触れず、Serverが保持している体力という値だけを本人に読み取る探索系スキルとする。画面に入っている戦闘中のNPCのうち、閾値を下回る個体だけに印を出す。印は本人にしか見えず、NPCの状態は変わらない。読み取りのあいだは動けない。",
+  "experience": {
+    "goal": "戦場を敵の一覧ではなく、状態の読める場所として提示する。どこへ入るのではなく、どこがもう弱いかを先に判断させる。",
+    "player_choice": "戦場の内側へ踏み込んで読むか、外側でもう一度別の判断をするか。読むあいだは動けず、攻撃もできない。",
+    "sacrifice_or_risk": "読み取りのあいだは無防備になる。印は本人にしか見えず、仲間に話しても相手の画面には出ない。誰が誰と戦っているかは示されない。"
+  },
+  "placement_assumption": "SEKIGAHARA（Idea）の上に置く案で、地形、勢力の配置、战线経路、配置ポイントは提案しない。使うのはServer側のNPCの状態とクライアントの画面表示だけである。NPCの思考、最大数、補充の規則は未決なので、本候補は体力の読み取りにのみ依存する。閾値は未確定。",
+  "components": [
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "本人にだけ、弱い個体への印を出す。共有ワールドとNPCの状態は変えない。"
+    },
+    {
+      "component": "Effect.StateChange",
+      "availability": "catalog",
+      "usage": "読み取りのあいだ、移動と攻撃の受付を封じる。硬直ではなく操作の受付拒否として扱う。"
+    },
+    {
+      "component": "NPCState",
+      "availability": "catalog",
+      "usage": "Serverが保持するNPCの状態を読む。実装は未確認で、勢力の関係には触れない。"
+    },
+    {
+      "component": "SkillActivation",
+      "availability": "catalog",
+      "usage": "既存の3スキルと同じ発動経路を持つ必要がある。実装はPartialで、読み取りの経路は含まれない。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "InformationChange",
+      "trigger": "対象が本スキルを発動したとき。",
+      "condition": "対象がSEKIGAHARAのマップ内にいて、画面上に戦闘中のNPCが1体以上いること。満たさないときは不成立。",
+      "result": "対象本人の画面上に、Serverが保持する体力が閾値を下回る個体への印を出す。印は対象にしか見えない。NPCの体力、思考、勢力、補充の規則は変化しない。",
+      "target": "対象本人の画面のみ",
+      "scope": "個人。仲間の画面、NPCの状態、共有ワールドのいずれも変えない。",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": [
+        "提示の時点で即時解決する",
+        "印は読み取りのたびに作り直す。保持しない",
+        "NPCの状態が変われば印も変わる。追随の扱いは未確定",
+        "Run終了時に破棄される"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "読み取りは即時解決で印を保存しない。残るのは本人に今見えている表示だけなので、固定の長さも保持も持たない。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effectと同一対象は非加算1件。読み取りごとに1回だけ提示し、印の数は増やさない。",
+        "conflict_resolution": "他のスキルが個体の状態を示す場合の重なり、および既存の個人表示との順位は未定のため保留する。"
+      },
+      "server_validation": "Serverが個体の体力と戦闘中かどうか、および対象が参加者であることを検証する。クライアントは閾値や個体を指定できない。",
+      "client_presentation": "本人だけの短時間表示。個体の種類、勢力の名前、正体や状態の内容は表示しない。",
+      "feedback": {
+        "success": "本人にだけ印が出る。仲間の画面と戦場は変わらない。",
+        "failure": "条件を満たさないときは何も出ないことを示す本人表示を出す。",
+        "ambiguous": "印が何を意味するかは示さない。体力の残量そのものは出さない。"
+      }
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "上のInformationChangeで提示が始まるとき。",
+      "condition": "提示が成立した場合に限る。",
+      "result": "対象プレイヤーの移動入力と攻撃の受付を受け付けない。硬直やStunではなく、入力が結果に届かないものとして扱う。",
+      "target": "発動した本人",
+      "scope": "個人。戦場のNPCも他の参加者にも影響しない",
+      "lifetime": "一時",
+      "resolution": "sustained",
+      "end_conditions": [
+        "提示が終わった時点で解除される",
+        "対象がマップを離れた時点で破棄される",
+        "Run終了時に破棄される"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "封じは読み取りのあいだだけに限る。提示、マップ離脱、Run終了のいずれかで解除する。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一Effectと同一対象は非加算1件。繰り返し発生しても1件を保つ。",
+        "conflict_resolution": "Stun、Down、Roll、/dev/nullの入力無効化との適用順は未定のため保留する。"
+      },
+      "server_validation": "Serverが提示の成立を検証し、封じ中の入力は例外なく不成立として扱う。",
+      "client_presentation": "操作できない旨を本人にだけ示す。理由の説明はしない。",
+      "feedback": {
+        "success": "封じに入った直後、操作が反応しない本人表示を出す。",
+        "failure": "封じ中の入力には短い本人表示だけを返す。ワールド状態は変えない。",
+        "ambiguous": "封じが本スキルのためか別の理由によるものかは表示では区別しない。"
+      }
+    }
+  ],
+  "provides_traits": [
+    "戦闘中の個体のうち弱いものにだけ本人へ印を出せる",
+    "読み取りの間だけ自分の操作を受け付けない",
+    "印は本人専用で、NPCの状態も戦場も変えない"
+  ],
+  "connection_tags": [
+    "Skill",
+    "Information",
+    "Environment",
+    "StateChange"
+  ],
+  "refs": [
+    {
+      "target_id": "ROLE-A-007",
+      "kind": "optional_connection",
+      "required_traits": [
+        "SEKIGAHARAの戦闘状態をServer確定の共有事実として扱えること"
+      ],
+      "fallback": "A-007が成立しない場合、本候補はServer側のNPCの状態だけから成立する。勢力関係や戦況の進行には依存しない。",
+      "resolution": "reserved_unresolved"
+    }
+  ],
+  "unresolved_refs": [
+    {
+      "target_id": "ROLE-A-007",
+      "required_traits": [
+        "SEKIGAHARAの戦闘状態をServer確定の共有事実として扱えること"
+      ],
+      "reason": "peer-snapshotsが配布されておらず、A-007は予約枠のままで本文を確認できない。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": null,
+      "required_traits": [
+        "ServerがNPCの体力と戦闘中かどうかを個人へ渡せること",
+        "SEKIGAHARAのNPCの最大数と補充の規則を、勢力の設計とは独立に決められること"
+      ],
+      "reason": "current-implementation.mdにSEKIGAHARAの実装記録がなく、勢力と戦況ロジックは未決と記されている。どの値を個人提示へ出せるかは判断できない。",
+      "adoption_blocker": false
+    }
+  ],
+  "conflicts": [
+    {
+      "source_path": "docs/systems/map-gimmick-ideas.md",
+      "existing_rule": "SEKIGAHARAはIdeaで、NPCの勢力、戦況ロジック、敵対・協力関係は未決として記されている。弱ったNPCの撃破はプレイヤーの選択肢の候補として書かれている。",
+      "proposal_difference": "本候補は戦況のロジックに踏み込まず、Serverが保持する体力という単独の値を個人に読み取らせる。",
+      "correction": "採用する場合は勢力設計を先行させず、個人提示だけを先に試す。勢力の未決事項はそのまま残す。",
+      "reason_correctable": "コンセプトの記述を変更せず、地形、配置、NPCの思考にも触れない。",
+      "decision_needed": "個人提示をNPC実装より先に置くか、NPCの仕様が決まった後に置くか。"
+    }
+  ],
+  "uncertainties": [
+    "矛盾は確認していない。ServerとClientの責務分離、およびSEKIGAHARAが未実装であることに反しない。",
+    "何をもって弱いとするかの閾値は未確定。",
+    "戦闘中でない個体に印を出すか。",
+    "印は即時に作り直す。保持はしない。",
+    "印を出した瞬間にその個体が倒れた場合の扱い。",
+    "既存の個人表示との重なり。",
+    "SEKIGAHARAは未実装なので、NPCの状態そのものが存在するかを前提にできるか。",
+    "複数人での見え方は未確認。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "戦場の個体を敵の一覧ではなく、弱さという状態として個人に読ませる。戦況の全体像は渡さない。",
+    "in_world_rationale": "視覚と認識に関わる逸脱の定義の範囲内で、個体の内部状態の一部だけを読めるという能力は成立し得る。ただし誰に許された能力なのか、なぜこの場所だけで読めるのかの理由は説明しない。",
+    "meaning_left_ambiguous": "印が何を意味するのか。戦場がそうである理由は説明しない。勢力の敵対関係にも組織史にも触れない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": "unknown",
+  "requires_code_reason": "SEKIGAHARAはIdeaで未実装であり、ServerがNPCの状態を個人へ渡す経路が存在するかを判断できない。必要性が確認できないためunknownとし、調査対象としてServer側のNPC状態の公開方法を挙げる。",
+  "new_logic": [
+    "Serverが保持するNPCの状態から本人用の印を組み立てる経路（要調査）"
+  ],
+  "prototype_cost": {
+    "band": "不明",
+    "rationale": "SEKIGAHARAのNPCが未実装で、個別が持つデータの形が定まっていない。個人提示だけ先行させる場合の試作は小さいが、地形や勢力設計を含む見積もりは出せない。試作前にNPC実装の前提を決める必要がある。",
+    "implementation_steps": [
+      "SEKIGAHARAのNPC実装の前提を先に決める。体力をServer側で持つのか、最大数と補充の規則はどうか",
+      "その前提の上で個人提示だけを実装し、表示を確認する",
+      "仲間には何も出ないことを1人セッションのログで確認する"
+    ],
+    "assumed_existing_parts": [
+      "Server権威のRun管理とPlayerのAttribute",
+      "既存3スキルの発動とクールダウン",
+      "各マップの生成と配置の規約"
+    ]
+  },
+  "role_details": {
+    "skill_family": "探索",
+    "rank": null,
+    "rank_rationale": "探索系のランク構成は開錠とSHADEの案のみで、系統全体の位置づけが未確定である。戦場での読み取りは検知に近いが戦闘支援寄りでもあるため、根拠のない数値は置かずにnullとした。",
+    "levels": [
+      {
+        "level": 1,
+        "proposal": "画面上の戦闘中のNPCのうち、体力が閾値を下回る個体だけに印を出す。印は本人専用。読み取りの間は動けない。"
+      },
+      {
+        "level": 2,
+        "proposal": "印の個体を本人から選べるようにする案。ただし提示に時間が要るぶん、そのあいだはさらに無防備になる。"
+      },
+      {
+        "level": 3,
+        "proposal": "個体を示さず、弱い個体の方向だけを一点で示す案。情報をさらに削る。方向の示し方は未確定。"
+      }
+    ],
+    "equipped_slot_policy": "探索系の1枠として使う。4枠との組み合わせも切替のタイミングも決めない。装備切替と枠占有の条件は未決定のため触れない。",
+    "normal_attack_link": "読み取り中はワンツーも含めて発動を受け付けない。読み取りの外では通常の連携規則に従う。",
+    "avoids": "何もしない個体や、まだ戦える個体へ無駄に踏み込む結果の一部。ただし個体の種類と戦況は読めない。",
+    "intervenes_in": "Server側が保持するNPCの状態。地形、勢力関係、NPCの思考、出現率、依頼の進行は変えない。",
+    "sacrifices": "読み取りのあいだ無防備になる。印は本人にしか見えず共有できない。誰が誰と戦っているかは分からない。",
+    "real_techniques": []
+  },
+  "html_file": "ROLE-C-007.html"
+}

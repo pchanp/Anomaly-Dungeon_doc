@@ -1,0 +1,155 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-A-003",
+  "role": "A",
+  "title": "案内役の一言 — 8/31の帰還選択",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "8/31",
+  "classification": "マップ固有",
+  "category": "NPC",
+  "source_evidence": [
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "### 実装済みの範囲",
+      "source_status": "Status: Prototype: Implemented（実装済みプロトタイプ）",
+      "claim": "EVENING以降は依頼未達成でもReturn Portalが開く。進行はマップ内に探索者がいる間だけで、12本のTrailがゾーンを結ぶ。"
+    },
+    {
+      "path": "docs/systems/current-implementation.md",
+      "section": "## 実装済みの基盤",
+      "source_status": "Status: Implemented（実装棚卸し）",
+      "claim": "夕方以降の帰還面開放と、8/32での帰還面閉鎖は実装済み。通常NPCの状態機械は確認されていない。"
+    },
+    {
+      "path": "docs/decisions/019-player-anomaly-runtime-pvp-and-return.md",
+      "section": "## 決定",
+      "source_status": "Status: Accepted（採用済み）",
+      "claim": "Player Anomalyは通常NPCおよび通常のReturn PortalとInteractionできない。"
+    },
+    {
+      "path": "docs/world/information-design.md",
+      "section": "## 「説明」ではなく「痕跡」",
+      "source_status": "Status: Draft（草案）",
+      "claim": "長い設定説明を基本手段にせず、NPCは世界の説明役ではなく生活に必要なことを話す存在として扱う。"
+    }
+  ],
+  "design_hypothesis": "EVENINGに、帰還へ向かうTrailの分岐で、帰還を知らせている通常NPCが1人だけ立つ状態を仮定します。案内の内容は最後に巡回した時点の通路状態を覚えています。攻撃を受けると案内を止めます。この人がいる理由は、人を外へ出させることだけです。世界の説明はしません。",
+  "experience": {
+    "goal": "他者のEXIT情報を信じるか、自分で確かめるかの判断を1回だけ発生させる。",
+    "player_choice": "案内に従って進む（早い。ただし古い）、自分で確かめる（時間を使う）、攻撃して止める（案内は途切れるが固定ペナルティはない）。",
+    "sacrifice_or_risk": "案内を信じると古い情報に乗る。更新を待つには時間を消費し、EVENINGの帰還判断の余裕が減る。放置でも成立する。"
+  },
+  "placement_assumption": "既存のTrailの分岐のうち1か所と、その周辺の歩行可能部分だけを想定する。新しいTrail、部屋、看板は提案しない。どの分岐を置くかは未確定。",
+  "components": [
+    {"component": "NPCState", "availability": "catalog", "usage": "通常NPC1体の案内、再巡回、停止の状態をServerが持つ。"},
+    {"component": "Effect.InformationChange", "availability": "catalog", "usage": "案内の個人提示に使う。"},
+    {"component": "Effect.StateChange", "availability": "catalog", "usage": "再巡回による案内の更新と、攻撃による停止を扱う。"},
+    {"component": "NpcRouteMemory", "availability": "proposed", "usage": "最後に巡回した時点の通路状態を覚える個体ごとの記録。周期と更新条件は未定。"}
+  ],
+  "effects": [
+    {
+      "kind": "InformationChange",
+      "trigger": "対象の近くでNPCの案内を聞く。",
+      "condition": "NPCが案内中であること。対象が通常のプレイヤーであること。距離の閾値は未定。",
+      "result": "推薦する通路の名前を個人提示として返す。理由と確認時刻は出さない。",
+      "target": "聞いた個人",
+      "scope": "個人。",
+      "lifetime": "一時",
+      "resolution": "instant",
+      "end_conditions": ["提示の取得だけなので適用解決"],
+      "end_mode": "any",
+      "end_rule_reason": "即時。取得ごとに解決する。",
+      "stacking": {"exception": false, "rule": "取得ごとに解決し、値を累計しない。", "conflict_resolution": "他の案内の提示との競合規則は未定義のため保留。"},
+      "server_validation": "Serverが個体の状態と権限を検証し、不成立なら値を返さない。",
+      "client_presentation": "通路名の1行のみ。",
+      "feedback": {"success": "通路名が出る。", "failure": "応答しない。", "ambiguous": "いつの情報か、いまも通れるかは出さない。"}
+    },
+    {
+      "kind": "StateChange",
+      "trigger": "NPCが再巡回する、または攻撃を受ける。",
+      "condition": "巡回中であること、または攻撃ダメージが成立したこと。",
+      "result": "再巡回で案内が更新される。攻撃を受けると案内を停止し、最後の案内内容を保持したまま動かさない。",
+      "target": "NPCの個体（Server Run共有）",
+      "scope": "Run共有の個体。案内内容は個人。",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": ["Run終了", "マップ終了"],
+      "end_mode": "any",
+      "end_rule_reason": "停止の解除は置かない。復帰は別個体の新規生成として扱う。",
+      "stacking": {"exception": false, "rule": "同一個体の遷移はイベントごとに1件。", "conflict_resolution": "他の状態異常との順序は共通既定に従い、回復は停止の解除を意味しない。"},
+      "server_validation": "Serverが移動と攻撃の成立を検証する。",
+      "client_presentation": "個体の位置と停止した挙動のみ。",
+      "feedback": {"success": "再巡回後に案内が変わる。", "failure": "攻撃で案内が止まる。", "ambiguous": "案内が古いشراءかどうかは表示しない。"}
+    }
+  ],
+  "provides_traits": ["古い他者情報を個人提示できる通常NPCがいる", "攻撃で情報源を止められる"],
+  "connection_tags": ["NPCState", "Environment", "AugustPhase", "InformationSharing", "Combat"],
+  "refs": [
+    {
+      "target_id": "ROLE-C-003",
+      "kind": "optional_connection",
+      "required_traits": ["他者の提示を信用判断に使える"],
+      "fallback": "接続なしでも成立する。信じる・自分で確かめる・止めるは移動と待機と攻撃だけで完結する。",
+      "resolution": "reserved_unresolved"
+    }
+  ],
+  "unresolved_refs": [
+    {
+      "target_id": "ROLE-C-003",
+      "required_traits": ["他者の提示を信用判断に使える"],
+      "reason": "Cの候補は配布されておらず、Cの003の内容が不明。語彙のみを記録する。",
+      "adoption_blocker": false
+    },
+    {
+      "target_id": null,
+      "required_traits": ["どのTrail分岐を案内場所として選ぶかを決める方針"],
+      "reason": "ID未指定の要求。既存のTrail構成に依存するため、共通設計側の判断が必要。",
+      "adoption_blocker": true
+    }
+  ],
+  "conflicts": [
+    {
+      "source_path": "docs/systems/current-implementation.md",
+      "existing_rule": "8/31マップには通常NPCの状態機械が未実装であり、既存のPromptは端末と出口面が中心である。",
+      "proposal_difference": "本候補はTrailの分岐に案内用の接触点を1つ足す。",
+      "correction": "既存のTrailと分岐は変更せず、配置だけを追加する。既存Promptの条件は変更しない。",
+      "reason_correctable": "配置の追加は既存の構造を壊さない。",
+      "decision_needed": "案内用の接触点をPromptで示すか、近接の挙動だけで成立させるか。"
+    }
+  ],
+  "uncertainties": [
+    "案内の内容と更新周期は未定。数値を決めていない。",
+    "案内が実際に誤っている確率は未定。保証しない。",
+    "分岐の選択は未確定。実装の有無はStudio未確認。"
+  ],
+  "worldview": {
+    "defamiliarized_element": "異常空間でも外へ出すための案内だけをする人が1人いる状態を足した点。案内は生活のためのもので、説明ではない。",
+    "in_world_rationale": "古い設備と紙の記録が混在する文明では、退避を指示する紙や人が残るのは自然である。その情報が古い理由は、環境の正体ではなく運用上の都合にあるため説明しない。",
+    "meaning_left_ambiguous": "なぜこの人だけ案内をしているのか。最後に通行を見たのはいつなのか。帰還が本当に正しいのか。",
+    "invariants_checked": ["INV-01", "INV-02", "INV-03", "INV-04", "INV-05", "INV-06", "INV-07", "INV-08", "INV-09", "INV-10", "INV-11"]
+  },
+  "requires_code": true,
+  "requires_code_reason": "8/31に通常NPCの状態機械、案内の個人提示、攻撃による停止が存在しないため。コード生成の許可ではない。",
+  "new_logic": ["通常NPC個体の再巡回と案内状態", "案内内容の個体ごとの記憶と更新", "攻撃による案内停止"],
+  "prototype_cost": {
+    "band": "小",
+    "rationale": "NPC1体と分岐1か所で試せる。ただしTrailとの干渉と案内の表示位置は未確認。実時間の見積もりは出していない。",
+    "implementation_steps": ["分岐1か所にNPC1体を配置する", "案内内容の更新周期と記憶を持たせる", "個人提示と攻撃時の停止を実装する", "EVENING前後の挙動を検証する"],
+    "assumed_existing_parts": ["既存の12本のTrailとゾーン", "EVENING以降の帰還面開放", "Server権威のPlayer Anomaly属性"]
+  },
+  "role_details": {
+    "npc_purpose": "この場所にいる理由は、人を外へ出させることだけ。世界の説明や店・世界の事情、アノマリーの意味は話さない。会話で得られるのは『あそこが通れると言っている』という1行で、誰がいつ確認したかは出さない。個体数は1体。",
+    "player_anomaly_handling": "判断019によりPlayer Anomalyは通常NPCとInteractionできないため、案内を受けられない。案内はServerが保持し続けるため、他のプレイヤーが得た内容は他の個人の表示に留まる。Player Anomaly自身が最後に受け取った案内を残すかは未確定。",
+    "mob_contract": {
+      "applicable": false,
+      "spawn_condition": "対象外。通常NPC1体のみ。モブ敵の発生を含まない。イベント由来のモブはROLE-A-013で扱う。",
+      "population_cap": "対象外。個体数は1体固定で湧きも補充も持たない。",
+      "non_combat_response": "対象外。戦闘を設計していない。攻撃は解答ではなく、案内を止める結果になるだけ。",
+      "exit_condition": "対象外。退場はRun終了とマップ終了のみ。案内停止は個体内の状態であり、個体数の増減は起こさない。",
+      "entity_distinction": "通常NPCでありAnomaly Entityではない。Interaction Kindは近接の観測とPresentのみ。Heal、Skill、Combat Interactionの受理は宣言しない。"
+    }
+  },
+  "html_file": "ROLE-A-003.html"
+}

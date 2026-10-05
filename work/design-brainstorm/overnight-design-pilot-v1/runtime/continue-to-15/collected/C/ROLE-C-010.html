@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ROLE-C-010 手を置いたまま</title>
+  <link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <p class="sub">ROLE-C-010 ／ 研究所 ／ マップ固有 ／ Idea</p>
+    <h1>手を置いたまま</h1>
+    <nav class="nav"><a href="index.html">一覧</a><a href="ROLE-C-010.json">この候補のJSON</a></nav>
+  </header>
+
+  <section id="hypothesis">
+    <h2>何の案か</h2>
+    <p>既存の器材に手を置いた状態のあいだだけ、一つの個人状態ksen効くなる探索系スキル。</p>
+    <h2>仕組み</h2>
+    <ul>
+      <li>器材に触れ、触れているあいだだけ本人に個人状態が入る。他の対象へは広げない。</li>
+      <li>手を離すと中断する。同じ器材へ戻っても自動で再開はしない。</li>
+      <li>触れているあいだは移動も攻撃も他のスキルも発動できない。</li>
+    </ul>
+    <h2>選択と代償</h2>
+    <p>その場に留まって効果を得るか、離れて移動を選ぶか。離れると切れるので、同じ器材へ戻っても得なおせない。効果の中身はまだ決めていない。</p>
+  </section>
+
+  <section id="diagram">
+    <h2>作用図</h2>
+    <div class="board">
+      <svg viewBox="0 0 980 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="器材に触れているあいだだけ個人状態が入り、離れると中断して同じ器材へ戻っても再開しないことを示す図">
+        <rect width="980" height="400" fill="#0a1118"/>
+        <text x="30" y="32" class="label">留まっているあいだだけ</text>
+        <rect x="40" y="56" width="380" height="60" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text x="60" y="82" class="label">器材から離れている</text>
+        <text x="60" y="104" class="small">個人状態は入っていない。移動も攻撃もできる</text>
+        <rect x="500" y="56" width="440" height="60" rx="8" fill="#142330" stroke="#70c9c3"/>
+        <text x="520" y="82" class="label">器材に触れている</text>
+        <text x="520" y="104" class="small">個人状態が入る。ただし動けない</text>
+        <path d="M420 86h72" class="active"/><path d="M484 80l8 6-8 6" class="active"/>
+        <text x="424" y="76" class="small">触る</text>
+
+        <path d="M720 116v30" class="hyp-line"/>
+        <rect x="500" y="146" width="440" height="66" rx="8" fill="#142330" stroke="#70c9c3"/>
+        <text x="520" y="172" class="label">本人にだけ効く</text>
+        <text x="520" y="196" class="small">器材、研究記録、共有の在庫は変わらない</text>
+
+        <path d="M240 146v26" class="active"/>
+        <path d="M280 172v26" class="active"/>
+        <rect x="40" y="198" width="380" height="66" rx="8" fill="#142330" stroke="#ea9380"/>
+        <text x="60" y="224" class="label">手を離すと中断する</text>
+        <text x="60" y="248" class="small">同じ器材へ戻っても自動では再開しない</text>
+
+        <rect x="40" y="286" width="900" height="62" rx="8" fill="#142330" stroke="#d3b653"/>
+        <text x="60" y="312" class="label">まだ決めていないこと</text>
+        <text x="60" y="336" class="small">効果の中身、どの器材が対象か、居場所が安全になるかは未確定</text>
+        <text x="30" y="376" class="small">研究所は未実装で、器材の実在を確認する手段がない。装置の正体には触れない。</text>
+        <text x="30" y="396" class="small">図は模式図。室内の構造や装置の形状は提案していない。</text>
+      </svg>
+    </div>
+    <p>触れるだけで始まり、離れると切れる。同じ場所へ戻っても自動で再開しない。</p>
+  </section>
+
+  <p class="sub">接続タグ: 探索／環境／状態変化／規則上書き。requires_code: unknown（研究所が未実装で必要性を判定できない）。詳細は<a href="ROLE-C-010.json">同じIDのJSON</a>に記録。</p>
+</main>
+</body>
+</html>

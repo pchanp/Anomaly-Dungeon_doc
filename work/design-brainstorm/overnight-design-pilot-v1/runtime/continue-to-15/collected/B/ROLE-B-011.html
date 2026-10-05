@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-B-011 置き忘れの品（差し出すと見えるものが入れ替わる）</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<p class="sub">overnight-design-pilot-v1 ／ ROLE=B ／ 研究所 ／ Idea</p>
+<h1>ROLE-B-011 置き忘れの品（差し出すと見えるものが入れ替わる）— 作業用見出し</h1>
+</header>
+
+<section id="hypothesis">
+<h2>何の案？</h2>
+<p>差し出した相手には見えるものが1つ増え、同時に相手のもともとの視認が1つ減る。</p>
+<h2>仕組み</h2>
+<ul>
+<li>同じRunの別の個人に差し出すと、受け手の個人にだけ視認が1つ増える。</li>
+<li>同時に、受け手がもともと持っていた視認が1つ消える。</li>
+<li>相手の所持や体力、世界の状態は動かない。差し出した品は消える。</li>
+</ul>
+<h2>選択と代償</h2>
+<p>増やすものと失うものは区別しない。相手が何を失ったかは、渡した側にも伝わらない。</p>
+</section>
+
+<section id="diagram">
+<h2>作用図</h2>
+<div class="board">
+<svg viewBox="0 0 980 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="置き忘れの品を個人から個人へ差し出すと、受け手の視認が一つ増え、同時に元の視認が一つ減る図。相手の所持と体力は変わらず、差は差し出した側にも伝わらない">
+<rect width="980" height="380" fill="#0a1118"/>
+<text x="30" y="26" class="small">既存のwhisperの装置とは別の物品。相互作用は作らない。</text>
+<rect x="30" y="60" width="230" height="116" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="46" y="90" class="label">差し出す側</text>
+<text x="46" y="116" class="small">1枠を消費</text>
+<text x="46" y="138" class="small">渡したあとは手元にない</text>
+<text x="46" y="160" class="small">何が見えるかは教えない</text>
+<rect x="720" y="60" width="230" height="116" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="736" y="90" class="label">受け手</text>
+<text x="736" y="116" class="small">視認が1つ増える</text>
+<text x="736" y="138" class="small">既存の視認が1つ消える</text>
+<text x="736" y="160" class="small">所持と体力は動かない</text>
+<rect x="360" y="46" width="260" height="144" rx="8" fill="#142330" stroke="#c4a0ec"/>
+<text x="376" y="76" class="label">入れ替わり</text>
+<text x="376" y="102" class="small">増えるのは相手側の記憶</text>
+<text x="376" y="124" class="small">失うのも相手側の記憶</text>
+<text x="376" y="146" class="small">+) 別の視認</text>
+<text x="376" y="168" class="small">−) もともと見たもの</text>
+<path d="M262 118 H357" class="active"/>
+<path d="M357 112 l10 6 -10 6" class="active"/>
+<path d="M622 118 H717" class="hyp-line"/>
+<path d="M717 112 l10 6 -10 6" class="hyp-line"/>
+<path d="M490 192 V232" class="hyp-line"/>
+<path d="M482 224 l8 8 8 -8" class="hyp-line"/>
+<rect x="330" y="234" width="320" height="86" rx="8" fill="#142330" stroke="#ea9380"/>
+<text x="346" y="264" class="label">戻らない</text>
+<text x="346" y="290" class="small">変化はマップ内だけ</text>
+<text x="346" y="312" class="small">Run終了で消える</text>
+<text x="30" y="352" class="small">増えるもの・失うものはHUDで区別しない。模式図であり配置図ではない。</text>
+</svg>
+</div>
+<p>左が渡した側、右が受け手。中央が入替わり、下が寿命の切れ目。</p>
+</section>
+
+<footer>
+<p><a href="index.html">← B候補一覧</a> ／ 詳細データ <a href="ROLE-B-011.json">ROLE-B-011.json</a> ／ connection_tags: Item, Observation ／ requires_code: true ／ 試作コスト: 不明</p>
+</footer>
+</main>
+</body>
+</html>

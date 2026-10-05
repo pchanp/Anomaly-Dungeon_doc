@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ROLE-C-001 巻き戻し地点</title>
+  <link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <p class="sub">ROLE-C-001 ／ 8/31 ／ マップ固有 ／ Idea</p>
+    <h1>巻き戻し地点</h1>
+    <nav class="nav"><a href="index.html">一覧</a><a href="ROLE-C-001.json">この候補のJSON</a></nav>
+  </header>
+
+  <section id="hypothesis">
+    <h2>何の案か</h2>
+    <p>8/31の昼・夕方・夜の切り替えの瞬間だけ、个人の「前の自分の位置」へ一度だけ戻すアクション系スキル。</p>
+    <h2>仕組み</h2>
+    <ul>
+      <li>フェーズが変わるたび、探索者それぞれの現在地を個人記録として残す。</li>
+      <li>切り替わり直後の短い窓で発動すると、その記録位置へ移動する。記録は1回で消える。</li>
+      <li>戻った直後は、そのフェーズが終わるまでスキルもワンツーも発動できない。移動はできる。</li>
+    </ul>
+    <h2>選択と代償</h2>
+    <p>窓を使うか、そのフェーズを探索に回すかを選ぶ。使うと往復の移動とExposureの蓄積を一部回収できるが、戻った後はそのフェーズで戦えない。地形も帰還面も残り時間も巻き戻らない。</p>
+  </section>
+
+  <section id="diagram">
+    <h2>作用図</h2>
+    <div class="board">
+      <svg viewBox="0 0 980 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="8月31日の昼から8月32日への切り替えと、切り替えごとに更新される個人の位置記録、切り替え直後の窓で記録位置へ戻る選択と戻った後に残る行動制限を示す図">
+        <rect width="980" height="420" fill="#0a1118"/>
+        <text x="30" y="32" class="label">切り替え（マップ共有の事実）</text>
+        <rect x="40" y="48" width="170" height="52" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text x="60" y="72" class="label">昼</text>
+        <text x="60" y="92" class="small">帰還面は閉</text>
+        <rect x="250" y="48" width="170" height="52" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text x="270" y="72" class="label">夕方</text>
+        <text x="270" y="92" class="small">帰還面が開く</text>
+        <rect x="460" y="48" width="170" height="52" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text x="480" y="72" class="label">夜</text>
+        <text x="480" y="92" class="small">帰還面は開いたまま</text>
+        <rect x="670" y="48" width="180" height="52" rx="8" fill="#142330" stroke="#ea9380"/>
+        <text x="690" y="72" class="label">8月32日</text>
+        <text x="690" y="92" class="small">閉塞。残り300秒</text>
+        <path d="M210 74h32" class="active"/><path d="M236 68l8 6-8 6" class="active"/>
+        <path d="M420 74h32" class="active"/><path d="M446 68l8 6-8 6" class="active"/>
+        <path d="M630 74h32" class="active"/><path d="M656 68l8 6-8 6" class="active"/>
+
+        <text x="30" y="146" class="label">個人の位置記録（地図内のあいだだけ保持）</text>
+        <rect x="40" y="160" width="170" height="44" rx="8" fill="#142330" stroke="#70c9c3" stroke-dasharray="6 4"/>
+        <text x="58" y="187" class="small">いまの位置を保存</text>
+        <rect x="250" y="160" width="170" height="44" rx="8" fill="#142330" stroke="#70c9c3" stroke-dasharray="6 4"/>
+        <text x="268" y="187" class="small">上書きで保存</text>
+        <rect x="460" y="160" width="170" height="44" rx="8" fill="#142330" stroke="#70c9c3" stroke-dasharray="6 4"/>
+        <text x="478" y="187" class="small">上書きで保存</text>
+        <rect x="670" y="160" width="180" height="44" rx="8" fill="#142330" stroke="#8ba2b3" stroke-dasharray="6 4"/>
+        <text x="688" y="187" class="small">保存のみ</text>
+        <path d="M125 100v54" class="hyp-line"/>
+        <path d="M335 100v54" class="hyp-line"/>
+        <path d="M545 100v54" class="hyp-line"/>
+        <path d="M760 100v54" class="hyp-line"/>
+
+        <rect x="40" y="236" width="380" height="62" rx="8" fill="#142330" stroke="#70c9c3"/>
+        <text x="60" y="264" class="label">窓の中で発動する</text>
+        <text x="60" y="288" class="small">記録位置へ移動。記録は消費される</text>
+        <rect x="460" y="236" width="390" height="62" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text x="480" y="264" class="label">見送る</text>
+        <text x="480" y="288" class="small">次の切り替えまで探索を続ける</text>
+        <path d="M356 186v42" class="active"/>
+        <text x="250" y="240" class="small">切り替え直後 → 窓が開く</text>
+
+        <rect x="40" y="322" width="380" height="62" rx="8" fill="#142330" stroke="#ea9380"/>
+        <text x="60" y="350" class="label">そのあいだ行動が制限される</text>
+        <text x="60" y="374" class="small">4つの枠とワンツーが発動不可。移動はできる</text>
+        <rect x="460" y="322" width="390" height="62" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text x="480" y="350" class="label">巻き戻らないもの</text>
+        <text x="480" y="374" class="small">地形・帰還面・出現率・Exposure・残り時間・依頼</text>
+        <path d="M230 298v20" class="active"/>
+        <text x="30" y="410" class="small">窓の長さと着地の安全は未確定。図は模式図で、地図の配置を示すものではない。</text>
+      </svg>
+    </div>
+    <p>記録は個人ごとに上書きされ、窓は切り替えの瞬間だけ開く。戻ったのは位置だけで、それ以外の世界は進んだままになる。</p>
+  </section>
+
+  <p class="sub">接続タグ: アクション／8/31の切り替え／移動／状態変化／情報変化。requires_code: true（試作見積もり: 中）。詳細は<a href="ROLE-C-001.json">同じIDのJSON</a>に記録。</p>
+</main>
+</body>
+</html>

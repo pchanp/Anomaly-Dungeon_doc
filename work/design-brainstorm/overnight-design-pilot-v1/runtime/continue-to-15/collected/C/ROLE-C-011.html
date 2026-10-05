@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ROLE-C-011 帰り道の印</title>
+  <link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <p class="sub">ROLE-C-011 ／ 研究所 ／ マップ固有 ／ Idea</p>
+    <h1>帰り道の印</h1>
+    <nav class="nav"><a href="index.html">一覧</a><a href="ROLE-C-011.json">この候補のJSON</a></nav>
+  </header>
+
+  <section id="hypothesis">
+    <h2>何の案か</h2>
+    <p>自分の歩いた道に、自分だけ見える印を置く探索系スキル。</p>
+    <h2>仕組み</h2>
+    <ul>
+      <li>発動中の移動で、現在位置の一つ後ろに印が1件できる。自分の後ろにしか置けない。</li>
+      <li>印は本人だけの個人記録。共有の地図にも、仲間の画面にも出ない。</li>
+      <li>置いているあいだだけ移動速度が落ち、置ける数と距離は有限。Runが終わると消える。</li>
+    </ul>
+    <h2>選択と代償</h2>
+    <p>帰り道を印で確保しながら進むか、置かずに自由に歩くかを選ぶ。置けば帰路は残るが歩く速さが落ちる。印は他人に見せないので、仲間に口頭で伝えるしかない。</p>
+  </section>
+
+  <section id="diagram">
+    <h2>作用図</h2>
+    <div class="board">
+      <svg viewBox="0 0 980 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="印は自分の後ろにしか置けず、置いているあいだだけ歩く速さが落ち、共有の地図には出ないことを示す図">
+        <rect width="980" height="400" fill="#0a1118"/>
+        <text x="30" y="32" class="label">印は自分の後ろにしか伸びない</text>
+        <rect x="60" y="180" width="820" height="120" rx="10" fill="#101922" stroke="#2a3c49"/>
+        <path d="M140 260h420" class="active" stroke-width="3"/>
+        <path d="M552 252l10 8-10 8" class="active" fill="#70c9c3"/>
+        <circle cx="170" cy="260" r="7" fill="#d3b653"/>
+        <circle cx="290" cy="260" r="7" fill="#d3b653"/>
+        <circle cx="410" cy="260" r="7" fill="#d3b653"/>
+        <circle cx="560" cy="252" r="13" fill="#172d3b" stroke="#70c9c3"/>
+        <text x="560" y="256" text-anchor="middle" class="small">本人</text>
+        <text x="170" y="228" class="small">印</text>
+        <text x="270" y="228" class="small">印</text>
+        <text x="390" y="228" class="small">印</text>
+        <text x="560" y="288" text-anchor="middle" class="small">ここまでにしか置けない</text>
+
+        <rect x="40" y="60" width="280" height="72" rx="8" fill="#142330" stroke="#70c9c3"/>
+        <text x="58" y="88" class="label">本人に見える</text>
+        <text x="58" y="112" class="small">自分の印の一覧</text>
+        <rect x="350" y="60" width="280" height="72" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text x="368" y="88" class="label">仲間に見える</text>
+        <text x="368" y="112" class="small">何も出ない</text>
+        <rect x="660" y="60" width="280" height="72" rx="8" fill="#142330" stroke="#ea9380"/>
+        <text x="678" y="88" class="label">置いているあいだ</text>
+        <text x="678" y="112" class="small">歩く速さが落ちる</text>
+        <path d="M560 140v22" class="hyp-line"/>
+        <path d="M180 140v70" class="hyp-line"/>
+        <path d="M800 132v10" class="active"/>
+
+        <rect x="40" y="324" width="900" height="58" rx="8" fill="#142330" stroke="#d3b653"/>
+        <text x="58" y="348" class="label">有限である</text>
+        <text x="58" y="372" class="small">置ける数と距離は未確定。Runが終わると印は消える</text>
+        <text x="30" y="396" class="small">印を個人画面で出すか地形の目印にするかは未確定。図は模式図で、室内の構造は示さない。</text>
+      </svg>
+    </div>
+    <p>印は自分しか見えない自分の記録。置いた分だけ帰路が残り、置き始めの速さは落ちる。</p>
+  </section>
+
+  <p class="sub">接続タグ: 探索／情報／状態変化。requires_code: true（試作見積もり: 小）。詳細は<a href="ROLE-C-011.json">同じIDのJSON</a>に記録。</p>
+</main>
+</body>
+</html>

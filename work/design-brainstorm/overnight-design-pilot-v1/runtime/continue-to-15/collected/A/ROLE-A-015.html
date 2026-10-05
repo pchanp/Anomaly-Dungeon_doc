@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-A-015 最後の数え — 終了直前の静けさ</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header class="top">
+<p class="sub">overnight-design-pilot-v1 ／ ROLE-A-015 ／ 全マップ共通 ／ GimmickEvent</p>
+<h1>最後の数え — 終了直前の静けさ</h1>
+<p>Runの終盤に、段階が1つずつ進むことを示す。</p>
+<div class="badges"><span class="badge hyp">Idea</span><span class="badge">unreviewed</span><span class="badge unknown">段階の定義は未定</span></div>
+<nav class="nav"><a href="index.html">← 一覧</a><a href="ROLE-A-015.json">同IDのJSON</a></nav>
+</header>
+
+<section id="hypothesis">
+<h2>何の案か</h2>
+<p>残秒を出さず、終盤の空気だけ渡す。</p>
+<ul>
+<li>Runの段階が1つ進むごとに、環境表現と個人提示が更新される。</li>
+<li>提示は段階のみ。残秒も終了理由も表示しない。</li>
+<li>新しい個体も発生も起こさない。何かが湧く現象ではない。</li>
+</ul>
+<p><strong>選択と代償:</strong> その時間を探索に使う／段階を読みにいく。段階の意味は説明されないため、誤読しても終了条件にはならない。</p>
+<p class="sub">接続タグ: WorldChange / InformationChange / Environment ／ requires_code: true ／ conflicts 1件・未解決2件（JSONに記載）</p>
+</section>
+
+<section id="diagram">
+<h2>仕組みの図</h2>
+<div class="board">
+<svg viewBox="0 0 1000 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Runの段階が1つ進むごとに環境表現と個人提示だけが更新され、残秒も終了理由も出ないことを示す図">
+<rect width="1000" height="300" fill="#0a1118"/>
+<text class="label" x="24" y="28">Run共有の段階</text>
+<text class="label" x="620" y="28">個人に返るもの</text>
+<rect x="24" y="60" width="140" height="56" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="small" x="38" y="94">段階1</text>
+<rect x="184" y="60" width="140" height="56" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="small" x="198" y="94">段階2</text>
+<rect x="344" y="60" width="140" height="56" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="small" x="358" y="94">段階3（仮）</text>
+<path d="M164 88h14M324 88h14" class="hyp-line"/>
+<path d="M172 82l9 6-9 6M332 82l9 6-9 6" class="hyp-line"/>
+<rect x="24" y="150" width="460" height="56" rx="8" fill="#142330" stroke="#8ba2b3"/>
+<text class="small" x="38" y="184">段階の数と長さは未定。既存の残秒からは導出しない</text>
+<rect x="620" y="60" width="356" height="56" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text class="small" x="634" y="94">段階だけが1行で更新される（残秒なし）</text>
+<rect x="620" y="150" width="356" height="56" rx="8" fill="#142330" stroke="#ea9380"/>
+<text class="small" x="634" y="184">終了理由は表示しない</text>
+<path d="M484 88h130" class="active"/>
+<path d="M608 82l9 6-9 6" class="active"/>
+<path d="M620 178h-130" stroke="#ea9380" stroke-width="2" fill="none"/>
+<path d="M496 172l-9 6 9 6" stroke="#ea9380" stroke-width="2" fill="none"/>
+<text class="small" x="24" y="264">この図で分かること：進行の提示だけで、終盤の時間を送る。</text>
+<text class="small" x="24" y="284">個体も環境も動かさない（湧きは別候補）。</text>
+</svg>
+</div>
+<p>図注：何かを数えていることは分かるが、何なのかは分からない。</p>
+</section>
+
+<footer>overnight-design-pilot-v1 ／ ROLE-A-015 ／ 実表示は未確認（担当セッションでブラウザを使用していない）。</footer>
+</main>
+</body>
+</html>

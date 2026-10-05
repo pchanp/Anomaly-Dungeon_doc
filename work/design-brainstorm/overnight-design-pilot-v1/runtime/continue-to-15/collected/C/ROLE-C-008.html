@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ROLE-C-008 一度だけ受け流す</title>
+  <link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <p class="sub">ROLE-C-008 ／ SEKIGAHARA ／ マップ固有 ／ Idea</p>
+    <h1>一度だけ受け流す</h1>
+    <nav class="nav"><a href="index.html">一覧</a><a href="ROLE-C-008.json">この候補のJSON</a></nav>
+  </header>
+
+  <section id="hypothesis">
+    <h2>何の案か</h2>
+    <p>直近の被打のあと、硬直を1回だけ殺すアクション系スキル。無敵ではない。</p>
+    <h2>仕組み</h2>
+    <ul>
+      <li>被打後、連続した入力の間に発動する。次の1回の被ダメージで硬直が出なくなる。</li>
+      <li>ダメージはそのまま通り、体は減る。無敵でも回復でもない。</li>
+      <li>受け流しを使うと、次の通常攻撃の受付が1回だけ拒否される。</li>
+    </ul>
+    <h2>選択と代償</h2>
+    <p>この1回で足場を保つか、反撃のために温存するかを選ぶ。体が減り、反撃は1手ぶん遅れる。使わなければ被打をそのまま受け持つ。</p>
+  </section>
+
+  <section id="diagram">
+    <h2>作用図</h2>
+    <div class="board">
+      <svg viewBox="0 0 980 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="同じ被打を平常どおり受ける場合と受け流しを使う場合にわかれ、受け流しの場合だけ硬直が消えるが体力は減り、その反動として次の通常攻撃が1回だけ受け付けないことを示す図">
+        <rect width="980" height="400" fill="#0a1118"/>
+        <text x="30" y="32" class="label">同じ一打。二通り受ける</text>
+        <rect x="40" y="50" width="250" height="54" rx="8" fill="#142330" stroke="#ea9380"/>
+        <text x="58" y="74" class="label">被打を平常どおり</text>
+        <text x="58" y="94" class="small">硬直が出る。体も減る</text>
+        <rect x="350" y="50" width="250" height="54" rx="8" fill="#142330" stroke="#70c9c3"/>
+        <text x="368" y="74" class="label">受け流しを使う</text>
+        <text x="368" y="94" class="small">残り1回。失効時間は未確定</text>
+        <path d="M290 77h54" class="active"/><path d="M336 71l8 6-8 6" class="active"/>
+
+        <path d="M165 104v30" class="hyp-line"/>
+        <path d="M475 104v30" class="hyp-line"/>
+        <rect x="40" y="134" width="250" height="64" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text x="58" y="160" class="label">硬直の間は動けない</text>
+        <text x="58" y="184" class="small">その間にもう1打を受ける</text>
+        <rect x="350" y="134" width="250" height="64" rx="8" fill="#142330" stroke="#70c9c3"/>
+        <text x="368" y="160" class="label">硬直は出ない</text>
+        <text x="368" y="184" class="small">ダメージは通り体が減る</text>
+        <path d="M165 198v26" class="active"/>
+        <path d="M475 198v26" class="active"/>
+
+        <rect x="40" y="232" width="250" height="64" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text x="58" y="258" class="label">硬直が終わる</text>
+        <text x="58" y="282" class="small">すべての操作が戻る</text>
+        <rect x="350" y="232" width="250" height="64" rx="8" fill="#142330" stroke="#ea9380"/>
+        <text x="368" y="258" class="label">次の通常攻撃が1回沈黙</text>
+        <text x="368" y="282" class="small">他の技と移動は使える</text>
+        <path d="M600 77h56" class="active"/><path d="M648 71l8 6-8 6" class="active"/>
+        <rect x="664" y="134" width="276" height="162" rx="8" fill="#142330" stroke="#8ba2b3"/>
+        <text x="682" y="160" class="label">変わらないもの</text>
+        <text x="682" y="186" class="small">ダメージの数値</text>
+        <text x="682" y="210" class="small">体力の下限の判定</text>
+        <text x="682" y="234" class="small">状態異常の付与</text>
+        <text x="682" y="258" class="small">地形と敵の行動</text>
+        <text x="682" y="282" class="small">依頼の進行</text>
+        <path d="M800 112v16" stroke="#8ba2b3" fill="none" stroke-dasharray="6 4"/>
+        <text x="30" y="336" class="small">硬直がどの段階で生じるかは既存文書に記録がない。试作前に確認が要る。</text>
+        <text x="30" y="360" class="small">SEKIGAHARAは未実装なので、まず別のマップで検証する。</text>
+        <text x="30" y="384" class="small">図は模式図。戦場の形状は示さない。</text>
+      </svg>
+    </div>
+    <p>消えるのは硬直だけ。体力は減り、次の通常攻撃が1回沈黙する。無敵でも回復でもない。</p>
+  </section>
+
+  <p class="sub">接続タグ: アクション／戦闘／状態変化／規則上書き。requires_code: unknown（硬直の発生箇所が文書にない）。詳細は<a href="ROLE-C-008.json">同じIDのJSON</a>に記録。</p>
+</main>
+</body>
+</html>

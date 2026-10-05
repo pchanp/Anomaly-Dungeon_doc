@@ -1,0 +1,242 @@
+{
+  "schema_version": "0.1",
+  "run_id": "overnight-design-pilot-v1",
+  "candidate_id": "ROLE-B-006",
+  "role": "B",
+  "title": "未記名の貸出票（差し出した相手だけに判る）— 作業用見出し",
+  "design_status": "Idea",
+  "review_status": "unreviewed",
+  "primary_map": "廃TSUTAYA",
+  "classification": "マップ固有",
+  "category": "Item",
+  "source_evidence": [
+    {
+      "path": "docs/systems/map-gimmick-ideas.md",
+      "section": "Archive Selection UIには一覧、選択、閉じる以外の遷移がない。",
+      "source_status": "Status: Prototype: Implemented（実装済みプロトタイプ）",
+      "claim": "棚の検索UIは表示と選択のみ。候補は新しいUI画面を増やさず、個人への提示だけを足す。"
+    },
+    {
+      "path": "docs/systems/anomaly-interaction.md",
+      "section": "対象には個別出現確率、同時出現数などが含まれ得る。この変更はサーバーがRun状態として確定し、Run終了時に破棄する。",
+      "source_status": "ステータス: Draft",
+      "claim": "個人提示と個人への直接の影響を分ける原則。候補は提示の相手個人だけを変化させる。"
+    },
+    {
+      "path": "docs/systems/effect-components.md",
+      "section": "| `InformationChange` | Detect・Recognition、可視性差、情報の信頼性 | Serverの共有事実とClientごとの提示・認識を分ける |",
+      "source_status": "Status: Designed（共通の分類と既定規則に合意済み。個別設定・実装は未確定）",
+      "claim": "情報の信頼性と個人ごとの提示を分離する分類。候補は『本人以外には意味を持たない紙』として使う。"
+    }
+  ],
+  "design_hypothesis": "貸出票は貸出の所有を示す票だが、候補は『名前がない』票にする。自分で読んでも差し出しても何も分からない。誰かに差し出した瞬間だけ、相手には中身の品と使用者が分かる。物の移動ではなく情報の期限にする案。",
+  "experience": {
+    "goal": "自分の所知を他者に渡し、そのために手元の紙を失う行為にする。",
+    "player_choice": "差し出して相手に知らせる。持ち歩いて自分で見る（何も分からない）。棚へ戻す。捨てる。",
+    "sacrifice_or_risk": "渡した瞬間に自分の手元にない。差す相手を選ぶことしかできない。"
+  },
+  "placement_assumption": "新しい棚・部屋・装置は増やさない。既存の棚検索のそばだけを置く場所とする。棚へ戻す操作は別候補で扱って競合を避ける。取得源は未実装の人物・施設であり創作しない。",
+  "components": [
+    {
+      "component": "Effect.InformationChange",
+      "availability": "catalog",
+      "usage": "提示された相手個人にだけ中身の情報を伝える。個人ごとの提示であり、共有ではない。"
+    },
+    {
+      "component": "ArchiveMedia",
+      "availability": "catalog",
+      "usage": "棚の検索UIの枠組み。実内容は未実装。"
+    },
+    {
+      "component": "InventoryBoundary",
+      "availability": "catalog",
+      "usage": "20枠と初期4枠の境界。渡すと枠が空く。"
+    },
+    {
+      "component": "ItemLifecycle",
+      "availability": "catalog",
+      "usage": "正式な取得源とItemStackが未実装であることを前提とする。"
+    }
+  ],
+  "effects": [
+    {
+      "kind": "InformationChange",
+      "trigger": "個人が未記名の貸出票を、同じRunの別の個人に差し出す",
+      "condition": "両方が実行中であること、受け手が個人であること、差し出す個人が所有者であること",
+      "result": "受け手の個人だけが中身の情報を得る。受け手の所持やHPは変わらず、共有のマップ状態も変わらない。差し出した側の票は消費される",
+      "target": "受け手の個人（提示先は個人）",
+      "scope": "個人。Run共有の状態は書き換えない",
+      "lifetime": "同一マップ中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "受け手がマップを離れた時点で提示は消える",
+        "受け手の死亡または切断で提示も消える。再接続時の復元は未決"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。提示はマップ内に閉じる設計でRun共有とは別境界に置く。",
+      "stacking": {
+        "exception": false,
+        "rule": "1票につき1件の提示。別の人へは何も残らない。固定秒数は持たない",
+        "conflict_resolution": "他の情報提示と競合する場合は優先順位が未決定なので強制作業しない"
+      },
+      "server_validation": "Serverが両者の参加、所有者、受け手の個人性を検証する。クライアント表示を根拠にしない",
+      "client_presentation": "受け手の個人表示にだけ出る。差し出した本人にも内容は出ない",
+      "feedback": {
+        "success": "受け手の側に短い表示が一度出る",
+        "failure": "何も変わらない。注意表示のみ",
+        "ambiguous": "情報の正誤や指示は出さない。受け手が自分で疑う余地は残す"
+      }
+    },
+    {
+      "kind": "InformationChange",
+      "trigger": "票を所持している間、個人の所持表示が再描画される",
+      "condition": "対象個人が参加中で個人表示が有効なとき",
+      "result": "『未記名』であることだけを示す印を表示する。中身は本人にも出さない",
+      "target": "対象個人",
+      "scope": "個人",
+      "lifetime": "同一Run中",
+      "resolution": "sustained",
+      "end_conditions": [
+        "Run終了または表示の非表示で解除",
+        "切断で個人提示は破棄する。再接続時の復元は未決"
+      ],
+      "end_mode": "any",
+      "end_rule_reason": "既定のany。",
+      "stacking": {
+        "exception": false,
+        "rule": "同一個人への同一提示は非加算1件。状態を上書きする",
+        "conflict_resolution": "他の所持表示との優先順位は未決定"
+      },
+      "server_validation": "Serverは票の有無と未使用かどうかだけを返す",
+      "client_presentation": "所持リストに小さな印1つ。他者には出さない",
+      "feedback": {
+        "success": "印が点いた状態のままになる",
+        "failure": "印が変化しない",
+        "ambiguous": "印の意味を説明する文は出さない"
+      }
+    }
+  ],
+  "provides_traits": [
+    "個人から個人へだけ情報を渡す提示の例",
+    "所持物を渡らずに情報だけを渡す経路"
+  ],
+  "connection_tags": [
+    "Item",
+    "Interface"
+  ],
+  "refs": [],
+  "unresolved_refs": [
+    {
+      "target_id": null,
+      "required_traits": [
+        "個人間での物品の受け渡し操作と、その所有権の移動規則"
+      ],
+      "reason": "ItemStackと受け渡し経路が未実装であり、个人間の受け渡しが成立するかを判断できない。候補では所有が個人から個人へ移る前提で書いたが、実装前の規則である。",
+      "adoption_blocker": true
+    }
+  ],
+  "conflicts": [],
+  "uncertainties": [
+    "受け手が複数人いた場合に全員に見えるか、一人だけに見えるかは未確定。",
+    "渡した先で紙が戻ってくるかは未確定。",
+    "『名前がない』ことが何を意味する、根据は説明しない。",
+    "照合範囲：棚UIの遷移、効果分類の個人提示、博士の依頼が定める固有品交換（配布経路が重なるため置かない判断）、判断010の枠強化。矛盾は見つからず conflicts は空配列"
+  ],
+  "worldview": {
+    "defamiliarized_element": "名所のある貸出票ではなく、名前がない票にした。価値は第三者の目にしか現れない。",
+    "in_world_rationale": "閉店後にも残された記録は本来、写す Extraterritorial 鍵が要るはずである。名乗りがない票は、誰かが実際にRental していた証として扱われる余地があり、受け手の解釈に委ねられる。",
+    "meaning_left_ambiguous": "誰が名前を書かなかったのか、貸出の事実を隠すためか、書き損じただけかは確定しない。",
+    "invariants_checked": [
+      "INV-01",
+      "INV-02",
+      "INV-03",
+      "INV-04",
+      "INV-05",
+      "INV-06",
+      "INV-07",
+      "INV-08",
+      "INV-09",
+      "INV-10",
+      "INV-11"
+    ]
+  },
+  "requires_code": true,
+  "requires_code_reason": "個人間の受け渡しと所有権の移動が未実装で、正式な取得源もItemStackも無い（current-implementation.md / memory-swapper.md）。物品を渡さずに情報だけを渡す経路が要るため true とする。",
+  "new_logic": [
+    "個人間の受け渡し操作と所有権の移動",
+    "受け手の個人にだけ情報を返す提示経路"
+  ],
+  "prototype_cost": {
+    "band": "中",
+    "rationale": "既に2人の個人が同じRunにいる場合の受け渡し口が無く、个人提示の経路も無い。枠は既存のものをそのまま使うため地形は増やさない。",
+    "implementation_steps": [
+      "デバッグ付与で票1枚を持たせる",
+      "個人へ個人へ渡すだけの受け渡し操作を足す",
+      "渡した側にだけ中身の情報を返す提示を足す",
+      "Play Soloと2人セッションで、受け手だけに見えることを確認する"
+    ],
+    "assumed_existing_parts": [
+      "棚の検索UIと名前および選択結果",
+      "枠境界を持つInventoryService",
+      "クライアントの個人所持表示"
+    ]
+  },
+  "role_details": {
+    "item_kind": "通常探索品",
+    "routes": [
+      {
+        "route": "Acquire",
+        "status": "Undecided",
+        "detail": "配る主体は未確定。店内にも都市にも該当する人物が未実装であり創作しない。試作のみデバッグ付与。"
+      },
+      {
+        "route": "Hold",
+        "status": "Proposed",
+        "detail": "1枠を消費する。渡すと自分の手元から外れ、枠が空く。"
+      },
+      {
+        "route": "Use",
+        "status": "Undecided",
+        "detail": "自分のために使う操作は未定。自分だけで確認できるかも未確定。"
+      },
+      {
+        "route": "Present",
+        "status": "Proposed",
+        "detail": "中核。相手個人にだけ中身を伝え、票は消費される。相手の所持は変わらない。"
+      },
+      {
+        "route": "Place",
+        "status": "NotApplicable",
+        "detail": "置かない。棚へ戻す経路は別候補で扱い、競合を避ける。試作でも置き口を持たない。"
+      },
+      {
+        "route": "Lose",
+        "status": "Proposed",
+        "detail": "渡さないまま死亡し、確保枠の外なら喪失物。渡した後の所在は未決。"
+      },
+      {
+        "route": "SecureSlot",
+        "status": "Proposed",
+        "detail": "確保枠に入れて死亡に耐えられるが、差す機会を失う。『守るか渡すか』の一択になる。"
+      },
+      {
+        "route": "Sell",
+        "status": "NotApplicable",
+        "detail": "換金しない。売ると『差し出す』という営みの意味が失われる。"
+      },
+      {
+        "route": "Quest",
+        "status": "Undecided",
+        "detail": "依頼主と依頼種別が未確定。博士の依頼が定める固有品交換と別系統にする必要がある。"
+      },
+      {
+        "route": "AnomalyInteraction",
+        "status": "NotApplicable",
+        "detail": "廃TSUTAYAの異常は未実装で受理先が無く、Item Interactionとして作らない。"
+      }
+    ],
+    "ownership_state": "票はplayer単位の個人所持。差し出すと個人から相手の個人へ所有権が移り、自分の枠が空く。提示の効きは受け手の個人に閉じる。切断と再接続時の復元は未決。",
+    "server_run_state": "個人間の受け渡しと個人提示のみを扱い、Run共有のマップ状態は書き換えない。出現率と同時出現数は変更しないためWorldChangeのEffectは発生しない。"
+  },
+  "html_file": "ROLE-B-006.html"
+}

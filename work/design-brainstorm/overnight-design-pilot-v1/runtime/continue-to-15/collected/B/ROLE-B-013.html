@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ROLE-B-013 入出庫札（安全を1段買うたび異常性に近づく）</title>
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<p class="sub">overnight-design-pilot-v1 ／ ROLE=B ／ 全マップ共通 ／ Draft</p>
+<h1>ROLE-B-013 入出庫札（安全を1段買うたび異常性に近づく）— 作業用見出し</h1>
+</header>
+
+<section id="hypothesis">
+<h2>何の案？</h2>
+<p>枠は増やさずに、Run中の出し入れを1回だけ許し、その代価を異常性で払う案。</p>
+<h2>仕組み</h2>
+<ul>
+<li>Run中に1回だけ、1点をSecure Slotと通常スロットの間で移せる。枠の総数は増えない。</li>
+<li>その瞬間に、自分だけのExposureが1段上がる。HPは減らない。</li>
+<li>残り回数が0になると二度と使えず、Run終了で消える。段の単位と上限は未確定。</li>
+</ul>
+<h2>選択と代償</h2>
+<p>この札をSecure Slotに入れて死亡に備えるか、通常枠に残して異常性を払うか。どちらが合理的かは数字では出さない。</p>
+</section>
+
+<section id="diagram">
+<h2>作用図</h2>
+<div class="board">
+<svg viewBox="0 0 980 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Secure Slotと通常スロットと入出庫札という3つの置き場から、Run中の出し入れを1回だけ許可する例外操作へ入り、その対価として対象個人のAnomaly Exposureが1段上がる図。枠数は増えず、成功時は全持ち帰り、失敗時はSecure Slot内だけが獲得物となる">
+<rect width="980" height="470" fill="#0a1118"/>
+<rect x="30" y="36" width="230" height="104" rx="8" fill="#142330" stroke="#d3b653"/>
+<text x="46" y="66" class="label">Secure Slot 初期4枠</text>
+<text x="46" y="92" class="small">失敗時も獲得物として残る</text>
+<text x="46" y="114" class="small">枠は増えない</text>
+<text x="46" y="132" class="small">入出庫時点は未決</text>
+<rect x="290" y="36" width="230" height="104" rx="8" fill="#142330" stroke="#70c9c3"/>
+<text x="306" y="66" class="label">通常スロット 16枠</text>
+<text x="306" y="92" class="small">Run中は使用できる</text>
+<text x="306" y="114" class="small">失敗時は枠外分が喪失物</text>
+<text x="306" y="132" class="small">総20枠は増やさない</text>
+<rect x="550" y="36" width="400" height="104" rx="8" fill="#142330" stroke="#c4a0ec"/>
+<text x="566" y="66" class="label">入出庫札 消費品 1枠</text>
+<text x="566" y="92" class="small">残り操作が1回だけある</text>
+<text x="566" y="114" class="small">博士研究室の交換対象外</text>
+<text x="566" y="132" class="small">枠数を増やす物ではない</text>
+<path d="M145 142 V186" class="active"/>
+<path d="M137 178 l8 8 8 -8" class="active"/>
+<path d="M405 142 V186" class="active"/>
+<path d="M397 178 l8 8 8 -8" class="active"/>
+<path d="M750 142 V186" class="hyp-line"/>
+<path d="M742 178 l8 8 8 -8" class="hyp-line"/>
+<rect x="140" y="188" width="700" height="92" rx="8" fill="#142330" stroke="#c4a0ec"/>
+<text x="158" y="218" class="label">Run中の出し入れを1操作だけ許可（RuleOverride）</text>
+<text x="158" y="244" class="small">適用対象はこの操作のみ。枠数も永続強化も増やさない</text>
+<text x="158" y="266" class="small">結果の無効化をするアノマリーとの評価順は未定義</text>
+<path d="M490 282 V310" class="hyp-line"/>
+<path d="M482 302 l8 8 8 -8" class="hyp-line"/>
+<rect x="140" y="312" width="700" height="86" rx="8" fill="#142330" stroke="#ea9380"/>
+<text x="158" y="342" class="label">対価として自分の Anomaly Exposure が1段上がる（StateChange）</text>
+<text x="158" y="368" class="small">HPは変わらない。段の単位と上限は未確定</text>
+<text x="158" y="388" class="small">異常化へ至るかどうかは閾値設計次第</text>
+<text x="30" y="428" class="small">Run終了時の帰還は既存の規則のまま。成功時は全持ち帰り、失敗時はSecure Slot内だけが獲得物。</text>
+<text x="30" y="448" class="small">本札をSecure Slotへ入れた場合、死亡時に残る保険手段が1つ減る。</text>
+</svg>
+</div>
+<p>上が現状の置き場、中央が1回だけの例外操作、下がその代償。枠は増えない。</p>
+</section>
+
+<footer>
+<p><a href="index.html">← B候補一覧</a> ／ 詳細データ <a href="ROLE-B-013.json">ROLE-B-013.json</a> ／ connection_tags: Item, Interface, Rule ／ requires_code: true ／ 試作コスト: 中</p>
+</footer>
+</main>
+</body>
+</html>
