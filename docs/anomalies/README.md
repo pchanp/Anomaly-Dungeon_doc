@@ -14,6 +14,8 @@
 - [Memory Swapper](memory-swapper.md) - 記憶と認識に応じてItemStackを移動させるInnocentなアノマリー。
 - [whisper](whisper.md) - 音響・認知へ干渉し、指定対象へ付き従うInvisibleなアノマリー。博士の元同僚Questと専用スキル`anxiety`へ接続するDraft。
 
+- [smudge](smudge.md) - 会話で言葉・InteractionをRun中侵食し、音楽によって逆に侵食され得るAnomaly EntityのIdea。
+
 ## Player Anomaly
 
 Player AnomalyはAnomaly Entityと区別して[`player-anomalies/`](player-anomalies/)に置く。
