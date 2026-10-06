@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>アノマリーダンジョン ／ 導入アニメーション試作</title>
+<style>
+:root{
+  --bg:#06080a;
+  --ink:#dfe9ef;
+  --dim:#6f8894;
+  --line:#1c262c;
+  --teal:#2fbfa0;
+  --amber:#c9a227;
+  --red:#b8452f;
+  --mono: ui-monospace,"SFMono-Regular",Menlo,Consolas,"DejaVu Sans Mono",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#000;overflow:hidden;font-family:var(--mono)}
+
+#stage{
+  position:fixed;inset:0;background:var(--bg);color:var(--ink);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
+#stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+/* --- 全画面のボックス・グリッチ帯 --- */
+.vignette{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at center,transparent 38%,rgba(0,0,0,.72) 100%)}
+.scan{position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background:repeating-linear-gradient(to bottom,rgba(255,255,255,.028) 0 1px,transparent 1px 3px)}
+
+/* --- 字幕 --- */
+#subs{
+  position:absolute;left:0;right:0;bottom:8vh;text-align:center;
+  padding:0 6vw;pointer-events:none;
+}
+#subs .line{
+  font-size:clamp(12px,1.35vw,17px);letter-spacing:.14em;color:#a9c0cc;
+  text-shadow:0 0 12px rgba(47,191,160,.18);opacity:0;transition:opacity .7s ease;
+}
+#subs .line.on{opacity:1}
+#subs .line.warn{color:#d9b3a8}
+#subs .line small{display:block;margin-top:.5em;font-size:.72em;letter-spacing:.22em;color:var(--dim)}
+
+/* --- タイトルカード --- */
+#title{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:1.1em;
+  opacity:0;pointer-events:none;text-align:center;
+}
+#title .kanji{
+  font-size:clamp(38px,8.4vw,124px);letter-spacing:.3em;text-indent:.3em;
+  font-weight:400;color:#f2f7f9;
+  text-shadow:0 0 2px rgba(255,255,255,.5),0 0 26px rgba(47,191,160,.35),0 0 70px rgba(47,191,160,.18);
+}
+#title .latin{
+  font-size:clamp(11px,1.5vw,20px);letter-spacing:.62em;text-indent:.62em;color:#7fd8c4;
+}
+#title .rule{width:min(58vw,620px);height:1px;background:linear-gradient(90deg,transparent,#2b4a52,transparent)}
+#title .tag{
+  font-size:clamp(10px,1.05vw,13px);letter-spacing:.3em;color:var(--dim);
+}
+
+/* --- スキップ／操作ヒント --- */
+#hud{
+  position:absolute;left:0;right:0;bottom:18px;text-align:center;
+  font-size:10px;letter-spacing:.22em;color:#33454e;pointer-events:none;
+}
+#skip{
+  position:absolute;right:16px;top:14px;z-index:5;
+  font:inherit;font-size:10px;letter-spacing:.2em;color:#4d6472;
+  background:rgba(6,8,10,.6);border:1px solid var(--line);padding:5px 10px;cursor:pointer;
+}
+#skip:hover{color:var(--teal);border-color:#2b4a52}
+#replay{
+  position:absolute;right:16px;top:14px;z-index:5;
+  font:inherit;font-size:10px;letter-spacing:.2em;color:#4d6472;
+  background:rgba(6,8,10,.6);border:1px solid var(--line);padding:5px 10px;cursor:pointer;display:none;
+}
+#replay:hover{color:var(--teal);border-color:#2b4a52}
+
+body.done #skip{display:none}
+body.done #replay{display:block}
+
+@media (prefers-reduced-motion:reduce){
+  #subs .line{transition:none}
+}
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="c"></canvas>
+  <div class="scan"></div>
+  <div class="vignette"></div>
+
+  <div id="subs"></div>
+
+  <div id="title">
+    <div class="latin">ANOMALY&nbsp;DUNGEON</div>
+    <div class="kanji">異変のダンジョン</div>
+    <div class="rule"></div>
+    <div class="tag">研究者は、この场所を「自分が作った」と主張している。</div>
+  </div>
+
+  <div id="hud">SPACE / CLICK : SKIP &nbsp;&nbsp; R : REPLAY</div>
+  <button id="skip" type="button">SKIP ▸</button>
+  <button id="replay" type="button">REPLAY ↺</button>
+</div>
+
+<script>
+(() => {
+'use strict';
+
+const cvs = document.getElementById('c');
+const ctx = cvs.getContext('2d');
+const stage = document.getElementById('stage');
+const subsEl = document.getElementById('subs');
+const titleEl = document.getElementById('title');
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+let W = 0, H = 0, DPR = 1;
+function resize(){
+  DPR = Math.min(devicePixelRatio || 1, 2);
+  W = stage.clientWidth; H = stage.clientHeight;
+  cvs.width = Math.floor(W * DPR); cvs.height = Math.floor(H * DPR);
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+}
+addEventListener('resize', resize);
+resize();
+
+/* ---------- 背景の粒子：廊下を漂う埃 ---------- */
+const MOTES = 90;
+const motes = Array.from({length:MOTES}, () => ({
+  x: Math.random(), y: Math.random(),
+  z: .25 + Math.random()*.75,
+  v: .006 + Math.random()*.02,
+  s: .4 + Math.random()*1.5
+}));
+
+/* ---------- 字幕 ---------- */
+const CUES = [
+  {at:  900, html:'記録は、ここから再開されました。'},
+  {at: 2900, html:'<span class="warn">直前の区間は欠落しています。</span>'},
+  {at: 4900, html:'分類: <b>逸脱</b> ／ 記録者: 博士'},
+  {at: 6900, html:'定義は更新されました。'},
+  {at: 9100, html:'「こう動くはずだ」が、<span class="warn">外れた</span>もの。'},
+  {at:11300, html:'迎えられるかどうかは、<br>誰も確認していない。'},
+  {at:13800, html:'公開記録 —— <span class="warn">該当なし</span>'},
+];
+
+function buildSubs(){
+  subsEl.innerHTML = '';
+  for (const cue of CUES){
+    const d = document.createElement('div');
+    d.className = 'line';
+    d.innerHTML = cue.html;
+    subsEl.appendChild(d);
+  }
+  return Array.from(subsEl.children);
+}
+
+let lines = [];
+let clock = 0;
+let startedAt = 0;
+let raf = 0;
+let finished = false;
+const TITLE_AT = 15400;
+
+function setTime(ms){
+  clock = ms;
+  const t = ms / 1000;
+  // 字幕の更新
+  for (let i = 0; i < lines.length; i++){
+    const cue = CUES[i];
+    const on = ms >= cue.at && ms < (CUES[i+1] ? CUES[i+1].at : TITLE_AT);
+    lines[i].classList.toggle('on', on);
+  }
+  // タイトル
+  const p = Math.min(Math.max((ms - TITLE_AT) / 1600, 0), 1);
+  titleEl.style.opacity = String(p);
+  titleEl.style.transform = `translateY(${(1-p)*14}px) scale(${.985 + p*.015})`;
+  titleEl.style.filter = `blur(${(1-p)*6}px) contrast(${1 + (1-p)*1.4})`;
+  titleEl.style.pointerEvents = p >= 1 ? 'auto' : 'none';
+  if (p >= 1 && !finished){
+    finished = true;
+    document.body.classList.add('done');
+  }
+  return clock;
+}
+
+/* ---------- 描画 ---------- */
+function draw(ms){
+  const t = ms / 1000;
+  ctx.clearRect(0,0,W,H);
+
+  // 背景の微かなグラデーション（，想起した都市の空）
+  const g = ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,'#050709');
+  g.addColorStop(.55,'#070b0e');
+  g.addColorStop(1,'#040607');
+  ctx.fillStyle = g;
+  ctx.fillRect(0,0,W,H);
+
+  // 時刻表示（32/8 の痕跡）
+  const horizon = H * .62;
+  const dawn = 0.5 + 0.5*Math.sin(t*0.25 + 1.2);
+
+  // 遠景のビル silhouettes
+  drawCity(horizon, dawn, 1);
+
+  // 漂う埃
+  for (const m of motes){
+    m.y -= m.v * m.z * 0.35;
+    if (m.y < -.05){ m.y = 1.05; m.x = Math.random(); }
+    const a = .05 + .22*m.z * (.4 + .6*dawn);
+    ctx.fillStyle = `rgba(190,215,225,${a})`;
+    ctx.beginPath();
+    ctx.arc(m.x*W, m.y*H, m.s*m.z, 0, Math.PI*2);
+    ctx.fill();
+  }
+
+  // 中景の廊下アーチ（透過して見える）
+  drawArches(t);
+
+  // 8/32 のゲート（後方）
+  drawGate(t);
+
+  // 走査線：一本だけ下から上へ，随时
+  const sweep = ((t*0.16) % 1);
+  const sy = H * (1 - sweep);
+  const sg = ctx.createLinearGradient(0,sy-40,0,sy+40);
+  sg.addColorStop(0,'rgba(47,191,160,0)');
+  sg.addColorStop(.5,'rgba(47,191,160,.055)');
+  sg.addColorStop(1,'rgba(47,191,160,0)');
+  ctx.fillStyle = sg;
+  ctx.fillRect(0,sy-40,W,80);
+
+  // 途中から轻微な信号劣化
+  const noise = ms > 4200 && ms < 5200 ? (1 - Math.abs(ms-4700)/500) : 0;
+  if (noise > 0 && !reduced){
+    for (let i = 0; i < 90*noise; i++){
+      const y = Math.random()*H;
+      const h = 1 + Math.random()*2;
+      ctx.fillStyle = `rgba(200,230,240,${Math.random()*.09*noise})`;
+      ctx.fillRect(Math.random()*W, y, 20+Math.random()*180, h);
+    }
+  }
+
+  // タイトル前の收缩（フラッシュ）
+  if (ms > TITLE_AT - 420 && ms < TITLE_AT){
+    const k = (ms - (TITLE_AT-420)) / 420;
+    ctx.fillStyle = `rgba(240,255,255,${(1-k)*.28})`;
+    ctx.fillRect(0,0,W,H);
+  }
+  if (ms > TITLE_AT){
+    // タイトル後は全体をわずかに暗く
+    ctx.fillStyle = 'rgba(4,6,8,.28)';
+    ctx.fillRect(0,0,W,H);
+  }
+}
+
+function drawCity(horizon, dawn, depth){
+  const w = Math.max(90, W*0.055);
+  let seed = 7;
+  const rnd = () => (seed = (seed*16807) % 2147483647) / 2147483647;
+  ctx.save();
+  for (let x = -w; x < W+w; x += w){
+    const bw = w * (.55 + rnd()*.75);
+    const bh = H*(.06 + rnd()*.16);
+    const bx = x;
+    const by = horizon - bh;
+    ctx.fillStyle = `rgba(9,14,17,${.85*depth})`;
+    ctx.fillRect(bx, by, bw, bh+2);
+    // 窓明かり：少数だけ、点滅
+    const cols = Math.max(1, Math.floor(bw/14));
+    const rows = Math.max(1, Math.floor(bh/18));
+    for (let cx = 0; cx < cols; cx++){
+      for (let cy = 0; cy < rows; cy++){
+        const r = rnd();
+        if (r > .90){
+          const flick = .4 + .6*Math.abs(Math.sin(t_global*1.4 + cx*3.1 + cy*5.7));
+          ctx.fillStyle = `rgba(226,196,120,${(.28 + .3*dawn)*flick})`;
+          ctx.fillRect(bx + 5 + cx*14, by + 7 + cy*18, 4, 3);
+        }
+      }
+    }
+  }
+  ctx.restore();
+}
+
+function drawArches(t){
+  // 手前を横切る拱接连廊。ゆっくり視点が前進する。
+  const speed = .010;
+  const slot = W*0.42;
+  const off = (t*speed*W) % slot;
+  ctx.save();
+  ctx.strokeStyle = 'rgba(24,36,42,.95)';
+  ctx.lineWidth = Math.max(6, W*0.011);
+  for (let i = -1; i < Math.ceil(W/slot)+1; i++){
+    const x = i*slot - off + slot*.5;
+    const wArch = slot*.42;
+    const top = H*.30;
+    ctx.beginPath();
+    ctx.moveTo(x-wArch, H);
+    ctx.lineTo(x-wArch, top+H*.16);
+    ctx.quadraticCurveTo(x, top-H*.05, x+wArch, top+H*.16);
+    ctx.lineTo(x+wArch, H);
+    ctx.stroke();
+    // 柱のハイライト
+    ctx.strokeStyle = 'rgba(47,191,160,.05)';
+    ctx.lineWidth = Math.max(1, W*.002);
+    ctx.beginPath();
+    ctx.moveTo(x-wArch+3, H); ctx.lineTo(x-wArch+3, top+H*.16);
+    ctx.stroke();
+    ctx.strokeStyle = 'rgba(24,36,42,.95)';
+    ctx.lineWidth = Math.max(6, W*0.011);
+  }
+  // 床の反射ライン
+  ctx.strokeStyle = 'rgba(30,46,54,.8)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i < 7; i++){
+    const k = i/7;
+    const y = H*.80 + k*H*.20;
+    ctx.globalAlpha = .18 + .3*k;
+    ctx.beginPath();
+    ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+  ctx.restore();
+}
+
+function drawGate(t){
+  // 奥の 8/32 ゲート。読めない表示だけ。
+  const cx = W*.5, cy = H*.44;
+  const r = Math.min(W,H)*.13;
+  ctx.save();
+  const pulse = .5 + .5*Math.sin(t*.9);
+  ctx.strokeStyle = `rgba(47,191,160,${.16 + .12*pulse})`;
+  ctx.lineWidth = Math.max(2, W*.0035);
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.stroke();
+  ctx.strokeStyle = 'rgba(201,162,39,.18)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.arc(cx, cy, r*1.22, .5, 3.4); ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx, cy, r*1.22, 3.7, 6.2); ctx.stroke();
+
+  ctx.fillStyle = `rgba(180,210,220,${.22 + .10*pulse})`;
+  ctx.font = `${Math.max(10, Math.min(W,H)*.018)}px ui-monospace, monospace`;
+  ctx.textAlign = 'center';
+  ctx.fillText('8 / 32', cx, cy + r*1.42);
+  ctx.fillStyle = 'rgba(120,150,162,.16)';
+  ctx.fillText('※ 時刻表示は更新されない', cx, cy + r*1.42 + Math.max(14, r*.24));
+  ctx.restore();
+}
+
+/* ---------- ループ ---------- */
+let t_global = 0;
+function frame(now){
+  if (!startedAt) startedAt = now;
+  const ms = now - startedAt;
+  t_global = ms/1000;
+  setTime(ms);
+  draw(ms);
+  if (!finished) raf = requestAnimationFrame(frame);
+}
+
+function start(){
+  if (raf) cancelAnimationFrame(raf);
+  lines = buildSubs();
+  setTime(0);
+  document.body.classList.remove('done');
+  finished = false;
+  startedAt = 0;
+  raf = requestAnimationFrame(frame);
+}
+
+function skipToEnd(){
+  setTime(TITLE_AT + 1600);
+  draw(TITLE_AT + 1600);
+  document.body.classList.add('done');
+  if (raf) cancelAnimationFrame(raf), raf = 0;
+}
+
+document.getElementById('skip').addEventListener('click', skipToEnd);
+document.getElementById('replay').addEventListener('click', start);
+addEventListener('keydown', e => {
+  if (e.code === 'Space' || e.code === 'Enter'){ e.preventDefault(); skipToEnd(); }
+  if (e.key === 'r' || e.key === 'R'){ start(); }
+});
+addEventListener('click', e => {
+  if (e.target.closest('button')) return;
+  if (!finished) skipToEnd();
+});
+
+start();
+})();
+</script>
+</body>
+</html>
