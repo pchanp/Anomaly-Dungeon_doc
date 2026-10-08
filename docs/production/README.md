@@ -19,3 +19,5 @@
 - ゲーム内の挙動やルールは `systems/` または `anomalies/` に記載します。
 - 未検証の手順は標準として扱わず、状態を明記します。
 - 標準工程の採否に関わる変更は `decisions/` に判断理由を残します。
+
+- [廃TSUTAYA最小Run開発ロードマップ](minimum-run-development-roadmap.md) - 手動制作・検証から半自動フロー試運転へ進むDraft。

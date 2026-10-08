@@ -83,3 +83,7 @@
 - [経済と成長](economy-and-progression.md)
 - [現在の実装状況](current-implementation.md)
 - [アノマリー固有スキルの設計判断](../decisions/012-anomaly-linked-skill-acquisition.md)
+
+## 固有スキルの境界（2026-10-08）
+
+アノマリー由来の固有スキルには通常スキルのランクを適用せず、対応する干渉条件を解放条件とする。固有品と研究室交換の経路は維持する。mad stompは攻撃系・ランクなし。固有スキルのレベル・強化・装備枠は未定。[判断022](../decisions/022-anomaly-skill-rank-and-mad-stomp.md)を参照。

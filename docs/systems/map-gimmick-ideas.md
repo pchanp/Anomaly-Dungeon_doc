@@ -229,3 +229,7 @@ Unique Experience
 - [ゲームルール](game-rules.md)
 - [ゲームループとポータル遷移](game-loop.md)
 - [ゲームシステムドキュメント](README.md)
+
+## 2026-10-08：廃TSUTAYA最小RunのVHSイベント
+
+任意のCRT再生でモンスターパニック映像が出ると、共通モブ出現イベントを起動する。媒体のラベルなし・誤表示・内容差し替えを候補とし、映像を見て内容を確認する。再生実績は将来のポータル条件へ接続可能にするが、今回Transition Portalは実装対象外。内容保持と再生回数の詳細は未定。[開発ロードマップ](../production/minimum-run-development-roadmap.md)を参照。
