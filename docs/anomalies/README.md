@@ -16,6 +16,8 @@
 
 - [smudge](smudge.md) - 会話で言葉・InteractionをRun中侵食し、音楽によって逆に侵食され得るAnomaly EntityのIdea。
 
+- [stray](stray.md) - 帯電可能な物体間を光のパルスで渡り、縦の危険帯と経路循環を持つ、モデル不要のAnomaly Entity案（Idea）。
+
 ## Player Anomaly
 
 Player AnomalyはAnomaly Entityと区別して[`player-anomalies/`](player-anomalies/)に置く。
