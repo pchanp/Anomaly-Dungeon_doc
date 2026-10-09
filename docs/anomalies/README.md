@@ -22,6 +22,7 @@
 
 Player AnomalyはAnomaly Entityと区別して[`player-anomalies/`](player-anomalies/)に置く。
 
+- [Player Anomaly設計草案](player-anomalies/player-anomaly-design-draft.md) - 異常化による認識・関係性の変化とPvPvEからPvEvEへの構造転換を検討するDesign Draft。既存仕様との差分を含み、即時の実装反映は行わない。
 - [Visible / Invisible Inversion](player-anomalies/visible-invisible-inversion.md) - 可視性と認識を反転させるRun単位のPlayer Anomaly。
 
 ## 横断的な設計資料

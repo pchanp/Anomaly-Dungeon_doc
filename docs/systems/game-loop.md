@@ -58,6 +58,8 @@
 
 ### Player Anomaly
 
+認識・関係性の変化を中心に据え直す[Player Anomaly設計草案](../anomalies/player-anomalies/player-anomaly-design-draft.md)を別途記録している。以下は既存の設計案であり、新草案では発生条件、Exposureとの関係、解除・継続性などを再検討する。草案は未確定で、即時の実装反映や判断019の置き換えを意味しない。
+
 - Player Anomalyは、原則としてプレイヤーにとってデバフである。通常のプレイヤー状態の方が経済面・ゲーム進行面で有利な前提を維持する。
 - Player Anomalyは1ランにつき**同時に1人まで**とする。Exposureが閾値を超えた通常プレイヤーが複数いても、すでにPlayer Anomalyがランに残っている間は通常状態のまま待機する。サーバーは閾値を超えた順に待機キューへ記録し、現在のPlayer Anomalyが死亡または帰還してランから退場した時点で、先頭の待機者を次のPlayer Anomalyにする。
 - アノマリー化したプレイヤーは通常NPCとInteractionできず、通常のReturn Portalも利用できない。Anomaly Entity側の当該プレイヤーへの挙動は、攻撃性を失うものと過度に攻撃的になるものの双方を個別設計で許容する。
