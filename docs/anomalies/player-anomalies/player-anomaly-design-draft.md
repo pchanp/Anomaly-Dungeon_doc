@@ -1,8 +1,11 @@
 # Player Anomaly
 
-**Status: Design Draft（設計草案・未確定）**  
-**Type: Gameplay / Worldbuilding / Cognitive Anomaly**  
-**System ID: `player_anomaly`（仮）**  
+**Status: Design Draft（設計草案・未確定）**
+
+**Type: Gameplay / Worldbuilding / Cognitive Anomaly**
+
+**System ID: `player_anomaly`（仮）**
+
 **関連概念: PvPvE、PvEvE、Anomaly Exposure、Individual Anomaly**
 
 ## この草案の位置づけ
