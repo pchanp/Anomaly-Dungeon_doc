@@ -1,0 +1,170 @@
+{
+  "status": "Implemented・生成経路の確認完了",
+  "gallery_item_count": 5,
+  "jobs": [
+    {
+      "id": "A-20261014-080721-6b46706d",
+      "state": "done",
+      "error": ""
+    },
+    {
+      "id": "A-20261014-080721-382175d6",
+      "state": "done",
+      "error": ""
+    },
+    {
+      "id": "B-20261014-080721-12f7050c",
+      "state": "done",
+      "error": ""
+    },
+    {
+      "id": "B-20261014-080721-3736905a",
+      "state": "done",
+      "error": ""
+    },
+    {
+      "id": "C-20261014-080721-91dbb5c7",
+      "state": "done",
+      "error": ""
+    }
+  ],
+  "images": [
+    {
+      "variant": "A1",
+      "image": "A/images/A-20261014-080721-6b46706d.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "bytes": 449935,
+      "sha256": "3abb27f314fba44c47fbe1dfbd94a2f3d5a2258e05f7fe6c7fad3e58bc6c15c9",
+      "png_embedded_parameters_match": {
+        "model": true,
+        "seed": true,
+        "steps": true,
+        "cfg_scale": true,
+        "sampler": true,
+        "prompt": true,
+        "negative_prompt": true,
+        "zero_negative_prompt": true,
+        "batch_one": true,
+        "no_extra_models": true
+      },
+      "actual_clip_skip": 2,
+      "actual_seed_mode": "Scale Alike",
+      "duration_seconds": 110.95767241669819,
+      "authenticated_public_download_matches": true,
+      "unauthenticated_public_download_status": 401
+    },
+    {
+      "variant": "A2",
+      "image": "A/images/A-20261014-080721-382175d6.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "bytes": 495079,
+      "sha256": "7ffec3426af504f62f338043ca4e524847d4799579577fa7461a2d27aff8be2d",
+      "png_embedded_parameters_match": {
+        "model": true,
+        "seed": true,
+        "steps": true,
+        "cfg_scale": true,
+        "sampler": true,
+        "prompt": true,
+        "negative_prompt": true,
+        "zero_negative_prompt": true,
+        "batch_one": true,
+        "no_extra_models": true
+      },
+      "actual_clip_skip": 2,
+      "actual_seed_mode": "Scale Alike",
+      "duration_seconds": 112.98642954137176,
+      "authenticated_public_download_matches": true,
+      "unauthenticated_public_download_status": 401
+    },
+    {
+      "variant": "B1",
+      "image": "B/images/B-20261014-080721-12f7050c.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "bytes": 468159,
+      "sha256": "bf550c9c76192051f002a1d8dc9dd836f9aa57c70a6bb99b388c717b2eb9188c",
+      "png_embedded_parameters_match": {
+        "model": true,
+        "seed": true,
+        "steps": true,
+        "cfg_scale": true,
+        "sampler": true,
+        "prompt": true,
+        "negative_prompt": true,
+        "zero_negative_prompt": true,
+        "batch_one": true,
+        "no_extra_models": true
+      },
+      "actual_clip_skip": 2,
+      "actual_seed_mode": "Scale Alike",
+      "duration_seconds": 115.257097333204,
+      "authenticated_public_download_matches": true,
+      "unauthenticated_public_download_status": 401
+    },
+    {
+      "variant": "B2",
+      "image": "B/images/B-20261014-080721-3736905a.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "bytes": 578696,
+      "sha256": "c7c19256445567013830212a01a91aa3e40f761a06cc5fa00c6cd65b1971d5bf",
+      "png_embedded_parameters_match": {
+        "model": true,
+        "seed": true,
+        "steps": true,
+        "cfg_scale": true,
+        "sampler": true,
+        "prompt": true,
+        "negative_prompt": true,
+        "zero_negative_prompt": true,
+        "batch_one": true,
+        "no_extra_models": true
+      },
+      "actual_clip_skip": 2,
+      "actual_seed_mode": "Scale Alike",
+      "duration_seconds": 119.0104413330555,
+      "authenticated_public_download_matches": true,
+      "unauthenticated_public_download_status": 401
+    },
+    {
+      "variant": "C1",
+      "image": "C/images/C-20261014-080721-91dbb5c7.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "bytes": 639205,
+      "sha256": "40a4f941255149cc9fbf1651ec2c2207de2320edd00c38664ff8fc64e8a2aabc",
+      "png_embedded_parameters_match": {
+        "model": true,
+        "seed": true,
+        "steps": true,
+        "cfg_scale": true,
+        "sampler": true,
+        "prompt": true,
+        "negative_prompt": true,
+        "zero_negative_prompt": true,
+        "batch_one": true,
+        "no_extra_models": true
+      },
+      "actual_clip_skip": 2,
+      "actual_seed_mode": "Scale Alike",
+      "duration_seconds": 119.37558950018138,
+      "authenticated_public_download_matches": true,
+      "unauthenticated_public_download_status": 401
+    }
+  ],
+  "visual_quality": "Draft・構図調整が必要",
+  "physical_iphone_cellular_tested": false
+}

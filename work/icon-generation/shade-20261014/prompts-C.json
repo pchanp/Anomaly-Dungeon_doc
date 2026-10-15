@@ -1,0 +1,11 @@
+{
+  "lane": "C",
+  "variants": [
+    {
+      "label": "崩れる輪郭が一直線トレースに変わる構図",
+      "prompt": "Single square game skill icon, 1024x1024, bold simple 2D flat vector shapes with crisp edges, readable at 32 to 64 pixels. Near-black charcoal background. One large anonymous ivory human silhouette in side view, solid bold flat fill, leaning into a forward dash. Its rear half dissolves into a broken dashed outline that trails backward and merges into one perfectly straight horizontal teleport trace: a thin dashed cool cyan line with three short fading grey afterimage streaks behind it. Restrained cool grey and pale cyan accents only, flat solid fills, no gradients, generous negative space, single centered subject. One icon only, not a sheet, grid or comic panels. No text, no letters, no numbers, no logo, no border, no frame.",
+      "negative_prompt": "text, letters, words, numbers, typography, logo, watermark, border, frame, ornate scenery, background details, gore, blood, weapons, swords, claws, facial features, eyes, face, multiple figures, crowds, duplicate silhouettes, grid, contact sheet, comic panels, 3d render, photorealism, gradients, blur, noise, extra limbs",
+      "notes": "【Draft source facts】docs/systems/skill-build.md 参照: SHADE は探索系・ランク2の設計案（Status: Draft）。ステルス状態で直線上を瞬間移動し、その経路にいる相手へ中ダメージ・中Stun。不可視・検知されない案だが、すべてのAnomaly Entityに通用するか、どのタイミングまで不可視かは未決定。安定したSystem IDは未提供のため、本試作では新設しない。【視覚仮案】白の匿名人型の後半が破線輪郭へ崩れ、その破線が一直線の残像ラインに視覚的に接続する構図。アイボリーのシルエット、シアンの破線、残像の表現はすべて制作上の仮案であり、世界設定・攻撃方式・「誰にも検知されない」という保証を示さない。レビューYAMLのSHADE欄（破線teleport・不可視・汎用性を示さない）に沿う。単一アイコン。"
+    }
+  ]
+}

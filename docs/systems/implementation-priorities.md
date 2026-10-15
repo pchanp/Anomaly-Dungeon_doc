@@ -1,9 +1,11 @@
 # 未実装機能の優先順位
 
 **Status: Draft（実装計画）**
-**更新日: 2026-09-28**
+**更新日: 2026-10-15（判断010・024と最新検証記録を反映）**
 
 この優先順位は、現在のStudio実装とDraft／Idea資料の依存関係を整理したもの。設計案を採用済みに変更するものではない。仕様確定が必要な項目は、実装より先に確認する。
+
+現在の実行キューは[Workboard](../workboard.md)を参照する。P0のStudio確認4件は2026-10-15のユーザー報告で完了。8/31は[判断024](../decisions/024-editable-august-map-authoring.md)の編集原本方式へ移行済みで、旧マップ修正は解決扱い。新アセットによる再制作は別範囲であり、本書の候補を一括実行しない。
 
 ## 優先度の基準
 
@@ -45,9 +47,9 @@
 
 - アイテムID、スタック、所有者、ワールド配置のモデル。
 - Run終了時に持ち帰る／失う処理。
-- Secure Slotは仕様確定後にこの基盤へ追加する。
+- 既存のSecure Slot保持／喪失境界を維持し、正式なItemStackと取得源へ接続する。
 
-**進捗:** `Services/InventoryService` に20枠・初期Secure Slot 4枠の枠数と、Run終了時の獲得物・喪失物への分類を実装した。`SecureSlotCapacity` 属性で拡張値を受け取る。アイテムID、スタック、所有者、ワールド配置、マップ上の取得源は未実装で、アイテムは `DebugInventoryTerminal` のデバッグ付与でしか作らない。Secure Slotはすでに境界に組み込まれているが、拡張手段と入出庫タイミングは未決定。
+**進捗:** `Services/InventoryService` に20枠・初期Secure Slot 4枠の枠数と、Run終了時の獲得物・喪失物への分類を実装した。`SecureSlotCapacity` 属性で拡張値を受け取る。アイテムID、スタック、所有者、ワールド配置、マップ上の取得源は未実装で、アイテムは `DebugInventoryTerminal` のデバッグ付与でしか作らない。Secure Slotはすでに境界に組み込まれている。強化経路は判断010で設計済みだが実装は未完了。必要量・上限・入出庫タイミング等は未決定。
 
 **依存する将来機能:** Memory Swapper、Quest回収、報酬、Secure Slot。
 
@@ -103,15 +105,15 @@ Run State、Portal Service、MapDefinitions、Exposure、Quest、Inventoryが必
 
 ### Secure Slot
 
-InventoryとRun終了処理の完成後に実装する。総インベントリ20枠のうち初期4枠をSecure Slotとし、通常プレイヤーはスキル強化で拡張できる。対象、入出庫タイミング、拡張上限・コスト、Player Anomaly時の扱いは未決定。
+総インベントリ20枠・初期Secure Slot 4枠の保持／喪失境界は実装済み。[判断010](../decisions/010-real-route-secure-slot-progression.md)に従い、都市ロビーの研究室でレアルート品を消費するSecure Conversion（通常枠をSecure枠へ変換、総枠数は不変）とCapacity Expansion（総枠数を増加、追加は通常枠）を接続する。スキル強化による拡張という旧記述は判断010で置き換える。必要量・上限、入出庫タイミング、Player Anomaly時の扱いは未決定。
 
-**進捗:** 枠数とRun終了時の保持／喪失の判定は `InventoryService` に実装済み。拡張手段、入出庫タイミング、Player Anomaly時の制約は未実装。
+**進捗:** 枠数とRun終了時の保持／喪失の判定は `InventoryService` に実装済み。研究室強化の実装、入出庫タイミング、Player Anomaly時の制約は未実装。
 
 ## P4: アイデア段階のマップ
 
 `map-gimmick-ideas.md`の各マップは採用未確定のため、現時点では実装しない。基盤完成後、1マップずつ設計を `Designed` へ更新してから着手する。
 
-**進捗:** Abandoned TSUTAYAのみプロトタイプとして実装済み。`Shared/Definitions/MapDefinitions`へ登録し、`Debug/DebugMapSwitch`から読み込める|archive棚、CRT、試聴機の3系統を実装した。Transition PortalとParty Stateは未実装のため、マップ間の遷移は成立しない。他の4マップは未実装のまま。
+**進捗:** Abandoned TSUTAYAと8月31日のプロトタイプが実装済み。8/31は判断024の編集原本からRunコピーを作る方式、TSUTAYAは従来生成方式。`Shared/Definitions/MapDefinitions`へ登録し、`Debug/DebugMapSwitch`から読み込める|archive棚、CRT、試聴機の3系統を実装した。Transition PortalとParty Stateは未実装のため、マップ間の遷移は成立しない。それ以外の未採用マップ案は個別設計・判断を待つ。
 
 ## 推奨する次の実装単位
 
@@ -122,7 +124,7 @@ InventoryとRun終了処理の完成後に実装する。総インベントリ20
 3. Run StateをPortal Serviceへ接続する。
 
    **進捗:** `RunService.Build`がMap IDを受け取るようになり、`MapGenerators`経由で実装済みのGeneratorへ委譲する。`DebugMapSwitch`から任意のMap IDへ切り替えられる。ただし遷移条件とParty Stateは未実装のため、これはTransition Portalの代替ではない。
-4. 入場・死亡・通常帰還・異常化後帰還・強制帰還をPlayテストする。
+4. 検証履歴と新しい変更範囲に合わせてPlayテストを定義する。従来P0・4件はユーザー確認で完了。正式なPlayer Anomaly仕様など未実装の新機能は、その実装後に別途検証する。
 5. その後、Inventory／ItemStackへ進む。
 
 ## 関連資料

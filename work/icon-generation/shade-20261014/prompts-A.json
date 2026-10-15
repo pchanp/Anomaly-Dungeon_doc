@@ -1,0 +1,17 @@
+{
+  "lane": "A",
+  "variants": [
+    {
+      "label": "A1: 起点と終点を結ぶ一本の直線経路",
+      "prompt": "Square 1024x1024 game skill icon, flat 2D graphic. Near-black charcoal background. A single thin dashed straight line runs horizontally across the center, connecting two anonymous ivory human silhouettes: one fading and broken apart at the left origin, one solid at the right destination. A few sparse cool grey-cyan afterimage dashes sit exactly on the straight path. Bold simple flat shapes, high contrast, generous negative space, readable at 32-64 pixels. No text, no letters, no numbers, no logo, no border.",
+      "negative_prompt": "text, letters, numbers, typography, logo, watermark, border, frame, grid, multiple panels, contact sheet, ornate scenery, gore, blood, weapons, armor, detailed face, realistic 3D render, photo, gradients, clutter, many subjects",
+      "notes": "【Draftの来源事実】docs/systems/skill-build.md 探索系ランク2：ステルス状態で直線上を瞬間移動し、経路上の相手へ中ダメージ・中Stun。不可視の持続時間と「すべてのAnomaly Entityに検知されないか」は未決定。安定したSystem IDは未決定のため本試作では新設しない。skill-icon-review.yamlのSHADE欄（破線teleport案）は参考扱い。【視覚仮案（制作上の仮説・ロアではなく仕様を確定しない）】1024x1024正方形・2Dフラット図形・32-64px判読。黒に近いチャコール背景に匿名アイボリー人型を2体だけ。寒色グレー/シアンの破線1本で直線経路を示す（破線を移動系に用いるのはYAML spec notesと整合）。起点の崩れるシルエットは不可視の仮案表現。武器・衣装・数値・怪物の正体は描かず、大物を抑えてマーク数を最小化。"
+    },
+    {
+      "label": "A2: 到着する主役シルエットと疎な直線残像",
+      "prompt": "Square 1024x1024 game skill icon, flat 2D graphic. Near-black charcoal background. One large dominant anonymous ivory human silhouette in a forward-leaning dash pose, slightly right of center. Behind it, one sparse straight diagonal trail of at most three small flat cool grey-cyan echo silhouettes fading away in a straight line. Bold simple flat shapes, generous negative space, high contrast, readable at 32-64 pixels. No text, no letters, no numbers, no logo, no border.",
+      "negative_prompt": "text, letters, numbers, typography, logo, watermark, border, frame, grid, multiple panels, contact sheet, ornate scenery, gore, blood, weapons, detailed face, realistic 3D render, photo, gradients, clutter, crowd, many figures",
+      "notes": "【Draftの来源事実】docs/systems/skill-build.md 探索系ランク2：ステルス状態での直線瞬間移動、経路上の相手へ中ダメージ・中Stun。不可視時間と検知の普遍性は未決定、System ID未定。【視覚仮案（制作上の仮説・ロアではなく仕様を確定しない）】主役は到着・前進する匿名アイボリー人型1体だけを大きく配置。残像は一直線に並ぶ寒色エコーシルエット3個までに制限。Stunやダメージのglyphは数値未定かつ過密回避のため入れない。背景は黒に近いチャコール。文字・ロゴ・枠・流血・武器なし。"
+    }
+  ]
+}

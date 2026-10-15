@@ -104,3 +104,9 @@ Known issue / Workaround available（一部項目のみ回避可）
 
 - [Studio検証チェックリスト](studio-verification-checklist.md)
 - [開発ワークボード](../workboard.md)
+
+## 2026-10-07追記：複数Client起動の回避方法
+
+過去の「start_stop_playに人数指定がないため、人間のUI操作が必須」という制約は、今回の環境では回避できた。Editのexecute_luauからStudioTestService:ExecuteMultiplayerTestAsync(6, args)をtask.spawn内で呼び、6Clientを起動した。呼び出しはテスト終了までyieldするため非同期で開始する。各Clientの接続が登録されるまで待ち、Serverのstudio_idをClient操作に流用しない。EndTest後に元のEdit接続のみへ戻ることを確認する。
+
+公式資料: [StudioTestService](https://create.roblox.com/docs/reference/engine/classes/StudioTestService)。6Clientの実施結果は[検証記録](studio-verification-checklist.md)を参照。UI経由の先行0ClientサーバーでAddPlayersを試した際は接続消失があり、原因は未確定。成功した回避方法はExecuteMultiplayerTestAsyncの別セッションである。

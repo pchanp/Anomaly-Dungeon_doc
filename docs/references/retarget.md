@@ -23,3 +23,12 @@ Source ArmatureのAnimationをTarget Armatureへ移す工程です。プロジ�
 
 - [アニメーション制作パイプライン](../production/animation-pipeline.md)
 - [判断記録002](../decisions/002-animation-retarget-tool.md)
+
+## ローカル検証スクリプト
+
+[Mixamo → 標準R15スクリプト](../../work/animations/scripts/README.md)を骨格プレビュー用のDraftとして用意した。Blender 5.2.1でHook Punchの1〜65フレームを実行し、原本保持と回転変換を数値確認した。接地・見た目・FBX出力・Robloxでの再生は未検証で、標準採用済みのリターゲット手段ではない。
+
+
+## 保存結果との対応（2026-10-15）
+
+上記は骨格試作の実行記録。現在のblendへの出力保存は未確認であり、保存済み検査JSONではTargetにActionがない時点が記録されている。Source Import・試行実行・保存結果を区別する。詳細は[Hook Punchの個別記録](../../work/animations/motions/hook-punch-sample/README.md)を参照。

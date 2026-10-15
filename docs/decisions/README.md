@@ -38,3 +38,7 @@
 - [021: 共通Effect分類、保存境界、重ね掛けの既定規則](021-effect-categories-lifetime-and-stacking.md) - 7種のEffect、4種の保存境界、非加算を既定とする重ね掛け・解除方針。
 
 - [022: 固有スキルのランク非適用とmad stomp](022-anomaly-skill-rank-and-mad-stomp.md) - ランクなしの解放条件、胞子との融合と専用スキル。
+
+- [023: 通常モーションはMixamo、特殊モーションはDeepMotionを使う](023-animation-source-priority.md) - 通常制作の補正工数を抑え、特殊な動きに調整を集中する採用方針。
+
+- [024: 8/31を編集画面の保存モデルから制作する](024-editable-august-map-authoring.md)

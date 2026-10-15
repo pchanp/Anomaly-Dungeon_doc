@@ -1,0 +1,29 @@
+{
+  "lane": "A",
+  "variants": [
+    {
+      "label": "English",
+      "prompt": "Side-on action icon of a sleek humanoid figure in a low, almost-horizontal (rushing pose:1.3), chest and head pitched forward toward the right, one knee folded beneath the body, the other leg trailing straight back toward the left. Immediately behind it on the left floats a bright (cyan-blue duplicate silhouette:1.3) in the identical pose, a clear ghost copy of the body, not edge lighting. Thin straight horizontal light streaks extend leftward from both bodies across a dark, sparse, near-black backdrop. Rightward burst of speed, simple uncluttered shapes, bold readable silhouette, game icon style.",
+      "negative_prompt": "upright standing pose, vertical composition, diagonal leaning figure, generic running portrait, muscular bodybuilder anatomy, demon face, skull, claws, giant face, edge glow without a duplicate silhouette, curved light trails, motion-blur swirls, crowd, text, typography, frame, border, scenic stage, bright background, extra limbs, multiple characters",
+      "notes": "Baseline variant; medium-opacity ghost, moderate streak length, even cyan glow."
+    },
+    {
+      "label": "English",
+      "prompt": "Side-on action icon of a sleek humanoid figure stretched in a low, almost-horizontal (rushing pose:1.3), chest and head pitched low toward the right, one knee folded, the other leg extended straight back to the left. Directly behind it on the left, a highly luminous (cyan-blue duplicate silhouette:1.3) mirrors the exact same pose, bright and semi-opaque, clearly a second body rather than rim light. Long, thin, perfectly straight horizontal light lines streak leftward from the figure and its ghost across a dark, empty, near-black background. Powerful rightward burst, crisp shapes, high-contrast glow, game icon style.",
+      "negative_prompt": "upright standing pose, vertical composition, diagonal leaning figure, generic running portrait, muscular bodybuilder anatomy, demon face, skull, claws, giant face, edge glow without a duplicate silhouette, curved light trails, motion-blur swirls, crowd, text, typography, frame, border, scenic stage, bright background, extra limbs, multiple characters",
+      "notes": "Brighter white-cyan glow, longer straight streaks, more opaque and radiant ghost than A04."
+    },
+    {
+      "label": "English",
+      "prompt": "Tightly cropped side-on action icon of a sleek humanoid figure in a low, almost-horizontal (rushing pose:1.3), chest and head pitched forward toward the right, one knee folded under the body, the other leg trailing straight back toward the left. Just behind it on the left, a dimmer, translucent (cyan-blue duplicate silhouette:1.3) repeats the identical pose, visibly a separate ghost body, not edge lighting. Short, thin, straight horizontal light streaks run leftward from both forms across a dark, sparse, near-black backdrop. Compact rightward burst, soft painterly finish, simple bold shapes, game icon style.",
+      "negative_prompt": "upright standing pose, vertical composition, diagonal leaning figure, generic running portrait, muscular bodybuilder anatomy, demon face, skull, claws, giant face, edge glow without a duplicate silhouette, curved light trails, motion-blur swirls, crowd, text, typography, frame, border, scenic stage, bright background, extra limbs, multiple characters",
+      "notes": "Tighter crop, lower ghost opacity, shorter streaks, softer painterly rendering."
+    },
+    {
+      "label": "English",
+      "prompt": "Side-on action icon of a sleek humanoid figure rendered as a dark, clean silhouette in a low, almost-horizontal (rushing pose:1.3), chest and head pitched low toward the right, one knee folded, the other leg trailing straight back to the left. Behind it on the left, a larger, radiant (cyan-blue duplicate silhouette:1.3) dominates the composition, an unmistakable glowing copy of the same pose, not edge lighting. Thin, straight horizontal light streaks pierce leftward through both bodies across a dark, empty, near-black backdrop. Strong rightward burst, minimal detail, high-contrast silhouette art, game icon style.",
+      "negative_prompt": "upright standing pose, vertical composition, diagonal leaning figure, generic running portrait, muscular bodybuilder anatomy, demon face, skull, claws, giant face, edge glow without a duplicate silhouette, curved light trails, motion-blur swirls, crowd, text, typography, frame, border, scenic stage, bright background, extra limbs, multiple characters",
+      "notes": "Foreground figure darkened to near-silhouette; ghost enlarged and most luminous of the set."
+    }
+  ]
+}

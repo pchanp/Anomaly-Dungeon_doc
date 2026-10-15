@@ -267,3 +267,37 @@ Studio本体の再起動と残存`StudioMCP`の終了は、2026-10-02に一度�
 - [現在の実装状況](../systems/current-implementation.md)
 - [Robloxプロジェクト構成](../systems/project-structure.md)
 - [Robloxへの導入](roblox-import.md)
+
+## 2026-10-07：6ClientでBlocked項目を再検証
+
+対象: 「異変のダンジョン」placeId `99417611378273`。Git HEAD `aa41c0e`、src最終変更 `c74a276`。主要7モジュール（LobbyConfig、RunConfig、MapDrawConfig、PartyService、LobbyService、RunService、MapDrawService）のSource長・バイト和・位置重み付き和がGitと一致。同期・本体コード変更は行っていない。
+
+公式のStudioTestServiceを利用し、Edit側から`task.spawn`内で`ExecuteMultiplayerTestAsync(6, ...)`を呼び、実際にPlayer1〜6をServerで確認。Serverと各Clientは別のstudio_idで操作できた。テスト用PivotToによる在圏変更、Humanoid.Health=0による死亡、Kickによる切断を使用し、受付やRun開始関数を直接呼んでPassにはしていない。
+
+| # | 判定 | 観察 |
+| --- | --- | --- |
+| 1 先着受付 | Pass | Player1〜5を0.4秒間隔で入域させ、順にLobbyState=PARTY。後着Player6は入れず、Player2退出後に空き枠へ入った |
+| 2 上限5人 | Pass | 6人目はCITYのまま、看板は5 / 5。空き枠発生後だけPARTYへ変化 |
+| 3 受付離脱 | Pass | Player2をZ=65へ移すとENTRANCE、最初の出発に含まれない |
+| 4 途中参加拒否 | Pass | ACTIVE後にPlayer2を再入域させてもInDungeon=false。他5人はtrue |
+| 5 強制締切 | Pass | 次の受付でPlayer2をZ=-30へ配置、ClientのEを600ms保持。30秒前にACTIVE、Player2のみInDungeon=true、通知「出発 / 8月31日 / 強制締切」をClientで確認 |
+| 6 切断 | Pass（試した経路） | ACTIVE中にPlayer3をKick。5秒後にPlayersから消え、他参加者のACTIVE維持。全員死亡後のリザルト待機中にPlayer4をKickし、他のRunResultPendingとIDLEを維持 |
+| 7 全員終了・再受付 | Pass（死亡経路） | 残る4参加者を死亡させると生成マップ破棄。入域中の待機者Player2が自動的に次のRECRUITINGへ。Player2を外へ出すとIDLE、再入域して次Runの強制締切に成功 |
+
+通常成功帰還・未達帰還経路の終了確認、実画面のリザルト、報酬精算、切断全パターンの検証は未実施。今回、死亡後の残存者はCITYとなったが、過去のLobbyState不一致を修正・解決した証拠とはしない。
+
+成功した6ClientセッションのServer OutputにゲームScript Error / Warningは見られなかった。先行のUI起動は0Clientのサーバーとなり、AddPlayers試行中に接続が消失した（終了原因未確定）。その先行セッションはPassの根拠にしない。親Editの過去ログも今回のゲームエラーとして数えない。
+
+テストはServerの`StudioTestService:EndTest`で終了し、接続が元のEdit一件だけに戻ったことを確認。ゲーム保存・公開は行っていない。
+
+
+## 2026-10-15：ユーザーによるP0確認完了の報告
+
+ユーザーからセッションで「p04件はスタジオ確認済みです。マップ修正に関しては新しいアセットなどをもとに再作成するので一旦解決にしたいです。」との報告を受領した。
+
+- 対象：Workboardの最小Run複数Client、リザルトUI、8/31景観、TSUTAYA改修のP0・4件。
+- 判断：4件のStudio確認待ちを解消し、WorkboardでDoneへ移動。マップ2件は現行修正を解決扱いにし、新アセット等による再制作は別範囲とする。
+- 確認者：ユーザー。報告受領日は2026-10-15。実際の検証日時・対象コミット・Client数・項目別結果は追加提供されていないため推測で埋めない。
+- Codexは今回Studio再実行をしていない。過去のチェック欄・観測ログは当時の状態として保持し、この報告を各項目の測定証拠へ置き換えない。
+- 新しいマップ・アセットの設計、編集原本化の他マップへの展開、再制作後の検証を完了したという意味ではない。LobbyState判断020の採否も本報告から確定しない。
+- 現在の進捗は [Workboardの完了記録](../workboard.md#p0ユーザーのstudio確認により完了) を参照する。

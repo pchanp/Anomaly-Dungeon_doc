@@ -1,0 +1,29 @@
+{
+  "lane": "B",
+  "variants": [
+    {
+      "label": "English",
+      "prompt": "Dynamic side-on action icon of a simple stylized humanoid figure in an extremely low, almost-horizontal rushing pose, body stretched rightward with chest and head pitched low toward the right edge, one knee folded beneath the torso, the other leg trailing straight behind toward the left. Immediately behind the main body on the left floats a bright cyan-blue duplicate silhouette in the exact same horizontal pose, clearly readable as a separate ghost copy, not edge lighting. Thin straight horizontal light streaks extend leftward from both figures across a dark, nearly black empty backdrop. The composition reads as a rightward burst with a luminous blue afterimage. Clean vector-like shapes, minimal detail on the foreground figure, subtle rim light on the leading edges. (low horizontal pose:1.3) (cyan duplicate silhouette:1.3)",
+      "negative_prompt": "upright standing pose, vertical figure, generic running portrait, realistic bodybuilder anatomy, muscular definition, demon face, skull, claws, giant face, edge glow only without duplicate silhouette, curved light trails, motion blur arcs, crowd, multiple characters, diagram, frame, border, typography, text, logo, scenic stage, bright background, ground plane, horizon line",
+      "notes": "Baseline revision with a clearly readable cyan duplicate silhouette at moderate opacity. Balanced streak length and straightforward readability at small icon size."
+    },
+    {
+      "label": "English",
+      "prompt": "Painterly side-on action icon of a minimal stylized humanoid figure in a very low, near-horizontal dash, body elongated toward the right with head and chest pitched low to the right, one knee folded under, the other leg extended straight back to the left. Trailing behind on the left is a long, semi-transparent bright cyan-blue ghost silhouette replicating the same horizontal pose, its form stretching further left than the main body, clearly a separate duplicate afterimage rather than a glow outline. Numerous thin, straight horizontal light streaks radiate leftward from both the solid figure and the translucent ghost, cutting across a dark, empty, desaturated background. The overall motion reads as a sharp rightward lunge with an elongated spectral echo. (horizontal stretched pose:1.2) (translucent duplicate silhouette:1.3)",
+      "negative_prompt": "upright pose, standing figure, diagonal composition, realistic anatomy, bodybuilder, demon face, skull, claws, giant head, only edge lighting without a visible duplicate, curved streaks, spiral light trails, crowd, text, typography, frame, scenic environment, bright backdrop, floor, horizon",
+      "notes": "Painterly rendering treatment with a longer, more translucent duplicate silhouette extending well behind the main body. Streak emphasis is higher; the ghost reads as a fading echo rather than a solid copy."
+    },
+    {
+      "label": "English",
+      "prompt": "Tightly cropped side-on action icon of a simple stylized humanoid figure in a low horizontal rush, body pitched forward to the right with head and chest near the ground line, one knee tucked beneath, the other leg trailing straight left. Close behind on the left glows a vivid cyan-blue duplicate silhouette in the same low pose, rendered at slightly smaller scale than the main body, unmistakably a separate ghost copy. Short, intense, straight white-cyan light streaks shoot horizontally leftward from the figure and its duplicate, creating a bright flash effect against a pure black, featureless void. The framing is compact with minimal negative space, emphasizing speed and the glowing afterimage. (low forward-leaning pose:1.3) (bright cyan duplicate:1.2)",
+      "negative_prompt": "upright figure, standing pose, loose composition, excessive negative space, realistic muscles, demonic face, skull, claws, giant face, outline-only glow with no duplicate body, curved light trails, crowd, multiple figures, text, logo, frame, stage, scenic background, ground, horizon line",
+      "notes": "Compact crop with the duplicate scaled slightly smaller and positioned very close behind the primary body. Streaks are shorter and brighter, reading as a flash or burst of speed lines."
+    },
+    {
+      "label": "English",
+      "prompt": "Bold silhouette-style side-on action icon of a minimal humanoid figure in a deep horizontal lunge, body stretched low toward the right, head and chest pitched forward-down, one knee folded beneath the hips, the other leg trailing rigidly straight to the left. Directly behind and slightly overlapping on the left stands a luminous bright cyan-blue full-body silhouette in an identical horizontal pose, rendered at roughly the same scale as the main figure, forming a clearly separated ghost duplicate with crisp edges. Long, thin, perfectly straight horizontal light beams extend leftward from both the dark foreground figure and the glowing blue afterimage, streaking across an empty, near-black backdrop. The image reads as a frozen instant of high-speed rightward motion with a radiant spectral copy. (deep horizontal lunge:1.3) (luminous cyan silhouette:1.4)",
+      "negative_prompt": "upright posture, vertical stance, generic run cycle frame, realistic bodybuilder anatomy, demon face, skull, claws, oversized head, thin edge glow without actual duplicate shape, curved or swirling light trails, crowd, diagram, border, typography, text, scenic stage, lit background, floor, horizon",
+      "notes": "Strongest emphasis on the duplicate silhouette, rendered at nearly equal scale and high luminosity. The foreground figure reads as a darker silhouette against the brighter ghost, inverting the typical value relationship for a more dramatic afterimage effect."
+    }
+  ]
+}

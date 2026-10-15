@@ -1,0 +1,17 @@
+{
+  "lane": "B",
+  "variants": [
+    {
+      "label": "B1 — 経路上の相手への直進",
+      "prompt": "Single square game skill icon, 1024x1024, flat 2D vector graphic. Near-black charcoal background. A large anonymous ivory human silhouette on the left side, facing right. A straight horizontal dashed line extends from the figure toward the right edge. A second smaller anonymous ivory human silhouette stands on the path near the right side. At the point where the path meets the second figure, a sparse cyan ring impact glyph. A faint cool grey afterimage ghost of the first figure lingers at the origin. Bold simple shapes, high contrast, readable at 32-64 pixels. No text, no logos, no border, no gore, no weapons.",
+      "negative_prompt": "text, letters, numbers, logos, watermark, border, frame, ornate scenery, gore, blood, weapons, multiple panels, grid, sheet, 3D render, photorealistic, gradient, complex details, extra limbs, faces, clothing details, action pose, dynamic pose",
+      "notes": "Draft source facts: SHADEは探索系ランク2の設計案。ステルス状態で直線上を瞬間移動し、経路上の相手へ中ダメージ・中Stun。不可視持続時間と全Anomaly Entityへの検知回避は未確定。System ID未定。Visual hypothesis: 左に大きな象牙色匿名人型シルエット（瞬間移動する者）、右に経路上の相手シルエット。破線で直線経路を示し、交点にシアンのリング型衝撃グリフト。原点に残像。色・残像・衝撃表現は仮案であり、仕様・攻撃方式を確定しない。"
+    },
+    {
+      "label": "B2 — 直線経路の貫通",
+      "prompt": "Single square game skill icon, 1024x1024, flat 2D vector graphic. Near-black charcoal background. A single anonymous ivory human silhouette in the center. A straight diagonal cyan-grey line passes through the figure from top-left to bottom-right, representing a teleport path. A sparse cyan starburst impact glyph marks the intersection point on the figure. A faint cool grey afterimage trail extends along the path behind the figure. Bold simple shapes, high contrast, readable at 32-64 pixels. No text, no logos, no border, no gore, no weapons.",
+      "negative_prompt": "text, letters, numbers, logos, watermark, border, frame, ornate scenery, gore, blood, weapons, multiple panels, grid, sheet, 3D render, photorealistic, gradient, complex details, extra limbs, faces, clothing details, action pose, dynamic pose",
+      "notes": "Draft source facts: SHADEは探索系ランク2の設計案。ステルス状態で直線上を瞬間移動し、経路上の相手へ中ダメージ・中Stun。不可視持続時間と全Anomaly Entityへの検知回避は未確定。System ID未定。Visual hypothesis: 中央に単一の象牙色匿名人型シルエット。左上から右下へ直線経路が貫通し、交点にシアンの星型衝撃グリフト。経路に沿って残像の軌跡。色・残像・衝撃表現は仮案であり、仕様・攻撃方式を確定しない。"
+    }
+  ]
+}

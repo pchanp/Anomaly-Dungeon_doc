@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111714">
+  <title>Icon Lab · Anomaly Dungeon</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="/">AD<span>/</span>ICON LAB</a><span class="draft">制作候補</span></header>
+  <main>
+    <section class="intro">
+      <p class="eyebrow">ANOMALY DUNGEON — ICON WORKSPACE</p>
+      <div class="heading"><div><h1>形を見て、選ぶ。</h1><p class="sub">3つの作業から届くアイコンを、ひとつの場所で。</p></div><div class="live"><span id="live-dot"></span><span id="connection">接続を確認中</span></div></div>
+    </section>
+    <section id="login" class="login" hidden>
+      <h2>ギャラリーを開く</h2><p>アクセスキー付きのリンクを開くか、キーを入力してください。</p>
+      <form id="login-form"><label for="token">アクセスキー</label><div class="login-input"><input id="token" type="password" autocomplete="off" required><button type="submit" class="primary">開く</button></div></form>
+      <p id="login-error" class="error" role="alert"></p>
+    </section>
+    <div id="workspace" hidden>
+      <section class="lanes" aria-label="担当別の画像数">
+        <button class="lane active" data-lane="all" aria-pressed="true"><span class="lane-label">ALL OUTPUTS</span><strong id="count-all">0</strong><span>すべての画像</span></button>
+        <button class="lane" data-lane="A" aria-pressed="false"><span class="lane-label">WORKER A</span><strong id="count-A">0</strong><span>Aの出力</span></button>
+        <button class="lane" data-lane="B" aria-pressed="false"><span class="lane-label">WORKER B</span><strong id="count-B">0</strong><span>Bの出力</span></button>
+        <button class="lane" data-lane="C" aria-pressed="false"><span class="lane-label">WORKER C</span><strong id="count-C">0</strong><span>Cの出力</span></button>
+      </section>
+      <section class="toolbar" aria-label="絞り込み">
+        <div class="search"><label class="sr-only" for="search">名前・プロンプトで検索</label><input id="search" type="search" placeholder="名前・プロンプトで検索"></div>
+        <label class="sr-only" for="review-filter">レビュー状態</label><select id="review-filter"><option value="all">すべての状態</option><option value="unreviewed">未確認</option><option value="candidate">採用候補</option><option value="revise">修正したい</option><option value="rejected">見送り</option></select>
+        <label class="sr-only" for="sort">並び順</label><select id="sort"><option value="newest">新しい順</option><option value="oldest">古い順</option><option value="name">名前順</option></select>
+        <button id="refresh" class="quiet">更新</button>
+      </section>
+      <div class="section-line"><h2>OUTPUT GALLERY</h2><span id="result-count">0枚</span></div>
+      <p id="error" class="error" role="alert" hidden></p>
+      <section id="grid" class="grid" aria-label="アイコン画像一覧"></section>
+      <section id="empty" class="empty" hidden><div class="empty-symbol">＋</div><h2 id="empty-title">最初のアイコンを待っています</h2><p id="empty-text">A・B・Cの画像フォルダに保存すると、ここに自動で届きます。</p><span class="empty-note">5秒ごとに更新 · PNG / JPG / WebP</span></section>
+      <details class="queue"><summary>生成キュー <span id="queue-count">0件</span></summary><div id="jobs"></div></details>
+      <footer><span>候補は制作上の仮案です。採用済みのゲーム仕様を示しません。</span><button id="logout" class="quiet">閉じる</button></footer>
+    </div>
+  </main>
+  <dialog id="detail">
+    <div class="dialog-top"><span id="detail-lane" class="eyebrow"></span><button id="close" class="quiet" aria-label="拡大表示を閉じる">閉じる ×</button></div>
+    <div class="detail-layout">
+      <div class="visual"><div class="full-image checker"><img id="detail-image" alt=""></div><div class="small-previews"><span>小さく表示</span><figure><img id="small-32" class="size-32" alt="32ピクセルで表示"><figcaption>32</figcaption></figure><figure><img id="small-48" class="size-48" alt="48ピクセルで表示"><figcaption>48</figcaption></figure><figure><img id="small-64" class="size-64" alt="64ピクセルで表示"><figcaption>64</figcaption></figure></div></div>
+      <div class="detail-info"><h2 id="detail-title"></h2><p id="detail-file" class="filename"></p><dl id="detail-meta"></dl>
+        <div class="review-buttons" aria-label="レビュー"><button data-review="candidate">☆ 採用候補</button><button data-review="revise">修正したい</button><button data-review="rejected">見送り</button><button data-review="unreviewed">未確認</button></div>
+        <label for="note" class="note-label">メモ</label><textarea id="note" rows="3" maxlength="4000" placeholder="良かった点・直したい点"></textarea><div class="save-row"><span id="save-status" role="status"></span><button id="save-note" class="primary">メモを保存</button></div>
+        <details class="prompt"><summary>生成プロンプト</summary><pre id="prompt"></pre><button id="copy-prompt" class="quiet">コピー</button><h3>Negative prompt</h3><pre id="negative"></pre></details>
+        <p id="generation-notes" class="sources"></p><div id="source-docs" class="sources"></div><a id="download" class="download" download>元画像を保存 ↗</a>
+      </div>
+    </div><div class="dialog-nav"><button id="previous" class="quiet">← 前の画像</button><span id="position"></span><button id="next" class="quiet">次の画像 →</button></div>
+  </dialog>
+  <template id="card-template"><article class="card"><button class="image-button checker"><img loading="lazy" decoding="async" alt=""><span class="card-lane"></span></button><div class="card-body"><button class="card-title"></button><p class="card-subtitle"></p><div class="card-bottom"><span class="badge"></span><button class="star" aria-label="採用候補にする">☆</button></div></div></article></template>
+</body>
+</html>

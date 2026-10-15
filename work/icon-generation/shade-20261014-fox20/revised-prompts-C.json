@@ -1,0 +1,29 @@
+{
+  "lane": "C",
+  "variants": [
+    {
+      "label": "English",
+      "prompt": "A strict side-on action frame of a slim humanoid figure darting rightward in a near-horizontal sprint, (low horizontal lunging posture:1.3): torso pitched flat and low, head leading right, one knee folded, the other leg stretched back toward the left edge. Immediately behind on the left, a clearly readable (bright cyan-blue duplicate silhouette:1.3) repeats the identical pose as a ghost afterimage. Thin straight horizontal light streaks slice leftward across both bodies. Foreground figure simple and matte with cool blue rim light; duplicate ghost glows intense cyan-white from within. Pure black empty background, digital illustration.",
+      "negative_prompt": "upright pose, standing figure, vertical composition, generic running portrait, muscular bodybuilder anatomy, demon face, skull, claws, giant face, edge glow without duplicate silhouette, curved motion trails, crowd of figures, text, typography, watermark, frame border, scenic stage, bright background, 3d render, extra limbs",
+      "notes": "Anchor variant: highest contrast, fully readable solid cyan duplicate, medium-length straight streaks, pure black void."
+    },
+    {
+      "label": "English",
+      "prompt": "Side-on action frame of a slim humanoid figure darting rightward in a horizontal sprint, (low lunging posture:1.3): torso pitched flat and low, head leading right, one knee folded beneath, the other leg trailing left. Immediately behind, a semi-transparent (white-blue duplicate silhouette:1.3) repeats the same pose as a soft ghost afterimage. Straight horizontal light streaks extend leftward across both figures. Painterly airbrushed rendering: ghost glows softly from within with a white-cyan core, edges diffused and luminous. Foreground figure a dark matte shape with blue rim light. Dark empty background, muted contrast.",
+      "negative_prompt": "upright pose, standing figure, vertical composition, generic running portrait, muscular bodybuilder anatomy, demon face, skull, claws, giant face, edge glow without duplicate silhouette, curved motion trails, crowd of figures, text, typography, watermark, frame border, scenic stage, bright background, 3d render, extra limbs",
+      "notes": "Painterly variant: semi-transparent white-blue ghost, soft airbrushed luminous core, diffused edges, muted contrast."
+    },
+    {
+      "label": "English",
+      "prompt": "Tight side-on crop of a slim humanoid figure darting rightward, (horizontal lunging posture:1.4): torso nearly parallel to the ground, head thrust right, one knee folded, the other leg stretched far left. Frame filled with two overlapping bodies: in front, a dark matte figure with cool blue rim light; directly behind, a (bright cyan duplicate silhouette:1.3) in the identical pose, glowing white-hot at its core and fading to electric blue at the edges. Thin straight horizontal streaks shoot leftward from both figures. No visible floor or sky, black void background, high contrast.",
+      "negative_prompt": "upright pose, standing figure, vertical composition, generic running portrait, muscular bodybuilder anatomy, demon face, skull, claws, giant face, edge glow without duplicate silhouette, curved motion trails, crowd of figures, text, typography, watermark, frame border, scenic stage, bright background, 3d render, extra limbs",
+      "notes": "Compact variant: tight crop with figures filling the frame, white-hot core inside the cyan duplicate, electric-blue edges."
+    },
+    {
+      "label": "English",
+      "prompt": "Minimalist side-on silhouette scene: a slim humanoid figure dashing rightward in a flat horizontal sprint, (low lunging posture:1.2): body parallel to the ground, head low and leading right, one knee folded, the other leg extended left. Trailing behind on the left, a faint (pale cyan duplicate silhouette:1.3) of the same figure, low opacity, dissolving into the darkness. Extremely long, thin straight horizontal streaks connect the two figures. Foreground figure nearly pure black silhouette with a thin cyan edge outline; ghost barely luminous. Empty black background, extreme negative space, ominous mood.",
+      "negative_prompt": "upright pose, standing figure, vertical composition, generic running portrait, muscular bodybuilder anatomy, demon face, skull, claws, giant face, edge glow without duplicate silhouette, curved motion trails, crowd of figures, text, typography, watermark, frame border, scenic stage, bright background, 3d render, extra limbs",
+      "notes": "Minimal variant: faint low-opacity ghost dissolving into darkness, extremely long thin streaks, near-silhouette foreground."
+    }
+  ]
+}

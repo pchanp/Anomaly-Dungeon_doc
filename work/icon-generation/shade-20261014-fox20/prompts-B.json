@@ -1,0 +1,47 @@
+{
+  "lane": "B",
+  "variants": [
+    {
+      "label": "B01 Long thin parallel streak trail",
+      "prompt": "Side-profile view of a low forward-pitched anonymous shadow humanoid bursting horizontally to the right, head and shoulders leading, legs swept straight back, compact airborne lunge. Directly behind the leading body, a very translucent cyan-blue ghost of the same pose stretches leftward, barely visible, dissolving into many thin straight parallel light streaks that extend far left across the dark navy background. One dominant dark figure, one faint attached echo, one horizontal motion gesture. Stylized luminous painted action illustration, energetic cyan glow, sharp leading contour, empty dark negative space.",
+      "negative_prompt": "diagram, technical drawing, infographic, flat restroom pictogram, row of upright people, crowd, multiple panels, comic grid, giant circular glyph, orbital circle, map, frame, border, pedestal, scenic stage, background scenery, helmet, mask, weapon, clothing detail, text, typography, logo, watermark, gore, upright standing figure, vertical motion, extra limbs, detached separate ghost, multiple disconnected figures",
+      "notes": "Trail is long and thin: many fine parallel streaks extend far left; the echo is extremely faint, almost transparent, with minimal glow."
+    },
+    {
+      "label": "B02 Short dense near-solid echo",
+      "prompt": "Side view of a shadowy faceless humanoid lunging horizontally right, torso folded low, head and shoulders ahead, legs trailing behind in a tight airborne dash. Close behind the leading body sits a short, dense cyan-blue echo of the same pose, almost solid and bright, its rear edge breaking into a few thick horizontal light streaks that fade quickly into the dark charcoal background. One dominant figure, one compact attached ghost, single left-to-right motion. Stylized luminous painted game-icon illustration, strong cyan-white rim light on the leading silhouette, deep empty negative space.",
+      "negative_prompt": "diagram, technical drawing, infographic, flat restroom pictogram, row of upright people, crowd, multiple panels, comic grid, giant circular glyph, orbital circle, map, frame, border, pedestal, scenic stage, background scenery, helmet, mask, weapon, clothing detail, text, typography, logo, watermark, gore, upright standing figure, vertical motion, extra limbs, detached separate ghost, multiple disconnected figures",
+      "notes": "Echo is short, dense and nearly solid; only a few thick streaks break from its rear edge; the trail ends quickly with high glow concentration."
+    },
+    {
+      "label": "B03 Layered double echo",
+      "prompt": "Side-profile action illustration of an anonymous shadow humanoid rushing horizontally to the right, low forward lean, head and shoulders leading, legs swept back in a compact lunge. Behind the leading body, two overlapping translucent cyan-blue echoes of the same pose recede leftward at different opacities, the nearer one brighter and more defined, the farther one fainter, both crossed by narrow straight parallel streaks. One dominant dark figure, layered attached ghosts, one horizontal gesture. Luminous painted finish, cyan glow against an empty dark navy background.",
+      "negative_prompt": "diagram, technical drawing, infographic, flat restroom pictogram, row of upright people, crowd, multiple panels, comic grid, giant circular glyph, orbital circle, map, frame, border, pedestal, scenic stage, background scenery, helmet, mask, weapon, clothing detail, text, typography, logo, watermark, gore, upright standing figure, vertical motion, extra limbs, detached separate ghost, multiple disconnected figures",
+      "notes": "Two overlapping echoes at different opacities create layered depth; both share the identical pose and streak direction, brighter near the body."
+    },
+    {
+      "label": "B04 White-core streak trail",
+      "prompt": "Side view of a faceless shadow humanoid in a low forward-pitched dash toward the right, head and shoulders leading, legs stretched straight behind, compact airborne pose. A translucent cyan-blue echo of the same pose trails leftward from the body, dissolving into long horizontal streaks with bright white cores and cyan edges that taper into the dark background. One dominant figure, one attached ghost, single horizontal motion. Stylized luminous painted action illustration, glowing white-cyan trail, sharp dark leading silhouette, empty charcoal negative space.",
+      "negative_prompt": "diagram, technical drawing, infographic, flat restroom pictogram, row of upright people, crowd, multiple panels, comic grid, giant circular glyph, orbital circle, map, frame, border, pedestal, scenic stage, background scenery, helmet, mask, weapon, clothing detail, text, typography, logo, watermark, gore, upright standing figure, vertical motion, extra limbs, detached separate ghost, multiple disconnected figures",
+      "notes": "Streaks have bright white cores with cyan edges; the trail glows hottest near the body and tapers left, shifting the cyan-white balance toward white."
+    },
+    {
+      "label": "B05 Dissolving dash segments",
+      "prompt": "Side-profile view of an anonymous shadow humanoid bursting horizontally right, torso pitched low, head and shoulders in front, legs swept back in a tight lunge. Behind it, a translucent cyan-blue ghost of the same pose pulls leftward and dissolves into short broken dash-like streak segments, spaced along one horizontal line, growing sparser toward the far left. One dominant dark figure, one fragmenting attached echo, one horizontal motion gesture. Luminous painted game-icon style, cyan glow, deep empty dark background, energetic speed feel.",
+      "negative_prompt": "diagram, technical drawing, infographic, flat restroom pictogram, row of upright people, crowd, multiple panels, comic grid, giant circular glyph, orbital circle, map, frame, border, pedestal, scenic stage, background scenery, helmet, mask, weapon, clothing detail, text, typography, logo, watermark, gore, upright standing figure, vertical motion, extra limbs, detached separate ghost, multiple disconnected figures",
+      "notes": "Echo dissolves into broken dash-like segments spaced along one horizontal line, growing sparser leftward; transparency decreases in steps rather than smoothly."
+    },
+    {
+      "label": "B06 Wide soft glow band",
+      "prompt": "Side view of a low forward-leaning shadow humanoid dashing horizontally to the right, head and shoulders leading, legs trailing straight behind, compact airborne lunge. A broad soft band of cyan-blue light stretches leftward from the body, a translucent ghost of the same pose glowing inside it, edges diffusing into faint straight parallel streaks against the dark navy background. One dominant figure, one wide attached echo, single horizontal motion. Stylized luminous painted action illustration, soft atmospheric glow, sharp leading contour, empty negative space.",
+      "negative_prompt": "diagram, technical drawing, infographic, flat restroom pictogram, row of upright people, crowd, multiple panels, comic grid, giant circular glyph, orbital circle, map, frame, border, pedestal, scenic stage, background scenery, helmet, mask, weapon, clothing detail, text, typography, logo, watermark, gore, upright standing figure, vertical motion, extra limbs, detached separate ghost, multiple disconnected figures",
+      "notes": "Trail is a broad soft glow band with the ghost visible inside it; streaks are faint and diffused, giving the widest and softest light treatment of the lane."
+    },
+    {
+      "label": "B07 Tight echo close to body",
+      "prompt": "Side-profile action illustration of a faceless shadow humanoid lunging horizontally right, body pitched low, head and shoulders ahead, legs swept back. A translucent cyan-blue echo of the same pose hugs the leading figure closely, pulled only slightly leftward, its rear edge splitting into a short fan of narrow straight streaks. One dominant dark figure, one tight attached ghost, one horizontal gesture. Luminous painted finish, bright cyan rim light on the leading silhouette, deep charcoal negative space, energetic motion.",
+      "negative_prompt": "diagram, technical drawing, infographic, flat restroom pictogram, row of upright people, crowd, multiple panels, comic grid, giant circular glyph, orbital circle, map, frame, border, pedestal, scenic stage, background scenery, helmet, mask, weapon, clothing detail, text, typography, logo, watermark, gore, upright standing figure, vertical motion, extra limbs, detached separate ghost, multiple disconnected figures",
+      "notes": "Echo hugs the leading figure closely with minimal gap; only a short fan of narrow streaks trails behind, the most compact trail of the lane."
+    }
+  ]
+}

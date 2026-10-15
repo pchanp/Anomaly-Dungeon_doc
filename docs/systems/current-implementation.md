@@ -7,6 +7,13 @@
 
 本稿末の「最小Runの実装（2026-09-29追加）」は、Play Solo中に確認できた事実と、確認できなかった事項を分けて記録したものである。
 
+## 最新記録の適用範囲（2026-10-15整理）
+
+- 以下の古い観測は記録当時の範囲として読む。10月7日の6Client検証、10月13日の編集原本化、10月15日のユーザー確認を優先して現在のキューを判断する。
+- 8/31の正本は `Workspace.MapAuthoring.AUGUST_31`。Runは保存原本のコピーであり、旧地形計算・Generatorは初回変換の背景とする。通常Runで景観を再生成しない。TSUTAYA／CLOSED_STACKSは従来生成。[判断024](../decisions/024-editable-august-map-authoring.md)、[制作手順](../production/editable-map-workflow.md)。
+- P0・4件はユーザーがStudio確認済みと報告し、現行マップ修正も解決扱い。[確認報告](../production/studio-verification-checklist.md#2026-10-15ユーザーによるp0確認完了の報告)。Codexによる追加測定ではなく、項目別の検証日時・コミット・条件は未提供。新アセットでの再制作は未着手の別範囲。
+- Secure Slotの強化経路は[判断010](../decisions/010-real-route-secure-slot-progression.md)で設計済み。研究室でのSecure Conversion／Capacity Expansionの実装、必要量・上限・入出庫等を区別し、経路自体を未決定扱いにしない。
+
 ## 起動確認
 
 2026-09-26にPlay Soloで初期化を確認した。マップ、スキル、デバッグフロア、ロビー接続、巨人Visual、クライアント処理が初期化され、巨人アニメーションは49フレーム・71 Boneを認識した。確認した範囲では新規のScript Errorは発生していない。
@@ -15,8 +22,8 @@
 
 - サーバー生成のClosed Stacksマップとロビー。
 - サーバー生成のAbandoned TSUTAYAマップ。7ルーム、通路、出口端末、泉、観測体、異常通路をもち、デバッグフロアから読み込める。
-- サーバー生成の8月31日マップ。10ゾーン、12本のTrail、出口端末、帰還面、泉、観測体、異常通路、8/32専用Parts11個、日付板2枚を生成する。
-- 8月31日マップの地形生成。`AugustTerrain`が自然地形・湖のへこみ・尾根・ゾーンの平坦化・地表メッシュ生成を担当する。谷底は正弦波の重ね合わせ、尾根は複数の滑らかな山の重なりで作り、湖は谷の南に絶対高で掘る。ゾーンの床板は地形と高さが一致し、境界に段差の壁は残さない。
+- 8月31日マップ。初回生成物の10ゾーン、12本のTrail、出口端末、帰還面、泉、観測体、異常通路、8/32専用Parts11個、日付板2枚を編集原本へ変換。通常Runでは保存モデルを複製する。
+- 8月31日マップの初回原本を作った旧地形生成。`AugustTerrain`が自然地形・湖のへこみ・尾根・ゾーンの平坦化・地表メッシュ生成を担当する。谷底は正弦波の重ね合わせ、尾根は複数の滑らかな山の重なりで作り、湖は谷の南に絶対高で掘る。ゾーンの床板は地形と高さが一致し、境界に段差の壁は残さない。
 - 8月31日マップの湖面。円柱を水平に寝かせた円盤で、水面は地形より高く縁は地形で覆われる半径を取る。湖底は湖底の泥、水際は砂、それ以外は草で塗り分ける。
 - 8月31日マップのTrail。路面を地形高に沿って12スタッド程度に分割し、区間ごとに両端を地形に合わす。1枚の板で2点結ばないため、谷の起伏で路面の縁が壁にならない。
 - 常設の都市ロビーとダンジョン入口ロビー。生成ダンジンモデルとは別のRuntimeモデルとして`LobbyService`が組み立て、都市→入口→パーティ受付の移動Interactionを持つ。
@@ -88,7 +95,7 @@
 - TSUTAYAのメディア項目は名前と選択結果のみを持ち、映像・音声の実体は未実装である。
 - TSUTAYAの共有BGMは固定音源のループであり、選択UIは未実装である。
 - マップは`CLOSED_STACKS`、`TSUTAYA`、`AUGUST_31`の3種だが、マップ間の遷移条件は未実装である。正式Runの候補は`TSUTAYA`と`AUGUST_31`の2種で、`CLOSED_STACKS`はデバッグ用途として残す。
-- 生成ワールドはRunの生存期間に一致する。全Partyメンバーが終了すると破棄し、次のPartyでは初期状態の新しいマップを生成する。8月31日の時計と環境状態は次のRunへ持ち越さない。
+- 生成ワールドはRunの生存期間に一致する。全Partyメンバーが終了すると破棄し、次のPartyでは初期状態のRuntimeマップを用意する（8/31は原本の複製）。8月31日の時計と環境状態は次のRunへ持ち越さない。
 - `RunState`の新しい状態は`AnomalyState:RunState`と`M.GetRunState()`の両方から同じ値を返す。既存の`InDungeon`、`PlayerRunState`、`QuestState`、`QuestObjective`、`Room`、`Credits`は二重の意味を持たせる実装にした。
 - 出口の出現条件は`Shared/Definitions/MapDefinitions`が保持し、`RunService`が`ExitCondition.PromptName`で端末Promptを参照する。登録済みの条件種別は`TERMINAL`のみで、`CLOSED_STACKS`と`TSUTAYA`、`AUGUST_31`が該当する。マップごとの複数条件、達成件数、時間条件などは未実装。記録片仕様は廃止済み。
 - `DebugMapSwitch`の`MapSwitchDeck`からデバッグフロア上のパッドで各マップを読み込める。8月31日と`TSUTAYA`の読み込みはPlay Soloで確認済みである。
@@ -112,7 +119,7 @@
 - 湖と`APARTMENT`を結ぶTrail。湖はTrailのネットワークに含まれていない。
 - 隣接ゾーンの高さの差。最大15スタッドあり、ゾーン間に傾斜の土手が生まれる。ゾーン配置の平坦化は未検討である。
 - マルチプレイヤー向けのサーバー割当、並列Run、再接続、サーバー間移動。これらは最小版のRunでは仮置きであり未実装である。
-- Secure Slotの拡張手段、拡張上限、コスト、入出庫タイミング、Player Anomaly時の制約。拡張値の受け取り口だけが`SecureSlotCapacity`で用意されている。
+- Secure Slot強化経路の実装（設計は判断010）、拡張上限、コスト、入出庫タイミング、Player Anomaly時の制約。拡張値の受け取り口だけが`SecureSlotCapacity`で用意されている。
 - 異常化後のRun Lifetime満了の扱い。最小版では失敗として扱い基本報酬を支払わない。生存したまま失敗が確定する経路になるため、帰還手段と生存報酬を含めて別途決める必要がある。
 - リザルト画面での獲得物・喪失物の表示詳細と、保有Questを複数持つためのデータモデル。現在はQuest 1件を固定で送っている。
 - マップ抽選のseed表示と再抽選可否、将来の重み付けの可視化。
@@ -175,7 +182,7 @@
 
 成功はQuest完了後の通常帰還のみ。成功時は `RunConfig.QuestRewardCredits` を支払い、所持中の持ち帰り対象をすべて獲得物とする。失敗時はSecure Slot内だけを獲得物に残し、それ以外を喪失物として破棄する。8/32のRun Lifetime満了は死亡扱いの失敗で、Creditsは支払わない。
 
-Party全員が終了すると `RunService.CloseRun` が生成世界を破棄し、`Aug32Active`、borrowed Lighting、`ExitUnlocked`、`RunSeed`、`MapId` を落として次の受付可能状態へ戻す。次の出発では新しいseedで作り直し、8月31日の時計と環境状態は持ち越さない。マップ内の `world.Lobby` は都市ロビーではなく、Run終了の帰還先には使わない。
+Party全員が終了すると `RunService.CloseRun` が生成世界を破棄し、`Aug32Active`、borrowed Lighting、`ExitUnlocked`、`RunSeed`、`MapId` を落として次の受付可能状態へ戻す。次の出発では新しいseedを用意し、8月31日は保存原本を複製する（景観の再生成にはseedを使わない）。時計と環境状態は持ち越さない。マップ内の `world.Lobby` は都市ロビーではなく、Run終了の帰還先には使わない。
 
 ### 結果送信とUI
 
@@ -190,15 +197,15 @@ Party全員が終了すると `RunService.CloseRun` が生成世界を破棄し�
 - 生成マップはRun開始時だけ存在する。起動直後は `AnomalyDungeon` モデルが無く、デバッグフロアから `DebugMapSwitch` で読み込むか、入口ロビーの受付から出発する。
 - 新規Remoteは未配置でも playable になるように `RunService` が実行時に生成する。プレースには手動で配置済み。
 
-## 最小Runの未確認・未決定
+## 最小Runの未確認・未決定（旧観測を含む）
 
 - **Player Anomalyの正式なRun継続仕様は未実装。** 設計では、同時発生を1人に制限し、Exposure閾値超過順の待機キューを持つ。通常帰還を封鎖して固有InteractionによるPortalまたはRuntime満了で帰還する。通常プレイヤー同士だけにHP 80%下限を適用し、Player Anomalyとの間は相互キル可能とする。現行最小版はこれを実装しておらず、`TRANSFORMED_TIMEOUT` を失敗扱いとして基本報酬を支払わない。待機キュー、固有Interaction、Portal、PvP下限切替、Runtime満了時の正式な精算は未実装である。
 - **`InventoryService` にはアイテムの所在情報がない。** 保持と喪失の判定と枠数だけを持ち、マップ上への配置、スタック、所有者、Item IDの規則は未実装。
-- **Secure Slotの拡張は未実装。** `SecureSlotCapacity` 属性で拡張値を読み取るが、拡張手段・上限・コストは未決定。
+- **Secure Slotの拡張は未実装。** `SecureSlotCapacity` 属性で拡張値を読み取るが、強化経路は判断010で設計済みだが未実装。必要量・上限・コストは未決定。
 - **受付開始はpolled 判定のため、入場から受付開始まで最大0.25秒の遅れがある。**
 - **`DebugInventoryTerminal` の配置は都市ロビーのSpawn脇の固定位置で、ロビー構造を変更しても追随しない。**
-- **複数人での挙動は未確認。** Studio MCPの`start_stop_play`はClient数を指定できず、2026-09-30と2026-10-03の検証はいずれも1人セッション（Play Solo）だった。そのためパーティ上限5人、切断者を含む複数人でのRun終了順序、進行中Runへの途中参加拒否は未確認のままである。1人セッションでも確認できたのは、受付中にフィールド外へ出ると出発参加者に残らないこと、30秒満了で`DEPARTING`から`ACTIVE`へ進むこと、全参加者の終了後に生成マップが破棄されて次の受付が始まること（終了経路は落下死亡）である。
-- **`DEBUG 強制締切` プロンプトは配置済みで、分岐の実行だけ未確認。** 2026-10-03に実プレースで `Workspace.DungeonEntranceLobby.ForceClose` 内の `ProximityPrompt` として存在することを確認した（`ActionText="受付を強制締切する"`、`ObjectText="DEBUG 強制締切"`、`Enabled=true`、`HoldDuration=0.35`、`MaxActivationDistance=12`、`RequiresLineOfSight=false`、`ClickablePrompt=true`、親に属性 `DebugOnly=true`）。**これは手動配置したものではなく `LobbyService` の `buildEntrance` が実行時に生成するものである。** Editモードのプレースには `DungeonEntranceLobby` 自体が存在しないため、配置作業は不要である。`PartyService` の `depart("FORCE_CLOSE")` が即時出発することは未確認であり、受信者は `ReplicatedStorage.AnomalyNotice` への通知のみでサーバー上に記録されないため、事後に `TIME_UP` と区別する手段も無い。
+- **2026-10-03時点の複数人検証の未確認記録。後続の10月7日6Client検証と10月15日ユーザー報告で更新済み。** Studio MCPの`start_stop_play`はClient数を指定できず、2026-09-30と2026-10-03の検証はいずれも1人セッション（Play Solo）だった。そのためパーティ上限5人、切断者を含む複数人でのRun終了順序、進行中Runへの途中参加拒否は未確認のままである。1人セッションでも確認できたのは、受付中にフィールド外へ出ると出発参加者に残らないこと、30秒満了で`DEPARTING`から`ACTIVE`へ進むこと、全参加者の終了後に生成マップが破棄されて次の受付が始まること（終了経路は落下死亡）である。
+- **2026-10-03時点：`DEBUG 強制締切` は配置済み、分岐実行は当時未確認。10月7日の6Client検証ではPass。** 2026-10-03に実プレースで `Workspace.DungeonEntranceLobby.ForceClose` 内の `ProximityPrompt` として存在することを確認した（`ActionText="受付を強制締切する"`、`ObjectText="DEBUG 強制締切"`、`Enabled=true`、`HoldDuration=0.35`、`MaxActivationDistance=12`、`RequiresLineOfSight=false`、`ClickablePrompt=true`、親に属性 `DebugOnly=true`）。**これは手動配置したものではなく `LobbyService` の `buildEntrance` が実行時に生成するものである。** Editモードのプレースには `DungeonEntranceLobby` 自体が存在しないため、配置作業は不要である。`PartyService` の `depart("FORCE_CLOSE")` が即時出発することは未確認であり、受信者は `ReplicatedStorage.AnomalyNotice` への通知のみでサーバー上に記録されないため、事後に `TIME_UP` と区別する手段も無い。
 - **Run終了時の `LobbyState` と物理位置の不整合が疑われる。** 2026-10-03の1人セッションで、落下死亡によりRunが終了した直後にキャラクタが都市ロビー（`-1600, 6.1, 50`）へ移動しているのに、プレイヤーの `LobbyState` が `CITY` ではなく `ENTRANCE` のままであった。`RunService` の `character()` が `task.defer` で `lobby.SendToCity`（`LobbyState=CITY`）を呼ぶのに対し、`PartyService` の0.25秒周期ループが `remove()` で `LobbyState=ENTRANCE` を上書きするため、実行順序が競合している可能性がある。**`Unconfirmed（未確認）`。** 影響範囲は未調査であり、仕様判断は [020: Run終了後のLobbyStateと物理位置の同期](../decisions/020-lobby-state-authority-and-physical-location.md) に記録した（判断未採用）。
 - **クライアントのリザルト画面は未確認。** サーバー側の結果確定とRemote送信までは確認済みだが、リザルト画面そのものの表示確認はしていない。
 - **マップ生成は `PartyService` の受付ループではなく別スレッドで走らせる。** 同一スレッドで走らせると、受付ループの実行予算と合算してマップ生成が script timeout で中断された。
@@ -206,3 +213,15 @@ Party全員が終了すると `RunService.CloseRun` が生成世界を破棄し�
   1. `Services/PartyService`: `depart` の `host.StartRun` を `task.spawn` で別スレッドに逃がす。**2026-09-30に適用。** Play SoloでTIME_UP経路を実測し、例外なく `DEPARTING` から `ACTIVE` へ進み、参加者が生成マップへ移動されることを確認済み。生成は0.1秒未満で終わり、受付ループ0.25秒周期の `syncField` は `DEPARTING` 中に一度も走らない。**`FORCE_CLOSE` は2026-10-03に「プロンプトは配置済み」を確認したが、分岐の実行は未確認。** 詳細は「最小Runの未確認・未決定」を参照。
   2. `Services/RunService`: `M.Tick` の先頭で `local current=world` に取り込み、反復中は `current` を使う。`Finish` が `CloseRun` を呼んで `world` をnilにするため、そのまま `world.KillY` を読むと `attempt to index nil` になる。末尾の `if world~=current then return end` は必須。**2026-09-30に適用。** Run Lifetime満了で `Finish` が同期的に `CloseRun` する状況をPlay Soloで再現し、`Tick` が例外を投げず `world=nil` へ到達することを確認済み。
   3. `Debug/DebugInventoryTerminal`: `pad.CFrame` の初期化でCFrameにCFrameを渡していたのを `lobby.CityLobbySpawn.CFrame+Vector3.new(14,0,6)` に変更。反映済み。
+
+## 2026-10-07：複数Client受付の再確認
+
+6Clientで受付・上限5人・受付離脱・途中参加拒否・E入力によるFORCE_CLOSE・Run中とリザルト中の切断・全参加者死亡後のマップ破棄と次受付を確認した。上記の古い「未確認」はこの範囲で解消。通常帰還での終了、リザルト画面と精算の検証は残る。ゲームコードは変更していない。詳細は[Studio検証記録](../production/studio-verification-checklist.md)の2026-10-07追記を参照。
+
+## 2026-10-13：8/31の編集原本への移行
+
+**Status: Prototype: Implemented（Studio反映済み）**
+
+8/31はWorkspace.MapAuthoring.AUGUST_31を編集原本とし、Play起動でServerStorageへ保管、Run開始でコピーします。通常RunのAugustGenerator呼び出しはAuthoredAugustMapへ置き換えました。Seedによる景観の再生成は行わず、再抽選端末は保存マップの再読込になります。10ゾーン・日付板・8/32参照の引き継ぎ、Runの再構築・終了時の原本保持をPlay Soloで確認しました。景観画面・実歩行・複数Client・8/32通しプレイ・保存再起動は未確認です。TSUTAYA/CLOSED_STACKSは従来生成のままです。
+
+Studioの生成器はGit側の008景観変更が未反映のため、初回モデルはStudioの既存景観を使用しています。詳細は[判断記録024](../decisions/024-editable-august-map-authoring.md)と[制作手順](../production/editable-map-workflow.md)を参照。

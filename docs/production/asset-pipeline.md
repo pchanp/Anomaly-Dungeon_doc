@@ -29,3 +29,7 @@
 - [キャラクター制作パイプライン](character-pipeline.md)
 - [アニメーション制作パイプライン](animation-pipeline.md)
 - [Robloxへの導入](roblox-import.md)
+
+## 8/31のマップ配置
+
+8/31は[編集画面で制作するマップ](editable-map-workflow.md)へ移行したプロトタイプです。完成素材は編集原本へ配置し、Runのコピーで確認します。TSUTAYA等のコード生成は未移行です。

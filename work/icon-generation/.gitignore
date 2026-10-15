@@ -1,0 +1,13 @@
+.runtime/
+A/images/*
+B/images/*
+C/images/*
+A/requests/*
+B/requests/*
+C/requests/*
+!A/images/.gitkeep
+!B/images/.gitkeep
+!C/images/.gitkeep
+!A/requests/.gitkeep
+!B/requests/.gitkeep
+!C/requests/.gitkeep

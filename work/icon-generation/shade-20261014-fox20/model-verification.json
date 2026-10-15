@@ -1,0 +1,23 @@
+[
+  {
+    "lane": "A",
+    "actual_model": "opencode/longcat-2.5-preview-free",
+    "free_price_verified": true,
+    "output_tokens_observed": 162,
+    "run_id": "run_0f4c034e-50e6-4d4e-848e-bf7c543c8659"
+  },
+  {
+    "lane": "B",
+    "actual_model": "opencode/longcat-2.5-preview-free",
+    "free_price_verified": true,
+    "output_tokens_observed": 162,
+    "run_id": "run_25280736-9033-4260-8757-e2314f41784f"
+  },
+  {
+    "lane": "C",
+    "actual_model": "opencode/big-pickle",
+    "free_price_verified": true,
+    "output_tokens_observed": 245,
+    "run_id": "run_caeff909-d668-46ad-a00d-bec687f80dd3"
+  }
+]

@@ -1,0 +1,47 @@
+{
+  "lane": "A",
+  "variants": [
+    {
+      "label": "A01 - Deep lunge tight ghost",
+      "prompt": "Side-view action illustration of a low forward-pitched anonymous shadow humanoid lunging horizontally to the right, head and shoulders leading, torso folded deep, legs swept straight behind, arms tucked close. A translucent cyan-blue echo of the same pose clings directly behind the leading figure, pulled backward and dissolving into short narrow parallel light streaks. Dark empty navy background, luminous painted game-icon style, sharp readable silhouette, energetic horizontal motion. No upright figure, no separate elements.",
+      "negative_prompt": "diagram, flat restroom pictogram, vector infographic, row of upright people, crowd, multiple panels, giant circular glyph, orbital circle, map, technical diagram, frame, border, helmet, weapon, clothing detail, armor, cape, face, eyes, text, typography, logo, emblem, scenic stage, pedestal, gore, standing upright figure, static pose, frontal view, extra limbs, disconnected parts",
+      "notes": "Deepest forward lean; ghost clings tightly behind figure; short dense trail; highest contrast between solid figure and glow."
+    },
+    {
+      "label": "A02 - Extreme pitch stretched ghost",
+      "prompt": "Side profile of an anonymous shadow humanoid in an extreme forward-leaning horizontal dash to the right, body almost parallel to the ground, head and shoulders far ahead, legs extended back in a compact aerial lunge. Behind it, a stretched translucent cyan-blue ghost of the same pose trails far to the left, dissolving into long thin parallel streaks. Dark charcoal background, glowing painted illustration, high contrast between solid black figure and luminous blue echo. Stylized icon art, single dynamic gesture.",
+      "negative_prompt": "diagram, flat restroom pictogram, vector infographic, row of upright people, crowd, multiple panels, giant circular glyph, orbital circle, map, technical diagram, frame, border, helmet, weapon, clothing detail, armor, cape, face, eyes, text, typography, logo, emblem, scenic stage, pedestal, gore, standing upright figure, static pose, frontal view, extra limbs, disconnected parts",
+      "notes": "Most extreme horizontal pitch; ghost stretched longest and thinnest; figure and echo nearly parallel to ground."
+    },
+    {
+      "label": "A03 - Higher placement long fine streaks",
+      "prompt": "A low-pitched shadow humanoid silhouette bursts horizontally right across the upper area of the frame, head leading, torso angled sharply down-forward, legs swept behind in a tight airborne lunge. A connected translucent cyan echo of the same pose follows immediately behind to the left, fragmenting into long fine parallel light streaks. Deep dark navy negative space below, luminous painted game-icon finish, bold contour, energetic side-view motion. No background scenery, single cohesive action.",
+      "negative_prompt": "diagram, flat restroom pictogram, vector infographic, row of upright people, crowd, multiple panels, giant circular glyph, orbital circle, map, technical diagram, frame, border, helmet, weapon, clothing detail, armor, cape, face, eyes, text, typography, logo, emblem, scenic stage, pedestal, gore, standing upright figure, static pose, frontal view, extra limbs, disconnected parts",
+      "notes": "Figure placed higher in frame; longest and finest parallel streaks; dark negative space concentrated below."
+    },
+    {
+      "label": "A04 - Overlapping ghost bright edge glow",
+      "prompt": "Side-view luminous painted illustration of an anonymous shadow humanoid rushing horizontally right at a steep forward lean, head and shoulders ahead, legs swept back in a compact lunge. A translucent cyan-blue ghost of the same pose overlaps the rear half of the figure, pulled backward and breaking into narrow parallel streaks. Bright white-cyan edge glow on the leading contour, deep dark empty background, high-contrast icon art, single dynamic horizontal gesture, no scenery or extra elements.",
+      "negative_prompt": "diagram, flat restroom pictogram, vector infographic, row of upright people, crowd, multiple panels, giant circular glyph, orbital circle, map, technical diagram, frame, border, helmet, weapon, clothing detail, armor, cape, face, eyes, text, typography, logo, emblem, scenic stage, pedestal, gore, standing upright figure, static pose, frontal view, extra limbs, disconnected parts",
+      "notes": "Ghost overlaps rear of figure; brightest white-cyan edge glow; echo and figure share the most visual space."
+    },
+    {
+      "label": "A05 - Lower placement wider echo spread",
+      "prompt": "An anonymous shadow humanoid in a low forward-leaning horizontal dash to the right, positioned in the lower half of the frame, head and shoulders leading, torso pitched, legs swept behind. A wide translucent cyan-blue echo of the same pose spreads backward to the left, dissolving into broad parallel light streaks. Dark empty background above, stylized luminous painted action illustration, sharp silhouette, energetic side-view motion, single cohesive figure and ghost.",
+      "negative_prompt": "diagram, flat restroom pictogram, vector infographic, row of upright people, crowd, multiple panels, giant circular glyph, orbital circle, map, technical diagram, frame, border, helmet, weapon, clothing detail, armor, cape, face, eyes, text, typography, logo, emblem, scenic stage, pedestal, gore, standing upright figure, static pose, frontal view, extra limbs, disconnected parts",
+      "notes": "Figure placed lower in frame; widest echo spread; broader parallel streaks; dark space above."
+    },
+    {
+      "label": "A06 - Larger figure fine fading streaks",
+      "prompt": "A large anonymous shadow humanoid silhouette dominates the frame, lunging horizontally right with head and shoulders leading, deep forward torso pitch, legs swept back in a compact airborne pose. A connected translucent cyan-blue echo of the same pose trails behind to the left, fading into very fine narrow parallel streaks. Dark navy empty background, luminous painted game-icon style, bold readable contour, high contrast, single horizontal motion gesture, no extra elements.",
+      "negative_prompt": "diagram, flat restroom pictogram, vector infographic, row of upright people, crowd, multiple panels, giant circular glyph, orbital circle, map, technical diagram, frame, border, helmet, weapon, clothing detail, armor, cape, face, eyes, text, typography, logo, emblem, scenic stage, pedestal, gore, standing upright figure, static pose, frontal view, extra limbs, disconnected parts",
+      "notes": "Largest figure scale; echo fades into the finest streaks; strongest silhouette dominance."
+    },
+    {
+      "label": "A07 - Mid lean soft dissolve",
+      "prompt": "Side-profile action illustration of an anonymous shadow humanoid in a moderate forward-leaning horizontal rush to the right, head and shoulders ahead, torso angled, legs swept straight behind in a compact lunge. A translucent cyan-blue ghost of the same pose extends backward to the left, softly dissolving into narrow parallel light streaks. Dark empty charcoal background, luminous painted icon art, balanced cyan and white glow, clean silhouette, energetic side-view motion, no extra elements or scenery.",
+      "negative_prompt": "diagram, flat restroom pictogram, vector infographic, row of upright people, crowd, multiple panels, giant circular glyph, orbital circle, map, technical diagram, frame, border, helmet, weapon, clothing detail, armor, cape, face, eyes, text, typography, logo, emblem, scenic stage, pedestal, gore, standing upright figure, static pose, frontal view, extra limbs, disconnected parts",
+      "notes": "Moderate lean; soft dissolve transition from ghost to streaks; most balanced cyan-white tone."
+    }
+  ]
+}

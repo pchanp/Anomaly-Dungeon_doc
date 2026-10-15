@@ -1,0 +1,398 @@
+{
+  "batch": "shade-20261014-fox20",
+  "status": "generated-and-verified",
+  "created_at": 1791936378.3157701,
+  "expected_count": 20,
+  "prompt_backend": "Happier OpenCode ACP",
+  "requested_prompt_model": "opencode/longcat-2.5-preview-free",
+  "actual_prompt_models": {
+    "A": "opencode/longcat-2.5-preview-free",
+    "B": "opencode/longcat-2.5-preview-free",
+    "C": "opencode/big-pickle"
+  },
+  "permission_mode": "default",
+  "runs": {
+    "A": "run_0f4c034e-50e6-4d4e-848e-bf7c543c8659",
+    "B": "run_25280736-9033-4260-8757-e2314f41784f",
+    "C": "run_caeff909-d668-46ad-a00d-bec687f80dd3"
+  },
+  "image_backend": "Draw Things HTTP",
+  "image_model": "sd_xl_base_1.0_q6p_q8p.ckpt",
+  "visual_brief": "brief.en.md",
+  "jobs": [
+    {
+      "id": "A-20261014-090618-03c44d6a",
+      "lane": "A",
+      "variant": "A01",
+      "label": "A01 - Deep lunge tight ghost",
+      "seed": 2899693926,
+      "request": "A/requests/shade-fox20-A01.json",
+      "state": "done",
+      "outputs": [
+        "A/images/A-20261014-090618-03c44d6a.png"
+      ],
+      "finished_at": 1791936449.2105222
+    },
+    {
+      "id": "B-20261014-090618-513d0c04",
+      "lane": "B",
+      "variant": "B01",
+      "label": "B01 Long thin parallel streak trail",
+      "seed": 971690901,
+      "request": "B/requests/shade-fox20-B01.json",
+      "state": "done",
+      "outputs": [
+        "B/images/B-20261014-090618-513d0c04.png"
+      ],
+      "finished_at": 1791936518.8295622
+    },
+    {
+      "id": "C-20261014-090618-6b34b115",
+      "lane": "C",
+      "variant": "C01",
+      "label": "C01 - Compact centered burst with painted luminous finish",
+      "seed": 3697292774,
+      "request": "C/requests/shade-fox20-C01.json",
+      "state": "done",
+      "outputs": [
+        "C/images/C-20261014-090618-6b34b115.png"
+      ],
+      "finished_at": 1791936590.0948758
+    },
+    {
+      "id": "A-20261014-090618-73ffbfb2",
+      "lane": "A",
+      "variant": "A02",
+      "label": "A02 - Extreme pitch stretched ghost",
+      "seed": 394479638,
+      "request": "A/requests/shade-fox20-A02.json",
+      "state": "done",
+      "outputs": [
+        "A/images/A-20261014-090618-73ffbfb2.png"
+      ],
+      "finished_at": 1791936662.236063
+    },
+    {
+      "id": "B-20261014-090618-00e597cd",
+      "lane": "B",
+      "variant": "B02",
+      "label": "B02 Short dense near-solid echo",
+      "seed": 507813933,
+      "request": "B/requests/shade-fox20-B02.json",
+      "state": "done",
+      "outputs": [
+        "B/images/B-20261014-090618-00e597cd.png"
+      ],
+      "finished_at": 1791936734.802132
+    },
+    {
+      "id": "C-20261014-090618-dcdafdb9",
+      "lane": "C",
+      "variant": "C02",
+      "label": "C02 - Backlit near-silhouette against hot cyan rim",
+      "seed": 1915575934,
+      "request": "C/requests/shade-fox20-C02.json",
+      "state": "done",
+      "outputs": [
+        "C/images/C-20261014-090618-dcdafdb9.png"
+      ],
+      "finished_at": 1791936807.262791
+    },
+    {
+      "id": "A-20261014-090618-bf1bc014",
+      "lane": "A",
+      "variant": "A03",
+      "label": "A03 - Higher placement long fine streaks",
+      "seed": 2744699035,
+      "request": "A/requests/shade-fox20-A03.json",
+      "state": "done",
+      "outputs": [
+        "A/images/A-20261014-090618-bf1bc014.png"
+      ],
+      "finished_at": 1791936880.384784
+    },
+    {
+      "id": "B-20261014-090618-7761a623",
+      "lane": "B",
+      "variant": "B03",
+      "label": "B03 Layered double echo",
+      "seed": 550642878,
+      "request": "B/requests/shade-fox20-B03.json",
+      "state": "done",
+      "outputs": [
+        "B/images/B-20261014-090618-7761a623.png"
+      ],
+      "finished_at": 1791936953.5202801
+    },
+    {
+      "id": "C-20261014-090618-6528f3fd",
+      "lane": "C",
+      "variant": "C03",
+      "label": "C03 - Fanned parallel ribbon trails",
+      "seed": 2961228266,
+      "request": "C/requests/shade-fox20-C03-r2.json",
+      "state": "done",
+      "initial_request": "C/requests/shade-fox20-C03.json",
+      "mode": "img2img",
+      "denoising_strength": 0.55,
+      "revision_run": "run_56140283-3841-47f9-9bca-46cf459d70d8",
+      "outputs": [
+        "C/images/C-20261014-090618-6528f3fd.png"
+      ],
+      "finished_at": 1791937474.0325708
+    },
+    {
+      "id": "A-20261014-090618-609a9c8a",
+      "lane": "A",
+      "variant": "A04",
+      "label": "A04 - Overlapping ghost bright edge glow",
+      "seed": 2889934618,
+      "request": "A/requests/shade-fox20-A04-r2.json",
+      "state": "done",
+      "initial_request": "A/requests/shade-fox20-A04.json",
+      "mode": "img2img",
+      "denoising_strength": 0.55,
+      "revision_run": "run_4789a830-bbac-41b5-bade-27ac72c0c4da",
+      "outputs": [
+        "A/images/A-20261014-090618-609a9c8a.png"
+      ],
+      "finished_at": 1791937526.3070788
+    },
+    {
+      "id": "B-20261014-090618-8faf2865",
+      "lane": "B",
+      "variant": "B04",
+      "label": "B04 White-core streak trail",
+      "seed": 1803448606,
+      "request": "B/requests/shade-fox20-B04-r2.json",
+      "state": "done",
+      "initial_request": "B/requests/shade-fox20-B04.json",
+      "mode": "img2img",
+      "denoising_strength": 0.55,
+      "revision_run": "run_0c432449-e10b-481b-8d21-65e1de05a128",
+      "outputs": [
+        "B/images/B-20261014-090618-8faf2865.png"
+      ],
+      "finished_at": 1791937579.777099
+    },
+    {
+      "id": "C-20261014-090618-36631ab7",
+      "lane": "C",
+      "variant": "C04",
+      "label": "C04 - Oversized ghost echo with dramatic scale contrast",
+      "seed": 3255100563,
+      "request": "C/requests/shade-fox20-C04-r2.json",
+      "state": "done",
+      "initial_request": "C/requests/shade-fox20-C04.json",
+      "mode": "img2img",
+      "denoising_strength": 0.6,
+      "revision_run": "run_56140283-3841-47f9-9bca-46cf459d70d8",
+      "outputs": [
+        "C/images/C-20261014-090618-36631ab7.png"
+      ],
+      "finished_at": 1791937636.4876218
+    },
+    {
+      "id": "A-20261014-090618-059b23f1",
+      "lane": "A",
+      "variant": "A05",
+      "label": "A05 - Lower placement wider echo spread",
+      "seed": 3127916750,
+      "request": "A/requests/shade-fox20-A05-r2.json",
+      "state": "done",
+      "initial_request": "A/requests/shade-fox20-A05.json",
+      "mode": "img2img",
+      "denoising_strength": 0.6,
+      "revision_run": "run_4789a830-bbac-41b5-bade-27ac72c0c4da",
+      "outputs": [
+        "A/images/A-20261014-090618-059b23f1.png"
+      ],
+      "finished_at": 1791937693.517361
+    },
+    {
+      "id": "B-20261014-090618-d46c3d81",
+      "lane": "B",
+      "variant": "B05",
+      "label": "B05 Dissolving dash segments",
+      "seed": 695568100,
+      "request": "B/requests/shade-fox20-B05-r2.json",
+      "state": "done",
+      "initial_request": "B/requests/shade-fox20-B05.json",
+      "mode": "img2img",
+      "denoising_strength": 0.6,
+      "revision_run": "run_0c432449-e10b-481b-8d21-65e1de05a128",
+      "outputs": [
+        "B/images/B-20261014-090618-d46c3d81.png"
+      ],
+      "finished_at": 1791937751.119046
+    },
+    {
+      "id": "C-20261014-090618-9e5d1e73",
+      "lane": "C",
+      "variant": "C05",
+      "label": "C05 - Tight crop with short bright light bars",
+      "seed": 3059914560,
+      "request": "C/requests/shade-fox20-C05-r2.json",
+      "state": "done",
+      "initial_request": "C/requests/shade-fox20-C05.json",
+      "mode": "img2img",
+      "denoising_strength": 0.65,
+      "revision_run": "run_56140283-3841-47f9-9bca-46cf459d70d8",
+      "outputs": [
+        "C/images/C-20261014-090618-9e5d1e73.png"
+      ],
+      "finished_at": 1791937809.285877
+    },
+    {
+      "id": "A-20261014-090618-dfa0c960",
+      "lane": "A",
+      "variant": "A06",
+      "label": "A06 - Larger figure fine fading streaks",
+      "seed": 1767788779,
+      "request": "A/requests/shade-fox20-A06-r2.json",
+      "state": "done",
+      "initial_request": "A/requests/shade-fox20-A06.json",
+      "mode": "img2img",
+      "denoising_strength": 0.65,
+      "revision_run": "run_4789a830-bbac-41b5-bade-27ac72c0c4da",
+      "outputs": [
+        "A/images/A-20261014-090618-dfa0c960.png"
+      ],
+      "finished_at": 1791937866.888352
+    },
+    {
+      "id": "B-20261014-090618-6740f51b",
+      "lane": "B",
+      "variant": "B06",
+      "label": "B06 Wide soft glow band",
+      "seed": 3974691675,
+      "request": "B/requests/shade-fox20-B06-r2.json",
+      "state": "done",
+      "initial_request": "B/requests/shade-fox20-B06.json",
+      "mode": "img2img",
+      "denoising_strength": 0.65,
+      "revision_run": "run_0c432449-e10b-481b-8d21-65e1de05a128",
+      "outputs": [
+        "B/images/B-20261014-090618-6740f51b.png"
+      ],
+      "finished_at": 1791937924.9650402
+    },
+    {
+      "id": "C-20261014-090618-d8a1a299",
+      "lane": "C",
+      "variant": "C06",
+      "label": "C06 - Layered painterly brushwork and soft luminous glow",
+      "seed": 3757394963,
+      "request": "C/requests/shade-fox20-C06-r2.json",
+      "state": "done",
+      "initial_request": "C/requests/shade-fox20-C06.json",
+      "mode": "img2img",
+      "denoising_strength": 0.5,
+      "revision_run": "run_56140283-3841-47f9-9bca-46cf459d70d8",
+      "outputs": [
+        "C/images/C-20261014-090618-d8a1a299.png"
+      ],
+      "finished_at": 1791937975.2237499
+    },
+    {
+      "id": "A-20261014-090618-f00616fa",
+      "lane": "A",
+      "variant": "A07",
+      "label": "A07 - Mid lean soft dissolve",
+      "seed": 248602896,
+      "request": "A/requests/shade-fox20-A07-r2.json",
+      "state": "done",
+      "initial_request": "A/requests/shade-fox20-A07.json",
+      "mode": "img2img",
+      "denoising_strength": 0.5,
+      "revision_run": "run_4789a830-bbac-41b5-bade-27ac72c0c4da",
+      "outputs": [
+        "A/images/A-20261014-090618-f00616fa.png"
+      ],
+      "finished_at": 1791938025.625571
+    },
+    {
+      "id": "B-20261014-090618-5b178cfb",
+      "lane": "B",
+      "variant": "B07",
+      "label": "B07 Tight echo close to body",
+      "seed": 359250008,
+      "request": "B/requests/shade-fox20-B07-r2.json",
+      "state": "done",
+      "initial_request": "B/requests/shade-fox20-B07.json",
+      "mode": "img2img",
+      "denoising_strength": 0.5,
+      "revision_run": "run_0c432449-e10b-481b-8d21-65e1de05a128",
+      "outputs": [
+        "B/images/B-20261014-090618-5b178cfb.png"
+      ],
+      "finished_at": 1791938076.729582
+    }
+  ],
+  "normalizations": [
+    {
+      "variant": "C06",
+      "change": "Replaced shadow creature with shadow humanoid to preserve the visual brief subject."
+    },
+    {
+      "variant": "C03",
+      "change": "Delegate returned literal label English; assigned the variant ID and an English visual label without altering the prompt."
+    },
+    {
+      "variant": "A04",
+      "change": "Delegate returned literal label English; assigned the variant ID and an English visual label without altering the prompt."
+    },
+    {
+      "variant": "B04",
+      "change": "Delegate returned literal label English; assigned the variant ID and an English visual label without altering the prompt."
+    },
+    {
+      "variant": "C04",
+      "change": "Delegate returned literal label English; assigned the variant ID and an English visual label without altering the prompt."
+    },
+    {
+      "variant": "A05",
+      "change": "Delegate returned literal label English; assigned the variant ID and an English visual label without altering the prompt."
+    },
+    {
+      "variant": "B05",
+      "change": "Delegate returned literal label English; assigned the variant ID and an English visual label without altering the prompt."
+    },
+    {
+      "variant": "C05",
+      "change": "Delegate returned literal label English; assigned the variant ID and an English visual label without altering the prompt."
+    },
+    {
+      "variant": "A06",
+      "change": "Delegate returned literal label English; assigned the variant ID and an English visual label without altering the prompt."
+    },
+    {
+      "variant": "B06",
+      "change": "Delegate returned literal label English; assigned the variant ID and an English visual label without altering the prompt."
+    },
+    {
+      "variant": "C06",
+      "change": "Delegate returned literal label English; assigned the variant ID and an English visual label without altering the prompt."
+    },
+    {
+      "variant": "A07",
+      "change": "Delegate returned literal label English; assigned the variant ID and an English visual label without altering the prompt."
+    },
+    {
+      "variant": "B07",
+      "change": "Delegate returned literal label English; assigned the variant ID and an English visual label without altering the prompt."
+    }
+  ],
+  "generation_started_at": 1791936378.4146502,
+  "completed_count": 20,
+  "refinement_reason": "Early text-only renders did not preserve the low horizontal Fox Illusion pose or distinct cyan duplicate. Remaining 12 candidates use image-to-image reference guidance.",
+  "revision_runs": {
+    "A": "run_4789a830-bbac-41b5-bade-27ac72c0c4da",
+    "B": "run_0c432449-e10b-481b-8d21-65e1de05a128",
+    "C": "run_56140283-3841-47f9-9bca-46cf459d70d8"
+  },
+  "reference_image_sha256": "8be484066ef257a05999f7aabf42e6bf7d8893724a82073232830e2e7d92e425",
+  "reference_preparation": "Reference resampled to 1024x576 and padded to 1024x1024 with dark navy bands, preserving aspect ratio.",
+  "generation_finished_at": 1791938076.7306461,
+  "visual_status": "Draft・人による選別が必要"
+}

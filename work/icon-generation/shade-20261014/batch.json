@@ -1,0 +1,78 @@
+{
+  "batch": "shade-20261014",
+  "status": "generated-and-verified",
+  "created_at": 1791932841.284126,
+  "prompt_backend": "Happier OpenCode ACP",
+  "prompt_model": "opencode/longcat-2.5-preview-free",
+  "permission_mode": "default",
+  "image_backend": "Draw Things HTTP",
+  "image_model": "sd_xl_base_1.0_q6p_q8p.ckpt",
+  "runs": {
+    "A": "run_94d377d9-9f8b-4e4f-a1a7-870ae4333fa0",
+    "B": "run_4a8026df-cfa8-4352-b8cf-2bdfd2bdccb0",
+    "C": "run_45576cdb-14e3-487b-86b5-8f77ebef4de8"
+  },
+  "jobs": [
+    {
+      "id": "A-20261014-080721-6b46706d",
+      "lane": "A",
+      "variant": "A1",
+      "label": "A1: 起点と終点を結ぶ一本の直線経路",
+      "seed": 111125259,
+      "request": "A/requests/shade-20261014-A1.json",
+      "state": "done",
+      "outputs": [
+        "A/images/A-20261014-080721-6b46706d.png"
+      ]
+    },
+    {
+      "id": "A-20261014-080721-382175d6",
+      "lane": "A",
+      "variant": "A2",
+      "label": "A2: 到着する主役シルエットと疎な直線残像",
+      "seed": 2782645220,
+      "request": "A/requests/shade-20261014-A2.json",
+      "state": "done",
+      "outputs": [
+        "A/images/A-20261014-080721-382175d6.png"
+      ]
+    },
+    {
+      "id": "B-20261014-080721-12f7050c",
+      "lane": "B",
+      "variant": "B1",
+      "label": "B1 — 経路上の相手への直進",
+      "seed": 2835952399,
+      "request": "B/requests/shade-20261014-B1.json",
+      "state": "done",
+      "outputs": [
+        "B/images/B-20261014-080721-12f7050c.png"
+      ]
+    },
+    {
+      "id": "B-20261014-080721-3736905a",
+      "lane": "B",
+      "variant": "B2",
+      "label": "B2 — 直線経路の貫通",
+      "seed": 287022878,
+      "request": "B/requests/shade-20261014-B2.json",
+      "state": "done",
+      "outputs": [
+        "B/images/B-20261014-080721-3736905a.png"
+      ]
+    },
+    {
+      "id": "C-20261014-080721-91dbb5c7",
+      "lane": "C",
+      "variant": "C1",
+      "label": "崩れる輪郭が一直線トレースに変わる構図",
+      "seed": 2067778243,
+      "request": "C/requests/shade-20261014-C1.json",
+      "state": "done",
+      "outputs": [
+        "C/images/C-20261014-080721-91dbb5c7.png"
+      ]
+    }
+  ],
+  "visual_quality": "Draft・構図調整が必要"
+}

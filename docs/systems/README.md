@@ -14,6 +14,7 @@
 - [ゲームループとポータル遷移](game-loop.md)
 - [ゲームルール](game-rules.md)
 - [通常スキルとビルド](skill-build.md)
+- [領域センサーで行動を選ぶ大型NPC](region-triggered-boss-actions.md) — Roblox向け実装案（Draft・未実装）
 - [共通Effectと保存境界](effect-components.md)
 - [マップとギミック案](map-gimmick-ideas.md)
 - [ロビー／ワールドマップ](lobby-world-map.md)

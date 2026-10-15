@@ -1,0 +1,18 @@
+{
+  "downloaded_at": "2026-10-13",
+  "source_page": "https://create.roblox.com/docs/art/modeling/project-files",
+  "download_url": "https://prod.docsiteassets.roblox.com/assets/modeling/meshes/reference-files/Rig_and_Attachments_Templates.zip",
+  "archive_sha256": "e96e8483143716b49369e8692f2c2c2c7ae0d3a3d936b58cf3b5dae73148ff7b",
+  "files": [
+    "__MACOSX/._Rig_and_Attachments_Templates 2",
+    "Rig_and_Attachments_Templates 2/.DS_Store",
+    "__MACOSX/Rig_and_Attachments_Templates 2/._.DS_Store",
+    "Rig_and_Attachments_Templates 2/Rig_and_Attachments_Template.ma",
+    "__MACOSX/Rig_and_Attachments_Templates 2/._Rig_and_Attachments_Template.ma",
+    "Rig_and_Attachments_Templates 2/Rig_and_Attachments_Template.blend",
+    "__MACOSX/Rig_and_Attachments_Templates 2/._Rig_and_Attachments_Template.blend",
+    "Rig_and_Attachments_Templates 2/Rig_and_Attachments_Template.fbx",
+    "__MACOSX/Rig_and_Attachments_Templates 2/._Rig_and_Attachments_Template.fbx"
+  ],
+  "validation": "ZIP integrity verified; Blender and Roblox compatibility not yet tested"
+}

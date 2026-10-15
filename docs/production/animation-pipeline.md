@@ -4,17 +4,25 @@
 
 ## 目的
 
-DeepMotion等から得たSource MotionをBlenderで対象モデルへリターゲットし、Robloxで利用可能なAnimationとして導入します。
+通常のモーションはMixamoの既存モーションを元に適宜編集し、Robloxで利用可能なAnimationとして導入します。DeepMotionから取得してBlenderで調整する工程は、既存モーションでは表現しにくい特殊なモーションに限定します。
 
 ## Current Standard
 
+- 通常のモーション: Mixamoの既存モーションを選び、必要な区間・姿勢を適宜編集する。
+- 特殊なモーション: DeepMotion等でSource Motionを取得し、Blenderで調整する。
+- Mixamoでも対象Rigへのリターゲットが必要になる場合がある。編集工数の削減と、Rig互換性の確認は分けて扱う。対象Blenderバージョン・Roblox Rigでの互換性は個別検証する。
+- 採用方針は[判断記録023](../decisions/023-animation-source-priority.md)、ツール固有情報は[Mixamo参照](../references/mixamo.md)を参照する。
+
+共通の導入工程:
+
 ```text
-DeepMotion等でSource Motionを取得
+Mixamoの既存モーションを取得（特殊なモーションはDeepMotion等）
   -> Animation FBX
   -> BlenderへImport
   -> Source / Target Armatureを確認
   -> Bone Mappingを設定
   -> Target ArmatureへRetarget
+  -> 必要な区間・姿勢を編集（特殊なモーションはノイズ補正も検討）
   -> AnimationをBake
   -> Roblox向けAnimation FBXをExport
   -> Roblox StudioのAnimation EditorへImport
@@ -47,3 +55,9 @@ DeepMotion等でSource Motionを取得
 ## 必須依存ではないもの
 
 - Rokoko Blender Plugin: 互換性問題が確認されているため、現時点では標準工程の必須依存にしない。
+
+## 作業ファイルの配置
+
+ローカル制作データは[`work/animations/`](../../work/animations/README.md)へ置く。共通Rigと再利用するリターゲット用Blenderファイルはそれぞれ`rigs/`、`templates/`に分け、個別モーションは`motions/<作業名>/`内で元FBX・編集.blend・出力FBX・プレビューを管理する。元データを残し、編集と出力には版を付ける。
+
+FBX、Blenderファイル、動画は同フォルダの`.gitignore`でGit対象外とする。出所、編集内容、対象Rig、フレーム範囲、Robloxでの検証結果は個別の作業記録へ残す。

@@ -1,0 +1,41 @@
+{
+  "lane": "C",
+  "variants": [
+    {
+      "label": "C01 - Compact centered burst with painted luminous finish",
+      "prompt": "A single anonymous shadowlike humanoid seen in strict side profile, body pitched low and lunging horizontally to the right, head and shoulders leading, legs swept back, arms tucked into a compact airborne dive. Directly behind it, a translucent cyan-blue copy of the same pose is dragged toward the left and thins into narrow parallel light streaks. One dominant figure, one attached ghost, one horizontal motion gesture. Dark charcoal emptiness surrounds the luminous painted subject, with a sharp bright rim on the leading contour against deep shadow. Stylized energetic action painting, high contrast, glowing cyan-white smear, centered compact framing.",
+      "negative_prompt": "diagram, infographic, flat pictogram, restroom sign, row of upright people, crowd, multiple panels, comic strip, circular glyph, orbital rings, map, frame, border, pedestal, stage, scenery, helmet, weapon, clothing detail, logo, typography, text, watermark, gore, standing pose, running sequence, grid, blueprint, extra limbs, blurry, low contrast",
+      "notes": "Centered compact figure; moderate lean; echo about the same size as the body, fading into short parallel streaks; balanced cyan-white against charcoal with a single bright rim."
+    },
+    {
+      "label": "C02 - Backlit near-silhouette against hot cyan rim",
+      "prompt": "Side view of one anonymous shadowlike figure frozen in a low forward lunge, plunging horizontally to the right, head and chest thrust ahead, legs streaming behind in the same compact dive. The body reads almost as a solid dark silhouette lit only by a hot cyan rim, while a translucent blue twin of the identical pose trails backward to the left and frays into straight parallel streaks. Background stays near-black and empty for maximum contrast. Stylized luminous painted action art, clean centered square composition, glowing edge light, crisp readable contour.",
+      "negative_prompt": "diagram, infographic, flat pictogram, restroom sign, row of upright people, crowd, panels, comic strip, circular glyph, orbital rings, map, frame, border, pedestal, stage, scenery, helmet, weapon, clothing detail, logo, typography, text, watermark, gore, standing pose, sequence strip, grid, extra limbs, muddy shadows, low contrast",
+      "notes": "Figure pushed closest to pure backlit silhouette; rim light is the main bright element; echo is smaller and dimmer; contrast is the highest of the set."
+    },
+    {
+      "label": "C03 - Fanned parallel ribbon trails",
+      "prompt": "A single faceless shadow humanoid in profile, pitched low and bursting to the right in a compact airborne lunge, head and shoulders leading, legs swept back. A translucent cyan-blue afterimage of the same pose is pulled leftward and dissolves into sheaves of narrow straight parallel light ribbons. The leading figure stays sharply readable against a deep charcoal void. One dominant subject, one connected ghost, one horizontal motion stroke. Painted stylized game illustration, glowing cyan-white highlights, strong light-dark contrast, tight centered framing, luminous finish.",
+      "negative_prompt": "diagram, infographic, flat pictogram, restroom sign, row of upright people, crowd, multiple panels, comic strip, circular glyph, orbital rings, map, frame, border, pedestal, stage, scenery, helmet, weapon, clothing detail, logo, typography, text, watermark, gore, standing pose, running sequence, grid, blueprint, extra limbs, blurry, low contrast",
+      "notes": "Echo breaks into fanning parallel ribbons rather than a smooth smear; trail is wider and more rhythmic; leading body sharp and high-contrast."
+    },
+    {
+      "label": "C04 - Oversized ghost echo with dramatic scale contrast",
+      "prompt": "Anonymous shadow figure in strict side profile lunging horizontally right, torso folded forward and downward, head and shoulders leading, legs trailing. Close behind, a much larger translucent cyan-blue ghost of the identical pose stretches back toward the left, fading through thin parallel streak lines. The foreground body stays dark and crisp so it still dominates the frame. Empty near-black background. Stylized luminous painted action illustration, dramatic scale contrast, glowing echo, compact square-centered composition, high value contrast.",
+      "negative_prompt": "diagram, infographic, flat pictogram, restroom sign, row of upright people, crowd, multiple panels, comic strip, circular glyph, orbital rings, map, frame, border, pedestal, stage, scenery, helmet, weapon, clothing detail, logo, typography, text, watermark, gore, standing pose, running sequence, grid, extra limbs, low contrast",
+      "notes": "Ghost is much larger than the foreground body; scale contrast carries the composition; foreground stays dark-crisp so it remains dominant; trail thins into fine lines."
+    },
+    {
+      "label": "C05 - Tight crop with short bright light bars",
+      "prompt": "Extreme side view, one anonymous shadowlike humanoid compressed into a tight centered crop, body pitched low and driving horizontally to the right, head and shoulders ahead, legs folded behind. A translucent cyan-blue copy of the same pose is dragged left and breaks into short bright parallel bars of light. Dark empty space presses in around the bright subject. Stylized luminous painted action art, punchy contrast, bold leading contour, glowing streak detail, compact icon framing, clean and readable.",
+      "negative_prompt": "diagram, infographic, flat pictogram, restroom sign, row of upright people, crowd, multiple panels, comic strip, circular glyph, orbital rings, map, frame, border, pedestal, stage, scenery, helmet, weapon, clothing detail, logo, typography, text, watermark, gore, standing pose, running sequence, grid, extra limbs, blurry, low contrast",
+      "notes": "Tightest crop and most compressed trail; streaks shorten into discrete bright bars; negative space is minimal; punchiest contrast of the set."
+    },
+    {
+      "label": "C06 - Layered painterly brushwork and soft luminous glow",
+      "prompt": "Side profile of a single anonymous shadow creature caught mid-lunge, low and forward-pitched, surging horizontally to the right, head and shoulders in the lead, legs swept behind. Behind it a translucent cyan-blue echo of the same posture is pulled left, softening and thinning into long straight parallel light streaks. Layered painterly brushwork and luminous cyan-white glow against a dark empty field. One dominant figure, one attached ghost, one horizontal gesture. Stylized painted game illustration, compact centered composition, rich contrast.",
+      "negative_prompt": "diagram, infographic, flat pictogram, restroom sign, row of upright people, crowd, multiple panels, comic strip, circular glyph, orbital rings, map, frame, border, pedestal, stage, scenery, helmet, weapon, clothing detail, logo, typography, text, watermark, gore, standing pose, running sequence, grid, blueprint, extra limbs, muddy, low contrast",
+      "notes": "Most textured and painterly of the six; echo is soft-edged with a slow dissolve; glow broad and luminous; sits between C01 balance and C03 rhythm."
+    }
+  ]
+}
