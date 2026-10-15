@@ -4,6 +4,7 @@
 
 ## 文書一覧
 
+- [制作ワークショップ](workshop/README.md) - W01〜W06の入口、受け渡し・記録・段階的な導入。初期文書基盤、制作工程は個別検証。
 - [アセット制作パイプライン](asset-pipeline.md)
 - [キャラクター制作パイプライン](character-pipeline.md)
 - [アニメーション制作パイプライン](animation-pipeline.md)

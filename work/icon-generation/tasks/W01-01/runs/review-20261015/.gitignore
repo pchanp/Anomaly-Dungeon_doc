@@ -1,0 +1,4 @@
+# Frozen review embeds existing candidate images; keep the large binary-derived artifact local.
+review.html
+# Human review contains reviewer information. Share explicitly after reviewing its contents.
+W01-01-review-*.json

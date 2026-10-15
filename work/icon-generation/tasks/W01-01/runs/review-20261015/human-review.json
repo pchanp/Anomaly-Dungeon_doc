@@ -1,0 +1,155 @@
+{
+  "task_id": "W01-01",
+  "run_id": "review-20261015",
+  "reviewer": "ユーザー",
+  "reviewed_date": "2026-10-15",
+  "source": "このセッションのユーザー発言",
+  "statement": "全て見送りです",
+  "reason": "動作・残像が伝わらない",
+  "reason_status": "ユーザー確認済み（20候補への総評。個別・サイズ別・背景別の評価ではない）",
+  "display_conditions": "未確認（背景別・サイズ別評価は提供されていない）",
+  "scope": "Fox20の既存20候補。過去の5枚・制作手法全般は対象外",
+  "candidates": [
+    {
+      "variant": "A01",
+      "sha256": "fd253af03741fc9fdf874ee7eb8aa6215ec7645601df17e079e1d1c6fbf66494",
+      "source": "work/icon-generation/A/images/A-20261014-090618-03c44d6a.png",
+      "acceptance": "見送り",
+      "reason": "動作・残像が伝わらない（全候補への総評）"
+    },
+    {
+      "variant": "A02",
+      "sha256": "7ab701cc29da55aabdf6337fc8b8fe7d38986b9de0e56d0314360f51dd525110",
+      "source": "work/icon-generation/A/images/A-20261014-090618-73ffbfb2.png",
+      "acceptance": "見送り",
+      "reason": "動作・残像が伝わらない（全候補への総評）"
+    },
+    {
+      "variant": "A03",
+      "sha256": "366c8b4858d87be739abcbb41cbb44f8323b21a8e27cb2798baa02feddb210cf",
+      "source": "work/icon-generation/A/images/A-20261014-090618-bf1bc014.png",
+      "acceptance": "見送り",
+      "reason": "動作・残像が伝わらない（全候補への総評）"
+    },
+    {
+      "variant": "A04",
+      "sha256": "5e9ac9402010d46113f7bd43ef4ee1ca5a9e2507168de8f1b572177e1cc36153",
+      "source": "work/icon-generation/A/images/A-20261014-090618-609a9c8a.png",
+      "acceptance": "見送り",
+      "reason": "動作・残像が伝わらない（全候補への総評）"
+    },
+    {
+      "variant": "A05",
+      "sha256": "663f704c89363ce7d2099c4dea2e3345a39005dffec054fe4fab35a4b8f10b9d",
+      "source": "work/icon-generation/A/images/A-20261014-090618-059b23f1.png",
+      "acceptance": "見送り",
+      "reason": "動作・残像が伝わらない（全候補への総評）"
+    },
+    {
+      "variant": "A06",
+      "sha256": "88efd3408ec05881b09f47da1fa0e3359e50aedc6c50403c3efd16320e6e1eb2",
+      "source": "work/icon-generation/A/images/A-20261014-090618-dfa0c960.png",
+      "acceptance": "見送り",
+      "reason": "動作・残像が伝わらない（全候補への総評）"
+    },
+    {
+      "variant": "A07",
+      "sha256": "1e2865dc3a75d3532e67af93122c174fba073eee5b9ec96c7cacb9da67b483b0",
+      "source": "work/icon-generation/A/images/A-20261014-090618-f00616fa.png",
+      "acceptance": "見送り",
+      "reason": "動作・残像が伝わらない（全候補への総評）"
+    },
+    {
+      "variant": "B01",
+      "sha256": "9663401a8604c0dc8b678f451f021245d0e87f1f02007aa5a9c809a9dcad9f56",
+      "source": "work/icon-generation/B/images/B-20261014-090618-513d0c04.png",
+      "acceptance": "見送り",
+      "reason": "動作・残像が伝わらない（全候補への総評）"
+    },
+    {
+      "variant": "B02",
+      "sha256": "90e12328cf4caa75a345c781d8115130f1ed0df692b48bf38c673901275a6d11",
+      "source": "work/icon-generation/B/images/B-20261014-090618-00e597cd.png",
+      "acceptance": "見送り",
+      "reason": "動作・残像が伝わらない（全候補への総評）"
+    },
+    {
+      "variant": "B03",
+      "sha256": "28c9eebb8b9032a2d889cafa79b3d02b8d305054fd0c96dfa84d58a487559eb0",
+      "source": "work/icon-generation/B/images/B-20261014-090618-7761a623.png",
+      "acceptance": "見送り",
+      "reason": "動作・残像が伝わらない（全候補への総評）"
+    },
+    {
+      "variant": "B04",
+      "sha256": "b630423fd8ff6a2357e8e5f76f2a4ca18f22055e74eed9f2c1c898555ac368d6",
+      "source": "work/icon-generation/B/images/B-20261014-090618-8faf2865.png",
+      "acceptance": "見送り",
+      "reason": "動作・残像が伝わらない（全候補への総評）"
+    },
+    {
+      "variant": "B05",
+      "sha256": "042681350bdefa7f8e3f34e44f697abd601089b09d1acf5985c5a309b20e7e8f",
+      "source": "work/icon-generation/B/images/B-20261014-090618-d46c3d81.png",
+      "acceptance": "見送り",
+      "reason": "動作・残像が伝わらない（全候補への総評）"
+    },
+    {
+      "variant": "B06",
+      "sha256": "836d8ae91564eececd0687ab5e5234252f06b73d9a938918accd6ba75e855010",
+      "source": "work/icon-generation/B/images/B-20261014-090618-6740f51b.png",
+      "acceptance": "見送り",
+      "reason": "動作・残像が伝わらない（全候補への総評）"
+    },
+    {
+      "variant": "B07",
+      "sha256": "4b96c8d44c9f82732cf252dc4b4930ea96edd0bdc8de7391fa2b97e23dc00f60",
+      "source": "work/icon-generation/B/images/B-20261014-090618-5b178cfb.png",
+      "acceptance": "見送り",
+      "reason": "動作・残像が伝わらない（全候補への総評）"
+    },
+    {
+      "variant": "C01",
+      "sha256": "9dc982ee9b0a9b17d8db2bed36fa4e790e0f0538c8eeb2b30560958669632786",
+      "source": "work/icon-generation/C/images/C-20261014-090618-6b34b115.png",
+      "acceptance": "見送り",
+      "reason": "動作・残像が伝わらない（全候補への総評）"
+    },
+    {
+      "variant": "C02",
+      "sha256": "6ce0ff9ce61b599a7c7fdde3db792e07ba5557a0237a6177209c75293906388e",
+      "source": "work/icon-generation/C/images/C-20261014-090618-dcdafdb9.png",
+      "acceptance": "見送り",
+      "reason": "動作・残像が伝わらない（全候補への総評）"
+    },
+    {
+      "variant": "C03",
+      "sha256": "7ea64553a5bd8991c3da9815b9f4a91707ae8ce4d454e255ad54cbb55f19cacf",
+      "source": "work/icon-generation/C/images/C-20261014-090618-6528f3fd.png",
+      "acceptance": "見送り",
+      "reason": "動作・残像が伝わらない（全候補への総評）"
+    },
+    {
+      "variant": "C04",
+      "sha256": "e9e947444cb4bc9d65fd14a845605727d58e29fe7c99761aa464b8e1bc6f6e2d",
+      "source": "work/icon-generation/C/images/C-20261014-090618-36631ab7.png",
+      "acceptance": "見送り",
+      "reason": "動作・残像が伝わらない（全候補への総評）"
+    },
+    {
+      "variant": "C05",
+      "sha256": "71ba3898fd1a952af5aa2329c4d1db2423071ce96ac599dd65977d67f50e1453",
+      "source": "work/icon-generation/C/images/C-20261014-090618-9e5d1e73.png",
+      "acceptance": "見送り",
+      "reason": "動作・残像が伝わらない（全候補への総評）"
+    },
+    {
+      "variant": "C06",
+      "sha256": "0ce597ea757938a18217519a12ce595f6e817108be89a8ac8dda2bfea3183707",
+      "source": "work/icon-generation/C/images/C-20261014-090618-d8a1a299.png",
+      "acceptance": "見送り",
+      "reason": "動作・残像が伝わらない（全候補への総評）"
+    }
+  ],
+  "reason_source": "セッションの追加発言「動作・残像が伝わらない」"
+}

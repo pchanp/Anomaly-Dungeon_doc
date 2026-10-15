@@ -1,0 +1,31 @@
+{
+  "image_count": 20,
+  "unique_hashes": 20,
+  "previous_hashes_match": true,
+  "full_square_retained": true,
+  "html_sha256": "2b53e3e8927e305e14fb2c45c9a39589164f413108f30a65d262296cffd73690",
+  "inputs_sha256": "2227b07d84020cc77065357b924d74c49d1d45d1cf7ebeaba6ab45b5fb13f0f8",
+  "html_bytes": 28798776,
+  "browser_test": "Unconfirmed: Chrome unavailable; browser inventory empty",
+  "human_review": "Unreviewed",
+  "synthetic_dom_test": {
+    "result": "Pass",
+    "checks": [
+      "20 cards",
+      "8 txt2img / 12 img2img filter",
+      "background-specific ratings",
+      "reviewer required",
+      "20-candidate JSON export",
+      "formal_adoption false",
+      "unanswered fields remain empty"
+    ]
+  },
+  "visual_inspection": {
+    "full_size_variants": [
+      "A01",
+      "A04",
+      "C06"
+    ],
+    "small_size_readability": "Unconfirmed"
+  }
+}

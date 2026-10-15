@@ -1,0 +1,342 @@
+{
+  "task_id": "W01-01",
+  "run_id": "review-20261015",
+  "baseline_commit": "788a3bc2c4eddac833365f17a71cba882bd86c7d",
+  "note": "Local hashes fix inputs; HEAD alone does not reproduce uncommitted assets.",
+  "source_documents": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "d75edd62c3959ecea2cad4b66cc11f9b1347cf04df21acf41543e8ee7aa66153"
+    },
+    {
+      "path": "README.md",
+      "sha256": "c5980a96fdbc3ab7743e1af6216f615e148e970f3d01047a4307e460dabe1041"
+    },
+    {
+      "path": "work/AGENTS.md",
+      "sha256": "8b4130e2bbad8ae20a69333965c4c2cd982fc1b2512aaa240db0c2ce1bfa0c04"
+    },
+    {
+      "path": "work/icon-generation/AGENTS.md",
+      "sha256": "673b68c36bab6bd346e310ce51c7f910e39eb1b4956795205f5596be00b13c8b"
+    },
+    {
+      "path": "docs/systems/skill-build.md",
+      "sha256": "10ee22636f8985fb4685fb298486af19d9ab57dfeafcd28686044763628a3682"
+    },
+    {
+      "path": "docs/production/workshop/shared/art-direction.md",
+      "sha256": "8b16309c8f5786d61ef173e5213bdfda1d4abbba6f583c84db3cbf3d03b98412"
+    },
+    {
+      "path": "docs/production/workshop/shared/handoff.md",
+      "sha256": "8f700de6354e60a2bcb7971246f5ba34e9fa614b7c7d6420cd5fc1fe2137c9a2"
+    },
+    {
+      "path": "docs/production/workshop/shared/validation.md",
+      "sha256": "31438a5a16507e6b64da0b5231801ea665a99d40fe35eda3444a70d24d899250"
+    },
+    {
+      "path": "work/icon-generation/shade-20261014-fox20/README.md",
+      "sha256": "f1adc33a2a9d2a7a402b04b0abdcf3b7cb01d318e466e7a4688d25f3989a8c83"
+    },
+    {
+      "path": "work/icon-generation/shade-20261014-fox20/brief.en.md",
+      "sha256": "55c678806eb1e005a89e2dc4f20c6574ea33d8a2ae74108c98f809a590133fcf"
+    },
+    {
+      "path": "work/icon-generation/shade-20261014-fox20/revision-brief.en.md",
+      "sha256": "a8573b90ceab3654332e7311d821ccafa98efc0262c5c8dd713587722532f242"
+    },
+    {
+      "path": "work/icon-generation/shade-20261014-fox20/batch.json",
+      "sha256": "523382935a2496bbfef2ac8ea471d97db786ed9e34546d4b53ad94d04ec26d60"
+    },
+    {
+      "path": "work/icon-generation/shade-20261014-fox20/generation-verification.json",
+      "sha256": "5b9a66e458b93551bf60cdbbfadcff314f5e9dd40c716a096ec47d8a22d4a894"
+    }
+  ],
+  "candidates": [
+    {
+      "variant": "A01",
+      "label": "A01 - Deep lunge tight ghost",
+      "job_id": "A-20261014-090618-03c44d6a",
+      "source": "work/icon-generation/A/images/A-20261014-090618-03c44d6a.png",
+      "sha256": "fd253af03741fc9fdf874ee7eb8aa6215ec7645601df17e079e1d1c6fbf66494",
+      "width": 1024,
+      "height": 1024,
+      "seed": 2899693926,
+      "mode": "txt2img",
+      "denoising_strength": null,
+      "request": "work/icon-generation/A/requests/shade-fox20-A01.json",
+      "request_sha256": "6e5fcef48341b0e847287ef0ff9abcc0b51d610e56d1405fa33384b064eb6a55"
+    },
+    {
+      "variant": "A02",
+      "label": "A02 - Extreme pitch stretched ghost",
+      "job_id": "A-20261014-090618-73ffbfb2",
+      "source": "work/icon-generation/A/images/A-20261014-090618-73ffbfb2.png",
+      "sha256": "7ab701cc29da55aabdf6337fc8b8fe7d38986b9de0e56d0314360f51dd525110",
+      "width": 1024,
+      "height": 1024,
+      "seed": 394479638,
+      "mode": "txt2img",
+      "denoising_strength": null,
+      "request": "work/icon-generation/A/requests/shade-fox20-A02.json",
+      "request_sha256": "bb02e466e9c591c0c05ab77e84fef29f5cc424f3ac6f6259a596cd419b50ac8c"
+    },
+    {
+      "variant": "A03",
+      "label": "A03 - Higher placement long fine streaks",
+      "job_id": "A-20261014-090618-bf1bc014",
+      "source": "work/icon-generation/A/images/A-20261014-090618-bf1bc014.png",
+      "sha256": "366c8b4858d87be739abcbb41cbb44f8323b21a8e27cb2798baa02feddb210cf",
+      "width": 1024,
+      "height": 1024,
+      "seed": 2744699035,
+      "mode": "txt2img",
+      "denoising_strength": null,
+      "request": "work/icon-generation/A/requests/shade-fox20-A03.json",
+      "request_sha256": "c98d3055504189ce955b4f2120bb6ae06d68f7e4aa6792ff8cd86a3788f6ceb3"
+    },
+    {
+      "variant": "A04",
+      "label": "A04 - Overlapping ghost bright edge glow",
+      "job_id": "A-20261014-090618-609a9c8a",
+      "source": "work/icon-generation/A/images/A-20261014-090618-609a9c8a.png",
+      "sha256": "5e9ac9402010d46113f7bd43ef4ee1ca5a9e2507168de8f1b572177e1cc36153",
+      "width": 1024,
+      "height": 1024,
+      "seed": 2889934618,
+      "mode": "img2img",
+      "denoising_strength": 0.55,
+      "request": "work/icon-generation/A/requests/shade-fox20-A04-r2.json",
+      "request_sha256": "55c817bda138754534ea01e38aa86eba91c29aed8e199d77337ea84c7099e95d"
+    },
+    {
+      "variant": "A05",
+      "label": "A05 - Lower placement wider echo spread",
+      "job_id": "A-20261014-090618-059b23f1",
+      "source": "work/icon-generation/A/images/A-20261014-090618-059b23f1.png",
+      "sha256": "663f704c89363ce7d2099c4dea2e3345a39005dffec054fe4fab35a4b8f10b9d",
+      "width": 1024,
+      "height": 1024,
+      "seed": 3127916750,
+      "mode": "img2img",
+      "denoising_strength": 0.6,
+      "request": "work/icon-generation/A/requests/shade-fox20-A05-r2.json",
+      "request_sha256": "75fa710bca1db8eeeb5a4642e7767cbe8d9fec5010558d2f52a66a6a4132744f"
+    },
+    {
+      "variant": "A06",
+      "label": "A06 - Larger figure fine fading streaks",
+      "job_id": "A-20261014-090618-dfa0c960",
+      "source": "work/icon-generation/A/images/A-20261014-090618-dfa0c960.png",
+      "sha256": "88efd3408ec05881b09f47da1fa0e3359e50aedc6c50403c3efd16320e6e1eb2",
+      "width": 1024,
+      "height": 1024,
+      "seed": 1767788779,
+      "mode": "img2img",
+      "denoising_strength": 0.65,
+      "request": "work/icon-generation/A/requests/shade-fox20-A06-r2.json",
+      "request_sha256": "4682db0ebb38e4081195f0259cdd89b75090d72650f0b20ef2cc9d4b99cbe030"
+    },
+    {
+      "variant": "A07",
+      "label": "A07 - Mid lean soft dissolve",
+      "job_id": "A-20261014-090618-f00616fa",
+      "source": "work/icon-generation/A/images/A-20261014-090618-f00616fa.png",
+      "sha256": "1e2865dc3a75d3532e67af93122c174fba073eee5b9ec96c7cacb9da67b483b0",
+      "width": 1024,
+      "height": 1024,
+      "seed": 248602896,
+      "mode": "img2img",
+      "denoising_strength": 0.5,
+      "request": "work/icon-generation/A/requests/shade-fox20-A07-r2.json",
+      "request_sha256": "6ad8764764f26637660c0a9e22efaa077d797ccabff15ffefc0fe15f34ede1c9"
+    },
+    {
+      "variant": "B01",
+      "label": "B01 Long thin parallel streak trail",
+      "job_id": "B-20261014-090618-513d0c04",
+      "source": "work/icon-generation/B/images/B-20261014-090618-513d0c04.png",
+      "sha256": "9663401a8604c0dc8b678f451f021245d0e87f1f02007aa5a9c809a9dcad9f56",
+      "width": 1024,
+      "height": 1024,
+      "seed": 971690901,
+      "mode": "txt2img",
+      "denoising_strength": null,
+      "request": "work/icon-generation/B/requests/shade-fox20-B01.json",
+      "request_sha256": "436c34ac5bcd19cfe6762f8964d7bea1baf76f5d321c1703df7fcf615593c306"
+    },
+    {
+      "variant": "B02",
+      "label": "B02 Short dense near-solid echo",
+      "job_id": "B-20261014-090618-00e597cd",
+      "source": "work/icon-generation/B/images/B-20261014-090618-00e597cd.png",
+      "sha256": "90e12328cf4caa75a345c781d8115130f1ed0df692b48bf38c673901275a6d11",
+      "width": 1024,
+      "height": 1024,
+      "seed": 507813933,
+      "mode": "txt2img",
+      "denoising_strength": null,
+      "request": "work/icon-generation/B/requests/shade-fox20-B02.json",
+      "request_sha256": "1561ff37f666c243a7da84c0b5bbb4d86f5d60a877bcd6451048bda8476e6bdd"
+    },
+    {
+      "variant": "B03",
+      "label": "B03 Layered double echo",
+      "job_id": "B-20261014-090618-7761a623",
+      "source": "work/icon-generation/B/images/B-20261014-090618-7761a623.png",
+      "sha256": "28c9eebb8b9032a2d889cafa79b3d02b8d305054fd0c96dfa84d58a487559eb0",
+      "width": 1024,
+      "height": 1024,
+      "seed": 550642878,
+      "mode": "txt2img",
+      "denoising_strength": null,
+      "request": "work/icon-generation/B/requests/shade-fox20-B03.json",
+      "request_sha256": "51d629a3250deca06f46dab88619558e713965e9cec29e904e94e80dace3f689"
+    },
+    {
+      "variant": "B04",
+      "label": "B04 White-core streak trail",
+      "job_id": "B-20261014-090618-8faf2865",
+      "source": "work/icon-generation/B/images/B-20261014-090618-8faf2865.png",
+      "sha256": "b630423fd8ff6a2357e8e5f76f2a4ca18f22055e74eed9f2c1c898555ac368d6",
+      "width": 1024,
+      "height": 1024,
+      "seed": 1803448606,
+      "mode": "img2img",
+      "denoising_strength": 0.55,
+      "request": "work/icon-generation/B/requests/shade-fox20-B04-r2.json",
+      "request_sha256": "f91bbd28e53db6229b03902197da155ecc506e938b273412a28b402eef160509"
+    },
+    {
+      "variant": "B05",
+      "label": "B05 Dissolving dash segments",
+      "job_id": "B-20261014-090618-d46c3d81",
+      "source": "work/icon-generation/B/images/B-20261014-090618-d46c3d81.png",
+      "sha256": "042681350bdefa7f8e3f34e44f697abd601089b09d1acf5985c5a309b20e7e8f",
+      "width": 1024,
+      "height": 1024,
+      "seed": 695568100,
+      "mode": "img2img",
+      "denoising_strength": 0.6,
+      "request": "work/icon-generation/B/requests/shade-fox20-B05-r2.json",
+      "request_sha256": "8adb780f52c44c85389ca9cd1f4be858575a331732af4e22c16418bea7dfc614"
+    },
+    {
+      "variant": "B06",
+      "label": "B06 Wide soft glow band",
+      "job_id": "B-20261014-090618-6740f51b",
+      "source": "work/icon-generation/B/images/B-20261014-090618-6740f51b.png",
+      "sha256": "836d8ae91564eececd0687ab5e5234252f06b73d9a938918accd6ba75e855010",
+      "width": 1024,
+      "height": 1024,
+      "seed": 3974691675,
+      "mode": "img2img",
+      "denoising_strength": 0.65,
+      "request": "work/icon-generation/B/requests/shade-fox20-B06-r2.json",
+      "request_sha256": "75c15fec8554fcf47ec079f6d8098fbefc353ba1f04a28d0e85d8ac2eecaed00"
+    },
+    {
+      "variant": "B07",
+      "label": "B07 Tight echo close to body",
+      "job_id": "B-20261014-090618-5b178cfb",
+      "source": "work/icon-generation/B/images/B-20261014-090618-5b178cfb.png",
+      "sha256": "4b96c8d44c9f82732cf252dc4b4930ea96edd0bdc8de7391fa2b97e23dc00f60",
+      "width": 1024,
+      "height": 1024,
+      "seed": 359250008,
+      "mode": "img2img",
+      "denoising_strength": 0.5,
+      "request": "work/icon-generation/B/requests/shade-fox20-B07-r2.json",
+      "request_sha256": "bf8276ecfec2307d507d177f256318814272e13469f6baa8dd159b0f139e0ddc"
+    },
+    {
+      "variant": "C01",
+      "label": "C01 - Compact centered burst with painted luminous finish",
+      "job_id": "C-20261014-090618-6b34b115",
+      "source": "work/icon-generation/C/images/C-20261014-090618-6b34b115.png",
+      "sha256": "9dc982ee9b0a9b17d8db2bed36fa4e790e0f0538c8eeb2b30560958669632786",
+      "width": 1024,
+      "height": 1024,
+      "seed": 3697292774,
+      "mode": "txt2img",
+      "denoising_strength": null,
+      "request": "work/icon-generation/C/requests/shade-fox20-C01.json",
+      "request_sha256": "5a566995e143e0dfd1f6f310011ddc7f932b2f28b10bf02a745e37bec24fbae0"
+    },
+    {
+      "variant": "C02",
+      "label": "C02 - Backlit near-silhouette against hot cyan rim",
+      "job_id": "C-20261014-090618-dcdafdb9",
+      "source": "work/icon-generation/C/images/C-20261014-090618-dcdafdb9.png",
+      "sha256": "6ce0ff9ce61b599a7c7fdde3db792e07ba5557a0237a6177209c75293906388e",
+      "width": 1024,
+      "height": 1024,
+      "seed": 1915575934,
+      "mode": "txt2img",
+      "denoising_strength": null,
+      "request": "work/icon-generation/C/requests/shade-fox20-C02.json",
+      "request_sha256": "8df6cb9ab0064c06d3f2e2a38ea34e354146a9b789d691b68a92b67b9629e4c5"
+    },
+    {
+      "variant": "C03",
+      "label": "C03 - Fanned parallel ribbon trails",
+      "job_id": "C-20261014-090618-6528f3fd",
+      "source": "work/icon-generation/C/images/C-20261014-090618-6528f3fd.png",
+      "sha256": "7ea64553a5bd8991c3da9815b9f4a91707ae8ce4d454e255ad54cbb55f19cacf",
+      "width": 1024,
+      "height": 1024,
+      "seed": 2961228266,
+      "mode": "img2img",
+      "denoising_strength": 0.55,
+      "request": "work/icon-generation/C/requests/shade-fox20-C03-r2.json",
+      "request_sha256": "5e38713f955a082f8884256a9c4194bc59490cc0c1c4ce40075e18f8a3394efc"
+    },
+    {
+      "variant": "C04",
+      "label": "C04 - Oversized ghost echo with dramatic scale contrast",
+      "job_id": "C-20261014-090618-36631ab7",
+      "source": "work/icon-generation/C/images/C-20261014-090618-36631ab7.png",
+      "sha256": "e9e947444cb4bc9d65fd14a845605727d58e29fe7c99761aa464b8e1bc6f6e2d",
+      "width": 1024,
+      "height": 1024,
+      "seed": 3255100563,
+      "mode": "img2img",
+      "denoising_strength": 0.6,
+      "request": "work/icon-generation/C/requests/shade-fox20-C04-r2.json",
+      "request_sha256": "b12f2c1b34d6096542e0ef3c5b02a2fc3f0addebcc2a63828f8aebf91a56eb45"
+    },
+    {
+      "variant": "C05",
+      "label": "C05 - Tight crop with short bright light bars",
+      "job_id": "C-20261014-090618-9e5d1e73",
+      "source": "work/icon-generation/C/images/C-20261014-090618-9e5d1e73.png",
+      "sha256": "71ba3898fd1a952af5aa2329c4d1db2423071ce96ac599dd65977d67f50e1453",
+      "width": 1024,
+      "height": 1024,
+      "seed": 3059914560,
+      "mode": "img2img",
+      "denoising_strength": 0.65,
+      "request": "work/icon-generation/C/requests/shade-fox20-C05-r2.json",
+      "request_sha256": "544281e78702e46edfa61975f8db4e929f07cf785257cd057e961516aedd4c5b"
+    },
+    {
+      "variant": "C06",
+      "label": "C06 - Layered painterly brushwork and soft luminous glow",
+      "job_id": "C-20261014-090618-d8a1a299",
+      "source": "work/icon-generation/C/images/C-20261014-090618-d8a1a299.png",
+      "sha256": "0ce597ea757938a18217519a12ce595f6e817108be89a8ac8dda2bfea3183707",
+      "width": 1024,
+      "height": 1024,
+      "seed": 3757394963,
+      "mode": "img2img",
+      "denoising_strength": 0.5,
+      "request": "work/icon-generation/C/requests/shade-fox20-C06-r2.json",
+      "request_sha256": "7d603e223fec164f3d9c8d548701e804b3020ab69d725cd66dcb442cf044f77f"
+    }
+  ]
+}
