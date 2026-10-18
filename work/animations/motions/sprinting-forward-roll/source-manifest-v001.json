@@ -1,0 +1,17 @@
+{
+  "input": "../_template/source/Sprinting Forward Roll.fbx",
+  "preserved_copy": "source/Sprinting Forward Roll.fbx",
+  "sha256": "32870b44386b458cf2fdca44fafb4ac4ae908e5910469471ab494e891c821249",
+  "source_origin": "ユーザー指定の作業フォルダ内Mixamo FBX。配布URLは未確認。",
+  "target": "Official Roblox R15, Armature (17 bones; 15 mapped)",
+  "root_mode": "IN_PLACE",
+  "orientation": "r15-anatomical-v2",
+  "frames": [
+    1,
+    30
+  ],
+  "fps": 30,
+  "studio_sequence": "SprintingForwardRoll_R15_v001",
+  "public_animation_id": null,
+  "status": "Studio verified; publication and human visual review pending"
+}

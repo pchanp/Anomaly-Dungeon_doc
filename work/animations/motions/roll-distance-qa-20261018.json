@@ -1,0 +1,9 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"stun\":{\"distance\":5.553731918334961,\"cancelled\":true},\"open\":{\"move\":0,\"elapsed\":1.0004695835523308,\"velocityLeft\":false,\"distance\":19.9711971282959,\"invincible\":false},\"wall\":{\"velocityLeft\":false,\"distance\":7.163380146026611,\"z\":-7.163380146026611}}"
+    }
+  ],
+  "isError": false
+}

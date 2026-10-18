@@ -32,3 +32,7 @@ Source ArmatureのAnimationをTarget Armatureへ移す工程です。プロジ�
 ## 保存結果との対応（2026-10-15）
 
 上記は骨格試作の実行記録。現在のblendへの出力保存は未確認であり、保存済み検査JSONではTargetにActionがない時点が記録されている。Source Import・試行実行・保存結果を区別する。詳細は[Hook Punchの個別記録](../../work/animations/motions/hook-punch-sample/README.md)を参照。
+
+## 2026-10-17固定手順への更新
+
+ユーザー指定により、Mixamo→公式R15は[保存済みスクリプト](../../work/animations/scripts/README.md)を固定手順に採用。以前の「標準未採用」「保存未確認」は当時の記録。v002の保存再読込と、固定スクリプトによるv003の再実行・検査・FBX出力を確認した。Studio Importの軸／階層変換も別スクリプトへ保存する。見た目・他Rig・公開後の互換性は別途検証する。

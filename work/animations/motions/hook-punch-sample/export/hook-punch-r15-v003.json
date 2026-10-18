@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "source": "Armature.001",
+  "source_action": "mixamo.com",
+  "target": "Armature",
+  "action": "HookPunch_R15_Stored_v003",
+  "frame_range": [
+    1,
+    65
+  ],
+  "root_mode": "KEEP",
+  "fps": 30.0,
+  "mapped_bones": 15,
+  "curves": 63,
+  "keyframes": 4095,
+  "max_source_direction_error_degrees": 0.0,
+  "max_rotation_error_degrees": 0.0,
+  "max_bone_length_error": 1.5795230865478516e-06,
+  "studio_import_verified": false,
+  "art_review": "pending",
+  "fbx_path": "work/animations/motions/hook-punch-sample/export/hook-punch-r15-v003.fbx"
+}

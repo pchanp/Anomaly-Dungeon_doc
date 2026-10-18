@@ -1,0 +1,20 @@
+{
+  "primary": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"delayedDamageHealth\":67,\"mainDamageHealth\":75,\"sequence\":\"HookPunch_R15_v004\",\"stunned\":true,\"replicatedFrames\":65,\"animationTrackPlaying\":true,\"lastHit\":\"hit\",\"stunRestored\":true}"
+      }
+    ],
+    "isError": false
+  },
+  "combat": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"externalSpeedChangePreserved\":true,\"largeAttackNotParried\":true,\"castAccepted\":true,\"lineOfSightBlocked\":true,\"parrySmallDamageBlocked\":true}"
+      }
+    ],
+    "isError": false
+  }
+}

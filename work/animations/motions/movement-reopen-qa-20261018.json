@@ -1,0 +1,16 @@
+[
+  {
+    "clip": "SprintingForwardRoll_R15_v001",
+    "frames": 30,
+    "reopenedPoseMatch": true,
+    "horizontalRootMotionRemoved": true,
+    "firstForward": 0.9195583
+  },
+  {
+    "clip": "StandardRun_R15_v001",
+    "frames": 17,
+    "reopenedPoseMatch": true,
+    "horizontalRootMotionRemoved": true,
+    "firstForward": 0.3323049
+  }
+]

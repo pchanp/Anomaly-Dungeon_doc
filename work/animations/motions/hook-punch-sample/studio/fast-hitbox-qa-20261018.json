@@ -1,0 +1,69 @@
+{
+  "primary": {
+    "finalHealth": 67,
+    "phases": {
+      "Recovery": true,
+      "Windup": true,
+      "Hit": true
+    },
+    "speeds": {
+      "2": true,
+      "3": true
+    },
+    "castAccepted": true,
+    "castCleaned": true,
+    "debugCleaned": true,
+    "debugMatches": true,
+    "stunRestored": true,
+    "hitAfter": 0.18360304832458496,
+    "wireframeOnly": true
+  },
+  "negativeCases": {
+    "1": {
+      "activeOutlineObserved": true,
+      "health": 100,
+      "case": "out-of-range"
+    },
+    "2": {
+      "activeOutlineObserved": true,
+      "health": 100,
+      "case": "behind"
+    },
+    "3": {
+      "activeOutlineObserved": true,
+      "health": 100,
+      "case": "side"
+    },
+    "4": {
+      "activeOutlineObserved": true,
+      "health": 100,
+      "case": "wall"
+    }
+  },
+  "client": {
+    "partTransparency": 1,
+    "outlineClass": "SelectionBox",
+    "canQuery": false,
+    "lineThickness": 0.03500000014901161,
+    "phase": "Windup",
+    "slot4": "纏絲勁",
+    "visibleToClient": true,
+    "surfaceTransparency": 1,
+    "size": {
+      "1": 4,
+      "2": 5,
+      "3": 5
+    }
+  },
+  "singleTarget": {
+    "oneMainAndOneDelayedHit": true,
+    "farHealth": 100,
+    "nearHealth": 67
+  },
+  "lifecycle": {
+    "cancelledWithoutDamage": true,
+    "damageWorksWithDebugDisabled": true,
+    "debugDefaultRestored": true,
+    "debugToggleHidesPart": true
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "cause": "Pose exporter v1 matched up but mapped anatomical forward to Roblox +Z and right to -X",
+  "correctedProfile": "r15-anatomical-v2",
+  "clip": "HookPunch_R15_v005",
+  "deprecatedPublishedId": "95405144949752",
+  "sourceGuardArmatureLocalForward": {
+    "Left": 24.387426376342773,
+    "Right": 33.803375244140625
+  },
+  "runtimeRegression": {
+    "corrected": {
+      "1": {
+        "leftForward": 0.22644805908203125,
+        "rightForward": 0.7904586791992188,
+        "passed": true,
+        "yaw": 0
+      },
+      "2": {
+        "leftForward": 0.22656245529651642,
+        "rightForward": 0.7905274033546448,
+        "passed": true,
+        "yaw": 1.5707963267948966
+      }
+    },
+    "legacy": {
+      "1": {
+        "leftForward": -0.2264556884765625,
+        "rightForward": -0.79046630859375,
+        "passed": false,
+        "yaw": 0
+      },
+      "2": {
+        "leftForward": -0.22644038498401642,
+        "rightForward": -0.7905274033546448,
+        "passed": false,
+        "yaw": 1.5707963267948966
+      }
+    }
+  },
+  "importChecks": {
+    "legacyV1Rejected": true,
+    "positiveZForwardRejected": true
+  },
+  "publishedReplacementPending": true
+}

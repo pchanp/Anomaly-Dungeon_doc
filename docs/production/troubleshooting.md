@@ -110,3 +110,44 @@ Known issue / Workaround available（一部項目のみ回避可）
 過去の「start_stop_playに人数指定がないため、人間のUI操作が必須」という制約は、今回の環境では回避できた。Editのexecute_luauからStudioTestService:ExecuteMultiplayerTestAsync(6, args)をtask.spawn内で呼び、6Clientを起動した。呼び出しはテスト終了までyieldするため非同期で開始する。各Clientの接続が登録されるまで待ち、Serverのstudio_idをClient操作に流用しない。EndTest後に元のEdit接続のみへ戻ることを確認する。
 
 公式資料: [StudioTestService](https://create.roblox.com/docs/reference/engine/classes/StudioTestService)。6Clientの実施結果は[検証記録](studio-verification-checklist.md)を参照。UI経由の先行0ClientサーバーでAddPlayersを試した際は接続消失があり、原因は未確定。成功した回避方法はExecuteMultiplayerTestAsyncの別セッションである。
+
+## R15のアニメーションが前後逆になる（2026-10-17原因確定）
+
+### Symptom
+
+Hook Punch／纏絲勁が再生される一方、開始時の拳が肩の後ろへ出る。公開ID95405144949752でも再現。
+
+### Cause
+
+Pose exporter v1が上方向だけを `RotX(-90°) @ Armature世界回転` で変換し、公式テンプレートの左+X・前+ZをRobloxの左−X・前−Zへ変換していなかった。旧RetargetのSource方向一致テストは同じBlender座標内の比較であり、Export後の向きの誤りを検出しなかった。以前の類似症状が同一原因だったという確定記録は見つかっていない。
+
+### Resolution
+
+Exporterをanatomical v2へ変更。頭・肩・足先から右・上・前を定め、全Pose回転と腰位置をRoblox基底へ変換。schema v1／前+Z manifestはImporterが拒否する。旧公開IDは設定のorientation profileで拒否し、修正clipを別版へ保存する。Rootやキャラクター全体の向きを回して見かけだけ合わせない。
+
+### Status
+
+原因を再現して修正、回帰検査Pass。実R15開始時の拳の前方成分（肩基準、stud）は旧版が左−0.226／右−0.790、修正版が左+0.226／右+0.790。Yaw0度・90度で一致。修正版HookPunch_R15_v005の公開ID登録は未完了（native UI接続障害）。
+
+### Related
+
+- [W05固定手順と回帰検査](../../work/animations/scripts/README.md)
+- [診断と測定結果](../../work/animations/motions/hook-punch-sample/studio/ORIENTATION-FIX-20261017.md)
+
+## 画面操作ツールのnative接続が起動しない（観測2026-10-17、説明更新10-18）
+
+### Symptom
+
+`mcp__cua_repl` の `cua.getApp('com.Roblox.RobloxStudio')` が `Sky Computer Use native pipe startup failed` を返す。アプリ一覧も取得できず、セッションリセット後の再試行でも同じエラー。
+
+### Cause
+
+`Unconfirmed`。観測できたのは画面操作ツール側native pipeの起動失敗まで。OS権限・Studio・ネットワーク等のどれが内部原因かは特定できていない。このエラーをRoblox Studio本体の故障やasset登録失敗の根拠にはしない。
+
+### Resolution
+
+影響範囲を「こちらの画面取得・クリック・公開ボタン操作」と明記する。独立した `Roblox_Studio` MCPのコード操作・Import・Playは実際に利用できた。実行可能な作業はMCPで継続し、公開UI操作の未完了とasset内容の検証を区別する。未保存データを失うStudio再起動は行わない。
+
+### Status
+
+内部原因未特定。公開画面の操作完了を確認できなかったため未完了として報告したが、その後ユーザーが登録を完了した。10月18日の高速化・判定可視化は画面操作を要さず、Studio MCPで実装・Play検証済み。現在のnative接続状態は本作業では再確認していない。

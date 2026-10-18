@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "source": "Armature.001",
+  "source_action": "Armature.001|mixamo.com|Layer0",
+  "target": "Armature",
+  "action": "SprintingForwardRoll_R15_v001",
+  "frame_range": [
+    1,
+    30
+  ],
+  "root_mode": "IN_PLACE",
+  "translation_scale": 0.02986215427981914,
+  "fps": 30.0,
+  "mapped_bones": 15,
+  "curves": 63,
+  "keyframes": 1890,
+  "max_source_direction_error_degrees": 0.0,
+  "max_rotation_error_degrees": 0.0,
+  "max_bone_length_error": 4.0531158447265625e-06,
+  "studio_import_verified": false,
+  "art_review": "pending",
+  "fbx_path": "/Users/saitouyouwataru/Documents/Git/Anomaly-Dungeon_doc/work/animations/motions/sprinting-forward-roll/export/sprinting-forward-roll-r15-v001.fbx"
+}
