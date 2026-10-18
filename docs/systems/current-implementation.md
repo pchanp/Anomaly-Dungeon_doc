@@ -225,3 +225,27 @@ Party全員が終了すると `RunService.CloseRun` が生成世界を破棄し�
 8/31はWorkspace.MapAuthoring.AUGUST_31を編集原本とし、Play起動でServerStorageへ保管、Run開始でコピーします。通常RunのAugustGenerator呼び出しはAuthoredAugustMapへ置き換えました。Seedによる景観の再生成は行わず、再抽選端末は保存マップの再読込になります。10ゾーン・日付板・8/32参照の引き継ぎ、Runの再構築・終了時の原本保持をPlay Soloで確認しました。景観画面・実歩行・複数Client・8/32通しプレイ・保存再起動は未確認です。TSUTAYA/CLOSED_STACKSは従来生成のままです。
 
 Studioの生成器はGit側の008景観変更が未反映のため、初回モデルはStudioの既存景観を使用しています。詳細は[判断記録024](../decisions/024-editable-august-map-authoring.md)と[制作手順](../production/editable-map-workflow.md)を参照。
+
+## 2026-10-17：纏絲勁・R15アニメーションのStudio試作
+
+[試作記録](tensikei-prototype.md)の範囲でSkillService／SkillControllerにスロット4を追加。Server側命中・Parry・0.5秒Stun・遅延ダメージとR15 AnimationTrack再生をPlay Soloで確認した。設定値はユーザー承認の暫定値。既存Magic BoltのDamageも同じ入口を利用する。取得・恒久ビルド・正式バランスは未実装。
+
+Mixamo→R15の[固定スクリプト](../../work/animations/scripts/README.md)と標準R15 Pose導入アダプタを保存。Studioには65 KeyframeのHookPunch_R15_v004を配置。公開Animation ID `95405144949752` を設定し、Studioで公開ID経由の実R15再生を確認。複数Client／PvP・公開後の互換性は未確認。ゲームの公開は行っていない。
+
+## R15出力の方向修正（2026-10-17）
+
+公開ID95405144949752は前後逆の旧basisと判明。W05 exporter／importerをanatomical v2へ修正し、実R15開始姿勢の拳の前方投影をYaw0°／90°で検査。旧版のFail再現とv005のPassを確認した。[診断](../../work/animations/motions/hook-punch-sample/studio/ORIENTATION-FIX-20261017.md)。現在のStudioは検証済みv005から一時ID再生し、旧公開IDはlegacy profileとして採用しない。修正版の再公開・公開IDの方向検証は未完了。
+
+## 2026-10-18：纏絲勁の高速再生・判定可視化
+
+[纏絲勁試作](tensikei-prototype.md)を前半3倍／後半2倍の再生に変更。元2.133秒から約0.889秒へ短縮し、主判定は約0.167秒で開始。サーバーの前方Box判定と同じ位置・寸法へ、透明Part＋SelectionBoxのワイヤーフレームをStudio限定で表示する。準備・判定・接触・後隙を色で区別し、終了／中断で掃除する。
+
+Play Soloで命中、範囲外・背後・横・壁遮蔽、単一対象・部位重複排除、3→2速度切替、Clientへの線表示複製、表示OFFでの判定維持を確認。元assetは変更しておらず、方向修正v005をStudio内で利用する。公開IDの差し替え・ゲーム公開はこの作業で行っていない。
+
+## 2026-10-18：ローリング・Shift走行のMixamo→R15適用
+
+Sprinting Forward Rollを既存スロット2、Standard RunをShift長押し走行へStudio導入。Rollの簡易関節操作をAnimationTrackへ置き換え、0.6秒の既存無敵区間に合わせた。Runは既存速度24・倍率1.05でループ。水平Root移動を除去し、Yaw0°／90°の方向、実キー入力の切替と停止、Stun停止、保存blend再読込を確認。公開ID未発行のためStudio内の検証済みSequenceを利用し、オンラインは旧assetを維持する。[実装・公開残件](movement-animation-integration.md)。ゲーム本体の保存／公開は未実施。
+
+## 2026-10-18：ローリングの移動距離調整
+
+スロット2だけで平坦地を約20スタッド移動するように変更。Server承認後、Clientの水平LinearVelocityを0.6秒間維持し、壁検査・Stun等の中断・終了時の掃除を実装。実測19.9712スタッド、壁手前停止・Stun中断を確認。無敵0.6秒・Cooldown4秒は維持。[適用記録](movement-animation-integration.md#ローリング単独で約20スタッド移動2026-10-18追記)。

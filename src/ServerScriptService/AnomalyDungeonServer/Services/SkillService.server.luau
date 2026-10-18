@@ -4,6 +4,9 @@ local RS=game:GetService("ReplicatedStorage")
 local Debris=game:GetService("Debris")
 local TweenService=game:GetService("TweenService")
 local skillEvent=RS:WaitForChild("SkillEvent")
+local CombatDamage=require(script.Parent.CombatDamage)
+local Tensikei=require(script.Parent.TensikeiService)
+local RollConfig=require(RS.AnomalyDungeon.Shared.Config.RollConfig)
 local SKILL_CD={[1]=3,[2]=4,[3]=10}
 local serverCd={}
 local MAGIC_SPEED=95
@@ -22,7 +25,7 @@ local function damageInRadius(player,pos,radius,hit)
  local params=OverlapParams.new() params.FilterType=Enum.RaycastFilterType.Exclude params.FilterDescendantsInstances={player.Character}
  for _,part in ipairs(workspace:GetPartBoundsInRadius(pos,radius,params)) do
   local char=part:FindFirstAncestorOfClass("Model") local hum=char and char:FindFirstChildOfClass("Humanoid")
-  if hum and hum.Health>0 and not hit[hum] then hit[hum]=true if not char:GetAttribute("IsInvincible") then hum:TakeDamage(25) end end
+  if hum and hum.Health>0 and not hit[hum] then hit[hum]=true CombatDamage.Apply(player,hum,25,{Direct=true}) end
  end
 end
 local function magicImpact(player,pos)
@@ -51,9 +54,10 @@ local function magicBolt(player,root)
  task.delay(MAGIC_LIFETIME,impact)
 end
 local function roll(player,root)
+ skillEvent:FireClient(player,"RollAccepted")
  player:SetAttribute("IsInvincible",true) sound(root,"rbxasset://sounds/action_jump_land.mp3",.9,1.05)
  local char=player.Character if char then for _,p in ipairs(char:GetDescendants()) do if p:IsA("BasePart") and p.Name~="HumanoidRootPart" then p:SetAttribute("RollOrigTrans",p.Transparency) p.Transparency=math.min(p.Transparency+.3,1) end end end
- task.delay(.6,function() player:SetAttribute("IsInvincible",false) if char and char.Parent then for _,p in ipairs(char:GetDescendants()) do if p:IsA("BasePart") and p.Name~="HumanoidRootPart" then local orig=p:GetAttribute("RollOrigTrans") if orig~=nil then p.Transparency=orig p:SetAttribute("RollOrigTrans",nil) end end end end end)
+ task.delay(RollConfig.Duration,function() player:SetAttribute("IsInvincible",false) if char and char.Parent then for _,p in ipairs(char:GetDescendants()) do if p:IsA("BasePart") and p.Name~="HumanoidRootPart" then local orig=p:GetAttribute("RollOrigTrans") if orig~=nil then p.Transparency=orig p:SetAttribute("RollOrigTrans",nil) end end end end end)
 end
 local function stealth(player,root,hum)
  player:SetAttribute("IsStealth",true) sound(root,"rbxasset://sounds/impact_water.mp3",.65,.58)
@@ -64,6 +68,13 @@ skillEvent.OnServerEvent:Connect(function(player,slot)
   if typeof(slot)~="number" then return end
   -- リザルト表示中はRun操作を受け付けない
   if player:GetAttribute("RunResultPending")==true then return end
+ if slot%1~=0 or slot<1 or slot>4 then return end
+ if CombatDamage.IsStunned(player.Character) then return end
+ if slot==4 then
+  local accepted,result=Tensikei.TryCast(player)
+  skillEvent:FireClient(player,"TensikeiResult",accepted,result)
+  return
+ end
   local root,hum=getChar(player) if not root or not hum or hum.Health<=0 then return end
  serverCd[player]=serverCd[player] or {} local now=os.clock() if serverCd[player][slot] and now<serverCd[player][slot] then return end serverCd[player][slot]=now+(SKILL_CD[slot] or 0)
  if slot==1 then magicBolt(player,root) elseif slot==2 then roll(player,root) elseif slot==3 then stealth(player,root,hum) end

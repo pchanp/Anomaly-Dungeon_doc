@@ -5,6 +5,12 @@ local UIS = game:GetService('UserInputService')
 
 local player = Players.LocalPlayer
 local skillEvent = RS:WaitForChild('SkillEvent')
+local RollMovement = require(script.Parent.RollMovement)
+local TensikeiConfig = require(RS:WaitForChild('AnomalyDungeon'):WaitForChild('Shared'):WaitForChild('Config'):WaitForChild('TensikeiConfig'))
+local function isStunned()
+  local character = player.Character
+  return character and (character:GetAttribute('CombatStunnedUntil') or 0) > workspace:GetServerTimeNow()
+end
 
 -- ============================================================
 -- スキル定義
@@ -13,7 +19,7 @@ local SKILL_DEFS = {
   [1] = {name = 'Magic Bolt',  cd = 3,  desc = '遠距離攻撃魔法'},
   [2] = {name = 'Roll',        cd = 4,  desc = '無敵ローリング'},
   [3] = {name = 'Stealth',     cd = 10, desc = '隠密移動'},
-  [4] = {name = '—',           cd = 0,  desc = '空きスロット'},
+  [4] = {name = TensikeiConfig.DisplayName, cd = TensikeiConfig.Cooldown, desc = 'Parry・突き・遅延衝撃（試作）'},
 }
 
 local DASH_CD    = 1.5
@@ -131,6 +137,7 @@ end
 -- ダッシュ（クライアント側で即座に実行、物理は所有権により複製）
 -- ============================================================
 local function tryDash()
+  if isStunned() then return end
   -- リザルト表示中はRun操作を受け付けない
   if player:GetAttribute('RunResultPending') == true then return end
   if os.clock() < dashCdEnd then return end
@@ -151,6 +158,7 @@ end
 -- スキル発動
 -- ============================================================
 local function trySkill(slot)
+  if isStunned() then return end
   if slot < 1 or slot > 4 then return end
   local def = SKILL_DEFS[slot]
   if def.cd == 0 then return end
@@ -166,23 +174,23 @@ local function trySkill(slot)
   cooldowns[slot] = now + def.cd
   skillEvent:FireServer(slot)
 
-  -- Roll: クライアント側で即座に移動ベクトルを適用
-  if slot == 2 then
-    local moveDir = hum.MoveDirection
-    if moveDir.Magnitude < 0.1 then
-      local lv = root.CFrame.LookVector
-      moveDir = Vector3.new(lv.X, 0, lv.Z)
-    end
-    if moveDir.Magnitude > 0.01 then
-      moveDir = moveDir.Unit
-      root.AssemblyLinearVelocity = moveDir * 50 + Vector3.new(0, 12, 0)
-    end
-  end
+
 end
 
 -- ============================================================
 -- 入力処理
 -- ============================================================
+skillEvent.OnClientEvent:Connect(function(kind, accepted, result)
+  if kind == 'RollAccepted' then RollMovement.Start(player); return end
+  if kind ~= 'TensikeiResult' then return end
+  if accepted then cooldowns[4] = os.clock() + result
+  elseif result ~= 'cooldown' then cooldowns[4] = nil end
+end)
+
+player.CharacterAdded:Connect(function()
+  cooldowns = {}
+end)
+
 UIS.InputBegan:Connect(function(input, gp)
   if gp then return end
   if input.KeyCode == Enum.KeyCode.LeftShift then
