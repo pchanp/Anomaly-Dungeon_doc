@@ -168,13 +168,13 @@ for _,zone in ipairs(ZONES) do
 	FLATS[#FLATS+1]={X=zone[3],Z=zone[5],Width=zone[6]+20,Depth=zone[7]+20,Y=Terrain.heightAt(zone[3],zone[5],LAKE,RIDGES,nil)}
 end
 
-function M.Build(seed)
-	local old=workspace:FindFirstChild("AnomalyDungeon")
+function M.Build(seed,authoringParent)
+	local old=not authoringParent and workspace:FindFirstChild("AnomalyDungeon")
 	if old then old:Destroy() end
 	local rng=Random.new(seed or 0)
 	local root=Instance.new("Model")
 	root.Name="AnomalyDungeon"
-	root.Parent=workspace
+	root.Parent=authoringParent or workspace
 	root:SetAttribute("Seed",seed)
 	root:SetAttribute("Theme",DEFS.DisplayName.." / 山あいの夏")
 	root:SetAttribute("Version",1)

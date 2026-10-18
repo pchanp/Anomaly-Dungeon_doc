@@ -9,7 +9,7 @@ local RunOutcomes=require(RS.AnomalyDungeon.Shared.Definitions.RunOutcomes)
 local TsutayaGenerator=require(script.Parent.Parent.Maps.Tsutaya.TsutayaGenerator)
 local Archive=require(script.Parent.Parent.Maps.Tsutaya.TsutayaArchiveService)
 MapGenerators.TSUTAYA=TsutayaGenerator
-local AugustGenerator=require(script.Parent.Parent.Maps.August.AugustGenerator)
+local AugustGenerator=require(script.Parent.Parent.Maps.Authoring.AuthoredAugustMap)
 local August=require(script.Parent.Parent.Maps.August.August31Service)
 MapGenerators.AUGUST_31=AugustGenerator
 local Inventory=require(script.Parent.InventoryService)
@@ -220,6 +220,7 @@ function M.Tick(dt)
 end
 function M.GetWorld() return world end
 function M.Start()
+ AugustGenerator.Initialize()
  local Lobby=require(script.Parent.LobbyService)
  local PartyService=require(script.Parent.PartyService)
  lobby=Lobby; Party=PartyService
