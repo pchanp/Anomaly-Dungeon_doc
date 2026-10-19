@@ -249,3 +249,11 @@ Sprinting Forward Rollを既存スロット2、Standard RunをShift長押し走�
 ## 2026-10-18：ローリングの移動距離調整
 
 スロット2だけで平坦地を約20スタッド移動するように変更。Server承認後、Clientの水平LinearVelocityを0.6秒間維持し、壁検査・Stun等の中断・終了時の掃除を実装。実測19.9712スタッド、壁手前停止・Stun中断を確認。無敵0.6秒・Cooldown4秒は維持。[適用記録](movement-animation-integration.md#ローリング単独で約20スタッド移動2026-10-18追記)。
+
+## 2026-10-18：ShadeのR15モーション適用
+
+ユーザー指定によりスロット3のStealth表示をShadeへ変更し、shade.fbxのリターゲット版Shade_R15_v002を発動時に一度再生する。既存ステルス5秒・移動速度30・Cooldown10秒は維持。原FBXの親子循環と座標系を補正し、全Pose保存再読込・実R15の方向・実キー3入力と終了を確認した。SHADE草案の瞬間移動・攻撃判定は今回実装しない。[詳細](movement-animation-integration.md#shadeをスロット3へ適用2026-10-18追記)。公開IDは未発行。
+
+## 2026-10-18：Shadeの高速移動と経路Hitbox
+
+ユーザー指定と暫定数値の確認により、Shadeへ50スタッド／0.3秒のServer主導移動、経路上の各対象1回25ダメージ＋0.5秒Stun、実判定と一致する橙／緑のワイヤーフレームと紫の通過経路枠を追加。壁停止・重複部位排除・範囲外・Stun中断・表示OFFをPlay Soloで確認。アニメーションは3.5倍へ調整し、既存5秒効果・Cooldown10秒は維持。[試作仕様・検証・制限](shade-prototype.md)。

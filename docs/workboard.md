@@ -35,6 +35,10 @@
 
 #### W05：固定リターゲット手順・Studio導入・纏絲勁試作（2026-10-17）
 
+- Shade高速化（2026-10-18）: 50スタッド／0.3秒・暫定25ダメージ＋0.5秒Stunと判定／経路の枠をStudio実装。実測50、壁停止23.35、複数対象各1回・範囲外・Stun中断・表示OFFを確認。[記録](systems/shade-prototype.md)。
+
+- Shade適用（2026-10-18）: ユーザー確認でスロット3のStealthをShade表示へ変更。shade.fbxの親子循環・座標系を補正してR15化、v002で方向・実入力・効果継続と解除を確認。公開ID／人間の見た目レビューは残る。[記録](../work/animations/motions/shade/README.md)。
+
 - ローリング移動調整（2026-10-18）: スロット2単独で約20スタッドへ変更。実測19.9712、壁前停止・Stun中断をPlay Solo確認。[記録](systems/movement-animation-integration.md#ローリング単独で約20スタッド移動2026-10-18追記)。
 
 - 2026-10-18追記: Sprinting Forward Roll／Standard Runを固定手順でR15化し、既存ローリング／Shift走行へStudio適用。実入力・方向Yaw0°／90°・Stun停止・保存再読込を確認。公開ID発行と人間の見た目レビューは未完了。[実装と残件](systems/movement-animation-integration.md)。
@@ -48,9 +52,6 @@
 - 正本: [試作仕様](systems/tensikei-prototype.md)、[結果・証拠](../work/animations/motions/hook-punch-sample/studio/RESULT-20261017.md)。元v001・v002と既存Sourceを保持。
 - 2026-10-18: 前半3倍・後半2倍（約0.889秒）へ高速化し、約0.167秒で主判定開始。判定Boxと一致するStudio用ワイヤーフレームを追加。ソロで命中・非命中・壁遮蔽・単一対象・Client表示・中断掃除を確認。[QA](../work/animations/motions/hook-punch-sample/studio/fast-hitbox-qa-20261018.json)。
 
-
-
-初期基盤の整備は完了。以下は次回実行の入口であり、既存ゲームP0の優先順位を置き換えない。生成・Studio変更の実行条件が不足している間はReadyにしない。
 
 #### W01-02：3構図の試作指示を具体化する
 

@@ -18,7 +18,7 @@ end
 local SKILL_DEFS = {
   [1] = {name = 'Magic Bolt',  cd = 3,  desc = '遠距離攻撃魔法'},
   [2] = {name = 'Roll',        cd = 4,  desc = '無敵ローリング'},
-  [3] = {name = 'Stealth',     cd = 10, desc = '隠密移動'},
+  [3] = {name = 'Shade',       cd = 10, desc = 'ステルス・Shadeモーション'},
   [4] = {name = TensikeiConfig.DisplayName, cd = TensikeiConfig.Cooldown, desc = 'Parry・突き・遅延衝撃（試作）'},
 }
 
@@ -137,7 +137,7 @@ end
 -- ダッシュ（クライアント側で即座に実行、物理は所有権により複製）
 -- ============================================================
 local function tryDash()
-  if isStunned() then return end
+  if isStunned() or player:GetAttribute("ShadeDashing") then return end
   -- リザルト表示中はRun操作を受け付けない
   if player:GetAttribute('RunResultPending') == true then return end
   if os.clock() < dashCdEnd then return end
@@ -158,7 +158,7 @@ end
 -- スキル発動
 -- ============================================================
 local function trySkill(slot)
-  if isStunned() then return end
+  if isStunned() or player:GetAttribute("ShadeDashing") then return end
   if slot < 1 or slot > 4 then return end
   local def = SKILL_DEFS[slot]
   if def.cd == 0 then return end

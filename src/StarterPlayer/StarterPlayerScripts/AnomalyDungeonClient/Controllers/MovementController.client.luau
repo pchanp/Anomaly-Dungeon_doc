@@ -35,7 +35,7 @@ local function playRoll()
         track:Play(AnimationConfig.Roll.Fade, 1, AnimationConfig.Roll.Duration / AnimationConfig.Roll.ActionDuration)
     end
 end
-local lastRolling = false
+local lastRolling, lastSneaking = false, false
 local function update()
     if not humanoid or humanoid.Health <= 0 then return end
     local isRolling, isSneaking = rolling(), sneaking()
@@ -43,19 +43,26 @@ local function update()
     local stunned = (character:GetAttribute("CombatStunnedUntil") or 0) > workspace:GetServerTimeNow()
     if stunned or player:GetAttribute("RunResultPending") == true then
         for name in pairs(tracks) do stopTrack(name, 0.06) end
-        lastRolling = isRolling
+        lastRolling, lastSneaking = isRolling, isSneaking
         return
     end
     if isRolling and not lastRolling then playRoll() end
     if not isRolling then stopTrack("Roll", 0.06) end
-    lastRolling = isRolling
+    if isSneaking and not lastSneaking and not isRolling then
+        stopTrack("Sneak", 0.04)
+        local track = tracks.Shade
+        if track then track:Play(AnimationConfig.Shade.Fade, 1, AnimationConfig.Shade.Speed) end
+    end
+    if not isSneaking or isRolling then stopTrack("Shade", 0.06) end
+    lastRolling, lastSneaking = isRolling, isSneaking
     setSprintSpeed()
     if isRolling then
         stopTrack("Sprint", 0.06); stopTrack("Sneak", 0.06)
     elseif isSneaking then
         stopTrack("Sprint", 0.12)
         local t = tracks.Sneak
-        if t and moving and not t.IsPlaying then t:Play(0.15, 1, 0.92) elseif t and not moving then stopTrack("Sneak", 0.15) end
+        if tracks.Shade and tracks.Shade.IsPlaying then stopTrack("Sneak", 0.04)
+        elseif t and moving and not t.IsPlaying then t:Play(0.15, 1, 0.92) elseif t and not moving then stopTrack("Sneak", 0.15) end
     elseif shiftHeld and moving and humanoid.FloorMaterial ~= Enum.Material.Air then
         stopTrack("Sneak", 0.12)
         local t = tracks.Sprint; if t and not t.IsPlaying then t:Play(AnimationConfig.Sprint.Fade, 1, AnimationConfig.Sprint.Speed) end
@@ -64,7 +71,7 @@ local function update()
     end
 end
 local function disconnectAll()
-    lastRolling = false
+    lastRolling, lastSneaking = false, false
     for _, c in ipairs(connections) do c:Disconnect() end
     table.clear(connections)
     for _, t in pairs(tracks) do t:Stop(0) end
@@ -74,7 +81,7 @@ local function bindCharacter(char)
     disconnectAll(); character = char; humanoid = char:WaitForChild("Humanoid"); baseSpeed = humanoid.WalkSpeed
     if humanoid.RigType ~= Enum.HumanoidRigType.R15 then warn("[MovementAnimations] R15 only") return end
     animator = humanoid:WaitForChild("Animator")
-    for _, name in ipairs({"Sprint", "Roll", "Sneak"}) do
+    for _, name in ipairs({"Sprint", "Roll", "Shade", "Sneak"}) do
         tracks[name] = AnimationTracks.Load(animator, name)
     end
     for _, target in ipairs({character, humanoid, player}) do

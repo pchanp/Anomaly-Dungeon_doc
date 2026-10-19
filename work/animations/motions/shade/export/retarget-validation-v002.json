@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "source": "Armature.001",
+  "source_action": "Armature.001|Sword_Dash_RM",
+  "target": "Armature",
+  "action": "Shade_R15_v002",
+  "frame_range": [
+    1,
+    39
+  ],
+  "root_mode": "IN_PLACE",
+  "translation_scale": 2.8992974164175633,
+  "fps": 24.0,
+  "mapped_bones": 15,
+  "curves": 63,
+  "keyframes": 2457,
+  "max_source_direction_error_degrees": 0.0,
+  "max_rotation_error_degrees": 0.0,
+  "max_bone_length_error": 6.079673767089844e-06,
+  "studio_import_verified": false,
+  "art_review": "pending",
+  "fbx_path": "/Users/saitouyouwataru/Documents/Git/Anomaly-Dungeon_doc/work/animations/motions/shade/export/shade-r15-v002.fbx"
+}

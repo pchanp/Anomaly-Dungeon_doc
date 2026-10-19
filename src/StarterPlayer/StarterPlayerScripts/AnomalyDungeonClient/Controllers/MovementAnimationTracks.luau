@@ -33,7 +33,7 @@ function M.Load(animator, name)
  if not ok then warn("[MovementAnimations] " .. name .. ": " .. tostring(track)); return nil end
  track.Name = spec and spec.Sequence or name
  track.Priority = name == "Sprint" and Enum.AnimationPriority.Movement or Enum.AnimationPriority.Action
- track.Looped = name ~= "Roll"
+ track.Looped = name ~= "Roll" and name ~= "Shade"
  return track
 end
 return M

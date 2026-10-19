@@ -48,3 +48,15 @@ Serverの既存Cooldown・生存・Stun・リザルト検査を通過した`Roll
 実キー入力の2だけ（MoveDirection=0）で19.9712スタッド、10スタッド先に厚さ2の壁を置いた場合は7.1634スタッドで停止。Stun中断では約5.5537スタッドで拘束解除を確認。無敵終了と移動用Instanceの掃除を確認し、新規ゲームエラーなし。[検証記録](../../work/animations/motions/roll-distance-qa-20261018.json)。ゲーム本体の保存・公開は未実施。
 
 変更: `Shared/Config/RollConfig.luau`、Clientの`RollMovement.luau`／`SkillController.client.luau`、Serverの`SkillService.server.luau`。
+
+## Shadeをスロット3へ適用（2026-10-18追記）
+
+ユーザー確認により、既存Stealth枠の表示名をShadeに変更し、`shade.fbx`から変換した`Shade_R15_v002`を発動時に一度再生する。39F／24fps・1.583333秒・1倍・非ループ・Action優先度。既存IsStealth属性の立ち上がりへ接続し、効果5秒・移動速度30・Cooldown10秒を引き継ぐ。移動中の旧SneakループはShade再生中に停止し、発動モーション終了後の既存ステルス移動として継続する。Roll・Stun・リザルト・死亡ではShade Trackも停止する。内部IsStealth属性名は既存連携のため維持する。
+
+`MovementAnimationConfig.Shade`・`MovementAnimationTracks`・`MovementController`・`SkillController`へ反映。SHADE草案の瞬間移動・ダメージ・Stun・NPC検知ルールは今回変更しない。実キー3の再生、連打時の非再発動、発動Track終了と5秒効果の区別、効果解除と通常速度への復帰をPlay Soloで確認した。
+
+入力の親子循環と横倒し座標系を補正し、標準R15へBake。v001は意味的方向検査Fail、v002は保存再読込・全Pose一致と実R15のYaw0°／90°検査Pass。Studioでは一時ID再生で、公開ID発行・ゲーム本体保存／公開は未実施。[作業記録・検証・公開用Rig](../../work/animations/motions/shade/README.md)。
+
+### Shade高速移動への更新
+
+後続依頼で50スタッド／0.3秒の移動と経路ダメージ・Stun、ワイヤーフレームを追加。Shade再生倍率は初回の1倍から3.5倍（約0.452秒）へ変更した。[現在のShade試作](shade-prototype.md)を参照。初回導入時の「攻撃判定・移動は追加していない」は当時の記録。NPC検知ルールは現在も変更していない。

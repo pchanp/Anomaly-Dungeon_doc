@@ -6,6 +6,7 @@ local TweenService=game:GetService("TweenService")
 local skillEvent=RS:WaitForChild("SkillEvent")
 local CombatDamage=require(script.Parent.CombatDamage)
 local Tensikei=require(script.Parent.TensikeiService)
+local Shade=require(script.Parent.ShadeService)
 local RollConfig=require(RS.AnomalyDungeon.Shared.Config.RollConfig)
 local SKILL_CD={[1]=3,[2]=4,[3]=10}
 local serverCd={}
@@ -66,6 +67,8 @@ local function stealth(player,root,hum)
 end
 skillEvent.OnServerEvent:Connect(function(player,slot)
   if typeof(slot)~="number" then return end
+ if player:GetAttribute("ShadeDashing") then return end
+ if slot==3 and player:GetAttribute("IsInvincible") then return end
   -- リザルト表示中はRun操作を受け付けない
   if player:GetAttribute("RunResultPending")==true then return end
  if slot%1~=0 or slot<1 or slot>4 then return end
@@ -77,7 +80,7 @@ skillEvent.OnServerEvent:Connect(function(player,slot)
  end
   local root,hum=getChar(player) if not root or not hum or hum.Health<=0 then return end
  serverCd[player]=serverCd[player] or {} local now=os.clock() if serverCd[player][slot] and now<serverCd[player][slot] then return end serverCd[player][slot]=now+(SKILL_CD[slot] or 0)
- if slot==1 then magicBolt(player,root) elseif slot==2 then roll(player,root) elseif slot==3 then stealth(player,root,hum) end
+ if slot==1 then magicBolt(player,root) elseif slot==2 then roll(player,root) elseif slot==3 then stealth(player,root,hum);Shade.Start(player,root,hum) end
 end)
 Players.PlayerRemoving:Connect(function(p) serverCd[p]=nil end)
 print("[SKILL SERVER] ready enhanced")

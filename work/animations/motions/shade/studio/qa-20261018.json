@@ -1,0 +1,32 @@
+{
+  "slot": 3,
+  "clip": "Shade_R15_v002",
+  "keyTest": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"endedTracks\":[],\"speedNow\":20,\"stealthNow\":false,\"start\":{\"speed\":30,\"stealth\":true,\"tracks\":{\"1\":{\"loop\":false,\"name\":\"Shade_R15_v002\",\"speed\":1,\"length\":1.5833333730697632,\"priority\":\"Action\",\"time\":0.3333333432674408}},\"slot\":\"Shade\"}}"
+      }
+    ],
+    "isError": false
+  },
+  "lifecycle": {
+    "content": [
+      {
+        "type": "text",
+        "text": "[{\"time\":0.4292960832826793,\"clipTime\":0.27916669845581057,\"speed\":30,\"stealth\":true,\"shadePlaying\":true},{\"speed\":30,\"stealth\":true,\"time\":2.229534124955535,\"shadePlaying\":false},{\"speed\":20,\"stealth\":false,\"time\":5.630628166720271,\"shadePlaying\":false}]"
+      }
+    ],
+    "isError": false
+  },
+  "facing": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"1\":{\"startUp\":0.9873682856559753,\"dashForward\":0.7655325531959534,\"passed\":true,\"yaw\":0},\"2\":{\"startUp\":0.9873682856559753,\"dashForward\":0.7655325531959534,\"passed\":true,\"yaw\":1.5707963267948966}}"
+      }
+    ],
+    "isError": false
+  },
+  "status": "Studio verified; public ID pending"
+}

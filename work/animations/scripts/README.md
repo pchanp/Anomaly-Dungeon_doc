@@ -102,3 +102,7 @@ Hook Punch v003: 1〜65F、30fps、15ボーン、63カーブ、4,095キー。方
 ```
 
 両方とも `IN_PLACE`。Hook Punchの拳位置テストは流用せず、`tests/verify_movement_facing.luau` で前傾と前転の意味的方向を実R15・Yaw0°／90°で確認する。Studio導入時はSource変更前のrequireキャッシュを避け、ImporterをCloneしてrequireし、終了後にCloneを破棄する。公開用クリップ・実装設定・残件は[適用記録](../../../docs/systems/movement-animation-integration.md)を参照。
+
+## shade.fbxの互換補正と適用（2026-10-18）
+
+`prepare_shade_retarget.py`は当該Comfy exporter入力専用の互換補正を先行し、共通のRetarget／Pose exporterを呼ぶ。単位Transformかつ非アニメーションのMesh親から骨格RootをSceneへ外し、骨格の解剖学的軸をTargetに整列してからBakeする。非単位Transform・想定外の接続数・非軸整列の入力は停止する。他FBXへ無条件適用しない。現行出力はv002、`tests/check_shade_reopen.py`で保存後の全Pose一致・水平移動除去・Source／Targetの前方向を検査する。[入力・原因・成果物とStudio記録](../motions/shade/README.md)。

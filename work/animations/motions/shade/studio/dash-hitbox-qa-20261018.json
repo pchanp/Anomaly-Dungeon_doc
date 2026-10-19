@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-18",
+  "clip": "Shade_R15_v002",
+  "values": {
+    "distance": 50,
+    "duration": 0.3,
+    "damage": 25,
+    "stun": 0.5,
+    "animationSpeed": 3.5
+  },
+  "open": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"debugClean\":true,\"anchoredAfter\":false,\"samples\":[{\"time\":0.00001200009137392044,\"hits\":0,\"anchored\":true,\"distance\":3.472222328186035,\"debug\":true,\"matched\":true},{\"time\":0.029471333604305984,\"hits\":0,\"anchored\":true,\"distance\":8.333333969116211,\"debug\":true,\"matched\":true},{\"time\":0.06323749991133809,\"hits\":1,\"anchored\":true,\"distance\":13.88888931274414,\"debug\":true,\"matched\":true},{\"time\":0.09605950023978949,\"hits\":1,\"anchored\":true,\"distance\":19.444446563720704,\"debug\":true,\"matched\":true},{\"time\":0.12959208339452744,\"hits\":1,\"anchored\":true,\"distance\":25.000003814697267,\"debug\":true,\"matched\":true},{\"time\":0.16377995861694218,\"hits\":1,\"anchored\":true,\"distance\":30.555561065673829,\"debug\":true,\"matched\":true},{\"time\":0.19664766686037184,\"hits\":1,\"anchored\":true,\"distance\":36.11111831665039,\"debug\":true,\"matched\":true},{\"time\":0.22942466661334039,\"hits\":2,\"anchored\":true,\"distance\":41.66667556762695,\"debug\":true,\"matched\":true},{\"time\":0.26316937524825337,\"hits\":2,\"anchored\":true,\"distance\":47.222232818603519,\"debug\":true,\"matched\":true}],\"distance\":50,\"duration\":0.2953458335250616,\"targets\":{\"Target2\":{\"stunCleared\":true,\"hp\":75,\"stunned\":true},\"Target1\":{\"stunCleared\":true,\"hp\":75,\"stunned\":true},\"Target3\":{\"stunCleared\":true,\"hp\":100,\"stunned\":false},\"Target4\":{\"stunCleared\":true,\"hp\":100,\"stunned\":false}},\"reason\":\"complete\"}"
+      }
+    ],
+    "isError": false
+  },
+  "client": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"animationSpeed\":3.5,\"frames\":{\"1\":{\"wire\":true,\"name\":\"ShadeHitbox\",\"collidable\":false,\"query\":false},\"2\":{\"wire\":true,\"name\":\"ShadePath\",\"collidable\":false,\"query\":false}},\"dashing\":true}"
+      }
+    ],
+    "isError": false
+  },
+  "wallDebugOffStun": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"wall\":{\"before\":75,\"behind\":100,\"anchored\":false,\"distance\":23.350000381469728,\"reason\":\"wall\"},\"stun\":{\"debugParts\":0,\"anchored\":false,\"distance\":13.88888931274414,\"reason\":\"cancelled\"},\"debugOff\":{\"distance\":50,\"parts\":0,\"hit\":75}}"
+      }
+    ],
+    "isError": false
+  },
+  "consoleErrors": []
+}

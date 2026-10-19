@@ -1,0 +1,17 @@
+{
+  "source": "../_template/source/shade.fbx",
+  "preserved_copy": "source/shade.fbx",
+  "sha256": "6f02059a650f05f4c50b95d2226f762c2e0706955ced3448c7a106ac09f72e86",
+  "creator": "@comfyorg/fbx-exporter-three - 1.0.0",
+  "source_action": "Sword_Dash_RM",
+  "range": [
+    1,
+    39
+  ],
+  "fps": 24,
+  "root_mode": "IN_PLACE",
+  "target": "Official R15 Armature; 15 mapped bones",
+  "current_clip": "Shade_R15_v002",
+  "public_animation_id": null,
+  "status": "Studio verified; publication and human visual review pending"
+}

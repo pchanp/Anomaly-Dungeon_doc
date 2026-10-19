@@ -1,0 +1,12 @@
+{
+  "source_sha256": "6f02059a650f05f4c50b95d2226f762c2e0706955ced3448c7a106ac09f72e86",
+  "repair": "identity skinned-mesh parent cycle; skeleton root lifted to scene",
+  "connections": [
+    {
+      "child": 566354334,
+      "old_parent": 891831069,
+      "new_parent": 0
+    }
+  ],
+  "animation_curves_modified": false
+}
